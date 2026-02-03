@@ -3,7 +3,7 @@
 ## Setup
 
 ### Backend
-Requires [Poetry](https://python-poetry.org/docs/#installation):
+Requires [Poetry](https://python-poetry.org/docs/#installing-with-the-official-installer):
 ```bash
 cd backend
 poetry config virtualenvs.in-project true  # for VS Code auto-detection
