@@ -106,7 +106,7 @@ def main(
     # Load level 5 skills if needed
     if max_level_needed >= 5:
         typer.echo("Loading individual skills (level 5)...")
-        skills_df = pd.read_csv(data_dir / "skills_en.csv")
+        skills_df = pd.read_csv(data_dir / "skills" / "skills_en.csv")
         skills_df["level"] = 5
         skills_df["category"] = skills_df["skillType"].apply(get_category_from_skill_type)
         skills_df["code"] = None  # Level 5 skills don't have codes
