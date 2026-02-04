@@ -14,7 +14,8 @@ import tomllib
 import typer
 import pandas as pd
 from pathlib import Path
-from typing import Annotated, Any
+from typing import Annotated
+from typing import Any  # for pd.isna checks on DataFrame columns
 
 app = typer.Typer()
 
@@ -61,13 +62,12 @@ def get_category_from_code(code: Any) -> str:
 
 
 def get_category_from_skill_type(skill_type: Any) -> str:
-    """Map skillType to category for Level 5 skills.
-
-    skillType has exactly 2 values: "knowledge" -> K, "skill/competence" -> S
-    """
+    """Map skillType to category for Level 5 skills."""
     if pd.isna(skill_type):
         return ""
-    return "K" if skill_type == "knowledge" else "S"
+    if "knowledge" in str(skill_type).lower():
+        return "K"
+    return "S"  # skill/competence -> S
 
 
 @app.command()
@@ -81,17 +81,15 @@ def main(
     typer.echo(f"Loading config from {config}")
     cfg = load_toml_config(config)
 
-    categories = cfg["filter"]["categories"]
-    max_level = cfg["filter"]["max_level"]
-    min_level = cfg["filter"].get("min_level", 1)
+    # Per-category level ranges: {"S": [4, 4], "K": [3, 3]}
+    levels_cfg = cfg["filter"]["levels"]
     exclude_codes = cfg["filter"].get("exclude_codes", [])
     exclude_prefixes = cfg["filter"].get("exclude_prefixes", [])
     output_filename = cfg["output"]["filename"]
 
-    typer.echo(f"  Categories: {categories}")
-    typer.echo(f"  Levels: {min_level} to {max_level}")
-    if exclude_codes:
-        typer.echo(f"  Excluding codes: {exclude_codes}")
+    typer.echo("  Levels by category:")
+    for cat, (min_lvl, max_lvl) in levels_cfg.items():
+        typer.echo(f"    {cat}: {min_lvl} to {max_lvl}")
     if exclude_prefixes:
         typer.echo(f"  Excluding prefixes: {exclude_prefixes}")
 
@@ -102,8 +100,11 @@ def main(
     df["category"] = df["code"].apply(get_category_from_code)
     typer.echo(f"  Loaded {len(df)} skill groups")
 
+    # Determine if we need Level 5 skills
+    max_level_needed = max(lvl[1] for lvl in levels_cfg.values())
+
     # Load level 5 skills if needed
-    if max_level >= 5:
+    if max_level_needed >= 5:
         typer.echo("Loading individual skills (level 5)...")
         skills_df = pd.read_csv(data_dir / "skills_en.csv")
         skills_df["level"] = 5
@@ -118,15 +119,24 @@ def main(
             skills_df[[c for c in common_cols if c in skills_df.columns]]
         ], ignore_index=True)
 
-    # Apply filters
-    mask = (
-        (df["level"] >= min_level) &
-        (df["level"] <= max_level) &
-        (df["category"].isin(categories)) &
-        (~df["code"].isin(exclude_codes))
-    )
+    # Build per-category level mask
+    category_masks = []
+    for cat, (min_lvl, max_lvl) in levels_cfg.items():
+        cat_mask = (
+            (df["category"] == cat) &
+            (df["level"] >= min_lvl) &
+            (df["level"] <= max_lvl)
+        )
+        category_masks.append(cat_mask)
 
-    # Exclude prefixes using vectorized string matching
+    # Combine all category masks with OR
+    mask = category_masks[0]
+    for m in category_masks[1:]:
+        mask |= m
+
+    # Apply exclusions
+    mask &= ~df["code"].isin(exclude_codes)
+
     if exclude_prefixes:
         prefix_pattern = "|".join(f"^{p}" for p in exclude_prefixes)
         mask &= ~df["code"].str.match(prefix_pattern, na=False)
@@ -135,10 +145,12 @@ def main(
 
     typer.echo(f"  Filtered to {len(filtered)} items")
 
-    # Show breakdown
-    for level in sorted(filtered["level"].unique()):
-        count = len(filtered[filtered["level"] == level])
-        typer.echo(f"    Level {level}: {count}")
+    # Show breakdown by category and level
+    for cat in sorted(filtered["category"].unique()):
+        cat_df = filtered[filtered["category"] == cat]
+        levels = sorted(cat_df["level"].unique())
+        counts = [f"L{lvl}:{len(cat_df[cat_df['level']==lvl])}" for lvl in levels]
+        typer.echo(f"    {cat}: {', '.join(counts)}")
 
     # Save
     output_path = data_dir / output_filename
