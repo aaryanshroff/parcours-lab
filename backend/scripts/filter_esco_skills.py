@@ -95,7 +95,7 @@ def main(
 
     # Load skill groups (levels 1-4)
     typer.echo("Loading skill groups (levels 1-4)...")
-    df = pd.read_csv(data_dir / "skillGroups_en.csv")
+    df = pd.read_csv(data_dir / "skills" / "skillGroups_en.csv")
     df["level"] = df["code"].apply(get_level_from_code)
     df["category"] = df["code"].apply(get_category_from_code)
     typer.echo(f"  Loaded {len(df)} skill groups")
