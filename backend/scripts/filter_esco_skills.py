@@ -153,7 +153,7 @@ def main(
         typer.echo(f"    {cat}: {', '.join(counts)}")
 
     # Save
-    output_path = data_dir / output_filename
+    output_path = data_dir / "skills" / output_filename
     filtered.to_csv(output_path, index=False)
     typer.echo(f"Saved to {output_path}")
 
