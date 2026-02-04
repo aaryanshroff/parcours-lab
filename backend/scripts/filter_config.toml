@@ -16,7 +16,8 @@ exclude_prefixes = [
     "S6",    # handling and moving (manual labor)
     "S7",    # constructing (carpentry, plumbing, welding, electrical)
     "S8",    # working with machinery and specialised equipment
-    "S3.2",  # providing health care or medical treatments
+    "S3.0",  # assisting and caring (generic)
+    "S3.1",  # counselling (personal/family issues)
     "S3.5",  # preparing and serving food and drinks
     "S3.6",  # providing general personal care (hair styling, childcare)
 ]
