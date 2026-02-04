@@ -1,0 +1,27 @@
+# ESCO Skills Filter Configuration
+
+[filter]
+# Top-level categories to include (S=skills, K=knowledge, T=transversal, L=language)
+categories = ["S", "K"]
+
+# Hierarchy levels (1-indexed)
+# 1 = top categories (S, K)
+# 2 = broad categories (S6, K1)
+# 3 = narrower (S6.2, 0011)
+# 4 = specific (S6.2.1)
+# 5 = individual skills (from skills_en.csv)
+min_level = 1
+max_level = 4
+
+# Specific codes to exclude
+exclude_codes = []
+
+# Prefixes to exclude (filters out entire branches)
+# S6 = handling and moving (manual labor)
+# S7 = constructing (carpentry, plumbing, welding, electrical)
+# S8 = working with machinery and specialised equipment
+exclude_prefixes = ["S6", "S7", "S8"]
+
+[output]
+# Output filename (relative to data dir)
+filename = "skill_groups_filtered.csv"
