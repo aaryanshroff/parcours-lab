@@ -5,22 +5,26 @@
 categories = ["S", "K"]
 
 # Hierarchy levels (1-indexed)
-# 1 = top categories (S, K)
-# 2 = broad categories (S6, K1)
-# 3 = narrower (S6.2, 0011)
-# 4 = specific (S6.2.1)
-# 5 = individual skills (from skills_en.csv)
-min_level = 1
+# 1 = Top categories         (S, K, T, L / 00, 01...)
+# 2 = Broad categories       (S6, S1... / 001, 011...)
+# 3 = Narrower categories    (S6.2... / 0011, 0111...)
+# 4 = Specific categories    (S6.2.1...)
+# 5 = Individual skills      (leaf nodes from skills_en.csv)
+min_level = 4
 max_level = 4
 
 # Specific codes to exclude
 exclude_codes = []
 
 # Prefixes to exclude (filters out entire branches)
-# S6 = handling and moving (manual labor)
-# S7 = constructing (carpentry, plumbing, welding, electrical)
-# S8 = working with machinery and specialised equipment
-exclude_prefixes = ["S6", "S7", "S8"]
+exclude_prefixes = [
+    "S6",    # handling and moving (manual labor)
+    "S7",    # constructing (carpentry, plumbing, welding, electrical)
+    "S8",    # working with machinery and specialised equipment
+    "S3.2",  # providing health care or medical treatments
+    "S3.5",  # preparing and serving food and drinks
+    "S3.6",  # providing general personal care (hair styling, childcare)
+]
 
 [output]
 # Output filename (relative to data dir)
