@@ -1,4 +1,4 @@
-"""Generic Data Explorer. Run: poetry run streamlit run scripts/explore_data.py"""
+"""poetry run streamlit run scripts/explore_data.py"""
 
 import pandas as pd
 import streamlit as st
