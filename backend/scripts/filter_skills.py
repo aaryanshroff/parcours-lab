@@ -7,9 +7,11 @@ Configuration is loaded from match_skills_config.toml.
 
 import json
 import logging
+import pickle
 import tomllib
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 from bertopic import BERTopic
 from sklearn.metrics.pairwise import cosine_similarity
@@ -31,7 +33,21 @@ def load_courses(path: Path) -> list[dict]:
         return json.load(f)["courses"]
 
 
-def discover_topics(courses: list[dict]) -> tuple[BERTopic, list]:
+def get_or_create_topics(courses: list[dict], cache_dir: Path) -> tuple[BERTopic, np.ndarray]:
+    """Load topic model and embeddings from cache, or create and cache them."""
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    model_path = cache_dir / "topic_model"
+    embeddings_path = cache_dir / "topic_embeddings.npy"
+
+    # Load from cache if available
+    if model_path.exists() and embeddings_path.exists():
+        logger.info("Loading cached topic model...")
+        model = BERTopic.load(model_path)
+        embeddings = np.load(embeddings_path)
+        return model, embeddings
+
+    # Create new model
+    logger.info("Discovering topics (this may take a while)...")
     texts = [f"{c['title']} {c.get('description', '')}" for c in courses]
     model = BERTopic(verbose=False)
     model.fit_transform(texts)
@@ -39,6 +55,11 @@ def discover_topics(courses: list[dict]) -> tuple[BERTopic, list]:
     embeddings = model.topic_embeddings_
     if model.topic_labels_[0] == -1:
         embeddings = embeddings[1:]
+
+    # Cache for next run
+    model.save(model_path, serialization="safetensors", save_ctfidf=True)
+    np.save(embeddings_path, embeddings)
+    logger.info(f"Cached topic model to {cache_dir}")
 
     return model, embeddings
 
@@ -100,13 +121,13 @@ def main():
     skills_path = BASE_DIR / "data/raw/skills/skills_en.csv"
     broader_path = BASE_DIR / "data/raw/skills/broaderRelationsSkillPillar_en.csv"
     groups_path = BASE_DIR / "data/raw/skills/skillGroups_en.csv"
-    output_path = BASE_DIR / "data/processed/skills/skills_matched.csv"
+    output_path = BASE_DIR / "data/processed/skills/skills_filtered.csv"
+    topics_cache_dir = BASE_DIR / "data/processed/topics"
 
-    logger.info("Loading courses and discovering topics...")
     courses = load_courses(courses_path)
-    model, topic_embeddings = discover_topics(courses)
+    model, topic_embeddings = get_or_create_topics(courses, topics_cache_dir)
     logger.info(
-        f"Discovered {len(topic_embeddings)} topics from {len(courses)} courses")
+        f"Using {len(topic_embeddings)} topics from {len(courses)} courses")
 
     logger.info("Loading skills with hierarchy codes...")
     skills_df = load_skills_with_codes(skills_path, broader_path, groups_path)
@@ -120,12 +141,26 @@ def main():
     logger.info("Filtering by semantic similarity...")
     filtered_df = filter_by_similarity(
         skills_df, skill_embeddings, topic_embeddings, threshold)
+    excluded_df = skills_df[~skills_df["conceptUri"].isin(
+        filtered_df["conceptUri"])]
     logger.info(
         f"Retained {len(filtered_df)}/{len(skills_df)} skills (threshold={threshold})")
 
+    # Save to CSV
     output_path.parent.mkdir(parents=True, exist_ok=True)
     filtered_df.to_csv(output_path, index=False)
-    logger.info(f"Saved {len(filtered_df)} skills to {output_path}")
+    excluded_path = output_path.with_name("skills_excluded.csv")
+    excluded_df.to_csv(excluded_path, index=False)
+    logger.info(f"Saved {len(filtered_df)} filtered: {output_path}")
+    logger.info(f"Saved {len(excluded_df)} excluded: {excluded_path}")
+
+    # Log samples
+    logger.info("\n=== SAMPLE FILTERED (kept) ===")
+    for s in filtered_df["preferredLabel"].sample(min(10, len(filtered_df))).tolist():
+        logger.info(f"  + {s}")
+    logger.info("\n=== SAMPLE EXCLUDED ===")
+    for s in excluded_df["preferredLabel"].sample(min(10, len(excluded_df))).tolist():
+        logger.info(f"  - {s}")
 
 
 if __name__ == "__main__":
