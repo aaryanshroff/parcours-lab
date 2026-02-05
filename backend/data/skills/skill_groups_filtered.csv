@@ -1413,6 +1413,10 @@ SkillGroup,http://data.europa.eu/esco/skill/08104c27-d4b2-4d40-ae97-dde65e71712f
 - advise on safety improvements
 - inform on safety standards.","http://data.europa.eu/esco/concept-scheme/skills
 http://data.europa.eu/esco/concept-scheme/skills-hierarchy",Promoting and providing information and advice on health and safety in the workplace.,S1.5.9,4,S
+SkillGroup,http://data.europa.eu/esco/skill/0a400212-8693-4b1f-b0ca-d1f82c321916,providing health care or medical treatments,healthcare,,released,2022-07-15T14:44:44.924Z,"Excludes:
+- Veterinary care
+- Diagnosing health conditions.","http://data.europa.eu/esco/concept-scheme/skills
+http://data.europa.eu/esco/concept-scheme/skills-hierarchy",Treating injuries and health conditions through the provision of health care and medical treatments to people.,S3.2.0,4,S
 SkillGroup,http://data.europa.eu/esco/skill/0a4c5823-8b09-4e6b-95b4-8036ef3b9c4c,advocating for individual or community needs,,,released,2022-06-19T12:25:44.633Z,"Excludes:
 - Promoting goods and services
 - Representing clients in legal proceeding Examples:
@@ -1420,8 +1424,6 @@ SkillGroup,http://data.europa.eu/esco/skill/0a4c5823-8b09-4e6b-95b4-8036ef3b9c4c
 - Promote service users' rights
 - Influence legislators.","http://data.europa.eu/esco/concept-scheme/skills
 http://data.europa.eu/esco/concept-scheme/skills-hierarchy","Delivering arguments in favour of something, such as a cause, idea, or policy, to benefit another person or a community.",S1.2.4,4,S
-SkillGroup,http://data.europa.eu/esco/skill/0ac31705-79ff-4409-a818-c9d0a6388e84,counselling,,,released,2020-12-04T16:35:28.167Z,,"http://data.europa.eu/esco/concept-scheme/skills
-http://data.europa.eu/esco/concept-scheme/skills-hierarchy","Responding to clients' needs by interpreting their emotional and motivational states, and determining and providing appropriate support or interventions.",S3.1.0,4,S
 SkillGroup,http://data.europa.eu/esco/skill/0b3930a2-8a13-4932-8a09-4c72ec8af464,monitoring quality of products,,,released,2022-06-21T15:02:59.368Z,Examples: - check paper quality - inspect material.,"http://data.europa.eu/esco/concept-scheme/skills
 http://data.europa.eu/esco/concept-scheme/skills-hierarchy","Monitoring the manufacturing process of products, testing their quality and investigating them for defects.",S2.8.10,4,S
 SkillGroup,http://data.europa.eu/esco/skill/0b9968af-72de-470a-98e1-2d19577443fb,resolving computer problems,,,released,2021-09-16T17:48:22.348Z,"Excludes:
@@ -1539,9 +1541,6 @@ SkillGroup,http://data.europa.eu/esco/skill/29dcc31e-a8d6-4a62-b3c1-2de81e966e39
 - obtain financial information Excludes:
 - Skills in the use of specific ICT tools to process data.","http://data.europa.eu/esco/concept-scheme/skills
 http://data.europa.eu/esco/concept-scheme/skills-hierarchy","Collecting, compiling or gathering information from digital, paper or other sources.",S2.4.1,4,S
-SkillGroup,http://data.europa.eu/esco/skill/29fbde52-e525-4653-96d0-acd59ccb28d8,assisting people to access services,,,released,,"Examples:
-- refer service users to community resources.","http://data.europa.eu/esco/concept-scheme/skills
-http://data.europa.eu/esco/concept-scheme/skills-hierarchy","Assist others to gain access to social, legal or other services and benefits, including making referrals to other professionals and organisations.",S3.1.3,4,S
 SkillGroup,http://data.europa.eu/esco/skill/2b6e15f5-dfa0-4e7c-9687-5665b07e56a4,protecting privacy and personal data,,,released,2024-01-29T16:26:16.498Z,"Examples:
 - Protect personal data and privacy
 - Safeguard online privacy and identity - Ensure the privacy of guests.","http://data.europa.eu/esco/concept-scheme/skills
@@ -1591,6 +1590,13 @@ SkillGroup,http://data.europa.eu/esco/skill/37272760-957a-4c34-b4f3-780ee285334d
 - Draw up marketing and sales plan
 - Create a financial plan.","http://data.europa.eu/esco/concept-scheme/skills
 http://data.europa.eu/esco/concept-scheme/skills-hierarchy","Envision and develop strategies and plans for companies and organisations aimed at purposes such as establishing new markets, refurbishing the equipment and machinery of a company, implementing pricing strategies, and restoring or maintaining financial viability.",S4.1.2,4,S
+SkillGroup,http://data.europa.eu/esco/skill/3926ec7d-64cd-4410-8283-493a1afdd57b,providing physical therapies,,,released,,"Examples:
+- apply clinical physiotherapy skills
+- administer hydrotherapy
+- give shiatsu massages Excludes:
+- veterinary care
+- non-therapeutic massage.","http://data.europa.eu/esco/concept-scheme/skills
+http://data.europa.eu/esco/concept-scheme/skills-hierarchy","Treating injuries and health conditions through physiotherapy, massage, chiropractic and other physical therapies.",S3.2.3,4,S
 SkillGroup,http://data.europa.eu/esco/skill/39499028-35bf-4d69-9275-fb98902ed88b,working with computers,digital skills,,released,2021-09-16T17:48:30.49Z,"Excludes:
 - Systems analysis
 - Installing, maintaining and repairing computer hardware.","http://data.europa.eu/esco/concept-scheme/skills
@@ -1635,12 +1641,22 @@ SkillGroup,http://data.europa.eu/esco/skill/494b8057-daf5-46a0-b33b-416e0115c30a
 - Enter commands, instructions, or specifications into CNC equipment
 - Set up the controls of a machine.","http://data.europa.eu/esco/concept-scheme/skills
 http://data.europa.eu/esco/concept-scheme/skills-hierarchy",Issuing commands to computer controlled machines and equipment by despatching the appropriate data and input.,S5.7.0,4,S
+SkillGroup,http://data.europa.eu/esco/skill/4bbdc5eb-b710-4b76-816d-04926f7ac4a1,providing psychological and occupational therapies,,,released,2022-07-15T14:44:44.924Z,"Examples:
+- apply psychoanalysis
+- use psychotherapeutic interventions
+- remediate healthcare user's occupational performance
+- apply music therapy treatment methods.","http://data.europa.eu/esco/concept-scheme/skills
+http://data.europa.eu/esco/concept-scheme/skills-hierarchy","Treating human health conditions through provision psychological and occupational, music or related therapies.",S3.2.4,4,S
 SkillGroup,http://data.europa.eu/esco/skill/4d6a48ae-352e-4823-bc3a-3f3e9e2cae86,accessing and analysing digital data,managing digital information,,released,2021-09-24T16:38:38.771Z,,"http://data.europa.eu/esco/concept-scheme/skills
 http://data.europa.eu/esco/concept-scheme/skills-hierarchy","Using digital tools to browse, search, filter, organise, store, retrieve, and analyse data, information and digital content, to collaborate and communicate with others, and create and edit new content.",S5.5.0,4,S
 SkillGroup,http://data.europa.eu/esco/skill/4feed491-dc09-4218-814a-0146e13ef4fe,solving problems,problem solving,,released,,"Excludes:
 - Repairing and resolving technical problems with machinery and equipment
 - Using ICT tools for problem solving.","http://data.europa.eu/esco/concept-scheme/skills
 http://data.europa.eu/esco/concept-scheme/skills-hierarchy","Developing and implementing solutions to practical, operational or conceptual problems which arise in the execution of work in a wide range of contexts.",S1.9.0,4,S
+SkillGroup,http://data.europa.eu/esco/skill/50e42de7-4a5c-4f94-b160-765f547d840c,fitting assistive devices,,,released,2021-03-30T12:16:14.895Z,"Examples:
+- tailor orthopaedic footwear Excludes:
+- veterinary care.","http://data.europa.eu/esco/concept-scheme/skills
+http://data.europa.eu/esco/concept-scheme/skills-hierarchy",Fitting assistive devices such as prostheses or orthotics to patients or clients.,S3.2.6,4,S
 SkillGroup,http://data.europa.eu/esco/skill/54f7432d-a8b6-4ed4-a50e-9ec882320595,"monitoring, inspecting and testing",,,released,2021-03-31T12:02:58.558Z,,"http://data.europa.eu/esco/concept-scheme/skills
 http://data.europa.eu/esco/concept-scheme/skills-hierarchy","Examining and investigating problems, sites or objects to assess functioning or compliance with standards, laws or regulations.",S2.8.0,4,S
 SkillGroup,http://data.europa.eu/esco/skill/58bd927f-e4cc-4b61-a679-cb91b3f8075a,following instructions and procedures,,,released,2022-06-19T15:45:14.266Z,"Examples:
@@ -1705,6 +1721,18 @@ http://data.europa.eu/esco/concept-scheme/skills-hierarchy","Envisioning a futur
 SkillGroup,http://data.europa.eu/esco/skill/70ac2c90-656a-4fa3-886c-5b9305db2087,processing information,,,released,2021-12-17T12:48:25.958Z,"Excludes:
 - Skills in the use of specific ICT tools to process data.","http://data.europa.eu/esco/concept-scheme/skills
 http://data.europa.eu/esco/concept-scheme/skills-hierarchy","Inputting, recording, transcribing and updating data using electronic or manual information systems.",S2.4.0,4,S
+SkillGroup,http://data.europa.eu/esco/skill/73e602a0-f80f-4f56-8e21-3db4fd08709d,"providing medical, dental and nursing care",,,released,2023-11-06T13:40:22.277Z,"Examples:
+- provide professional care in nursing
+- administer prescribed medication
+- carry out wound care
+- manage acute pain
+- rehabilitate worn dentition Excludes:
+- veterinary care
+- performing surgery
+- physiotherapy
+- occupational therapy
+- psychotherapy.","http://data.europa.eu/esco/concept-scheme/skills
+http://data.europa.eu/esco/concept-scheme/skills-hierarchy","Treating injuries and health conditions among humans, through administering medication and providing other medical treatments and nursing care.",S3.2.1,4,S
 SkillGroup,http://data.europa.eu/esco/skill/775be776-b6ce-4322-a96f-11b2df84ce07,"creating artistic, visual or instructive materials",creating artistic and visual materials,,released,,,"http://data.europa.eu/esco/concept-scheme/skills
 http://data.europa.eu/esco/concept-scheme/skills-hierarchy","Creating and developing visual representations and displays, instructional or promotional materials, or artistic designs or performances.",S1.12.0,4,S
 SkillGroup,http://data.europa.eu/esco/skill/77e41477-4ecf-425b-8163-b18a5a54e593,recruiting and hiring,recruiting,,released,,"Examples:
@@ -1917,8 +1945,11 @@ SkillGroup,http://data.europa.eu/esco/skill/b7e752ec-7b2e-46e6-ac24-8b1233609c31
 - Provide leadership
 - Lead board meetings.","http://data.europa.eu/esco/concept-scheme/skills
 http://data.europa.eu/esco/concept-scheme/skills-hierarchy","Reinforcing an organization's vision, inspiring and enthusing others to achieve positive outcomes. The focus of this group is on skills in motivating and inspiring others, rather than on managing and supervising a team.",S4.5.0,4,S
-SkillGroup,http://data.europa.eu/esco/skill/b84813aa-6c44-4d58-a240-556c2060fb4e,assisting and caring,providing services,,released,2021-09-30T13:20:52.1Z,,"http://data.europa.eu/esco/concept-scheme/skills
-http://data.europa.eu/esco/concept-scheme/skills-hierarchy","Providing assistance, nurturing, care, service and support to people, and ensuring compliance to rules, standards, guidelines or laws.",S3.0.0,4,S
+SkillGroup,http://data.europa.eu/esco/skill/b88bddd4-210e-405f-bbdf-729bb66605a0,"prescribing and ordering medical tests, treatments or devices",,,released,,"Examples:
+- prescribe medication
+- prescribe psychotherapeutic treatment Excludes:
+- veterinary care.","http://data.europa.eu/esco/concept-scheme/skills
+http://data.europa.eu/esco/concept-scheme/skills-hierarchy","Ordering medical tests such as blood tests or medical imaging, planning courses of treatment and prescribing medication, or medical and prosthetic devices.",S3.2.5,4,S
 SkillGroup,http://data.europa.eu/esco/skill/b917784a-d7c9-437c-be6e-0de41067fa62,estimating resource needs,,,released,,"Examples:
 - estimate restoration costs
 - forecast production quantities.","http://data.europa.eu/esco/concept-scheme/skills
@@ -2055,10 +2086,6 @@ SkillGroup,http://data.europa.eu/esco/skill/d54970ba-d9f2-41ec-a852-bbd1e5796823
 - respond to enquiries Excludes:
 - presentation of information to groups.","http://data.europa.eu/esco/concept-scheme/skills
 http://data.europa.eu/esco/concept-scheme/skills-hierarchy","Answering questions, making recommendations, and providing information or support in response to requests from clients, customers, guests or members of the public.",S3.4.1,4,S
-SkillGroup,http://data.europa.eu/esco/skill/d6a8a2a4-4e21-4ea6-b267-b5c63e687cfd,"counselling on personal, family or social issues",,,released,2022-07-15T14:44:44.924Z,"Examples:
-- give advice on personal matters
-- help clients cope with grief.","http://data.europa.eu/esco/concept-scheme/skills
-http://data.europa.eu/esco/concept-scheme/skills-hierarchy","Responding to clients' needs by interpreting their emotional and motivational states, and assisting them to understand their situation.",S3.1.1,4,S
 SkillGroup,http://data.europa.eu/esco/skill/d6c8dacb-b0c0-4544-b0b7-69b24df41ba1,managing transport and logistics activities,,,released,2023-02-22T19:40:51.512Z,,"http://data.europa.eu/esco/concept-scheme/skills
 http://data.europa.eu/esco/concept-scheme/skills-hierarchy","Planning, overseeing and directing logistics or other operational activities related to transport of goods or passengers.",S4.2.4,4,S
 SkillGroup,http://data.europa.eu/esco/skill/d700aa7a-0ed8-4967-a32c-4cb6075ab3b9,diagnosing health conditions,,,released,2023-11-06T08:02:23.35Z,"Examples:
@@ -2091,6 +2118,12 @@ SkillGroup,http://data.europa.eu/esco/skill/dfae80db-cf29-41e1-a48c-2bee901afff1
 - Facilitate teamwork between students
 - Encourage teambuilding.","http://data.europa.eu/esco/concept-scheme/skills
 http://data.europa.eu/esco/concept-scheme/skills-hierarchy","Encouraging team members and building a relationship of mutual trust, respect and cooperation. Stimulating teambuilding activities.",S4.6.0,4,S
+SkillGroup,http://data.europa.eu/esco/skill/e001ce62-78e7-4821-a7df-a08457c295ab,performing surgical procedures,,,released,,"Examples:
+- dental surgery
+- administer anaesthetics
+- perform paediatric surgery Excludes:
+- veterinary surgery.","http://data.europa.eu/esco/concept-scheme/skills
+http://data.europa.eu/esco/concept-scheme/skills-hierarchy",Treating injuries and health conditions through provision of various types of surgical intervention.,S3.2.2,4,S
 SkillGroup,http://data.europa.eu/esco/skill/e06f2d35-a160-46c2-89f1-9cae9c93c8b8,selling products or services,,,released,2022-06-19T15:23:46.929Z,"Examples:
 - sell office equipment
 - take room service orders
@@ -2196,10 +2229,6 @@ SkillGroup,http://data.europa.eu/esco/skill/f839b1da-78b6-4466-86f4-a5798821ea20
 - Install software
 - Install operating system.","http://data.europa.eu/esco/concept-scheme/skills
 http://data.europa.eu/esco/concept-scheme/skills-hierarchy","Setting up computers, networks, or similar information systems. Installing computer software, and configuring computer networks.",S5.2.1,4,S
-SkillGroup,http://data.europa.eu/esco/skill/f9db77be-eb63-4937-a0d0-b581733e7d2a,providing support to resolve problems,,,released,2022-08-24T13:39:08.535Z,"Examples:
-- assist families in crisis situations
-- provide victim assistance.","http://data.europa.eu/esco/concept-scheme/skills
-http://data.europa.eu/esco/concept-scheme/skills-hierarchy","Providing appropriate support or interventions to others to assist them to resolve their personal, family or social problems.",S3.1.2,4,S
 SkillGroup,http://data.europa.eu/esco/skill/fb01d224-882a-4346-99e2-bfd56f52d09c,"promoting, selling and purchasing",,,released,,"Excludes:
 - Trading and other skills involving buying and selling.","http://data.europa.eu/esco/concept-scheme/skills
 http://data.europa.eu/esco/concept-scheme/skills-hierarchy","Using communication strategies or techniques to encourage acceptance of goods, services, or ideas, and to sell or buy and goods or services.",S1.6.0,4,S
