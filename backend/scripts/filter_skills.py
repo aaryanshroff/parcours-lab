@@ -1,9 +1,4 @@
-#!/usr/bin/env python3
-"""Match ESCO skills to course catalog using semantic similarity.
-
-Uses BERTopic for topic modeling and cosine similarity to match skills to courses.
-Configuration is loaded from match_skills_config.toml.
-"""
+"""Filter skills using semantic similarity to course topics and ESCO code filters."""
 
 import json
 import logging
@@ -89,6 +84,7 @@ def load_skills_with_codes(skills_path: Path, broader_path: Path, groups_path: P
 
 
 def embed_skills(df: pd.DataFrame, model: BERTopic) -> list:
+    """Embeds skills using the topic model's internal embedding model."""
     texts = (df["preferredLabel"].fillna("") + " " +
              df["description"].fillna("")).str.strip()
     return model.embedding_model.embed(texts.tolist())
