@@ -5,7 +5,7 @@ description = ""
 authors = [
     {name = "Your Name",email = "you@example.com"}
 ]
-requires-python = ">=3.13"
+requires-python = ">=3.12,<3.14"
 dependencies = [
     "openrouter (>=0.1.3,<0.2.0)",
     "python-dotenv (>=1.2.1,<2.0.0)"
