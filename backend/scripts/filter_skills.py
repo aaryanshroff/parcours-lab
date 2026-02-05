@@ -121,7 +121,7 @@ def main():
     skills_path = BASE_DIR / "data/raw/skills/skills_en.csv"
     broader_path = BASE_DIR / "data/raw/skills/broaderRelationsSkillPillar_en.csv"
     groups_path = BASE_DIR / "data/raw/skills/skillGroups_en.csv"
-    output_path = BASE_DIR / "data/processed/skills/skills_filtered.csv"
+    output_path = BASE_DIR / "data/processed/skills/skills_retained.csv"
     topics_cache_dir = BASE_DIR / "data/processed/topics"
 
     courses = load_courses(courses_path)
@@ -151,11 +151,11 @@ def main():
     filtered_df.to_csv(output_path, index=False)
     excluded_path = output_path.with_name("skills_excluded.csv")
     excluded_df.to_csv(excluded_path, index=False)
-    logger.info(f"Saved {len(filtered_df)} filtered: {output_path}")
+    logger.info(f"Saved {len(filtered_df)} retained: {output_path}")
     logger.info(f"Saved {len(excluded_df)} excluded: {excluded_path}")
 
     # Log samples
-    logger.info("\n=== SAMPLE FILTERED (kept) ===")
+    logger.info("\n=== SAMPLE RETAINED ===")
     for s in filtered_df["preferredLabel"].sample(min(10, len(filtered_df))).tolist():
         logger.info(f"  + {s}")
     logger.info("\n=== SAMPLE EXCLUDED ===")
