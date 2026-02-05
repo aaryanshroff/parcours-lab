@@ -38,7 +38,7 @@ try:
     st.write(f"### `{selected_file}`")
     st.caption(f"{len(df):,} rows - {len(df.columns)} columns")
 
-    st.data_editor(df)
+    st.data_editor(df, disabled=True)
 
 except Exception as e:
     st.error(f"Error loading file: {e}")
