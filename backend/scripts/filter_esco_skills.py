@@ -109,7 +109,35 @@ def main(
         skills_df = pd.read_csv(data_dir / "skills" / "skills_en.csv")
         skills_df["level"] = 5
         skills_df["category"] = skills_df["skillType"].apply(get_category_from_skill_type)
-        skills_df["code"] = None  # Level 5 skills don't have codes
+
+        # Load broader relations to map skills to parent group codes
+        broader_path = data_dir / "skills" / "broaderRelationsSkillPillar_en.csv"
+        if broader_path.exists():
+            typer.echo("  Loading broader relations for parent code mapping...")
+            broader_df = pd.read_csv(broader_path)
+
+            # Build URI -> code mapping from skill groups
+            uri_to_code = dict(zip(df["conceptUri"], df["code"]))
+
+            # Map each skill to its parent code (may need multiple hops)
+            skill_to_parent = dict(zip(broader_df["conceptUri"], broader_df["broaderUri"]))
+
+            def get_parent_code(uri: str, max_hops: int = 5) -> str:
+                """Walk up hierarchy to find first parent with a code."""
+                for _ in range(max_hops):
+                    if uri in uri_to_code and pd.notna(uri_to_code[uri]):
+                        return uri_to_code[uri]
+                    if uri not in skill_to_parent:
+                        break
+                    uri = skill_to_parent[uri]
+                return None
+
+            skills_df["code"] = skills_df["conceptUri"].apply(get_parent_code)
+            typer.echo(f"    Mapped {skills_df['code'].notna().sum()} skills to parent codes")
+        else:
+            typer.echo("  No broader relations file, skipping parent code mapping")
+            skills_df["code"] = None
+
         typer.echo(f"  Loaded {len(skills_df)} individual skills")
 
         # Merge dataframes (keep common columns + extras)
