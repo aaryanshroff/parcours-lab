@@ -1,10 +1,8 @@
 # Skill Filtering Configuration
 
-# Minimum similarity score between skill and course topics (0.0 to 1.0)
-# Higher = stricter, fewer skills retained
-topic_similarity_threshold = 0.35
+# Higher = stricter, fewer skills retained (0.0 to 1.0)
+topic_similarity_threshold = 0.4
 
-# Skill hierarchy code prefixes to exclude
 # Any skill under these nodes (including the node itself) will be excluded
 exclude_prefixes = [
     "S6",    # handling and moving (manual labor)
