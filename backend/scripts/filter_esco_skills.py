@@ -95,7 +95,7 @@ def main(
 
     # Load skill groups (levels 1-4)
     typer.echo("Loading skill groups (levels 1-4)...")
-    df = pd.read_csv(data_dir / "skills" / "skillGroups_en.csv")
+    df = pd.read_csv(data_dir / "raw/skills/skillGroups_en.csv")
     df["level"] = df["code"].apply(get_level_from_code)
     df["category"] = df["code"].apply(get_category_from_code)
     typer.echo(f"  Loaded {len(df)} skill groups")
@@ -106,12 +106,12 @@ def main(
     # Load level 5 skills if needed
     if max_level_needed >= 5:
         typer.echo("Loading individual skills (level 5)...")
-        skills_df = pd.read_csv(data_dir / "skills" / "skills_en.csv")
+        skills_df = pd.read_csv(data_dir / "raw/skills/skills_en.csv")
         skills_df["level"] = 5
         skills_df["category"] = skills_df["skillType"].apply(get_category_from_skill_type)
 
         # Load broader relations to map skills to parent group codes
-        broader_path = data_dir / "skills" / "broaderRelationsSkillPillar_en.csv"
+        broader_path = data_dir / "raw/skills/broaderRelationsSkillPillar_en.csv"
         if broader_path.exists():
             typer.echo("  Loading broader relations for parent code mapping...")
             broader_df = pd.read_csv(broader_path)
@@ -181,7 +181,7 @@ def main(
         typer.echo(f"    {cat}: {', '.join(counts)}")
 
     # Save
-    output_path = data_dir / "skills" / output_filename
+    output_path = data_dir / "processed/skills" / output_filename
     filtered.to_csv(output_path, index=False)
     typer.echo(f"Saved to {output_path}")
 
