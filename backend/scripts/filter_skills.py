@@ -93,7 +93,11 @@ def embed_skills(df: pd.DataFrame, model: BERTopic) -> list:
 def filter_by_similarity(df: pd.DataFrame, skill_emb: list, topic_emb: list, threshold: float) -> pd.DataFrame:
     similarity = cosine_similarity(skill_emb, topic_emb)
     max_sim = similarity.max(axis=1)
-    return df[max_sim >= threshold]
+
+    is_javanese = df["preferredLabel"].str.contains(
+        "javanese", case=False, na=False)
+
+    return df[(max_sim >= threshold) | is_javanese]
 
 
 def apply_exclusions(df: pd.DataFrame, config: dict) -> pd.DataFrame:
