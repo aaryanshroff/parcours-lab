@@ -257,6 +257,12 @@ transportation software related to an ERP data
 transportation software related to ERP administration",,released,2024-02-09T17:29:15.235Z,,,"http://data.europa.eu/esco/concept-scheme/skills,
 http://data.europa.eu/esco/concept-scheme/member-skills,
 http://data.europa.eu/esco/concept-scheme/6c930acd-c104-4ece-acf7-f44fd7333036","Business management software to collect, manage and interpret data related to shipping, payment, inventory, manufacturing applied in transportation and distribution.",0413
+KnowledgeSkillCompetence,http://data.europa.eu/esco/skill/0a1e6554-1c6b-42c6-970b-8d9a307cdb5e,skill/competence,transversal,write Javanese,"correspond in written Javanese
+show competency in written Javanese
+correspond in written basa jawa
+correspond in written cara jawa",,released,2025-01-27T15:14:13.362Z,,,"http://data.europa.eu/esco/concept-scheme/skills,
+http://data.europa.eu/esco/concept-scheme/member-skills,
+http://data.europa.eu/esco/concept-scheme/skill-language-groups",Compose written texts in Javanese.,T1.1
 KnowledgeSkillCompetence,http://data.europa.eu/esco/skill/0a52bed5-fd29-45fb-aba6-e32bccfda1c1,skill/competence,sector-specific,plan migration to cloud,"prepare plan for migration to cloud
 cloud migration planning
 plan refactoring",,released,2024-02-29T16:24:50.953Z,,,"http://data.europa.eu/esco/concept-scheme/skills,
@@ -522,6 +528,15 @@ http://data.europa.eu/esco/concept-scheme/6c930acd-c104-4ece-acf7-f44fd7333036",
 KnowledgeSkillCompetence,http://data.europa.eu/esco/skill/14ee9f76-3524-43d5-8a1a-5ba8283f8bd7,knowledge,transversal,Spanish,Castilian,,released,2024-02-09T17:29:12.952Z,,,"http://data.europa.eu/esco/concept-scheme/skills,
 http://data.europa.eu/esco/concept-scheme/member-skills,
 http://data.europa.eu/esco/concept-scheme/skill-language-groups",The Spanish language. Spanish is an official and working language of the EU.,T1.1
+KnowledgeSkillCompetence,http://data.europa.eu/esco/skill/1500f1a7-d348-4d9e-b0a0-5792645f6c7a,skill/competence,transversal,understand written Javanese,"interpret written Javanese
+make sense of written Javanese
+read Javanese
+understand Javanese writing
+comprehend written basa jawa
+comprehend written Javanese
+comprehend written cara jawa",,released,2025-01-27T15:10:01.807Z,,,"http://data.europa.eu/esco/concept-scheme/skills,
+http://data.europa.eu/esco/concept-scheme/member-skills,
+http://data.europa.eu/esco/concept-scheme/skill-language-groups",Read and comprehend written texts in Javanese.,T1.1
 KnowledgeSkillCompetence,http://data.europa.eu/esco/skill/151174e2-2a27-4c1e-be68-6446278d34b7,skill/competence,cross-sector,exercise stewardship,"implement responsible planning and management of resources
 practice responsible planning and management of resources
 practice stewardship
@@ -3387,6 +3402,12 @@ prepare credit suggestions
 prepare credit bids
 prepare credit endeavours",,released,2024-02-09T17:29:09.009Z,,,"http://data.europa.eu/esco/concept-scheme/skills,
 http://data.europa.eu/esco/concept-scheme/member-skills","Identify the credit needs of clients, their financial situation and debt issues. Identify optimal credit solutions and offer tailored credit services.",S1.5.2
+KnowledgeSkillCompetence,http://data.europa.eu/esco/skill/7a86907d-1fd5-4e8f-b0f1-f366a14f6f6d,knowledge,transversal,Javanese,"competent in Javanese
+basa jawa
+ability to comprehend spoken and written Javanese and to speak and write in Javanese
+cara jawa",,released,2024-02-09T17:29:15.968Z,,,"http://data.europa.eu/esco/concept-scheme/skills,
+http://data.europa.eu/esco/concept-scheme/member-skills,
+http://data.europa.eu/esco/concept-scheme/skill-language-groups",The Javanese language.,T1.1
 KnowledgeSkillCompetence,http://data.europa.eu/esco/skill/7a8fb784-67fa-41e9-a75c-6b491d91f800,skill/competence,cross-sector,develop strategy to solve problems,"create implementation strategy
 devise action plan
 design strategy to solve problems
@@ -5180,6 +5201,15 @@ visualise patients' healthcare needs",,released,2024-02-09T17:29:14.494Z,,,"http
 http://data.europa.eu/esco/concept-scheme/member-skills","Get an idea of what the healthcare use needs are and visualise the case, the possible solutions, and treatments to be applied.",T2.3
 KnowledgeSkillCompetence,http://data.europa.eu/esco/skill/b856655a-ee98-481f-a5a3-b0abc45f6ad5,knowledge,sector-specific,molecular gastronomy,gastronomy innovation,,released,2023-04-03T10:20:47.159Z,,,"http://data.europa.eu/esco/concept-scheme/skills,
 http://data.europa.eu/esco/concept-scheme/member-skills","The analysis of scientific research applied to food preparation, which focuses among others on how the interaction between ingredients can modify the structure and appearance of food, for example by creating unexpected tastes and textures and by developing new types of dining experiences.",0721
+KnowledgeSkillCompetence,http://data.europa.eu/esco/skill/b895feef-e869-48ac-a853-6c31a636721f,skill/competence,transversal,understand spoken Javanese,"make sense of spoken Javanese
+understand Javanese speech
+listen to Javanese
+interpret spoken Javanese
+comprehend spoken cara jawa
+comprehend spoken basa jawa
+comprehend spoken Javanese",,released,2025-01-27T15:04:34.52Z,,,"http://data.europa.eu/esco/concept-scheme/skills,
+http://data.europa.eu/esco/concept-scheme/member-skills,
+http://data.europa.eu/esco/concept-scheme/skill-language-groups",Comprehend orally expressed Javanese.,T1.1
 KnowledgeSkillCompetence,http://data.europa.eu/esco/skill/b89e9673-ed14-4989-a8f2-75532f85bbca,skill/competence,occupation-specific,perform import of commodities,"complete import of commodities
 implement import of commodities
 undertake import of commodities",,released,2024-02-09T17:29:17.515Z,,,"http://data.europa.eu/esco/concept-scheme/skills,
@@ -5516,6 +5546,13 @@ provide an international logistics service
 respond to requests for logistics services from around the world
 respond to requests for logistical services from all over the world",,released,2024-02-09T17:29:09.009Z,,,"http://data.europa.eu/esco/concept-scheme/skills,
 http://data.europa.eu/esco/concept-scheme/member-skills",Respond to requests for logistical services from customers in any country around the world.,S3.4.1
+KnowledgeSkillCompetence,http://data.europa.eu/esco/skill/c9ba0570-f751-4023-9851-5a0826e722cc,skill/competence,transversal,interact verbally in Javanese,"speak basa jawa
+speak Javanese
+communicate verbally in Javanese
+verbally interact in Javanese
+speak cara jawa",,released,2025-01-27T15:04:15.264Z,,,"http://data.europa.eu/esco/concept-scheme/skills,
+http://data.europa.eu/esco/concept-scheme/member-skills,
+http://data.europa.eu/esco/concept-scheme/skill-language-groups",Communicate orally in Javanese.,T1.1
 KnowledgeSkillCompetence,http://data.europa.eu/esco/skill/ca0f9294-09f6-4528-bb3d-604955f8acfd,skill/competence,sector-specific,manage farm supplies,"sourcing supplies to farm
 farm supplies managing
 source farm supplies

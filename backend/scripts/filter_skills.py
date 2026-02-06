@@ -149,9 +149,18 @@ def main():
     # Save to CSV
     output_path.parent.mkdir(parents=True, exist_ok=True)
     filtered_df.to_csv(output_path, index=False)
+
+    # Save embeddings of retained skills for search
+    retained_embeddings = np.array(skill_embeddings)[
+        skills_df.index.isin(filtered_df.index)]
+    embeddings_output_path = output_path.with_name(
+        "skills_retained_embeddings.npy")
+    np.save(embeddings_output_path, retained_embeddings)
+
     excluded_path = output_path.with_name("skills_excluded.csv")
     excluded_df.to_csv(excluded_path, index=False)
     logger.info(f"Saved {len(filtered_df)} retained: {output_path}")
+    logger.info(f"Saved embeddings: {embeddings_output_path}")
     logger.info(f"Saved {len(excluded_df)} excluded: {excluded_path}")
 
     # Log samples
