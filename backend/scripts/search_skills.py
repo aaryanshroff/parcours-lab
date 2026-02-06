@@ -12,7 +12,6 @@ from sklearn.metrics.pairwise import cosine_similarity
 BASE_DIR = Path(__file__).parent.parent
 SKILLS_PATH = BASE_DIR / "data/processed/skills/skills_retained.csv"
 EMBEDDINGS_PATH = BASE_DIR / "data/processed/skills/skills_retained_embeddings.npy"
-# Default BERTopic model
 MODEL_NAME = "all-MiniLM-L6-v2"
 
 
