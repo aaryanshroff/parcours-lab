@@ -1,0 +1,15 @@
+# Skill Filtering Configuration
+
+# Higher = stricter, fewer skills retained (0.0 to 1.0)
+topic_similarity_threshold = 0.5
+
+# Any skill under these nodes (including the node itself) will be excluded
+exclude_prefixes = [
+    "S6",    # handling and moving (manual labor)
+    "S7",    # constructing (carpentry, plumbing, welding, electrical)
+    "S8",    # working with machinery and specialised equipment
+    "S3.0",  # assisting and caring (generic)
+    "S3.1",  # counselling (personal/family issues)
+    "S3.5",  # preparing and serving food and drinks
+    "S3.6",  # providing general personal care (hair styling, childcare)
+]
