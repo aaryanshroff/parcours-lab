@@ -156,10 +156,10 @@ function SkillsModal({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="fixed inset-0 z-50 h-dvh w-full max-w-none translate-x-0 translate-y-0 rounded-none border-0 overflow-visible md:inset-auto md:top-1/2 md:left-1/2 md:h-auto md:max-w-lg md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-lg md:border"
+        className="fixed inset-0 z-50 h-dvh w-full max-w-none translate-x-0 translate-y-0 rounded-none border-0 overflow-visible duration-0 md:inset-auto md:top-1/2 md:left-1/2 md:h-auto md:max-w-lg md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-lg md:border md:duration-200"
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
-        <div className="flex h-full flex-col gap-4 overflow-auto md:h-auto">
+        <div className="flex h-full flex-col gap-4 overflow-visible md:h-auto">
           <DialogTitle className="pl-1">Manage skills</DialogTitle>
           <div className="relative">
             <Input
@@ -219,7 +219,7 @@ function SkillsModal({
                 </span>
               ))
             ) : (
-              <p className="text-muted-foreground text-sm">
+              <p className="pl-1 text-muted-foreground text-sm">
                 Add skills using the search above.
               </p>
             )}
@@ -281,20 +281,15 @@ export function SkillsSection() {
       <SidebarSection
         title="My Skills"
         action={
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="size-7 text-sidebar-foreground/70 hover:text-sidebar-foreground"
-                onClick={() => setModalOpen(true)}
-                aria-label="Edit skills"
-              >
-                <PencilIcon className="size-3.5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="bottom">Edit skills</TooltipContent>
-          </Tooltip>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-7 text-sidebar-foreground/70 hover:text-sidebar-foreground"
+            onClick={() => setModalOpen(true)}
+            aria-label="Edit skills"
+          >
+            <PencilIcon className="size-3.5" />
+          </Button>
         }
       >
         {!isHydrated ? (
