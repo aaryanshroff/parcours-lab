@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/sidebar";
 import { ThreadList } from "@/components/assistant-ui/thread-list";
 import { SkillsSection } from "@/components/assistant-ui/skill-selector";
+import { GoalsSection } from "@/components/assistant-ui/goals-section";
 
 export function ThreadListSidebar({
   ...props
@@ -45,6 +46,7 @@ export function ThreadListSidebar({
         </div>
       </SidebarHeader>
       <SidebarContent className="aui-sidebar-content px-2">
+        <GoalsSection />
         <SkillsSection />
         <SidebarSection title="Threads">
           <ThreadList />

@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import { PencilIcon, XIcon } from "lucide-react";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Dialog } from "@/components/ui/dialog";
+import { MobileDialogContent } from "@/components/ui/mobile-dialog";
 import { Input } from "@/components/ui/input";
 import {
   Tooltip,
@@ -155,12 +156,7 @@ function SkillsModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        className="fixed inset-0 z-50 h-dvh w-full max-w-none translate-x-0 translate-y-0 rounded-none border-0 overflow-visible duration-0 md:inset-auto md:top-1/2 md:left-1/2 md:h-auto md:max-w-lg md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-lg md:border md:duration-200"
-        onOpenAutoFocus={(e) => e.preventDefault()}
-      >
-        <div className="flex h-full flex-col gap-4 overflow-visible md:h-auto">
-          <DialogTitle className="pl-1">Manage skills</DialogTitle>
+      <MobileDialogContent title="Manage skills">
           <div className="relative">
             <Input
               ref={inputRef}
@@ -224,8 +220,7 @@ function SkillsModal({
               </p>
             )}
           </div>
-        </div>
-      </DialogContent>
+      </MobileDialogContent>
     </Dialog>
   );
 }
