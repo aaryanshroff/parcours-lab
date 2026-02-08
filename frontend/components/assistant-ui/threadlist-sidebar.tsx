@@ -10,8 +10,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  SidebarSection,
 } from "@/components/ui/sidebar";
 import { ThreadList } from "@/components/assistant-ui/thread-list";
+import { SkillsSection } from "@/components/assistant-ui/skill-selector";
 
 export function ThreadListSidebar({
   ...props
@@ -43,7 +45,10 @@ export function ThreadListSidebar({
         </div>
       </SidebarHeader>
       <SidebarContent className="aui-sidebar-content px-2">
-        <ThreadList />
+        <SkillsSection />
+        <SidebarSection title="Threads">
+          <ThreadList />
+        </SidebarSection>
       </SidebarContent>
       <SidebarRail />
       <SidebarFooter className="aui-sidebar-footer border-t">
@@ -59,9 +64,9 @@ export function ThreadListSidebar({
                 </div>
                 <div className="aui-sidebar-footer-heading flex flex-col gap-0.5 leading-none">
                   <span className="aui-sidebar-footer-title font-semibold">
-                    GitHub
+                    John Doe
                   </span>
-                  <span>View Source</span>
+                  <span>Free</span>
                 </div>
               </Link>
             </SidebarMenuButton>

@@ -258,38 +258,45 @@ function SidebarTrigger({
   onClick,
   ...props
 }: React.ComponentProps<typeof Button>) {
-  const { toggleSidebar } = useSidebar();
+  const { toggleSidebar, open } = useSidebar();
 
   return (
-    <Button
-      data-sidebar="trigger"
-      data-slot="sidebar-trigger"
-      variant="ghost"
-      size="icon"
-      className={cn("size-7", className)}
-      onClick={(event) => {
-        onClick?.(event);
-        toggleSidebar();
-      }}
-      {...props}
-    >
-      <PanelLeftIcon />
-      <span className="sr-only">Toggle Sidebar</span>
-    </Button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          data-sidebar="trigger"
+          data-slot="sidebar-trigger"
+          variant="ghost"
+          size="icon"
+          className={cn("size-7", className)}
+          onClick={(event) => {
+            onClick?.(event);
+            toggleSidebar();
+          }}
+          {...props}
+        >
+          <PanelLeftIcon />
+          <span className="sr-only">{open ? "Hide menu" : "Expand menu"}</span>
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent side={open ? "bottom" : "right"}>
+        {open ? "Hide menu" : "Expand menu"}
+      </TooltipContent>
+    </Tooltip>
   );
 }
 
 function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
-  const { toggleSidebar } = useSidebar();
+  const { toggleSidebar, open } = useSidebar();
 
   return (
     <button
       data-sidebar="rail"
       data-slot="sidebar-rail"
-      aria-label="Toggle Sidebar"
+      aria-label={open ? "Hide menu" : "Expand menu"}
       tabIndex={-1}
       onClick={toggleSidebar}
-      title="Toggle Sidebar"
+      title={open ? "Hide menu" : "Expand menu"}
       className={cn(
         "absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] hover:after:bg-sidebar-border group-data-[side=left]:-right-4 group-data-[side=right]:left-0 sm:flex",
         "in-data-[side=left]:cursor-w-resize in-data-[side=right]:cursor-e-resize",
@@ -374,7 +381,7 @@ function SidebarContent({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="sidebar-content"
       data-sidebar="content"
       className={cn(
-        "flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
+        "flex min-h-0 flex-1 flex-col gap-6 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
         className,
       )}
       {...props}
@@ -448,6 +455,29 @@ function SidebarGroupContent({
       className={cn("w-full text-sm", className)}
       {...props}
     />
+  );
+}
+
+const SIDEBAR_SECTION_TITLE_CLASS =
+  "flex h-8 shrink-0 items-center rounded-md px-2 font-semibold uppercase tracking-wider text-sidebar-foreground text-xs";
+
+function SidebarSection({
+  title,
+  action,
+  className,
+  children,
+  ...props
+}: React.ComponentProps<"div"> & { title: string; action?: React.ReactNode }) {
+  return (
+    <SidebarGroup className={cn("py-0", className)} {...props}>
+      <div className="flex h-8 shrink-0 items-center justify-between gap-2">
+        <SidebarGroupLabel className={SIDEBAR_SECTION_TITLE_CLASS}>
+          {title}
+        </SidebarGroupLabel>
+        {action}
+      </div>
+      <SidebarGroupContent>{children}</SidebarGroupContent>
+    </SidebarGroup>
   );
 }
 
@@ -707,6 +737,7 @@ export {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
+  SidebarSection,
   SidebarInput,
   SidebarInset,
   SidebarMenu,
