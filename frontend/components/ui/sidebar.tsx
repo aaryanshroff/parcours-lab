@@ -459,7 +459,7 @@ function SidebarGroupContent({
 }
 
 const SIDEBAR_SECTION_TITLE_CLASS =
-  "flex h-8 shrink-0 items-center rounded-md px-2 font-semibold uppercase tracking-wider text-sidebar-foreground text-xs";
+  "flex h-8 shrink-0 items-center rounded-md px-2 font-medium uppercase tracking-wider text-sidebar-foreground/70 text-xs";
 
 function SidebarSection({
   title,

@@ -1,3 +1,16 @@
+export const SUGGESTED_SKILLS = [
+  "JavaScript",
+  "TypeScript",
+  "React",
+  "Python",
+  "SQL",
+  "Node.js",
+  "Git",
+  "REST APIs",
+  "Communication",
+  "Problem Solving",
+];
+
 export const SKILLS_LIST = [
   "JavaScript",
   "TypeScript",
