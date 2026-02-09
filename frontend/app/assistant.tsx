@@ -1,10 +1,10 @@
 "use client";
 
-import { AssistantRuntimeProvider } from "@assistant-ui/react";
 import {
-  useChatRuntime,
-  AssistantChatTransport,
-} from "@assistant-ui/react-ai-sdk";
+  AssistantRuntimeProvider,
+  useLocalRuntime,
+  type ChatModelAdapter,
+} from "@assistant-ui/react";
 import { Thread } from "@/components/assistant-ui/thread";
 import {
   SidebarInset,
@@ -22,12 +22,26 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
+const MOCK_DELAY_MS = 2000;
+const MOCK_RESPONSE_TEXT = "Mock response payload";
+
+const mockChatAdapter: ChatModelAdapter = {
+  async run({ abortSignal }) {
+    await new Promise<void>((resolve, reject) => {
+      const t = setTimeout(resolve, MOCK_DELAY_MS);
+      abortSignal?.addEventListener("abort", () => {
+        clearTimeout(t);
+        reject(new DOMException("Aborted", "AbortError"));
+      });
+    });
+    return {
+      content: [{ type: "text" as const, text: MOCK_RESPONSE_TEXT }],
+    };
+  },
+};
+
 export const Assistant = () => {
-  const runtime = useChatRuntime({
-    transport: new AssistantChatTransport({
-      api: "/api/chat",
-    }),
-  });
+  const runtime = useLocalRuntime(mockChatAdapter);
 
   return (
     <AssistantRuntimeProvider runtime={runtime}>
