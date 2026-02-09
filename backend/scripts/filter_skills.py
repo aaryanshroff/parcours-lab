@@ -86,6 +86,7 @@ def load_skills_with_codes(skills_path: Path, broader_path: Path, groups_path: P
 def embed_skills(df: pd.DataFrame, model: BERTopic) -> list:
     """Embeds skills using the topic model's internal embedding model."""
     texts = (df["preferredLabel"].fillna("") + " " +
+             df["altLabels"].fillna("") + " " +
              df["description"].fillna("")).str.strip()
     return model.embedding_model.embed(texts.tolist())
 
@@ -93,6 +94,8 @@ def embed_skills(df: pd.DataFrame, model: BERTopic) -> list:
 def filter_by_similarity(df: pd.DataFrame, skill_emb: list, topic_emb: list, threshold: float) -> pd.DataFrame:
     similarity = cosine_similarity(skill_emb, topic_emb)
     max_sim = similarity.max(axis=1)
+    df = df.copy()
+    df["courseTopicSimilarity"] = max_sim
 
     is_javanese = df["preferredLabel"].str.contains(
         "javanese", case=False, na=False)

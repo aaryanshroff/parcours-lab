@@ -1,7 +1,7 @@
 # Skill Filtering Configuration
 
 # Higher = stricter, fewer skills retained (0.0 to 1.0)
-topic_similarity_threshold = 0.5
+topic_similarity_threshold = 0.45
 
 # Any skill under these nodes (including the node itself) will be excluded
 exclude_prefixes = [

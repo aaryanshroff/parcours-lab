@@ -1,9 +1,26 @@
 """poetry run streamlit run scripts/explore_data.py"""
 
 import json
+from pathlib import Path
+
+import numpy as np
 import pandas as pd
 import streamlit as st
-from pathlib import Path
+from sentence_transformers import SentenceTransformer
+from sklearn.metrics.pairwise import cosine_similarity
+
+
+EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2"
+
+
+@st.cache_resource
+def load_embedding_model():
+    return SentenceTransformer(EMBEDDING_MODEL_NAME)
+
+
+@st.cache_data
+def load_embeddings(path: str):
+    return np.load(path)
 
 
 def load_data_file(file_path: Path, selected_file_name: str = None) -> pd.DataFrame:
@@ -67,6 +84,19 @@ try:
     df = load_data_file(file_path, str(selected_file))
 
     st.write(f"### `{selected_file}`")
+
+    # Semantic search if a matching embeddings file exists
+    embeddings_path = file_path.with_name(file_path.stem + "_embeddings.npy")
+    if embeddings_path.exists():
+        query = st.text_input("Enter your goal", key="skill_search")
+        if query:
+            model = load_embedding_model()
+            skill_embeddings = load_embeddings(str(embeddings_path))
+            query_embedding = model.encode([query])
+            similarities = cosine_similarity(query_embedding, skill_embeddings)[0]
+            df.insert(0, "Score", similarities)
+            df = df.sort_values("Score", ascending=False).reset_index(drop=True)
+
     st.caption(f"{len(df):,} rows - {len(df.columns)} columns")
 
     st.data_editor(df, disabled=True)
