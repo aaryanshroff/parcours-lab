@@ -22,3 +22,12 @@ cd frontend
 npm install
 npm run dev
 ```
+
+## Run
+
+### Backend
+
+```bash
+cd backend
+poetry run flask run
+```
