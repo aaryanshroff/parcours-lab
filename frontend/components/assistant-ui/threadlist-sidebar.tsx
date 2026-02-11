@@ -13,8 +13,12 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  SidebarSection,
 } from "@/components/ui/sidebar";
 import { COURSES } from "@/lib/courses";
+import { ThreadList } from "@/components/assistant-ui/thread-list";
+import { SkillsSection } from "@/components/assistant-ui/skill-selector";
+import { GoalsSection } from "@/components/assistant-ui/goals-section";
 
 export function ThreadListSidebar({
   ...props
@@ -29,81 +33,61 @@ export function ThreadListSidebar({
     "w-full rounded-md border border-input bg-muted/40 px-3 py-2 text-xs text-foreground placeholder:text-muted-foreground resize-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 disabled:cursor-not-allowed disabled:opacity-60";
 
   return (
-    <Sidebar
-      {...props}
-      className="h-screen"
-    >
+    <Sidebar {...props} className="h-screen">
       {/* Header */}
       <SidebarHeader className="border-b border-sidebar-border px-4 py-3">
         <div className="text-sm font-semibold">Your Profile</div>
       </SidebarHeader>
-      <SidebarContent className="px-3 py-2 !gap-3">
-        <SidebarGroup className="p-1">
-          <SidebarGroupLabel>Current Goal</SidebarGroupLabel>
-          <textarea
-            value={currentGoal}
-            onChange={(e) => setCurrentGoal(e.target.value)}
-            placeholder="What are you working toward right now?"
-            className={textareaBaseClasses}
-            rows={3}
-            disabled={isRunning}
-          />
-        </SidebarGroup>
 
-        <SidebarGroup className="p-1">
-          <SidebarGroupLabel>Known Skills</SidebarGroupLabel>
-          <textarea
-            value={knownSkills}
-            onChange={(e) => setKnownSkills(e.target.value)}
-            placeholder="Languages, frameworks, tools..."
-            className={textareaBaseClasses}
-            rows={3}
-            disabled={isRunning}
-          />
-        </SidebarGroup>
-
-        <SidebarGroup className="p-1">
-          <SidebarGroupLabel>Course History</SidebarGroupLabel>
-
-          <div className="space-y-4 rounded-lg border border-border bg-muted/40 p-3">
-            <div className="space-y-2">
-              <div className="text-xs font-medium text-muted-foreground">
-                Accepted
-              </div>
-              {COURSES.filter((c) => c.status === "accepted").map((course) => (
-                <div
-                  key={course.id}
-                  className="relative flex items-center gap-3 rounded-md border border-border bg-background/60 p-2"
-                >
-                  <div className="h-10 w-10 shrink-0 rounded-md bg-muted" />
-                  <div className="text-sm font-medium">{course.title}</div>
-                  <div className="absolute right-2 text-sm font-semibold text-emerald-500">
-                    ✓
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="space-y-2">
-              <div className="text-xs font-medium text-muted-foreground">
-                Rejected
-              </div>
-              {COURSES.filter((c) => c.status === "rejected").map((course) => (
-                <div
-                  key={course.id}
-                  className="relative flex items-center gap-3 rounded-md border border-border bg-background/60 p-2"
-                >
-                  <div className="h-10 w-10 shrink-0 rounded-md bg-muted" />
-                  <div className="text-sm font-medium">{course.title}</div>
-                  <div className="absolute right-2 text-sm font-semibold text-destructive">
-                    ✕
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </SidebarGroup>
+      <SidebarContent className="aui-sidebar-content px-2">
+        <GoalsSection />
+        <SkillsSection />
+        <SidebarSection title="Threads">
+          <ThreadList />
+        </SidebarSection>
       </SidebarContent>
+
+      <SidebarGroup className="p-1">
+        <SidebarGroupLabel>Course History</SidebarGroupLabel>
+
+        <div className="space-y-4 rounded-lg border border-border bg-muted/40 p-3">
+          <div className="space-y-2">
+            <div className="text-xs font-medium text-muted-foreground">
+              Accepted
+            </div>
+            {COURSES.filter((c) => c.status === "accepted").map((course) => (
+              <div
+                key={course.id}
+                className="relative flex items-center gap-3 rounded-md border border-border bg-background/60 p-2"
+              >
+                <div className="h-10 w-10 shrink-0 rounded-md bg-muted" />
+                <div className="text-sm font-medium">{course.title}</div>
+                <div className="absolute right-2 text-sm font-semibold text-emerald-500">
+                  ✓
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="space-y-2">
+            <div className="text-xs font-medium text-muted-foreground">
+              Rejected
+            </div>
+            {COURSES.filter((c) => c.status === "rejected").map((course) => (
+              <div
+                key={course.id}
+                className="relative flex items-center gap-3 rounded-md border border-border bg-background/60 p-2"
+              >
+                <div className="h-10 w-10 shrink-0 rounded-md bg-muted" />
+                <div className="text-sm font-medium">{course.title}</div>
+                <div className="absolute right-2 text-sm font-semibold text-destructive">
+                  ✕
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </SidebarGroup>
 
       {/* Footer */}
       <SidebarFooter className="border-t border-sidebar-border">
@@ -117,11 +101,11 @@ export function ThreadListSidebar({
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-background text-foreground">
                   <Github size={16} />
                 </div>
-                <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-semibold">GitHub</span>
-                  <span className="text-xs text-muted-foreground">
-                    View Source
+                <div className="aui-sidebar-footer-heading flex flex-col gap-0.5 leading-none">
+                  <span className="aui-sidebar-footer-title font-semibold">
+                    John Doe
                   </span>
+                  <span>Free</span>
                 </div>
               </Link>
             </SidebarMenuButton>
