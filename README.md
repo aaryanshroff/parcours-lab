@@ -11,6 +11,12 @@ poetry install
 eval $(poetry env activate)
 ```
 
+### DB
+
+```bash
+npx supabase link
+```
+
 Create `backend/.env`:
 ```bash
 OPENROUTER_API_KEY=shared_key
@@ -30,4 +36,10 @@ npm run dev
 ```bash
 cd backend
 poetry run flask run
+```
+
+### DB Migration
+```bash
+npx supabase migration new <name>
+npx supabase db push
 ```
