@@ -14,6 +14,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { COURSES } from "@/lib/courses";
 
 export function ThreadListSidebar({
   ...props
@@ -37,7 +38,6 @@ export function ThreadListSidebar({
         <div className="text-sm font-semibold">Your Profile</div>
       </SidebarHeader>
       <SidebarContent className="px-3 py-2 !gap-3">
-
         <SidebarGroup className="p-1">
           <SidebarGroupLabel>Current Goal</SidebarGroupLabel>
           <textarea
@@ -70,30 +70,36 @@ export function ThreadListSidebar({
               <div className="text-xs font-medium text-muted-foreground">
                 Accepted
               </div>
-              <div className="relative flex items-center gap-3 rounded-md border border-border bg-background/60 p-2">
-                <div className="h-10 w-10 shrink-0 rounded-md bg-muted" />
-                <div className="text-sm font-medium">
-                  Hardcoded Fake Accepted Course
+              {COURSES.filter((c) => c.status === "accepted").map((course) => (
+                <div
+                  key={course.id}
+                  className="relative flex items-center gap-3 rounded-md border border-border bg-background/60 p-2"
+                >
+                  <div className="h-10 w-10 shrink-0 rounded-md bg-muted" />
+                  <div className="text-sm font-medium">{course.title}</div>
+                  <div className="absolute right-2 text-sm font-semibold text-emerald-500">
+                    ✓
+                  </div>
                 </div>
-                <div className="absolute right-2 text-sm font-semibold text-emerald-500">
-                  ✓
-                </div>
-              </div>
+              ))}
             </div>
 
             <div className="space-y-2">
               <div className="text-xs font-medium text-muted-foreground">
                 Rejected
               </div>
-              <div className="relative flex items-center gap-3 rounded-md border border-border bg-background/60 p-2">
-                <div className="h-10 w-10 shrink-0 rounded-md bg-muted" />
-                <div className="text-sm font-medium">
-                  Hardcoded Fake Rejected Course
+              {COURSES.filter((c) => c.status === "rejected").map((course) => (
+                <div
+                  key={course.id}
+                  className="relative flex items-center gap-3 rounded-md border border-border bg-background/60 p-2"
+                >
+                  <div className="h-10 w-10 shrink-0 rounded-md bg-muted" />
+                  <div className="text-sm font-medium">{course.title}</div>
+                  <div className="absolute right-2 text-sm font-semibold text-destructive">
+                    ✕
+                  </div>
                 </div>
-                <div className="absolute right-2 text-sm font-semibold text-destructive">
-                  ✕
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </SidebarGroup>
