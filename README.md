@@ -40,6 +40,7 @@ poetry run flask run
 
 ### DB Migration
 ```bash
+cd backend
 npx supabase migration new <name>
 npx supabase db push
 ```
