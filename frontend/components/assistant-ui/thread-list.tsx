@@ -28,7 +28,7 @@ const ThreadListNew: FC = () => {
     <ThreadListPrimitive.New asChild>
       <Button
         variant="outline"
-        className="aui-thread-list-new h-9 justify-start gap-2 rounded-lg px-3 text-sm hover:bg-muted data-active:bg-muted"
+        className="aui-thread-list-new h-9 justify-start gap-2 rounded-lg px-3 text-xs hover:bg-muted data-active:bg-muted"
       >
         <PlusIcon className="size-4" />
         New Thread

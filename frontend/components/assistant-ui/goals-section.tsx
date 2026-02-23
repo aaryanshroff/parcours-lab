@@ -37,7 +37,7 @@ function GoalDisplay({ goal }: { goal: string }) {
 
   return (
     <div className="rounded-md border bg-sidebar-accent/50 px-3 py-2">
-      <p className="text-sidebar-foreground text-xs">
+      <p className="text-sidebar-foreground text-xs font-semibold">
         {displayText || "Set your goal"}
       </p>
     </div>
