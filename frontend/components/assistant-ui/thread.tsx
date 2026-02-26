@@ -286,7 +286,7 @@ const UserMessage: FC = () => {
           <MessagePrimitive.Parts />
         </div>
         <div className="aui-user-action-bar-wrapper absolute top-1/2 left-0 -translate-x-full -translate-y-1/2 pr-2">
-          <UserActionBar />
+          {false && <UserActionBar />}
         </div>
       </div>
 
