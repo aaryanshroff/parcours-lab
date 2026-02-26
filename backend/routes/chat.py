@@ -7,8 +7,6 @@ import os
 
 chat_bp = Blueprint("chat", __name__)
 
-class ChatR
-
 
 def call_openrouter(messages: list, model: str) -> dict:
     """Send chat completion request to OpenRouter and return parsed JSON."""
