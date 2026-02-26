@@ -107,8 +107,7 @@ export function GoalsSection() {
 
   React.useEffect(() => {
     setGoal(loadGoal());
-    const t = setTimeout(() => setIsHydrated(true), 300);
-    return () => clearTimeout(t);
+    setIsHydrated(true);
   }, []);
 
   React.useEffect(() => {

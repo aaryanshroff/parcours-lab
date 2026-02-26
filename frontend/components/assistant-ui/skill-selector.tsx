@@ -262,8 +262,7 @@ export function SkillsSection() {
 
   React.useEffect(() => {
     setSelected(loadKnownSkills());
-    const t = setTimeout(() => setIsHydrated(true), 300);
-    return () => clearTimeout(t);
+    setIsHydrated(true);
   }, []);
 
   React.useEffect(() => {
