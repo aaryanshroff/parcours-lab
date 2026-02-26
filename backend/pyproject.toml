@@ -25,6 +25,7 @@ typer = ">=0.21.1,<0.22.0"
 torch = "2.2.2"
 bertopic = ">=0.17.4,<0.18.0"
 numpy = "<2"
+tqdm = "^4.67.3"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
