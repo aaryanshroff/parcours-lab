@@ -8,7 +8,7 @@ import os
 chat_bp = Blueprint("chat", __name__)
 
 
-def call_openrouter(messages: list, model: str) -> dict:
+def call_openrouter(messages: list, model: str = "minimax/minimax-m2") -> dict:
     """Send chat completion request to OpenRouter and return parsed JSON."""
     api_key = os.environ.get("OPENROUTER_API_KEY")
     if not api_key:
@@ -18,7 +18,7 @@ def call_openrouter(messages: list, model: str) -> dict:
         api_key=api_key
     ) as client:
         result = client.chat.send(
-            model="minimax/minimax-m2",
+            model=model,
             messages=messages
         )
 
