@@ -21,10 +21,10 @@ create table course_history (
     created_at timestamptz default now()
 );
 
-ALTER TABLE conversation_history
+ALTER TABLE conversations
 ADD COLUMN IF NOT EXISTS profile_id uuid
 REFERENCES user_profiles(id)
 ON DELETE CASCADE;
 
 create index idx_course_history_user_id on course_history(user_id);
-create index idx_conversation_profile_id on conversation_history(profile_id);
+create index idx_conversation_profile_id on conversations(profile_id);
