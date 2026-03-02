@@ -10,6 +10,7 @@ const PROFILE_COMPLETE_KEY = "parcours-profile-complete";
 const GOAL_STORAGE_KEY = "parcours-goal";
 const KNOWN_SKILLS_STORAGE_KEY = "parcours-known-skills";
 const STARRED_SKILLS_STORAGE_KEY = "parcours-starred-skills";
+const REQUIRED_SKILLS_STORAGE_KEY = "parcours-required-skills";
 
 interface OnboardingProps {
   onComplete: (profile: { goal: string; skills: string[] }) => void;
@@ -68,16 +69,20 @@ export function Onboarding({ onComplete }: OnboardingProps) {
       }
 
       const profile = await response.json();
-      const skills = profile.current_skills.map(
+      const currentSkills = (profile.current_skills ?? []).map(
+        (s: { label: string }) => s.label,
+      );
+      const requiredSkills = (profile.required_skills ?? []).map(
         (s: { label: string }) => s.label,
       );
 
       localStorage.setItem(BIO_STORAGE_KEY, bio);
       localStorage.setItem(PROFILE_COMPLETE_KEY, "true");
-      localStorage.setItem("parcours-goal", profile.goal);
-      localStorage.setItem("parcours-known-skills", JSON.stringify(skills));
+      localStorage.setItem(GOAL_STORAGE_KEY, profile.goal);
+      localStorage.setItem(KNOWN_SKILLS_STORAGE_KEY, JSON.stringify(currentSkills));
+      localStorage.setItem(REQUIRED_SKILLS_STORAGE_KEY, JSON.stringify(requiredSkills));
 
-      onComplete({ goal: profile.goal, skills });
+      onComplete({ goal: profile.goal, skills: currentSkills });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
       setIsLoading(false);
@@ -240,6 +245,7 @@ export function useOnboardingComplete() {
     localStorage.removeItem(GOAL_STORAGE_KEY);
     localStorage.removeItem(KNOWN_SKILLS_STORAGE_KEY);
     localStorage.removeItem(STARRED_SKILLS_STORAGE_KEY);
+    localStorage.removeItem(REQUIRED_SKILLS_STORAGE_KEY);
     setIsComplete(false);
   };
 
