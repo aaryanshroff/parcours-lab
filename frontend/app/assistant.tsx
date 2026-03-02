@@ -30,10 +30,20 @@ import {
 
 const backendChatAdapter: ChatModelAdapter = {
   async run({ messages, abortSignal }) {
+    const goal = localStorage.getItem("parcours-goal") || "";
+    const requiredSkills: string[] = (() => {
+      try {
+        const raw = localStorage.getItem("parcours-required-skills");
+        return raw ? JSON.parse(raw) : [];
+      } catch {
+        return [];
+      }
+    })();
+
     const response = await fetch(`${API_BASE_URL}/api/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages }),
+      body: JSON.stringify({ messages, goal, required_skills: requiredSkills }),
       signal: abortSignal,
     });
 
