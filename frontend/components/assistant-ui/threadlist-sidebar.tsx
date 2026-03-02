@@ -18,8 +18,9 @@ import { SkillsSection } from "@/components/assistant-ui/skill-selector";
 import { GoalsSection } from "@/components/assistant-ui/goals-section";
 
 export function ThreadListSidebar({
+  onLogout,
   ...props
-}: React.ComponentProps<typeof Sidebar>) {
+}: React.ComponentProps<typeof Sidebar> & { onLogout: () => void }) {
   return (
     <Sidebar {...props}>
       <SidebarHeader className="aui-sidebar-header mb-2 border-b">
@@ -89,6 +90,11 @@ export function ThreadListSidebar({
       <SidebarRail />
       <SidebarFooter className="aui-sidebar-footer border-t">
         <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton size="sm" onClick={onLogout}>
+              Logout
+            </SidebarMenuButton>
+          </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link

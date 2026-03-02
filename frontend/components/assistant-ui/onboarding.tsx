@@ -7,6 +7,9 @@ import { API_BASE_URL } from "@/lib/api";
 
 const BIO_STORAGE_KEY = "parcours-onboarding-bio";
 const PROFILE_COMPLETE_KEY = "parcours-profile-complete";
+const GOAL_STORAGE_KEY = "parcours-goal";
+const KNOWN_SKILLS_STORAGE_KEY = "parcours-known-skills";
+const STARRED_SKILLS_STORAGE_KEY = "parcours-starred-skills";
 
 interface OnboardingProps {
   onComplete: (profile: { goal: string; skills: string[] }) => void;
@@ -234,6 +237,9 @@ export function useOnboardingComplete() {
   const reset = () => {
     localStorage.removeItem(PROFILE_COMPLETE_KEY);
     localStorage.removeItem(BIO_STORAGE_KEY);
+    localStorage.removeItem(GOAL_STORAGE_KEY);
+    localStorage.removeItem(KNOWN_SKILLS_STORAGE_KEY);
+    localStorage.removeItem(STARRED_SKILLS_STORAGE_KEY);
     setIsComplete(false);
   };
 
