@@ -22,14 +22,22 @@ Create `backend/.env`:
 OPENROUTER_API_KEY=shared_key
 ```
 
+
+## Run
+
+### Full App
+
+```bash
+cd frontend
+npm run dev:all
+```
+
 ### Frontend
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-
-## Run
 
 ### Backend
 
