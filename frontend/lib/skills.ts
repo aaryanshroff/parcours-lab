@@ -44,3 +44,5 @@ export const SKILLS_LIST = [
 ] as const;
 
 export type SkillId = (typeof SKILLS_LIST)[number];
+
+export const MAX_SKILLS = 15;
