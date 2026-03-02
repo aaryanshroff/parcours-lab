@@ -16,6 +16,32 @@ export function Onboarding({ onComplete }: OnboardingProps) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
+  // Bypasses the endpoint (FOR DEBUG) -------------------------------------------
+  const handleDebugBypass = () => {
+    const defaultSkills = [
+      "JavaScript",
+      "TypeScript",
+      "React",
+      "Python",
+      "Communication",
+    ];
+    localStorage.setItem(BIO_STORAGE_KEY, "Debug default profile");
+    localStorage.setItem(PROFILE_COMPLETE_KEY, "true");
+    localStorage.setItem(
+      "parcours-goal",
+      "Transition into a senior full-stack engineering role",
+    );
+    localStorage.setItem(
+      "parcours-known-skills",
+      JSON.stringify(defaultSkills),
+    );
+    onComplete({
+      goal: "Transition into a senior full-stack engineering role",
+      skills: defaultSkills,
+    });
+    // ----------------------------------------------------------------------------------
+  };
+
   const handleSubmit = async () => {
     if (!bio.trim()) {
       setError("Please enter your background and goals");
@@ -75,7 +101,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
                 setBio(e.target.value)
               }
               placeholder="Tell us about your background, skills, and goals..."
-              className="min-h-48 resize-none text-base shadow-lg transition-shadow focus-visible:shadow-xl"
+              className="min-h-32 resize-none p-4 text-sm shadow-lg transition-shadow focus-visible:shadow-xl md:min-h-48 md:text-base"
               disabled={isLoading}
             />
 
@@ -108,6 +134,13 @@ export function Onboarding({ onComplete }: OnboardingProps) {
             >
               {isLoading ? "Building your profile..." : "Build profile"}
             </Button>
+            <button
+              type="button"
+              onClick={handleDebugBypass}
+              className="w-full text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors"
+            >
+              Generate default profile (debug)
+            </button>
           </div>
         </div>
       </div>
