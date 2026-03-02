@@ -22,6 +22,7 @@ import {
 } from "@assistant-ui/react";
 import {
   ArrowDownIcon,
+  ArrowUpIcon,
   CheckIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -194,10 +195,10 @@ const ComposerAction: FC = () => {
             type="submit"
             variant="default"
             size="icon"
-            className="aui-composer-send rounded-full px-6 py-4"
+            className="aui-composer-send size-8 rounded-full"
             aria-label="Send message"
           >
-            Send
+            <ArrowUpIcon className="aui-composer-send-icon size-4" />
           </TooltipIconButton>
         </ComposerPrimitive.Send>
       </AssistantIf>
