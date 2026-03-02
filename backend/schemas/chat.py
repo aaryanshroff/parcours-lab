@@ -25,6 +25,8 @@ class ThreadMessage(BaseModel):
 class ChatRequest(BaseModel):
     messages: list[ThreadMessage]
     model: str = DEFAULT_MODEL
+    goal: str = ""
+    required_skills: list[str] = []
 
     @field_validator("model")
     @classmethod

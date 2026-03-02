@@ -1,5 +1,5 @@
 from services.llm import call_openrouter, get_reply_text
-from services.courses import get_random_recommended_courses
+from services.courses import get_recommended_courses
 import json
 
 RECOMMENDED_COURSES_TOOL_NAME = "get_recommended_courses"
@@ -10,7 +10,7 @@ TOOLS = [
         "function": {
             "name": RECOMMENDED_COURSES_TOOL_NAME,
             "description": (
-                "Return recommended courses as structured data. "
+                "Return recommended courses based on the user's goal and required skills. "
                 "Call this when the user asks for course recommendations."
             ),
             "parameters": {
@@ -30,11 +30,15 @@ SYSTEM_TOOL_INSTRUCTION = (
 )
 
 
-def execute_tool_call(tool_call: dict[str, str]) -> tuple[dict[str, object], list[dict[str, str]]]:
+def execute_tool_call(
+    tool_call: dict[str, str],
+    goal: str = "",
+    required_skills: list[str] | None = None,
+) -> tuple[dict[str, object], list[dict[str, str]]]:
     if tool_call["name"] != RECOMMENDED_COURSES_TOOL_NAME:
         raise ValueError(f"Unsupported tool '{tool_call['name']}'")
 
-    courses = get_random_recommended_courses()
+    courses = get_recommended_courses(goal, required_skills or [])
     return {"recommended_courses": courses}, courses
 
 
@@ -42,6 +46,8 @@ def resolve_tool_calls(
     tool_calls: list[dict[str, str]],
     model_messages: list[dict[str, object]],
     model: str,
+    goal: str = "",
+    required_skills: list[str] | None = None,
 ) -> tuple[str, list[dict[str, str]]]:
     """Execute tool calls, send results back to the model, return (reply, courses)."""
     assistant_tool_calls = []
@@ -49,7 +55,7 @@ def resolve_tool_calls(
     all_courses: list[dict[str, str]] = []
 
     for tc in tool_calls:
-        tool_output, courses = execute_tool_call(tc)
+        tool_output, courses = execute_tool_call(tc, goal, required_skills)
         all_courses.extend(courses)
 
         assistant_tool_calls.append({

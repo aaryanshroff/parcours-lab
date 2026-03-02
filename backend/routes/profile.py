@@ -78,12 +78,13 @@ def build_profile():
         profile = json.loads(cleaned_json)
         validate_profile_structure(profile)
 
-        # Semantic-match current skills from bio text
-        profile["current_skills"] = match_skills(bio, top_k=10, threshold=0.45)
+        # Semantic-match current skills from LLM-extracted labels (not raw bio)
+        llm_skills = " ".join(s["label"] for s in profile["current_skills"] if s.get("label"))
+        profile["current_skills"] = match_skills(llm_skills, top_k=5, threshold=0.45) if llm_skills else []
 
         # Semantic-match required skills from extracted goal
         goal = profile.get("goal", "")
-        profile["required_skills"] = match_skills(goal, top_k=15, threshold=0.35) if goal else []
+        profile["required_skills"] = match_skills(goal, top_k=5, threshold=0.35) if goal else []
 
         return jsonify(profile), 200
 
