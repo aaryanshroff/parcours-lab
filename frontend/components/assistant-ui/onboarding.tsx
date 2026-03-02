@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { API_BASE_URL } from "@/lib/api";
 
 const BIO_STORAGE_KEY = "parcours-onboarding-bio";
 const PROFILE_COMPLETE_KEY = "parcours-profile-complete";
@@ -52,7 +53,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
     setError(null);
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/api/profile", {
+      const response = await fetch(`${API_BASE_URL}/api/profile`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ bio }),
