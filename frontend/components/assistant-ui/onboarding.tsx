@@ -240,13 +240,11 @@ export function useOnboardingComplete() {
   };
 
   const reset = () => {
-    localStorage.removeItem(PROFILE_COMPLETE_KEY);
-    localStorage.removeItem(BIO_STORAGE_KEY);
-    localStorage.removeItem(GOAL_STORAGE_KEY);
-    localStorage.removeItem(KNOWN_SKILLS_STORAGE_KEY);
-    localStorage.removeItem(STARRED_SKILLS_STORAGE_KEY);
-    localStorage.removeItem(REQUIRED_SKILLS_STORAGE_KEY);
+    Object.keys(localStorage)
+      .filter((k) => k.startsWith("parcours-"))
+      .forEach((k) => localStorage.removeItem(k));
     setIsComplete(false);
+    window.location.reload();
   };
 
   return { isComplete, isLoaded, markComplete, reset };
