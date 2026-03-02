@@ -348,6 +348,61 @@ function saveStarredSkills(starred: Set<string>) {
   }
 }
 
+// -- Required skills section ------------------------------------------------
+
+const REQUIRED_SKILLS_STORAGE_KEY = "parcours-required-skills";
+
+function loadRequiredSkills(): string[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(REQUIRED_SKILLS_STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw) as unknown;
+    return Array.isArray(parsed) && parsed.every((s) => typeof s === "string")
+      ? parsed
+      : [];
+  } catch {
+    return [];
+  }
+}
+
+export function RequiredSkillsSection() {
+  const [skills, setSkills] = React.useState<string[]>([]);
+  const [isHydrated, setIsHydrated] = React.useState(false);
+
+  React.useEffect(() => {
+    setSkills(loadRequiredSkills());
+    setIsHydrated(true);
+  }, []);
+
+  if (!isHydrated) {
+    return (
+      <SidebarSection title="Required Skills">
+        <KnownSkillsSkeleton />
+      </SidebarSection>
+    );
+  }
+
+  if (skills.length === 0) return null;
+
+  return (
+    <SidebarSection title="Required Skills">
+      <div className="flex flex-col gap-3 py-1 animate-in fade-in-0 duration-200">
+        <div className="flex flex-wrap items-center gap-2">
+          {skills.map((skill) => (
+            <span
+              key={skill}
+              className="inline-flex items-center rounded-full bg-sidebar-accent px-3 py-1 text-xs font-medium text-sidebar-accent-foreground"
+            >
+              {skill}
+            </span>
+          ))}
+        </div>
+      </div>
+    </SidebarSection>
+  );
+}
+
 // -- Section ----------------------------------------------------------------
 
 export function SkillsSection() {
