@@ -32,43 +32,59 @@ import {
   RefreshCwIcon,
   SquareIcon,
 } from "lucide-react";
-import { useRef, useEffect, type FC } from "react";
+import { useRef, useEffect, useState, type FC } from "react";
 import type { RecommendedCourse } from "@/lib/types";
+import { addCourse, isCourseRecorded } from "@/lib/courses";
 
 const EMPTY_RECOMMENDED_COURSES: RecommendedCourse[] = [];
 
-const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => (
-  <div className="rounded-xl border border-border bg-background/80 p-4 shadow-sm">
-    {course.url ? (
-      <a
-        href={course.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="font-semibold text-sm underline-offset-2 hover:underline"
-      >
-        {course.title || "Untitled course"}
-      </a>
-    ) : (
-      <div className="font-semibold text-sm">
-        {course.title || "Untitled course"}
-      </div>
-    )}
-    <p className="mt-1 text-muted-foreground text-sm">
-      {course.summary || "No summary available for this course yet."}
-    </p>
-    <div className="mt-3 flex items-center gap-2">
-      <button className="rounded-md bg-emerald-500 px-3 py-1.5 font-medium text-white text-xs hover:bg-emerald-600">
-        Accept
-      </button>
-      <button className="rounded-md bg-red-500 px-3 py-1.5 font-medium text-white text-xs hover:bg-red-600">
-        Reject
-      </button>
-      <button className="rounded-md border border-border px-3 py-1.5 font-medium text-xs hover:bg-muted">
-        Modify
-      </button>
+const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
+  const title = course.title || "Untitled course";
+  const [recorded, setRecorded] = useState(() => isCourseRecorded(title));
+
+  const handle = (status: "accepted" | "rejected") => {
+    addCourse({ title, status });
+    setRecorded(true);
+  };
+
+  return (
+    <div className="rounded-xl border border-border bg-background/80 p-4 shadow-sm">
+      {course.url ? (
+        <a
+          href={course.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-semibold text-sm underline-offset-2 hover:underline"
+        >
+          {title}
+        </a>
+      ) : (
+        <div className="font-semibold text-sm">{title}</div>
+      )}
+      <p className="mt-1 text-muted-foreground text-sm">
+        {course.summary || "No summary available for this course yet."}
+      </p>
+      {recorded ? (
+        <p className="mt-3 text-muted-foreground text-xs">Saved to history</p>
+      ) : (
+        <div className="mt-3 flex items-center gap-2">
+          <button
+            onClick={() => handle("accepted")}
+            className="rounded-md bg-emerald-500 px-3 py-1.5 font-medium text-white text-xs hover:bg-emerald-600"
+          >
+            Accept
+          </button>
+          <button
+            onClick={() => handle("rejected")}
+            className="rounded-md bg-red-500 px-3 py-1.5 font-medium text-white text-xs hover:bg-red-600"
+          >
+            Reject
+          </button>
+        </div>
+      )}
     </div>
-  </div>
-);
+  );
+};
 
 export const Thread: FC = () => {
   return (
