@@ -3,6 +3,7 @@ import json
 from flask import Blueprint, request, jsonify
 from openrouter import OpenRouter
 from dotenv import load_dotenv
+from services.skill_matcher import match_skills
 
 load_dotenv()
 
@@ -76,6 +77,13 @@ def build_profile():
         cleaned_json = clean_llm_json_response(llm_response)
         profile = json.loads(cleaned_json)
         validate_profile_structure(profile)
+
+        # Semantic-match current skills from bio text
+        profile["current_skills"] = match_skills(bio, top_k=10, threshold=0.45)
+
+        # Semantic-match required skills from extracted goal
+        goal = profile.get("goal", "")
+        profile["required_skills"] = match_skills(goal, top_k=15, threshold=0.35) if goal else []
 
         return jsonify(profile), 200
 
