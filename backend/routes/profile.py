@@ -1,13 +1,19 @@
+import logging
 import os
 import json
 from flask import Blueprint, request, jsonify
 from openrouter import OpenRouter
 from dotenv import load_dotenv
 from services.skill_matcher import match_skills
+from config.db import supabase
 
 load_dotenv()
 
+logger = logging.getLogger(__name__)
+
 profile_bp = Blueprint("profile", __name__)
+
+TABLE = "user_profiles"
 
 
 def extract_profile_from_bio(bio: str) -> dict:
@@ -96,3 +102,93 @@ def build_profile():
         return jsonify({"error": str(e)}), 500
     except Exception as e:
         return jsonify({"error": f"Profile extraction failed: {str(e)}"}), 500
+
+
+# ── Profile CRUD (Supabase) ────────────────────────────────────────────
+
+
+def _require_supabase():
+    if supabase is None:
+        return jsonify({"error": "database not configured"}), 503
+    return None
+
+
+@profile_bp.route("/profile/<user_id>", methods=["GET"])
+def get_profile(user_id: str):
+    """Return the user's goal and skills."""
+    err = _require_supabase()
+    if err:
+        return err
+
+    result = (
+        supabase.table(TABLE)
+        .select("id, goal, current_skills")
+        .eq("id", user_id)
+        .execute()
+    )
+
+    if not result.data:
+        return jsonify({"error": "profile not found"}), 404
+
+    row = result.data[0]
+    return jsonify({
+        "id": row["id"],
+        "goal": row.get("goal") or "",
+        "skills": row.get("current_skills") or [],
+    })
+
+
+@profile_bp.route("/profile/<user_id>/skills", methods=["PUT"])
+def set_skills(user_id: str):
+    """Set the user's current skills.
+
+    Expects: {"skills": ["Python", "SQL", ...]}
+    """
+    err = _require_supabase()
+    if err:
+        return err
+
+    body = request.get_json(force=True)
+    skills = body.get("skills")
+    if skills is None or not isinstance(skills, list):
+        return jsonify({"error": "skills must be a list"}), 400
+
+    result = (
+        supabase.table(TABLE)
+        .update({"current_skills": skills})
+        .eq("id", user_id)
+        .execute()
+    )
+
+    if not result.data:
+        return jsonify({"error": "profile not found"}), 404
+
+    return jsonify({"skills": result.data[0].get("current_skills", [])})
+
+
+@profile_bp.route("/profile/<user_id>/goal", methods=["PUT"])
+def set_goal(user_id: str):
+    """Set the user's learning goal.
+
+    Expects: {"goal": "Become a data scientist"}
+    """
+    err = _require_supabase()
+    if err:
+        return err
+
+    body = request.get_json(force=True)
+    goal = body.get("goal")
+    if goal is None or not isinstance(goal, str):
+        return jsonify({"error": "goal must be a string"}), 400
+
+    result = (
+        supabase.table(TABLE)
+        .update({"goal": goal})
+        .eq("id", user_id)
+        .execute()
+    )
+
+    if not result.data:
+        return jsonify({"error": "profile not found"}), 404
+
+    return jsonify({"goal": result.data[0].get("goal", "")})
