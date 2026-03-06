@@ -3,6 +3,14 @@ from flask import request, jsonify
 from pydantic import ValidationError
 
 def validate_request_body(model):
+    """
+    Usage:
+        @app.route("/chat", methods=["POST"])
+        @validate_request_body(ChatRequest)
+        def handle_chat(payload: ChatRequest):
+            messages = payload.to_openrouter_messages()
+            return jsonify({"model": payload.model, "messages": messages})
+    """
     def decorator(f):
         @wraps(f)
         def wrapper(*args, **kwargs):
