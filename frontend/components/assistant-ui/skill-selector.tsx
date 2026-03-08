@@ -50,7 +50,7 @@ export function SkillSelector({
             className="inline-flex items-center gap-1 rounded-full bg-sidebar-accent px-3 py-1 text-xs font-medium text-sidebar-accent-foreground"
           >
             {starred.has(skill) && (
-              <StarIcon className="size-3 fill-current text-amber-500" />
+              <StarIcon className="size-3 shrink-0 fill-current text-amber-500" />
             )}
             {skill}
           </span>
@@ -262,7 +262,7 @@ function SkillsModal({
                 >
                   <StarIcon
                     className={cn(
-                      "size-3.5 transition-colors",
+                      "size-3.5 shrink-0 transition-colors",
                       starred.has(skill)
                         ? "fill-current text-amber-500"
                         : "text-muted-foreground/40",
