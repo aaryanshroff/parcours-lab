@@ -9,6 +9,8 @@ import type { RecommendedCourse } from "@/lib/types";
 import { addCourse, isCourseRecorded } from "@/lib/courses";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
+const REJECT_REASONS = ["Too advanced", "Already taken", "Not relevant", "Wrong language"];
+
 function capitalize(s: string) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
@@ -150,17 +152,33 @@ const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
 
       {/* Actions */}
       {recordedStatus !== null ? (
-        <p className="mt-3 text-muted-foreground text-xs capitalize">
+        <p className="mt-2 text-muted-foreground text-xs capitalize">
           {recordedStatus}
         </p>
       ) : showRejectForm ? (
         <div className="mt-1 flex flex-col gap-2">
-          <textarea
-            value={rejectReason}
+          <p className="text-xs text-muted-foreground">Why not this course?</p>
+          <div className="flex flex-wrap gap-1.5">
+            {REJECT_REASONS.map((reason) => (
+              <button
+                key={reason}
+                onClick={() => setRejectReason((prev) => prev === reason ? "" : reason)}
+                className={`rounded-md border px-2.5 py-1 text-xs transition-colors ${
+                  rejectReason === reason
+                    ? "border-foreground/30 bg-foreground/10 text-foreground"
+                    : "border-border text-muted-foreground hover:bg-muted"
+                }`}
+              >
+                {reason}
+              </button>
+            ))}
+          </div>
+          <input
+            type="text"
+            value={REJECT_REASONS.includes(rejectReason) ? "" : rejectReason}
             onChange={(e) => setRejectReason(e.target.value)}
-            placeholder="Why are you rejecting this course? (optional)"
-            className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm placeholder:text-muted-foreground/60 focus:outline-none focus:ring-1 focus:ring-ring resize-none"
-            rows={2}
+            placeholder="Other reason (optional)"
+            className="w-full rounded-md border border-border bg-background px-3 py-1.5 text-xs placeholder:text-muted-foreground/60 focus:outline-none focus:ring-1 focus:ring-ring"
           />
           <div className="flex items-center gap-2">
             <button
@@ -182,14 +200,14 @@ const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
                 setShowRejectForm(false);
                 setRejectReason("");
               }}
-              className="rounded-md px-3 py-1.5 font-medium text-xs text-muted-foreground transition-colors hover:bg-muted"
+              className="rounded-md border border-border px-3 py-1.5 font-medium text-xs text-muted-foreground transition-colors hover:bg-muted"
             >
               Cancel
             </button>
           </div>
         </div>
       ) : (
-        <div className="mt-3 flex items-center gap-2">
+        <div className="mt-1 flex items-center gap-2">
           <button
             onClick={handleAccept}
             className="rounded-md px-3 py-1.5 font-medium text-white text-xs transition-colors"
