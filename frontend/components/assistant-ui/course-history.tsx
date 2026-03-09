@@ -1,12 +1,37 @@
 "use client";
 
+import { useState } from "react";
 import { SidebarSection } from "@/components/ui/sidebar";
-import { useCourseHistory } from "@/lib/courses";
+import { useCourseHistory, type Course, type CourseProgress } from "@/lib/courses";
+import { CourseDetailModal } from "@/components/assistant-ui/course-detail-modal";
+
+function getProgress(course: Course): CourseProgress {
+  return course.progress ?? (course.done ? "done" : "not_started");
+}
+
+const PROGRESS_INDICATOR: Record<CourseProgress, string> = {
+  not_started: "○",
+  in_progress: "◐",
+  done: "✓",
+};
 
 export function CourseHistorySection() {
   const courses = useCourseHistory();
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const selectedCourse = selectedId ? courses.find((c) => c.id === selectedId) ?? null : null;
+
   const accepted = courses.filter((c) => c.status === "accepted");
   const rejected = courses.filter((c) => c.status === "rejected");
+
+  // Sort: not_started first, in_progress next, done last
+  const progressOrder: Record<CourseProgress, number> = {
+    not_started: 0,
+    in_progress: 1,
+    done: 2,
+  };
+  const sortedAccepted = [...accepted].sort(
+    (a, b) => progressOrder[getProgress(a)] - progressOrder[getProgress(b)],
+  );
 
   if (courses.length === 0) {
     return (
@@ -20,55 +45,79 @@ export function CourseHistorySection() {
   }
 
   return (
-    <SidebarSection title="Course History">
-      <div className="space-y-4 p-1">
-        {accepted.length > 0 && (
-          <div className="space-y-2">
-            <div className="px-2 text-xs font-medium text-muted-foreground">
-              Accepted
-            </div>
-            {accepted.map((course) => (
-              <div
-                key={course.id}
-                className="relative flex w-full items-center rounded-md border border-border bg-background/60 p-2 pr-7"
-              >
-                <div className="truncate text-xs font-medium">
-                  {course.title}
-                </div>
-                <div
-                  className="absolute right-2 text-sm font-semibold"
-                  style={{ color: "var(--course-accept)" }}
-                >
-                  ✓
-                </div>
+    <>
+      <SidebarSection title="Course History">
+        <div className="space-y-4 p-1">
+          {sortedAccepted.length > 0 && (
+            <div className="space-y-2">
+              <div className="px-2 text-xs font-medium text-muted-foreground">
+                Accepted
               </div>
-            ))}
-          </div>
-        )}
-        {rejected.length > 0 && (
-          <div className="space-y-2">
-            <div className="px-2 text-xs font-medium text-muted-foreground">
-              Rejected
+              {sortedAccepted.map((course) => {
+                const progress = getProgress(course);
+                const isDone = progress === "done";
+                return (
+                  <button
+                    key={course.id}
+                    type="button"
+                    onClick={() => setSelectedId(course.id)}
+                    className={`relative flex w-full items-center rounded-md border border-border bg-background/60 p-2 pr-7 text-left transition-colors hover:bg-accent ${isDone ? "opacity-50" : ""}`}
+                  >
+                    <div className={`truncate text-xs ${isDone ? "line-through" : ""}`}>
+                      {course.provider && (
+                        <span className="font-semibold">{course.provider}: </span>
+                      )}
+                      <span className="font-medium">{course.title}</span>
+                    </div>
+                    <div
+                      className="absolute right-2 text-sm font-semibold"
+                      style={{ color: "var(--course-accept)" }}
+                    >
+                      {PROGRESS_INDICATOR[progress]}
+                    </div>
+                  </button>
+                );
+              })}
             </div>
-            {rejected.map((course) => (
-              <div
-                key={course.id}
-                className="relative flex w-full items-center rounded-md border border-border bg-background/60 p-2 pr-7"
-              >
-                <div className="truncate text-xs font-medium">
-                  {course.title}
-                </div>
-                <div
-                  className="absolute right-2 text-sm font-semibold"
-                  style={{ color: "var(--course-reject)" }}
-                >
-                  ✕
-                </div>
+          )}
+          {rejected.length > 0 && (
+            <div className="space-y-2">
+              <div className="px-2 text-xs font-medium text-muted-foreground">
+                Rejected
               </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </SidebarSection>
+              {rejected.map((course) => (
+                <button
+                  key={course.id}
+                  type="button"
+                  onClick={() => setSelectedId(course.id)}
+                  className="relative flex w-full items-center rounded-md border border-border bg-background/60 p-2 pr-7 text-left transition-colors hover:bg-accent"
+                >
+                  <div className="truncate text-xs">
+                    {course.provider && (
+                      <span className="font-semibold">{course.provider}: </span>
+                    )}
+                    <span className="font-medium">{course.title}</span>
+                  </div>
+                  <div
+                    className="absolute right-2 text-sm font-semibold"
+                    style={{ color: "var(--course-reject)" }}
+                  >
+                    ✕
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </SidebarSection>
+
+      <CourseDetailModal
+        course={selectedCourse}
+        open={selectedCourse !== null}
+        onOpenChange={(open) => {
+          if (!open) setSelectedId(null);
+        }}
+      />
+    </>
   );
 }

@@ -4,33 +4,48 @@ import { useState, type FC } from "react";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
-  ExternalLinkIcon,
 } from "lucide-react";
 import type { RecommendedCourse } from "@/lib/types";
 import { addCourse, isCourseRecorded } from "@/lib/courses";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+
+function capitalize(s: string) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
 
 const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
   const title = course.title || "Untitled course";
   const [recorded, setRecorded] = useState(() => isCourseRecorded(title));
 
   const handle = (status: "accepted" | "rejected") => {
-    addCourse({ title, status });
+    addCourse({
+      title,
+      status,
+      provider: course.provider,
+      url: course.url,
+      summary: course.summary,
+      level: course.level,
+      format: course.format,
+      duration_hours: course.duration_hours,
+      price: course.price,
+      rating: course.rating,
+      certificate: course.certificate,
+      skills: course.skills,
+    });
     setRecorded(true);
   };
 
-  const meta: string[] = [];
-  if (course.provider) meta.push(course.provider);
-  if (course.level && course.level !== "unknown") meta.push(course.level);
-  if (course.format) meta.push(course.format);
+  const subtitle: string[] = [];
+  if (course.provider) subtitle.push(course.provider);
+  if (course.level && course.level !== "unknown") subtitle.push(capitalize(course.level));
+  if (course.format) subtitle.push(capitalize(course.format));
 
   const details: string[] = [];
   if (course.duration_hours && course.duration_hours > 0)
     details.push(`${course.duration_hours} hrs`);
   if (course.price) details.push(course.price);
-  if (course.certificate) details.push("Certificate");
-  if (course.rating != null) details.push(`${course.rating.toFixed(1)}/5`);
-  if (course.language) details.push(course.language.toUpperCase());
+  if (course.rating != null) details.push(`★ ${course.rating.toFixed(1)}`);
+  if (course.certificate) details.push("Certificate included");
 
   return (
     <div className="flex flex-col rounded-xl border border-border bg-background/80 p-4 shadow-sm">
@@ -65,23 +80,16 @@ const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
         </span>
       </div>
 
-      {/* Meta badges */}
-      {meta.length > 0 && (
-        <div className="mb-2 flex flex-wrap gap-1.5">
-          {meta.map((m) => (
-            <span
-              key={m}
-              className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground"
-            >
-              {m}
-            </span>
-          ))}
-        </div>
+      {/* Subtitle */}
+      {subtitle.length > 0 && (
+        <p className="mb-2 text-xs text-muted-foreground">
+          {subtitle.join(" · ")}
+        </p>
       )}
 
-      {/* Details line */}
+      {/* Details */}
       {details.length > 0 && (
-        <p className="mb-2 text-xs text-muted-foreground">
+        <p className="mb-2 text-xs text-muted-foreground/80">
           {details.join(" · ")}
         </p>
       )}
@@ -95,26 +103,21 @@ const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
 
       {/* Skills */}
       {course.skills && course.skills.length > 0 && (
-        <div className="mb-3">
-          <p className="mb-1 text-xs font-medium text-muted-foreground">
-            Skills:
-          </p>
-          <div className="flex flex-wrap gap-1">
-            {course.skills.slice(0, 5).map((skill, i) => (
-              <span
-                key={i}
-                className="max-w-35 truncate rounded bg-muted/60 px-1.5 py-0.5 text-[11px] text-muted-foreground"
-                title={skill.name}
-              >
-                {skill.name}
-              </span>
-            ))}
-            {course.skills.length > 5 && (
-              <span className="px-1 text-[11px] text-muted-foreground/60">
-                +{course.skills.length - 5} more
-              </span>
-            )}
-          </div>
+        <div className="mb-3 flex flex-wrap gap-1">
+          {course.skills.slice(0, 5).map((skill, i) => (
+            <span
+              key={i}
+              className="max-w-35 truncate rounded bg-muted/60 px-1.5 py-0.5 text-[11px] text-muted-foreground"
+              title={skill.name}
+            >
+              {skill.name}
+            </span>
+          ))}
+          {course.skills.length > 5 && (
+            <span className="px-1 text-[11px] text-muted-foreground/60">
+              +{course.skills.length - 5} more
+            </span>
+          )}
         </div>
       )}
 
