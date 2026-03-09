@@ -13,7 +13,6 @@ import {
   SidebarSection,
 } from "@/components/ui/sidebar";
 import { useCourseHistory } from "@/lib/courses";
-import { ThreadList } from "@/components/assistant-ui/thread-list";
 import { SkillsSection, RequiredSkillsSection } from "@/components/assistant-ui/skill-selector";
 import { GoalsSection } from "@/components/assistant-ui/goals-section";
 
@@ -96,9 +95,6 @@ export function ThreadListSidebar({
         <SkillsSection />
         <RequiredSkillsSection />
         <CourseHistorySection />
-        <SidebarSection title="Threads">
-          <ThreadList />
-        </SidebarSection>
       </SidebarContent>
       <SidebarRail />
       <SidebarFooter className="aui-sidebar-footer border-t">

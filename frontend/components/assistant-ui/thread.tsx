@@ -8,10 +8,8 @@ import { Reasoning, ReasoningGroup } from "@/components/assistant-ui/reasoning";
 import { ToolFallback } from "@/components/assistant-ui/tool-fallback";
 import { TooltipIconButton } from "@/components/assistant-ui/tooltip-icon-button";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import {
   AssistantIf,
-  BranchPickerPrimitive,
   ComposerPrimitive,
   ErrorPrimitive,
   MessagePrimitive,
@@ -21,8 +19,6 @@ import {
 import {
   ArrowDownIcon,
   ArrowUpIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
   SquareIcon,
 } from "lucide-react";
 import { useRef, useEffect, useState, type FC } from "react";
@@ -328,7 +324,6 @@ const AssistantMessage: FC = () => {
         )}
       </div>
 
-      <BranchPicker className="mt-1 ml-2" />
     </MessagePrimitive.Root>
   );
 };
@@ -346,38 +341,6 @@ const UserMessage: FC = () => {
           <MessagePrimitive.Parts />
         </div>
       </div>
-
-      <BranchPicker className="aui-user-branch-picker col-span-full col-start-1 row-start-3 -mr-1 justify-end" />
     </MessagePrimitive.Root>
-  );
-};
-
-const BranchPicker: FC<BranchPickerPrimitive.Root.Props> = ({
-  className,
-  ...rest
-}) => {
-  return (
-    <BranchPickerPrimitive.Root
-      hideWhenSingleBranch
-      className={cn(
-        "aui-branch-picker-root mr-2 -ml-2 inline-flex items-center text-muted-foreground text-xs",
-        className,
-      )}
-      {...rest}
-    >
-      <BranchPickerPrimitive.Previous asChild>
-        <TooltipIconButton tooltip="Previous">
-          <ChevronLeftIcon />
-        </TooltipIconButton>
-      </BranchPickerPrimitive.Previous>
-      <span className="aui-branch-picker-state font-medium">
-        <BranchPickerPrimitive.Number /> / <BranchPickerPrimitive.Count />
-      </span>
-      <BranchPickerPrimitive.Next asChild>
-        <TooltipIconButton tooltip="Next">
-          <ChevronRightIcon />
-        </TooltipIconButton>
-      </BranchPickerPrimitive.Next>
-    </BranchPickerPrimitive.Root>
   );
 };
