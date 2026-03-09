@@ -1,5 +1,6 @@
 from services.llm import call_openrouter, get_reply_text
 from services.courses import get_recommended_courses
+from services.course_history import get_seen_course_ids, add_seen_courses
 import json
 
 RECOMMENDED_COURSES_TOOL_NAME = "get_recommended_courses"
@@ -34,11 +35,16 @@ def execute_tool_call(
     tool_call: dict[str, str],
     goal: str = "",
     required_skills: list[str] | None = None,
+    conversation_id: str = "default",
 ) -> tuple[dict[str, object], list[dict[str, str]]]:
     if tool_call["name"] != RECOMMENDED_COURSES_TOOL_NAME:
         raise ValueError(f"Unsupported tool '{tool_call['name']}'")
 
-    courses = get_recommended_courses(goal, required_skills or [])
+    seen_ids = get_seen_course_ids(conversation_id)
+    courses = get_recommended_courses(
+        goal, required_skills or [], exclude_course_ids=seen_ids,
+    )
+    add_seen_courses(conversation_id, [str(c.get("id", "")) for c in courses])
     return {"recommended_courses": courses}, courses
 
 
@@ -48,6 +54,7 @@ def resolve_tool_calls(
     model: str,
     goal: str = "",
     required_skills: list[str] | None = None,
+    conversation_id: str = "default",
 ) -> tuple[str, list[dict[str, str]]]:
     """Execute tool calls, send results back to the model, return (reply, courses)."""
     assistant_tool_calls = []
@@ -55,7 +62,7 @@ def resolve_tool_calls(
     all_courses: list[dict[str, str]] = []
 
     for tc in tool_calls:
-        tool_output, courses = execute_tool_call(tc, goal, required_skills)
+        tool_output, courses = execute_tool_call(tc, goal, required_skills, conversation_id)
         all_courses.extend(courses)
 
         assistant_tool_calls.append({

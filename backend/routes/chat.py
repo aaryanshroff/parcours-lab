@@ -28,6 +28,7 @@ def chat():
             assistant_text, recommended_courses = resolve_tool_calls(
                 tool_calls, model_messages, req.model,
                 goal=req.goal, required_skills=req.required_skills,
+                conversation_id=req.conversation_id,
             )
         else:
             assistant_text = get_reply_text(result)
