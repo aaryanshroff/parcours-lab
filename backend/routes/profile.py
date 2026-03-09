@@ -6,6 +6,8 @@ from openrouter import OpenRouter
 from dotenv import load_dotenv
 from services.skill_matcher import match_skills
 from config.db import supabase
+from schemas.profile import BuildProfileRequest, SetSkillsRequest, SetGoalRequest
+from utils import validate_request_body
 
 load_dotenv()
 
@@ -68,27 +70,18 @@ def validate_profile_structure(profile: dict) -> None:
 
 
 @profile_bp.route("/profile", methods=["POST"])
-def build_profile():
+@validate_request_body(BuildProfileRequest)
+def build_profile(payload: BuildProfileRequest):
     """Accept a bio and return a structured profile with extracted goal and skills."""
-    data = request.get_json()
-    if not data or "bio" not in data:
-        return jsonify({"error": "Missing 'bio' field"}), 400
-
-    bio = data["bio"]
-    if not isinstance(bio, str) or not bio.strip():
-        return jsonify({"error": "'bio' must be a non-empty string"}), 400
-
     try:
-        llm_response = extract_profile_from_bio(bio)
+        llm_response = extract_profile_from_bio(payload.bio)
         cleaned_json = clean_llm_json_response(llm_response)
         profile = json.loads(cleaned_json)
         validate_profile_structure(profile)
 
-        # Semantic-match current skills from LLM-extracted labels (not raw bio)
         llm_skills = " ".join(s["label"] for s in profile["current_skills"] if s.get("label"))
         profile["current_skills"] = match_skills(llm_skills, top_k=5, threshold=0.45) if llm_skills else []
 
-        # Semantic-match required skills from extracted goal
         goal = profile.get("goal", "")
         profile["required_skills"] = match_skills(goal, top_k=5, threshold=0.35) if goal else []
 
@@ -107,19 +100,9 @@ def build_profile():
 # ── Profile CRUD (Supabase) ────────────────────────────────────────────
 
 
-def _require_supabase():
-    if supabase is None:
-        return jsonify({"error": "database not configured"}), 503
-    return None
-
-
 @profile_bp.route("/profile/<user_id>", methods=["GET"])
 def get_profile(user_id: str):
     """Return the user's goal and skills."""
-    err = _require_supabase()
-    if err:
-        return err
-
     result = (
         supabase.table(TABLE)
         .select("id, goal, current_skills")
@@ -139,23 +122,12 @@ def get_profile(user_id: str):
 
 
 @profile_bp.route("/profile/<user_id>/skills", methods=["PUT"])
-def set_skills(user_id: str):
-    """Set the user's current skills.
-
-    Expects: {"skills": ["Python", "SQL", ...]}
-    """
-    err = _require_supabase()
-    if err:
-        return err
-
-    body = request.get_json(force=True)
-    skills = body.get("skills")
-    if skills is None or not isinstance(skills, list):
-        return jsonify({"error": "skills must be a list"}), 400
-
+@validate_request_body(SetSkillsRequest)
+def set_skills(payload: SetSkillsRequest, user_id: str):
+    """Set the user's current skills."""
     result = (
         supabase.table(TABLE)
-        .update({"current_skills": skills})
+        .update({"current_skills": payload.skills})
         .eq("id", user_id)
         .execute()
     )
@@ -167,23 +139,12 @@ def set_skills(user_id: str):
 
 
 @profile_bp.route("/profile/<user_id>/goal", methods=["PUT"])
-def set_goal(user_id: str):
-    """Set the user's learning goal.
-
-    Expects: {"goal": "Become a data scientist"}
-    """
-    err = _require_supabase()
-    if err:
-        return err
-
-    body = request.get_json(force=True)
-    goal = body.get("goal")
-    if goal is None or not isinstance(goal, str):
-        return jsonify({"error": "goal must be a string"}), 400
-
+@validate_request_body(SetGoalRequest)
+def set_goal(payload: SetGoalRequest, user_id: str):
+    """Set the user's learning goal."""
     result = (
         supabase.table(TABLE)
-        .update({"goal": goal})
+        .update({"goal": payload.goal})
         .eq("id", user_id)
         .execute()
     )

@@ -36,6 +36,9 @@ def _load_skills() -> list[dict]:
     return _skills_cache
 
 
+_load_skills()
+
+
 @skills_bp.route("/skills", methods=["GET"])
 def list_skills():
     """Return all available skills for the dropdown selector."""
