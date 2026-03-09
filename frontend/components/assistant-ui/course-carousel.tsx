@@ -15,12 +15,16 @@ function capitalize(s: string) {
 
 const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
   const title = course.title || "Untitled course";
-  const [recorded, setRecorded] = useState(() => isCourseRecorded(title));
+  const [recordedStatus, setRecordedStatus] = useState<
+    "accepted" | "rejected" | null
+  >(() => (isCourseRecorded(title) ? "accepted" : null));
+  const [showRejectForm, setShowRejectForm] = useState(false);
+  const [rejectReason, setRejectReason] = useState("");
 
-  const handle = (status: "accepted" | "rejected") => {
+  const handleAccept = () => {
     addCourse({
       title,
-      status,
+      status: "accepted",
       provider: course.provider,
       url: course.url,
       summary: course.summary,
@@ -32,12 +36,32 @@ const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
       certificate: course.certificate,
       skills: course.skills,
     });
-    setRecorded(true);
+    setRecordedStatus("accepted");
+  };
+
+  const handleRejectSubmit = () => {
+    addCourse({
+      title,
+      status: "rejected",
+      rejection_reason: rejectReason.trim() || undefined,
+      provider: course.provider,
+      url: course.url,
+      summary: course.summary,
+      level: course.level,
+      format: course.format,
+      duration_hours: course.duration_hours,
+      price: course.price,
+      rating: course.rating,
+      certificate: course.certificate,
+      skills: course.skills,
+    });
+    setRecordedStatus("rejected");
   };
 
   const subtitle: string[] = [];
   if (course.provider) subtitle.push(course.provider);
-  if (course.level && course.level !== "unknown") subtitle.push(capitalize(course.level));
+  if (course.level && course.level !== "unknown")
+    subtitle.push(capitalize(course.level));
   if (course.format) subtitle.push(capitalize(course.format));
 
   const details: string[] = [];
@@ -125,25 +149,72 @@ const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
       <div className="mt-auto" />
 
       {/* Actions */}
-      {recorded ? (
-        <p className="mt-3 text-muted-foreground text-xs">Saved to history</p>
+      {recordedStatus !== null ? (
+        <p className="mt-3 text-muted-foreground text-xs capitalize">
+          {recordedStatus}
+        </p>
+      ) : showRejectForm ? (
+        <div className="mt-1 flex flex-col gap-2">
+          <textarea
+            value={rejectReason}
+            onChange={(e) => setRejectReason(e.target.value)}
+            placeholder="Why are you rejecting this course? (optional)"
+            className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm placeholder:text-muted-foreground/60 focus:outline-none focus:ring-1 focus:ring-ring resize-none"
+            rows={2}
+          />
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleRejectSubmit}
+              className="rounded-md px-3 py-1.5 font-medium text-white text-xs transition-colors"
+              style={{ backgroundColor: "var(--course-reject)" }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.backgroundColor =
+                  "var(--course-reject-hover)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.backgroundColor = "var(--course-reject)")
+              }
+            >
+              Submit
+            </button>
+            <button
+              onClick={() => {
+                setShowRejectForm(false);
+                setRejectReason("");
+              }}
+              className="rounded-md px-3 py-1.5 font-medium text-xs text-muted-foreground transition-colors hover:bg-muted"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
       ) : (
         <div className="mt-3 flex items-center gap-2">
           <button
-            onClick={() => handle("accepted")}
+            onClick={handleAccept}
             className="rounded-md px-3 py-1.5 font-medium text-white text-xs transition-colors"
             style={{ backgroundColor: "var(--course-accept)" }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--course-accept-hover)")}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "var(--course-accept)")}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor =
+                "var(--course-accept-hover)")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor = "var(--course-accept)")
+            }
           >
             Accept
           </button>
           <button
-            onClick={() => handle("rejected")}
+            onClick={() => setShowRejectForm(true)}
             className="rounded-md px-3 py-1.5 font-medium text-white text-xs transition-colors"
             style={{ backgroundColor: "var(--course-reject)" }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--course-reject-hover)")}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "var(--course-reject)")}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor =
+                "var(--course-reject-hover)")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor = "var(--course-reject)")
+            }
           >
             Reject
           </button>
@@ -170,7 +241,10 @@ export const CourseCarousel: FC<{ courses: RecommendedCourse[] }> = ({
 
   return (
     <div className="mt-4">
-      <CourseCard key={currentCourse.id || currentCourse.title || currentIndex} course={currentCourse} />
+      <CourseCard
+        key={currentCourse.id || currentCourse.title || currentIndex}
+        course={currentCourse}
+      />
 
       {courses.length > 1 && (
         <div className="mt-2 flex items-center justify-center gap-2">

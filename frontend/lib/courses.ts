@@ -17,6 +17,7 @@ export type Course = {
   price?: string;
   rating?: number | null;
   certificate?: boolean;
+  rejection_reason?: string;
   skills?: Array<{ name: string; esco_uri?: string; description?: string }>;
 };
 
