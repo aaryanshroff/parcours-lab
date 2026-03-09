@@ -27,6 +27,7 @@ class ChatRequest(BaseModel):
     model: str = DEFAULT_MODEL
     goal: str = ""
     required_skills: list[str] = []
+    conversation_id: str = "default"
 
     @field_validator("model")
     @classmethod
