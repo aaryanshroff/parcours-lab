@@ -31,13 +31,40 @@ import { addCourse, isCourseRecorded } from "@/lib/courses";
 
 const EMPTY_RECOMMENDED_COURSES: RecommendedCourse[] = [];
 
+const REJECT_CHIPS = [
+  "Too advanced",
+  "Already taken",
+  "Not relevant",
+  "Wrong language",
+];
+
 const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
   const title = course.title || "Untitled course";
   const [recorded, setRecorded] = useState(() => isCourseRecorded(title));
+  const [rejecting, setRejecting] = useState(false);
+  const [selectedChips, setSelectedChips] = useState<Set<string>>(new Set());
+  const [customReason, setCustomReason] = useState("");
 
-  const handle = (status: "accepted" | "rejected") => {
-    addCourse({ title, status });
+  const handleAccept = () => {
+    addCourse({ title, status: "accepted" });
     setRecorded(true);
+  };
+
+  const handleRejectSubmit = () => {
+    const parts = [...selectedChips];
+    if (customReason.trim()) parts.push(customReason.trim());
+    addCourse({ title, status: "rejected", reason: parts.join("; ") || undefined });
+    setRecorded(true);
+    setRejecting(false);
+  };
+
+  const toggleChip = (chip: string) => {
+    setSelectedChips((prev) => {
+      const next = new Set(prev);
+      if (next.has(chip)) next.delete(chip);
+      else next.add(chip);
+      return next;
+    });
   };
 
   return (
@@ -57,18 +84,60 @@ const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
       <p className="mt-1 text-muted-foreground text-sm">
         {course.summary || "No summary available for this course yet."}
       </p>
+
       {recorded ? (
         <p className="mt-3 text-muted-foreground text-xs">Saved to history</p>
+      ) : rejecting ? (
+        <div className="mt-3 space-y-2">
+          <p className="text-muted-foreground text-xs">Why not this course?</p>
+          <div className="flex flex-wrap gap-1.5">
+            {REJECT_CHIPS.map((chip) => (
+              <button
+                key={chip}
+                onClick={() => toggleChip(chip)}
+                className={cn(
+                  "rounded-full border px-2.5 py-1 text-xs transition-colors",
+                  selectedChips.has(chip)
+                    ? "border-red-500 bg-red-500/10 text-red-600 dark:text-red-400"
+                    : "border-border text-muted-foreground hover:border-red-300 hover:text-red-500",
+                )}
+              >
+                {chip}
+              </button>
+            ))}
+          </div>
+          <input
+            type="text"
+            value={customReason}
+            onChange={(e) => setCustomReason(e.target.value)}
+            placeholder="Other reason (optional)"
+            className="w-full rounded-md border border-border bg-transparent px-2.5 py-1.5 text-xs outline-none placeholder:text-muted-foreground focus:border-ring"
+          />
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleRejectSubmit}
+              className="rounded-md border border-border px-3 py-1.5 font-medium text-muted-foreground text-xs hover:bg-muted"
+            >
+              Submit
+            </button>
+            <button
+              onClick={() => { setRejecting(false); setSelectedChips(new Set()); setCustomReason(""); }}
+              className="rounded-md border border-border px-3 py-1.5 text-muted-foreground text-xs hover:bg-muted"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
       ) : (
         <div className="mt-3 flex items-center gap-2">
           <button
-            onClick={() => handle("accepted")}
+            onClick={handleAccept}
             className="rounded-md bg-emerald-500 px-3 py-1.5 font-medium text-white text-xs hover:bg-emerald-600"
           >
             Accept
           </button>
           <button
-            onClick={() => handle("rejected")}
+            onClick={() => setRejecting(true)}
             className="rounded-md bg-red-500 px-3 py-1.5 font-medium text-white text-xs hover:bg-red-600"
           >
             Reject
