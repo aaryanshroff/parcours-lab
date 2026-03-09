@@ -22,6 +22,7 @@ const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
   >(() => (isCourseRecorded(title) ? "accepted" : null));
   const [showRejectForm, setShowRejectForm] = useState(false);
   const [rejectReason, setRejectReason] = useState("");
+  const [skillsExpanded, setSkillsExpanded] = useState(false);
 
   const handleAccept = () => {
     addCourse({
@@ -93,7 +94,9 @@ const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
           {course.explanation && (
             <Tooltip>
               <TooltipTrigger asChild>
-                <span className="ml-1.5 inline-flex size-4 -translate-y-px cursor-help items-center justify-center rounded-full border border-border text-[10px] font-normal text-muted-foreground">
+                <span
+                  className="ml-1.5 inline-flex size-4 -translate-y-px cursor-help items-center justify-center rounded-full border border-border text-[10px] font-normal text-muted-foreground"
+                >
                   ?
                 </span>
               </TooltipTrigger>
@@ -130,19 +133,21 @@ const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
       {/* Skills */}
       {course.skills && course.skills.length > 0 && (
         <div className="mb-3 flex flex-wrap gap-1">
-          {course.skills.slice(0, 5).map((skill, i) => (
+          {(skillsExpanded ? course.skills : course.skills.slice(0, 5)).map((skill, i) => (
             <span
               key={i}
-              className="max-w-35 truncate rounded bg-muted/60 px-1.5 py-0.5 text-[11px] text-muted-foreground"
-              title={skill.name}
+              className="rounded bg-muted/60 px-1.5 py-0.5 text-[11px] text-muted-foreground"
             >
               {skill.name}
             </span>
           ))}
-          {course.skills.length > 5 && (
-            <span className="px-1 text-[11px] text-muted-foreground/60">
+          {course.skills.length > 5 && !skillsExpanded && (
+            <button
+              onClick={() => setSkillsExpanded(true)}
+              className="px-1 text-[11px] text-muted-foreground/60 hover:text-muted-foreground transition-colors"
+            >
               +{course.skills.length - 5} more
-            </span>
+            </button>
           )}
         </div>
       )}
