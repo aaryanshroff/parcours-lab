@@ -29,6 +29,43 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { useEffect } from "react";
+
+const INITIAL_PROMPT_SENT_KEY = "parcours-initial-prompt-sent";
+
+const getInitialRecommendationPrompt = () => {
+  const goal = localStorage.getItem("parcours-goal")?.trim() ?? "";
+
+  const knownSkills: string[] = (() => {
+    try {
+      const raw = localStorage.getItem("parcours-known-skills");
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
+    }
+  })();
+
+  const requiredSkills: string[] = (() => {
+    try {
+      const raw = localStorage.getItem("parcours-required-skills");
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
+    }
+  })();
+
+  const goalText = goal
+    ? `My goal is: ${goal}.`
+    : "Use my profile to infer a realistic learning goal.";
+  const knownSkillsText = knownSkills.length
+    ? `My current skills include: ${knownSkills.join(", ")}.`
+    : "Assume I have beginner-to-intermediate baseline skills.";
+  const requiredSkillsText = requiredSkills.length
+    ? `I need to build these skills: ${requiredSkills.join(", ")}.`
+    : "Focus on the most important missing skills from my profile.";
+
+  return `${goalText} ${knownSkillsText} ${requiredSkillsText} Recommend 5 courses.`;
+};
 
 const backendChatAdapter: ChatModelAdapter = {
   async run({ messages, abortSignal }) {
@@ -104,6 +141,23 @@ const backendChatAdapter: ChatModelAdapter = {
 export const Assistant = () => {
   const runtime = useLocalRuntime(backendChatAdapter);
   const { isComplete, isLoaded, markComplete, reset } = useOnboardingComplete();
+
+  useEffect(() => {
+    if (!isLoaded || !isComplete) {
+      return;
+    }
+
+    if (localStorage.getItem(INITIAL_PROMPT_SENT_KEY) === "true") {
+      return;
+    }
+
+    try {
+      runtime.thread.append(getInitialRecommendationPrompt());
+      localStorage.setItem(INITIAL_PROMPT_SENT_KEY, "true");
+    } catch {
+      // Allow retry on the next render if append fails.
+    }
+  }, [isComplete, isLoaded, runtime]);
 
   return (
     <AssistantRuntimeProvider runtime={runtime}>
