@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { PencilIcon, StarIcon, XIcon } from "lucide-react";
+import { InfoIcon, PencilIcon, StarIcon, XIcon } from "lucide-react";
 import { Dialog } from "@/components/ui/dialog";
 import { MobileDialogContent } from "@/components/ui/mobile-dialog";
 import { Input } from "@/components/ui/input";
@@ -244,6 +244,10 @@ function SkillsModal({
               )}
             </ul>
           )}
+        </div>
+        <div className="flex items-start gap-2 rounded-md border bg-muted/30 px-2.5 py-2 text-muted-foreground text-xs">
+          <InfoIcon className="mt-0.5 size-3.5 shrink-0" />
+          <p>Star a skill to mark proficiency.</p>
         </div>
         <div className="flex flex-wrap gap-2">
           {orderedSelected.length > 0 ? (
