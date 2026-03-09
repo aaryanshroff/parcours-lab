@@ -35,7 +35,7 @@ class CoursePayload(BaseModel):
 
 @lru_cache(maxsize=1)
 def load_course_catalog() -> list[dict[str, object]]:
-    with COURSE_CATALOG_PATH.open() as f:
+    with COURSE_CATALOG_PATH.open(encoding="utf-8") as f:
         payload = json.load(f)
 
     courses = payload.get("courses", [])
