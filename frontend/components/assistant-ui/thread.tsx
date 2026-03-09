@@ -24,6 +24,7 @@ import {
 import { useRef, useEffect, useState, type FC } from "react";
 import type { RecommendedCourse } from "@/lib/types";
 import { addCourse, isCourseRecorded } from "@/lib/courses";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
 const EMPTY_RECOMMENDED_COURSES: RecommendedCourse[] = [];
 
@@ -65,18 +66,33 @@ const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
 
   return (
     <div className="rounded-xl border border-border bg-background/80 p-4 shadow-sm">
-      {course.url ? (
-        <a
-          href={course.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-semibold text-sm underline-offset-2 hover:underline"
-        >
-          {title}
-        </a>
-      ) : (
-        <div className="font-semibold text-sm">{title}</div>
-      )}
+      <div className="flex items-center gap-1.5">
+        {course.url ? (
+          <a
+            href={course.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-sm underline-offset-2 hover:underline"
+          >
+            {title}
+          </a>
+        ) : (
+          <span className="font-semibold text-sm">{title}</span>
+        )}
+        {course.explanation && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="inline-flex size-4 cursor-help items-center justify-center rounded-full border border-border text-[10px] text-muted-foreground">
+                ?
+              </span>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="max-w-64">
+              <p className="font-semibold text-xs">Why this course?</p>
+              <p className="mt-0.5 text-xs">{course.explanation}</p>
+            </TooltipContent>
+          </Tooltip>
+        )}
+      </div>
       <p className="mt-1 text-muted-foreground text-sm">
         {course.summary || "No summary available for this course yet."}
       </p>

@@ -6,6 +6,7 @@ export type RecommendedCourse = {
   summary?: string;
   level?: string;
   language?: string;
+  explanation?: string;
 };
 
 export type ChatResponse = {

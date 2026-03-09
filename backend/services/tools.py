@@ -69,8 +69,9 @@ Required skills: {skills}
 Candidates (JSON array):
 {candidates_json}
 
-Return ONLY a JSON array of the selected course IDs, e.g. ["id1", "id2", "id3"]. \
-No explanation, no markdown, just the JSON array."""
+Return ONLY a JSON array of objects with "id" and "explanation" fields, e.g. \
+[{{"id": "id1", "explanation": "one sentence why"}}, ...]. \
+Keep each explanation to one concise sentence. No markdown, just the JSON array."""
 
 _CANDIDATE_COUNT = 10
 _PICK_COUNT = 3
@@ -115,21 +116,29 @@ def _llm_rerank_courses(
     )
     reply = get_reply_text(result).strip()
 
-    # Parse the JSON array of IDs from the response
+    # Parse the JSON array of {id, explanation} objects
     try:
-        # Strip markdown fences if present
         clean = reply
         if clean.startswith("```"):
             clean = clean.split("\n", 1)[1] if "\n" in clean else clean[3:]
             clean = clean.rsplit("```", 1)[0]
-        selected_ids = json.loads(clean.strip())
-        if not isinstance(selected_ids, list):
+        parsed = json.loads(clean.strip())
+        if not isinstance(parsed, list):
             raise ValueError("not a list")
     except (json.JSONDecodeError, ValueError):
         return candidates[:pick]
 
-    id_set = set(str(sid) for sid in selected_ids)
-    reranked = [c for c in candidates if c.get("id") in id_set]
+    # Build a map of id -> explanation from the LLM response
+    explanations: dict[str, str] = {}
+    for item in parsed:
+        if isinstance(item, dict):
+            explanations[str(item.get("id", ""))] = str(item.get("explanation", ""))
+
+    reranked: list[dict[str, str]] = []
+    for c in candidates:
+        cid = c.get("id", "")
+        if cid in explanations:
+            reranked.append({**c, "explanation": explanations[cid]})
 
     if not reranked:
         return candidates[:pick]
