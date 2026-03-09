@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "dev:backend": "cd ../backend && poetry run flask run --debug",
+    "dev:all": "concurrently -n FRONTEND,BACKEND npm:dev npm:dev:backend",
     "build": "next build",
     "start": "next start",
     "lint": "biome check .",
@@ -42,6 +44,7 @@
     "@types/node": "^25.0.10",
     "@types/react": "^19.2.9",
     "@types/react-dom": "^19.2.3",
+    "concurrently": "^9.2.1",
     "tailwindcss": "^4.1.18",
     "typescript": "^5.9.3"
   },

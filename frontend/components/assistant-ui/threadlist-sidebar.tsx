@@ -12,14 +12,65 @@ import {
   SidebarRail,
   SidebarSection,
 } from "@/components/ui/sidebar";
-import { COURSES } from "@/lib/courses";
+import { useCourseHistory } from "@/lib/courses";
 import { ThreadList } from "@/components/assistant-ui/thread-list";
-import { SkillsSection } from "@/components/assistant-ui/skill-selector";
+import { SkillsSection, RequiredSkillsSection } from "@/components/assistant-ui/skill-selector";
 import { GoalsSection } from "@/components/assistant-ui/goals-section";
 
+function CourseHistorySection() {
+  const courses = useCourseHistory();
+  const accepted = courses.filter((c) => c.status === "accepted");
+  const rejected = courses.filter((c) => c.status === "rejected");
+
+  if (courses.length === 0) {
+    return (
+      <SidebarSection title="Course History">
+        <p className="px-3 py-2 text-muted-foreground text-xs">
+          No courses yet. Accept or reject recommendations to build your history.
+        </p>
+      </SidebarSection>
+    );
+  }
+
+  return (
+    <SidebarSection title="Course History">
+      <div className="space-y-4 p-3">
+        {accepted.length > 0 && (
+          <div className="space-y-2">
+            <div className="text-xs font-medium text-muted-foreground">Accepted</div>
+            {accepted.map((course) => (
+              <div
+                key={course.id}
+                className="relative flex items-center gap-3 rounded-md border border-border bg-background/60 p-2"
+              >
+                <div className="text-xs font-medium">{course.title}</div>
+                <div className="absolute right-2 text-sm font-semibold text-emerald-500">✓</div>
+              </div>
+            ))}
+          </div>
+        )}
+        {rejected.length > 0 && (
+          <div className="space-y-2">
+            <div className="text-xs font-medium text-muted-foreground">Rejected</div>
+            {rejected.map((course) => (
+              <div
+                key={course.id}
+                className="relative flex items-center gap-3 rounded-md border border-border bg-background/60 p-2"
+              >
+                <div className="text-xs font-medium">{course.title}</div>
+                <div className="absolute right-2 text-sm font-semibold text-destructive">✕</div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </SidebarSection>
+  );
+}
 export function ThreadListSidebar({
+  onLogout,
   ...props
-}: React.ComponentProps<typeof Sidebar>) {
+}: React.ComponentProps<typeof Sidebar> & { onLogout: () => void }) {
   return (
     <Sidebar {...props}>
       <SidebarHeader className="aui-sidebar-header mb-2 border-b">
@@ -43,45 +94,8 @@ export function ThreadListSidebar({
       <SidebarContent className="aui-sidebar-content px-2">
         <GoalsSection />
         <SkillsSection />
-        <SidebarSection title="Course History">
-          <div className="space-y-4 p-3">
-            <div className="space-y-2">
-              <div className="text-xs font-medium text-muted-foreground">
-                Accepted
-              </div>
-              {COURSES.filter((c) => c.status === "accepted").map((course) => (
-                <div
-                  key={course.id}
-                  className="relative flex items-center gap-3 rounded-md border border-border bg-background/60 p-2"
-                >
-                  <div className="h-10 w-10 shrink-0 rounded-md bg-muted" />
-                  <div className="text-xs font-medium">{course.title}</div>
-                  <div className="absolute right-2 text-sm font-semibold text-emerald-500">
-                    ✓
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="space-y-2">
-              <div className="text-xs font-medium text-muted-foreground">
-                Rejected
-              </div>
-              {COURSES.filter((c) => c.status === "rejected").map((course) => (
-                <div
-                  key={course.id}
-                  className="relative flex items-center gap-3 rounded-md border border-border bg-background/60 p-2"
-                >
-                  <div className="h-10 w-10 shrink-0 rounded-md bg-muted" />
-                  <div className="text-xs font-medium">{course.title}</div>
-                  <div className="absolute right-2 text-sm font-semibold text-destructive">
-                    ✕
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </SidebarSection>
+        <RequiredSkillsSection />
+        <CourseHistorySection />
         <SidebarSection title="Threads">
           <ThreadList />
         </SidebarSection>
@@ -89,6 +103,11 @@ export function ThreadListSidebar({
       <SidebarRail />
       <SidebarFooter className="aui-sidebar-footer border-t">
         <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton size="sm" onClick={onLogout}>
+              Logout
+            </SidebarMenuButton>
+          </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link

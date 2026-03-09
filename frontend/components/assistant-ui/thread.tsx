@@ -25,7 +25,59 @@ import {
   ChevronRightIcon,
   SquareIcon,
 } from "lucide-react";
-import { useRef, useEffect, type FC } from "react";
+import { useRef, useEffect, useState, type FC } from "react";
+import type { RecommendedCourse } from "@/lib/types";
+import { addCourse, isCourseRecorded } from "@/lib/courses";
+
+const EMPTY_RECOMMENDED_COURSES: RecommendedCourse[] = [];
+
+const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
+  const title = course.title || "Untitled course";
+  const [recorded, setRecorded] = useState(() => isCourseRecorded(title));
+
+  const handle = (status: "accepted" | "rejected") => {
+    addCourse({ title, status });
+    setRecorded(true);
+  };
+
+  return (
+    <div className="rounded-xl border border-border bg-background/80 p-4 shadow-sm">
+      {course.url ? (
+        <a
+          href={course.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-semibold text-sm underline-offset-2 hover:underline"
+        >
+          {title}
+        </a>
+      ) : (
+        <div className="font-semibold text-sm">{title}</div>
+      )}
+      <p className="mt-1 text-muted-foreground text-sm">
+        {course.summary || "No summary available for this course yet."}
+      </p>
+      {recorded ? (
+        <p className="mt-3 text-muted-foreground text-xs">Saved to history</p>
+      ) : (
+        <div className="mt-3 flex items-center gap-2">
+          <button
+            onClick={() => handle("accepted")}
+            className="rounded-md bg-emerald-500 px-3 py-1.5 font-medium text-white text-xs hover:bg-emerald-600"
+          >
+            Accept
+          </button>
+          <button
+            onClick={() => handle("rejected")}
+            className="rounded-md bg-red-500 px-3 py-1.5 font-medium text-white text-xs hover:bg-red-600"
+          >
+            Reject
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export const Thread: FC = () => {
   return (
@@ -134,10 +186,10 @@ const ComposerAction: FC = () => {
             type="submit"
             variant="default"
             size="icon"
-            className="aui-composer-send rounded-full px-6 py-4"
+            className="aui-composer-send size-8 rounded-full"
             aria-label="Send message"
           >
-            Send
+            <ArrowUpIcon className="aui-composer-send-icon size-4" />
           </TooltipIconButton>
         </ComposerPrimitive.Send>
       </AssistantIf>
@@ -170,9 +222,21 @@ const MessageError: FC = () => {
 };
 
 const AssistantMessage: FC = () => {
+  const recommendedCourses = useAuiState(({ message }) => {
+    const dataPart = message.parts.find(
+      (part) => part.type === "data" && part.name === "recommended_courses",
+    );
+
+    if (!dataPart || !("data" in dataPart) || !Array.isArray(dataPart.data)) {
+      return EMPTY_RECOMMENDED_COURSES;
+    }
+
+    return dataPart.data as RecommendedCourse[];
+  });
+
   return (
     <MessagePrimitive.Root
-      className="aui-assistant-message-root fade-in slide-in-from-bottom-1 relative mx-auto w-full max-w-(--thread-max-width) animate-in py-3 duration-150 text-left"
+      className="aui-assistant-message-root fade-in slide-in-from-bottom-1 relative mx-auto w-full max-w-(--thread-max-width) animate-in py-3 text-left duration-150"
       data-role="assistant"
     >
       <div className="aui-assistant-message-content wrap-break-word px-2 text-foreground leading-relaxed">
@@ -186,25 +250,13 @@ const AssistantMessage: FC = () => {
         />
         <MessageError />
 
-        {/* Mock course recommendation card */}
-        <div className="mt-4 rounded-xl border border-border bg-background/80 p-4 shadow-sm">
-          <div className="text-sm font-semibold">Intro to Product Design</div>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Learn the fundamentals of user research, wireframing, and prototyping
-            to build intuitive product experiences.
-          </p>
-          <div className="mt-3 flex items-center gap-2">
-            <button className="rounded-md bg-emerald-500 px-3 py-1.5 text-xs font-medium text-white hover:bg-emerald-600">
-              Accept
-            </button>
-            <button className="rounded-md bg-red-500 px-3 py-1.5 text-xs font-medium text-white hover:bg-red-600">
-              Reject
-            </button>
-            <button className="rounded-md border border-border px-3 py-1.5 text-xs font-medium hover:bg-muted">
-              Modify
-            </button>
+        {recommendedCourses.length > 0 && (
+          <div className="mt-4 space-y-3">
+            {recommendedCourses.map((course, index) => (
+              <CourseCard key={course.id || `${course.title || "course"}-${index}`} course={course} />
+            ))}
           </div>
-        </div>
+        )}
       </div>
 
       <BranchPicker className="mt-1 ml-2" />
