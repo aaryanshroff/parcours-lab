@@ -21,144 +21,12 @@ import {
   ArrowUpIcon,
   SquareIcon,
 } from "lucide-react";
-import { useRef, useEffect, useState, type FC } from "react";
+import { useRef, useEffect, type FC } from "react";
 import type { RecommendedCourse } from "@/lib/types";
-import { addCourse, isCourseRecorded } from "@/lib/courses";
-import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { CourseCarousel } from "@/components/assistant-ui/course-carousel";
 
 const EMPTY_RECOMMENDED_COURSES: RecommendedCourse[] = [];
 
-const REJECT_CHIPS = [
-  "Too advanced",
-  "Already taken",
-  "Not relevant",
-  "Wrong language",
-];
-
-const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
-  const title = course.title || "Untitled course";
-  const [recorded, setRecorded] = useState(() => isCourseRecorded(title));
-  const [rejecting, setRejecting] = useState(false);
-  const [selectedChips, setSelectedChips] = useState<Set<string>>(new Set());
-  const [customReason, setCustomReason] = useState("");
-
-  const handleAccept = () => {
-    addCourse({ title, status: "accepted" });
-    setRecorded(true);
-  };
-
-  const handleRejectSubmit = () => {
-    const parts = [...selectedChips];
-    if (customReason.trim()) parts.push(customReason.trim());
-    addCourse({ title, status: "rejected", reason: parts.join("; ") || undefined });
-    setRecorded(true);
-    setRejecting(false);
-  };
-
-  const toggleChip = (chip: string) => {
-    setSelectedChips((prev) => {
-      const next = new Set(prev);
-      if (next.has(chip)) next.delete(chip);
-      else next.add(chip);
-      return next;
-    });
-  };
-
-  return (
-    <div className="rounded-xl border border-border bg-background/80 p-4 shadow-sm">
-      <div className="flex items-center gap-1.5">
-        {course.url ? (
-          <a
-            href={course.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-semibold text-sm underline-offset-2 hover:underline"
-          >
-            {title}
-          </a>
-        ) : (
-          <span className="font-semibold text-sm">{title}</span>
-        )}
-        {course.explanation && (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span className="inline-flex size-4 cursor-help items-center justify-center rounded-full border border-border text-[10px] text-muted-foreground">
-                ?
-              </span>
-            </TooltipTrigger>
-            <TooltipContent side="top" className="max-w-64">
-              <p className="font-semibold text-xs">Why this course?</p>
-              <p className="mt-0.5 text-xs">{course.explanation}</p>
-            </TooltipContent>
-          </Tooltip>
-        )}
-      </div>
-      <p className="mt-1 text-muted-foreground text-sm">
-        {course.summary || "No summary available for this course yet."}
-      </p>
-
-      {recorded ? (
-        <p className="mt-3 text-muted-foreground text-xs">Saved to history</p>
-      ) : rejecting ? (
-        <div className="mt-3 space-y-2">
-          <p className="text-muted-foreground text-xs">Why not this course?</p>
-          <div className="flex flex-wrap gap-1.5">
-            {REJECT_CHIPS.map((chip) => (
-              <button
-                key={chip}
-                onClick={() => toggleChip(chip)}
-                className={cn(
-                  "rounded-full border px-2.5 py-1 text-xs transition-colors",
-                  selectedChips.has(chip)
-                    ? "border-red-500 bg-red-500/10 text-red-600 dark:text-red-400"
-                    : "border-border text-muted-foreground hover:border-red-300 hover:text-red-500",
-                )}
-              >
-                {chip}
-              </button>
-            ))}
-          </div>
-          <input
-            type="text"
-            value={customReason}
-            onChange={(e) => setCustomReason(e.target.value)}
-            placeholder="Other reason (optional)"
-            className="w-full rounded-md border border-border bg-transparent px-2.5 py-1.5 text-xs outline-none placeholder:text-muted-foreground focus:border-ring"
-          />
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleRejectSubmit}
-              className="rounded-md border border-border px-3 py-1.5 font-medium text-muted-foreground text-xs hover:bg-muted"
-            >
-              Submit
-            </button>
-            <button
-              onClick={() => { setRejecting(false); setSelectedChips(new Set()); setCustomReason(""); }}
-              className="rounded-md border border-border px-3 py-1.5 text-muted-foreground text-xs hover:bg-muted"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      ) : (
-        <div className="mt-3 flex items-center gap-2">
-          <button
-            onClick={handleAccept}
-            className="rounded-md bg-emerald-500 px-3 py-1.5 font-medium text-white text-xs hover:bg-emerald-600"
-          >
-            Accept
-          </button>
-          <button
-            onClick={() => setRejecting(true)}
-            className="rounded-md bg-red-500 px-3 py-1.5 font-medium text-white text-xs hover:bg-red-600"
-          >
-            Reject
-          </button>
-        </div>
-      )}
-    </div>
-  );
-};
 
 export const Thread: FC = () => {
   return (
@@ -332,11 +200,7 @@ const AssistantMessage: FC = () => {
         <MessageError />
 
         {recommendedCourses.length > 0 && (
-          <div className="mt-4 space-y-3">
-            {recommendedCourses.map((course, index) => (
-              <CourseCard key={course.id || `${course.title || "course"}-${index}`} course={course} />
-            ))}
-          </div>
+          <CourseCarousel courses={recommendedCourses} />
         )}
       </div>
 

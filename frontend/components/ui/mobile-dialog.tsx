@@ -3,6 +3,7 @@
 import * as React from "react";
 import {
   DialogContent,
+  DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
 import type { ComponentProps } from "react";
@@ -25,6 +26,7 @@ export function MobileDialogContent({
     >
       <div className="flex h-full flex-col gap-4 overflow-visible md:h-auto ">
         <DialogTitle className="pl-1">{title}</DialogTitle>
+        <DialogDescription className="sr-only">{title}</DialogDescription>
         {children}
       </div>
     </DialogContent>

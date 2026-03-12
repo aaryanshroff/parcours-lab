@@ -16,12 +16,27 @@ class CoursePayload(BaseModel):
     summary: str = ""
     level: str = ""
     language: str = ""
+    format: str = ""
+    duration_hours: int | None = None
+    price: str = ""
+    rating: float | None = None
+    certificate: bool = False
+    skills: list[dict[str, str]] = []
 
     @classmethod
     def from_raw(cls, course: dict, fallback_index: int) -> "CoursePayload":
         desc = str(
             course.get("description") or course.get("descriptionAbbreviated") or ""
         ).strip()
+        skills = []
+        for skill in course.get("skills", []):
+            if isinstance(skill, dict):
+                skills.append({
+                    "name": str(skill.get("name", "")),
+                    "esco_uri": str(skill.get("esco_uri", "")),
+                    "description": str(skill.get("description", "")),
+                })
+        duration = course.get("duration_hours")
         return cls(
             id=str(course.get("id") or f"course-{fallback_index}"),
             title=str(course.get("title") or "Untitled course").strip(),
@@ -30,12 +45,18 @@ class CoursePayload(BaseModel):
             summary=(desc[:280] + "...") if len(desc) > 280 else desc,
             level=str(course.get("level") or "").strip(),
             language=str(course.get("language") or "").strip(),
+            format=str(course.get("format") or "").strip(),
+            duration_hours=int(duration) if duration else None,
+            price=str(course.get("price") or "").strip(),
+            rating=course.get("rating"),
+            certificate=bool(course.get("certificate", False)),
+            skills=skills,
         )
 
 
 @lru_cache(maxsize=1)
 def load_course_catalog() -> list[dict[str, object]]:
-    with COURSE_CATALOG_PATH.open() as f:
+    with COURSE_CATALOG_PATH.open(encoding="utf-8") as f:
         payload = json.load(f)
 
     courses = payload.get("courses", [])
