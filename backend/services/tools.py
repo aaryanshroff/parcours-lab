@@ -59,12 +59,12 @@ TOOLS = [
                                     ),
                                 },
                                 "value": {
-                                    "type": ["string", "array"],
+                                    "type": "string",
                                     "description": (
-                                        "For 'goal': a string. "
-                                        "For skill fields: a single skill string or an array of skill strings."
+                                        "For 'goal': the goal text. "
+                                        "For skill fields: a comma-separated list of skill names "
+                                        "(e.g. 'Python, Docker, SQL')."
                                     ),
-                                    "items": {"type": "string"},
                                 },
                             },
                             "required": ["field", "action", "value"],
@@ -122,12 +122,17 @@ def _execute_profile_update(
     for upd in updates_raw:
         field = upd["field"]
         action = upd["action"]
-        value = upd["value"]
+        raw_value = upd["value"]
 
-        # Normalise value to a list for skill fields
+        # Normalise value: the LLM always sends a string.
+        # For skill fields, split comma-separated values into a list.
         if field in ("current_skills", "required_skills"):
-            if isinstance(value, str):
-                value = [value]
+            if isinstance(raw_value, list):
+                value = [v.strip() for v in raw_value if v.strip()]
+            else:
+                value = [v.strip() for v in str(raw_value).split(",") if v.strip()]
+        else:
+            value = raw_value
 
         if field == "goal":
             previous = current_goal
