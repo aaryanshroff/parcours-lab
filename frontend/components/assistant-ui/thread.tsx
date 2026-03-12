@@ -8,6 +8,7 @@ import { Reasoning, ReasoningGroup } from "@/components/assistant-ui/reasoning";
 import { ToolFallback } from "@/components/assistant-ui/tool-fallback";
 import { TooltipIconButton } from "@/components/assistant-ui/tooltip-icon-button";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
   AssistantIf,
   ComposerPrimitive,
@@ -28,7 +29,9 @@ import { CourseCarousel } from "@/components/assistant-ui/course-carousel";
 const EMPTY_RECOMMENDED_COURSES: RecommendedCourse[] = [];
 
 
-export const Thread: FC = () => {
+export const Thread: FC<{ initialRecommendationsPending?: boolean }> = ({
+  initialRecommendationsPending = false,
+}) => {
   return (
     <ThreadPrimitive.Root
       className="aui-root aui-thread-root @container flex h-full flex-col bg-background"
@@ -40,9 +43,21 @@ export const Thread: FC = () => {
         turnAnchor="top"
         className="aui-thread-viewport relative flex flex-1 flex-col overflow-x-auto overflow-y-scroll scroll-smooth px-4 pt-4"
       >
-        <AssistantIf condition={({ thread }) => thread.isEmpty}>
-          <ThreadWelcome />
-        </AssistantIf>
+        {initialRecommendationsPending && (
+          <AssistantIf condition={({ thread }) => thread.isEmpty}>
+            <div className="aui-thread-welcome-root mx-auto my-auto flex w-full max-w-(--thread-max-width) grow flex-col justify-center px-4">
+              <h1 className="aui-thread-welcome-message-inner fade-in slide-in-from-bottom-1 animate-in font-semibold text-2xl">
+                Recommendations pending...
+              </h1>
+              <p className="aui-thread-welcome-message-inner fade-in slide-in-from-bottom-1 animate-in text-muted-foreground text-xl">
+                Generating your first personalized course suggestions.
+              </p>
+              <p className="aui-thread-welcome-message-inner fade-in slide-in-from-bottom-1 animate-in text-muted-foreground text-m">
+                This can take up to 6 seconds to load!
+              </p>
+            </div>
+          </AssistantIf>
+        )}
 
         <ThreadPrimitive.Messages
           components={{
@@ -71,23 +86,6 @@ const ThreadScrollToBottom: FC = () => {
         <ArrowDownIcon />
       </TooltipIconButton>
     </ThreadPrimitive.ScrollToBottom>
-  );
-};
-
-const ThreadWelcome: FC = () => {
-  return (
-    <div className="aui-thread-welcome-root mx-auto my-auto flex w-full max-w-(--thread-max-width) grow flex-col">
-      <div className="aui-thread-welcome-center flex w-full grow flex-col items-center justify-center">
-        <div className="aui-thread-welcome-message flex size-full flex-col justify-center px-4">
-          <h1 className="aui-thread-welcome-message-inner fade-in slide-in-from-bottom-1 animate-in font-semibold text-2xl duration-200">
-            Hello there!
-          </h1>
-          <p className="aui-thread-welcome-message-inner fade-in slide-in-from-bottom-1 animate-in text-muted-foreground text-xl delay-75 duration-200">
-            How can I help you today?
-          </p>
-        </div>
-      </div>
-    </div>
   );
 };
 
