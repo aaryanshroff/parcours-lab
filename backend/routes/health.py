@@ -1,6 +1,6 @@
 from flask import Blueprint
 
-#from config.db import supabase
+from config.db import supabase
 #temp to test chat
 
 health_bp = Blueprint("health", __name__)

@@ -42,10 +42,27 @@ const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
   const [selectedChips, setSelectedChips] = useState<Set<string>>(new Set());
   const [customReason, setCustomReason] = useState("");
 
-  const handleAccept = () => {
-    addCourse({ title, status: "accepted" });
-    setRecorded(true);
-  };
+const handle = async (status: "accepted" | "rejected") => {
+  const endpoint =
+    status === "accepted"
+      ? "http://127.0.0.1:5001/api/courses/accept"
+      : "http://127.0.0.1:5001/api/courses/reject";
+
+  await fetch(endpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      user_id: "550e8400-e29b-41d4-a716-446655440000",
+      course_id: title,
+    }),
+  });
+
+  addCourse({ title, status });
+  setRecorded(true);
+};
+
 
   const handleRejectSubmit = () => {
     const parts = [...selectedChips];
