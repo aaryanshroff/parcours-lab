@@ -1,13 +1,21 @@
+import logging
 import os
 import json
 from flask import Blueprint, request, jsonify
 from openrouter import OpenRouter
 from dotenv import load_dotenv
 from services.skill_matcher import match_skills
+from config.db import supabase
+from schemas.profile import BuildProfileRequest, SetSkillsRequest, SetGoalRequest
+from utils import validate_request_body
 
 load_dotenv()
 
+logger = logging.getLogger(__name__)
+
 profile_bp = Blueprint("profile", __name__)
+
+TABLE = "user_profiles"
 
 
 def extract_profile_from_bio(bio: str) -> dict:
@@ -62,27 +70,18 @@ def validate_profile_structure(profile: dict) -> None:
 
 
 @profile_bp.route("/profile", methods=["POST"])
-def build_profile():
+@validate_request_body(BuildProfileRequest)
+def build_profile(payload: BuildProfileRequest):
     """Accept a bio and return a structured profile with extracted goal and skills."""
-    data = request.get_json()
-    if not data or "bio" not in data:
-        return jsonify({"error": "Missing 'bio' field"}), 400
-
-    bio = data["bio"]
-    if not isinstance(bio, str) or not bio.strip():
-        return jsonify({"error": "'bio' must be a non-empty string"}), 400
-
     try:
-        llm_response = extract_profile_from_bio(bio)
+        llm_response = extract_profile_from_bio(payload.bio)
         cleaned_json = clean_llm_json_response(llm_response)
         profile = json.loads(cleaned_json)
         validate_profile_structure(profile)
 
-        # Semantic-match current skills from LLM-extracted labels (not raw bio)
         llm_skills = " ".join(s["label"] for s in profile["current_skills"] if s.get("label"))
         profile["current_skills"] = match_skills(llm_skills, top_k=5, threshold=0.45) if llm_skills else []
 
-        # Semantic-match required skills from extracted goal
         goal = profile.get("goal", "")
         profile["required_skills"] = match_skills(goal, top_k=5, threshold=0.35) if goal else []
 
@@ -96,3 +95,61 @@ def build_profile():
         return jsonify({"error": str(e)}), 500
     except Exception as e:
         return jsonify({"error": f"Profile extraction failed: {str(e)}"}), 500
+
+
+# ── Profile CRUD (Supabase) ────────────────────────────────────────────
+
+
+@profile_bp.route("/profile/<user_id>", methods=["GET"])
+def get_profile(user_id: str):
+    """Return the user's goal and skills."""
+    result = (
+        supabase.table(TABLE)
+        .select("id, goal, current_skills")
+        .eq("id", user_id)
+        .execute()
+    )
+
+    if not result.data:
+        return jsonify({"error": "profile not found"}), 404
+
+    row = result.data[0]
+    return jsonify({
+        "id": row["id"],
+        "goal": row.get("goal") or "",
+        "skills": row.get("current_skills") or [],
+    })
+
+
+@profile_bp.route("/profile/<user_id>/skills", methods=["PUT"])
+@validate_request_body(SetSkillsRequest)
+def set_skills(payload: SetSkillsRequest, user_id: str):
+    """Set the user's current skills."""
+    result = (
+        supabase.table(TABLE)
+        .update({"current_skills": payload.skills})
+        .eq("id", user_id)
+        .execute()
+    )
+
+    if not result.data:
+        return jsonify({"error": "profile not found"}), 404
+
+    return jsonify({"skills": result.data[0].get("current_skills", [])})
+
+
+@profile_bp.route("/profile/<user_id>/goal", methods=["PUT"])
+@validate_request_body(SetGoalRequest)
+def set_goal(payload: SetGoalRequest, user_id: str):
+    """Set the user's learning goal."""
+    result = (
+        supabase.table(TABLE)
+        .update({"goal": payload.goal})
+        .eq("id", user_id)
+        .execute()
+    )
+
+    if not result.data:
+        return jsonify({"error": "profile not found"}), 404
+
+    return jsonify({"goal": result.data[0].get("goal", "")})

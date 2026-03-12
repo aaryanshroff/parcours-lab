@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from pydantic import ValidationError
 from schemas.chat import ChatRequest
 from services.llm import call_openrouter, get_reply_text, extract_tool_calls
-from services.tools import TOOLS, SYSTEM_TOOL_INSTRUCTION, resolve_tool_calls
+from services.tools import TOOLS, build_system_instruction, resolve_tool_calls
 
 chat_bp = Blueprint("chat", __name__)
 
@@ -16,8 +16,9 @@ def chat():
 
     try:
         req = ChatRequest.model_validate(data)
+        system_instruction = build_system_instruction(req.course_history)
         model_messages: list[dict[str, object]] = [
-            {"role": "system", "content": SYSTEM_TOOL_INSTRUCTION},
+            {"role": "system", "content": system_instruction},
             *req.to_openrouter_messages(),
         ]
 
@@ -28,6 +29,8 @@ def chat():
             assistant_text, recommended_courses = resolve_tool_calls(
                 tool_calls, model_messages, req.model,
                 goal=req.goal, required_skills=req.required_skills,
+                conversation_id=req.conversation_id,
+                course_history=req.course_history,
             )
         else:
             assistant_text = get_reply_text(result)

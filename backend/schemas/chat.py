@@ -22,11 +22,19 @@ class ThreadMessage(BaseModel):
         )
 
 
+class CourseFeedback(BaseModel):
+    title: str
+    status: Literal["accepted", "rejected"]
+    reason: str = ""
+
+
 class ChatRequest(BaseModel):
     messages: list[ThreadMessage]
     model: str = DEFAULT_MODEL
     goal: str = ""
     required_skills: list[str] = []
+    conversation_id: str = "default"
+    course_history: list[CourseFeedback] = []
 
     @field_validator("model")
     @classmethod

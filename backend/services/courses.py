@@ -65,7 +65,10 @@ _course_embeddings_normed = _course_embeddings / np.where(_course_norms == 0, 1,
 
 
 def get_recommended_courses(
-    goal: str, required_skills: list[str], count: int = 3
+    goal: str,
+    required_skills: list[str],
+    count: int = 3,
+    exclude_course_ids: set[str] | None = None,
 ) -> list[dict[str, str]]:
     """Rank courses by semantic similarity to the goal + required skills."""
     queries = [q for q in [goal, *required_skills] if q and q.strip()]
@@ -80,11 +83,16 @@ def get_recommended_courses(
     sim_matrix = _course_embeddings_normed @ query_embs_normed.T  # (n_courses, n_queries)
     scores = sim_matrix.mean(axis=1)
 
-    k = min(count, len(scores))
-    top_idx = np.argpartition(scores, -k)[-k:]
-    top_idx = top_idx[np.argsort(scores[top_idx])[::-1]]
+    excluded = exclude_course_ids or set()
+    ranked_idx = np.argsort(scores)[::-1]
+    results: list[dict[str, str]] = []
 
-    return [
-        CoursePayload.from_raw(_courses_raw[i], i).model_dump()
-        for i in top_idx
-    ]
+    for idx in ranked_idx:
+        payload = CoursePayload.from_raw(_courses_raw[int(idx)], int(idx))
+        if payload.id in excluded:
+            continue
+        results.append(payload.model_dump())
+        if len(results) >= count:
+            break
+
+    return results

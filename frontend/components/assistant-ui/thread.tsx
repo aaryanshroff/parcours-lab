@@ -8,12 +8,8 @@ import { Reasoning, ReasoningGroup } from "@/components/assistant-ui/reasoning";
 import { ToolFallback } from "@/components/assistant-ui/tool-fallback";
 import { TooltipIconButton } from "@/components/assistant-ui/tooltip-icon-button";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import {
-  ActionBarMorePrimitive,
-  ActionBarPrimitive,
   AssistantIf,
-  BranchPickerPrimitive,
   ComposerPrimitive,
   ErrorPrimitive,
   MessagePrimitive,
@@ -23,27 +19,30 @@ import {
 import {
   ArrowDownIcon,
   ArrowUpIcon,
-  CheckIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  CopyIcon,
-  DownloadIcon,
-  MoreHorizontalIcon,
-  PencilIcon,
-  RefreshCwIcon,
   SquareIcon,
 } from "lucide-react";
 import { useRef, useEffect, useState, type FC } from "react";
 import type { RecommendedCourse } from "@/lib/types";
 import { addCourse, isCourseRecorded } from "@/lib/courses";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
 const EMPTY_RECOMMENDED_COURSES: RecommendedCourse[] = [];
+
+const REJECT_CHIPS = [
+  "Too advanced",
+  "Already taken",
+  "Not relevant",
+  "Wrong language",
+];
 
 const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
   const title = course.title || "Untitled course";
   const [recorded, setRecorded] = useState(() => isCourseRecorded(title));
+  const [rejecting, setRejecting] = useState(false);
+  const [selectedChips, setSelectedChips] = useState<Set<string>>(new Set());
+  const [customReason, setCustomReason] = useState("");
 
-  const handle = async (status: "accepted" | "rejected") => {
+const handle = async (status: "accepted" | "rejected") => {
   const endpoint =
     status === "accepted"
       ? "http://127.0.0.1:5001/api/courses/accept"
@@ -63,41 +62,111 @@ const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
   addCourse({ title, status });
   setRecorded(true);
 };
-  // const handle = (status: "accepted" | "rejected") => {
-  //   addCourse({ title, status });
-  //   setRecorded(true);
-  // };
-  
+
+
+  const handleRejectSubmit = () => {
+    const parts = [...selectedChips];
+    if (customReason.trim()) parts.push(customReason.trim());
+    addCourse({ title, status: "rejected", reason: parts.join("; ") || undefined });
+    setRecorded(true);
+    setRejecting(false);
+  };
+
+  const toggleChip = (chip: string) => {
+    setSelectedChips((prev) => {
+      const next = new Set(prev);
+      if (next.has(chip)) next.delete(chip);
+      else next.add(chip);
+      return next;
+    });
+  };
 
   return (
     <div className="rounded-xl border border-border bg-background/80 p-4 shadow-sm">
-      {course.url ? (
-        <a
-          href={course.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-semibold text-sm underline-offset-2 hover:underline"
-        >
-          {title}
-        </a>
-      ) : (
-        <div className="font-semibold text-sm">{title}</div>
-      )}
+      <div className="flex items-center gap-1.5">
+        {course.url ? (
+          <a
+            href={course.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-sm underline-offset-2 hover:underline"
+          >
+            {title}
+          </a>
+        ) : (
+          <span className="font-semibold text-sm">{title}</span>
+        )}
+        {course.explanation && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="inline-flex size-4 cursor-help items-center justify-center rounded-full border border-border text-[10px] text-muted-foreground">
+                ?
+              </span>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="max-w-64">
+              <p className="font-semibold text-xs">Why this course?</p>
+              <p className="mt-0.5 text-xs">{course.explanation}</p>
+            </TooltipContent>
+          </Tooltip>
+        )}
+      </div>
       <p className="mt-1 text-muted-foreground text-sm">
         {course.summary || "No summary available for this course yet."}
       </p>
+
       {recorded ? (
         <p className="mt-3 text-muted-foreground text-xs">Saved to history</p>
+      ) : rejecting ? (
+        <div className="mt-3 space-y-2">
+          <p className="text-muted-foreground text-xs">Why not this course?</p>
+          <div className="flex flex-wrap gap-1.5">
+            {REJECT_CHIPS.map((chip) => (
+              <button
+                key={chip}
+                onClick={() => toggleChip(chip)}
+                className={cn(
+                  "rounded-full border px-2.5 py-1 text-xs transition-colors",
+                  selectedChips.has(chip)
+                    ? "border-red-500 bg-red-500/10 text-red-600 dark:text-red-400"
+                    : "border-border text-muted-foreground hover:border-red-300 hover:text-red-500",
+                )}
+              >
+                {chip}
+              </button>
+            ))}
+          </div>
+          <input
+            type="text"
+            value={customReason}
+            onChange={(e) => setCustomReason(e.target.value)}
+            placeholder="Other reason (optional)"
+            className="w-full rounded-md border border-border bg-transparent px-2.5 py-1.5 text-xs outline-none placeholder:text-muted-foreground focus:border-ring"
+          />
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleRejectSubmit}
+              className="rounded-md border border-border px-3 py-1.5 font-medium text-muted-foreground text-xs hover:bg-muted"
+            >
+              Submit
+            </button>
+            <button
+              onClick={() => { setRejecting(false); setSelectedChips(new Set()); setCustomReason(""); }}
+              className="rounded-md border border-border px-3 py-1.5 text-muted-foreground text-xs hover:bg-muted"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
       ) : (
         <div className="mt-3 flex items-center gap-2">
           <button
-            onClick={() => handle("accepted")}
+            onClick={handleAccept}
             className="rounded-md bg-emerald-500 px-3 py-1.5 font-medium text-white text-xs hover:bg-emerald-600"
           >
             Accept
           </button>
           <button
-            onClick={() => handle("rejected")}
+            onClick={() => setRejecting(true)}
             className="rounded-md bg-red-500 px-3 py-1.5 font-medium text-white text-xs hover:bg-red-600"
           >
             Reject
@@ -127,7 +196,6 @@ export const Thread: FC = () => {
         <ThreadPrimitive.Messages
           components={{
             UserMessage,
-            EditComposer,
             AssistantMessage,
           }}
         />
@@ -289,60 +357,7 @@ const AssistantMessage: FC = () => {
         )}
       </div>
 
-      <div className="aui-assistant-message-footer mt-1 ml-2 flex">
-        <BranchPicker />
-        <AssistantActionBar />
-      </div>
     </MessagePrimitive.Root>
-  );
-};
-
-const AssistantActionBar: FC = () => {
-  return (
-    <ActionBarPrimitive.Root
-      hideWhenRunning
-      autohide="not-last"
-      autohideFloat="single-branch"
-      className="aui-assistant-action-bar-root col-start-3 row-start-2 -ml-1 flex gap-1 text-muted-foreground data-floating:absolute data-floating:rounded-md data-floating:border data-floating:bg-background data-floating:p-1 data-floating:shadow-sm"
-    >
-      <ActionBarPrimitive.Copy asChild>
-        <TooltipIconButton tooltip="Copy">
-          <AssistantIf condition={({ message }) => message.isCopied}>
-            <CheckIcon />
-          </AssistantIf>
-          <AssistantIf condition={({ message }) => !message.isCopied}>
-            <CopyIcon />
-          </AssistantIf>
-        </TooltipIconButton>
-      </ActionBarPrimitive.Copy>
-      <ActionBarPrimitive.Reload asChild>
-        <TooltipIconButton tooltip="Refresh">
-          <RefreshCwIcon />
-        </TooltipIconButton>
-      </ActionBarPrimitive.Reload>
-      <ActionBarMorePrimitive.Root>
-        <ActionBarMorePrimitive.Trigger asChild>
-          <TooltipIconButton
-            tooltip="More"
-            className="data-[state=open]:bg-accent"
-          >
-            <MoreHorizontalIcon />
-          </TooltipIconButton>
-        </ActionBarMorePrimitive.Trigger>
-        <ActionBarMorePrimitive.Content
-          side="bottom"
-          align="start"
-          className="aui-action-bar-more-content z-50 min-w-32 overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md"
-        >
-          <ActionBarPrimitive.ExportMarkdown asChild>
-            <ActionBarMorePrimitive.Item className="aui-action-bar-more-item flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-              <DownloadIcon className="size-4" />
-              Export as Markdown
-            </ActionBarMorePrimitive.Item>
-          </ActionBarPrimitive.ExportMarkdown>
-        </ActionBarMorePrimitive.Content>
-      </ActionBarMorePrimitive.Root>
-    </ActionBarPrimitive.Root>
   );
 };
 
@@ -358,81 +373,7 @@ const UserMessage: FC = () => {
         <div className="aui-user-message-content wrap-break-word rounded-2xl bg-muted px-4 py-2.5 text-foreground">
           <MessagePrimitive.Parts />
         </div>
-        <div className="aui-user-action-bar-wrapper absolute top-1/2 left-0 -translate-x-full -translate-y-1/2 pr-2">
-          {false && <UserActionBar />}
-        </div>
       </div>
-
-      <BranchPicker className="aui-user-branch-picker col-span-full col-start-1 row-start-3 -mr-1 justify-end" />
     </MessagePrimitive.Root>
-  );
-};
-
-const UserActionBar: FC = () => {
-  return (
-    <ActionBarPrimitive.Root
-      hideWhenRunning
-      autohide="not-last"
-      className="aui-user-action-bar-root flex flex-col items-end"
-    >
-      <ActionBarPrimitive.Edit asChild>
-        <TooltipIconButton tooltip="Edit" className="aui-user-action-edit p-4">
-          <PencilIcon />
-        </TooltipIconButton>
-      </ActionBarPrimitive.Edit>
-    </ActionBarPrimitive.Root>
-  );
-};
-
-const EditComposer: FC = () => {
-  return (
-    <MessagePrimitive.Root className="aui-edit-composer-wrapper mx-auto flex w-full max-w-(--thread-max-width) flex-col px-2 py-3">
-      <ComposerPrimitive.Root className="aui-edit-composer-root ml-auto flex w-full max-w-[85%] flex-col rounded-2xl bg-muted">
-        <ComposerPrimitive.Input
-          className="aui-edit-composer-input min-h-14 w-full resize-none bg-transparent p-4 text-foreground text-sm outline-none"
-          autoFocus
-        />
-        <div className="aui-edit-composer-footer mx-3 mb-3 flex items-center gap-2 self-end">
-          <ComposerPrimitive.Cancel asChild>
-            <Button variant="ghost" size="sm">
-              Cancel
-            </Button>
-          </ComposerPrimitive.Cancel>
-          <ComposerPrimitive.Send asChild>
-            <Button size="sm">Update</Button>
-          </ComposerPrimitive.Send>
-        </div>
-      </ComposerPrimitive.Root>
-    </MessagePrimitive.Root>
-  );
-};
-
-const BranchPicker: FC<BranchPickerPrimitive.Root.Props> = ({
-  className,
-  ...rest
-}) => {
-  return (
-    <BranchPickerPrimitive.Root
-      hideWhenSingleBranch
-      className={cn(
-        "aui-branch-picker-root mr-2 -ml-2 inline-flex items-center text-muted-foreground text-xs",
-        className,
-      )}
-      {...rest}
-    >
-      <BranchPickerPrimitive.Previous asChild>
-        <TooltipIconButton tooltip="Previous">
-          <ChevronLeftIcon />
-        </TooltipIconButton>
-      </BranchPickerPrimitive.Previous>
-      <span className="aui-branch-picker-state font-medium">
-        <BranchPickerPrimitive.Number /> / <BranchPickerPrimitive.Count />
-      </span>
-      <BranchPickerPrimitive.Next asChild>
-        <TooltipIconButton tooltip="Next">
-          <ChevronRightIcon />
-        </TooltipIconButton>
-      </BranchPickerPrimitive.Next>
-    </BranchPickerPrimitive.Root>
   );
 };

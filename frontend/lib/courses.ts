@@ -4,6 +4,7 @@ export type Course = {
   id: string;
   title: string;
   status: "accepted" | "rejected";
+  reason?: string;
 };
 
 const STORAGE_KEY = "parcours-course-history";

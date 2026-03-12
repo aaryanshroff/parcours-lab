@@ -19,6 +19,8 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { API_BASE_URL } from "@/lib/api";
 import type { ChatResponse, RecommendedCourse } from "@/lib/types";
+
+const conversationId = crypto.randomUUID();
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -40,10 +42,23 @@ const backendChatAdapter: ChatModelAdapter = {
       }
     })();
 
+    const courseHistory: Array<{ title: string; status: string; reason: string }> = (() => {
+      try {
+        const raw = localStorage.getItem("parcours-course-history");
+        if (!raw) return [];
+        const parsed = JSON.parse(raw) as Array<{ title?: string; status?: string; reason?: string }>;
+        return Array.isArray(parsed)
+          ? parsed.map((c) => ({ title: c.title ?? "", status: c.status ?? "", reason: c.reason ?? "" }))
+          : [];
+      } catch {
+        return [];
+      }
+    })();
+
     const response = await fetch(`${API_BASE_URL}/api/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages, goal, required_skills: requiredSkills }),
+      body: JSON.stringify({ messages, goal, required_skills: requiredSkills, conversation_id: conversationId, course_history: courseHistory }),
       signal: abortSignal,
     });
 
