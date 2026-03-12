@@ -33,14 +33,6 @@ import { useEffect, useState } from "react";
 
 const INITIAL_PROMPT_SENT_KEY = "parcours-initial-prompt-sent";
 
-const getRequiredSkillsFromStorage = (): string[] => {
-  try {
-    const raw = localStorage.getItem("parcours-required-skills");
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
-};
 
 const getCourseHistoryFromStorage = (): Array<{
   title: string;
@@ -96,31 +88,25 @@ const getInitialRecommendationPrompt = () => {
     }
   })();
 
-  const requiredSkills = getRequiredSkillsFromStorage();
-
   const goalText = goal
     ? `My goal is: ${goal}.`
     : "Use my profile to infer a realistic learning goal.";
   const knownSkillsText = knownSkills.length
     ? `My current skills include: ${knownSkills.join(", ")}.`
     : "Assume I have beginner-to-intermediate baseline skills.";
-  const requiredSkillsText = requiredSkills.length
-    ? `I need to build these skills: ${requiredSkills.join(", ")}.`
-    : "Focus on the most important missing skills from my profile.";
 
-  return `${goalText} ${knownSkillsText} ${requiredSkillsText} Recommend 5 courses.`;
+  return `${goalText} ${knownSkillsText} Recommend 5 courses.`;
 };
 
 const backendChatAdapter: ChatModelAdapter = {
   async run({ messages, abortSignal }) {
     const goal = localStorage.getItem("parcours-goal") || "";
-    const requiredSkills = getRequiredSkillsFromStorage();
     const courseHistory = getCourseHistoryFromStorage();
 
     const response = await fetch(`${API_BASE_URL}/api/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages, goal, required_skills: requiredSkills, conversation_id: conversationId, course_history: courseHistory }),
+      body: JSON.stringify({ messages, goal, conversation_id: conversationId, course_history: courseHistory }),
       signal: abortSignal,
     });
 
@@ -155,32 +141,37 @@ export const Assistant = () => {
   const { isComplete, isLoaded, markComplete, reset } = useOnboardingComplete();
   const [isInitialRecommendationsPending, setIsInitialRecommendationsPending] =
     useState(false);
+  const [isInitialRecommendationsCompleting, setIsInitialRecommendationsCompleting] =
+    useState(false);
 
   useEffect(() => {
     if (!isLoaded || !isComplete) {
       setIsInitialRecommendationsPending(false);
+      setIsInitialRecommendationsCompleting(false);
       return;
     }
 
     const sentStatus = localStorage.getItem(INITIAL_PROMPT_SENT_KEY);
     if (sentStatus === "true") {
       setIsInitialRecommendationsPending(false);
+      setIsInitialRecommendationsCompleting(false);
       return;
     }
 
     if (sentStatus === "pending") {
       setIsInitialRecommendationsPending(true);
+      setIsInitialRecommendationsCompleting(false);
       return;
     }
 
     const abortController = new AbortController();
     localStorage.setItem(INITIAL_PROMPT_SENT_KEY, "pending");
     setIsInitialRecommendationsPending(true);
+    setIsInitialRecommendationsCompleting(false);
 
     const runInitialPrompt = async () => {
       try {
         const goal = localStorage.getItem("parcours-goal") || "";
-        const requiredSkills = getRequiredSkillsFromStorage();
         const courseHistory = getCourseHistoryFromStorage();
         const initialPrompt = getInitialRecommendationPrompt();
 
@@ -195,7 +186,6 @@ export const Assistant = () => {
               },
             ],
             goal,
-            required_skills: requiredSkills,
             conversation_id: conversationId,
             course_history: courseHistory,
           }),
@@ -207,6 +197,9 @@ export const Assistant = () => {
         }
 
         const data = (await response.json()) as ChatResponse;
+        setIsInitialRecommendationsCompleting(true);
+        await new Promise((resolve) => setTimeout(resolve, 250));
+
         runtime.thread.append({
           role: "assistant",
           content: toAssistantContent(data),
@@ -214,9 +207,11 @@ export const Assistant = () => {
         });
 
         localStorage.setItem(INITIAL_PROMPT_SENT_KEY, "true");
+        setIsInitialRecommendationsCompleting(false);
         setIsInitialRecommendationsPending(false);
       } catch {
         localStorage.removeItem(INITIAL_PROMPT_SENT_KEY);
+        setIsInitialRecommendationsCompleting(false);
         setIsInitialRecommendationsPending(false);
       }
     };
@@ -261,6 +256,8 @@ export const Assistant = () => {
               <div className="flex-1 overflow-hidden">
                 <Thread
                   initialRecommendationsPending={isInitialRecommendationsPending}
+                  initialRecommendationsCompleting={isInitialRecommendationsCompleting}
+                  disableComposer={isInitialRecommendationsPending}
                 />
               </div>
             </SidebarInset>

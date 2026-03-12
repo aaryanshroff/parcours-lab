@@ -29,30 +29,55 @@ import { CourseCarousel } from "@/components/assistant-ui/course-carousel";
 const EMPTY_RECOMMENDED_COURSES: RecommendedCourse[] = [];
 
 
-const SixSecondLoadingBar: FC = () => {
-  const [started, setStarted] = useState(false);
+const SixSecondLoadingBar: FC<{ complete?: boolean }> = ({ complete = false }) => {
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const frame = requestAnimationFrame(() => setStarted(true));
+    if (complete) {
+      setProgress(100);
+      return;
+    }
+
+    const start = performance.now();
+    let frame = 0;
+
+    const tick = (now: number) => {
+      const elapsed = now - start;
+      const nextProgress = Math.min((elapsed / 6000) * 100, 100);
+      setProgress(nextProgress);
+
+      if (elapsed < 6000) {
+        frame = requestAnimationFrame(tick);
+      }
+    };
+
+    frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, []);
+  }, [complete]);
 
   return (
     <div className="mt-2 w-full max-w-md" aria-label="Loading recommendations">
       <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
         <div
           className={cn(
-            "h-full rounded-full bg-primary transition-all duration-[6000ms] ease-linear",
-            started ? "w-full" : "w-0",
+            "h-full rounded-full bg-primary",
+            complete && "transition-[width] duration-100 ease-linear",
           )}
+          style={{ width: `${progress}%` }}
         />
       </div>
     </div>
   );
 };
 
-export const Thread: FC<{ initialRecommendationsPending?: boolean }> = ({
+export const Thread: FC<{
+  initialRecommendationsPending?: boolean;
+  initialRecommendationsCompleting?: boolean;
+  disableComposer?: boolean;
+}> = ({
   initialRecommendationsPending = false,
+  initialRecommendationsCompleting = false,
+  disableComposer = false,
 }) => {
   return (
     <ThreadPrimitive.Root
@@ -77,7 +102,7 @@ export const Thread: FC<{ initialRecommendationsPending?: boolean }> = ({
               <p className="aui-thread-welcome-message-inner fade-in slide-in-from-bottom-1 animate-in text-muted-foreground text-m">
                 This can take up to 6 seconds to load!
               </p>
-              <SixSecondLoadingBar />
+              <SixSecondLoadingBar complete={initialRecommendationsCompleting} />
             </div>
           </AssistantIf>
         )}
@@ -91,7 +116,7 @@ export const Thread: FC<{ initialRecommendationsPending?: boolean }> = ({
 
         <ThreadPrimitive.ViewportFooter className="aui-thread-viewport-footer sticky bottom-0 mx-auto mt-auto flex w-full max-w-(--thread-max-width) flex-col gap-4 overflow-visible rounded-t-3xl bg-background pb-4 md:pb-6">
           <ThreadScrollToBottom />
-          <Composer />
+          <Composer disabled={disableComposer} />
         </ThreadPrimitive.ViewportFooter>
       </ThreadPrimitive.Viewport>
     </ThreadPrimitive.Root>
@@ -112,15 +137,16 @@ const ThreadScrollToBottom: FC = () => {
   );
 };
 
-const Composer: FC = () => {
+const Composer: FC<{ disabled?: boolean }> = ({ disabled = false }) => {
   const isRunning = useAuiState(({ thread }) => thread.isRunning);
+  const isInputDisabled = isRunning || disabled;
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    if (!isRunning) {
+    if (!isInputDisabled) {
       inputRef.current?.focus();
     }
-  }, [isRunning]);
+  }, [isInputDisabled]);
 
   return (
     <ComposerPrimitive.Root className="aui-composer-root relative flex w-full flex-col">
@@ -134,7 +160,7 @@ const Composer: FC = () => {
             rows={1}
             autoFocus
             aria-label="Message input"
-            disabled={isRunning}
+            disabled={isInputDisabled}
           />
           <ComposerAction />
         </div>
