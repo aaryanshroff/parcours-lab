@@ -43,10 +43,31 @@ const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
   const title = course.title || "Untitled course";
   const [recorded, setRecorded] = useState(() => isCourseRecorded(title));
 
-  const handle = (status: "accepted" | "rejected") => {
-    addCourse({ title, status });
-    setRecorded(true);
-  };
+  const handle = async (status: "accepted" | "rejected") => {
+  const endpoint =
+    status === "accepted"
+      ? "http://127.0.0.1:5001/api/courses/accept"
+      : "http://127.0.0.1:5001/api/courses/reject";
+
+  await fetch(endpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      user_id: "550e8400-e29b-41d4-a716-446655440000",
+      course_id: title,
+    }),
+  });
+
+  addCourse({ title, status });
+  setRecorded(true);
+};
+  // const handle = (status: "accepted" | "rejected") => {
+  //   addCourse({ title, status });
+  //   setRecorded(true);
+  // };
+  
 
   return (
     <div className="rounded-xl border border-border bg-background/80 p-4 shadow-sm">
