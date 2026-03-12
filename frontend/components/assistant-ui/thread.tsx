@@ -145,6 +145,28 @@ const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
   );
 };
 
+const SixSecondLoadingBar: FC = () => {
+  const [started, setStarted] = useState(false);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setStarted(true));
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
+  return (
+    <div className="mt-2 w-full max-w-md" aria-label="Loading recommendations">
+      <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
+        <div
+          className={cn(
+            "h-full rounded-full bg-primary transition-all duration-[6000ms] ease-linear",
+            started ? "w-full" : "w-0",
+          )}
+        />
+      </div>
+    </div>
+  );
+};
+
 export const Thread: FC<{ initialRecommendationsPending?: boolean }> = ({
   initialRecommendationsPending = false,
 }) => {
@@ -171,6 +193,7 @@ export const Thread: FC<{ initialRecommendationsPending?: boolean }> = ({
               <p className="aui-thread-welcome-message-inner fade-in slide-in-from-bottom-1 animate-in text-muted-foreground text-m">
                 This can take up to 6 seconds to load!
               </p>
+              <SixSecondLoadingBar />
             </div>
           </AssistantIf>
         )}
