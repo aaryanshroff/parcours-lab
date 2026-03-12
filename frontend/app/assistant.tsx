@@ -18,7 +18,7 @@ import {
 } from "@/components/assistant-ui/onboarding";
 import { Separator } from "@/components/ui/separator";
 import { API_BASE_URL } from "@/lib/api";
-import type { ChatResponse, RecommendedCourse } from "@/lib/types";
+import type { ChatResponse, RecommendedCourse, ProfileUpdate } from "@/lib/types";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -28,22 +28,30 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
+function readLocalStorageList(key: string): string[] {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
 const backendChatAdapter: ChatModelAdapter = {
   async run({ messages, abortSignal }) {
     const goal = localStorage.getItem("parcours-goal") || "";
-    const requiredSkills: string[] = (() => {
-      try {
-        const raw = localStorage.getItem("parcours-required-skills");
-        return raw ? JSON.parse(raw) : [];
-      } catch {
-        return [];
-      }
-    })();
+    const currentSkills = readLocalStorageList("parcours-known-skills");
+    const requiredSkills = readLocalStorageList("parcours-required-skills");
 
     const response = await fetch(`${API_BASE_URL}/api/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages, goal, required_skills: requiredSkills }),
+      body: JSON.stringify({
+        messages,
+        goal,
+        current_skills: currentSkills,
+        required_skills: requiredSkills,
+      }),
       signal: abortSignal,
     });
 
@@ -69,7 +77,7 @@ const backendChatAdapter: ChatModelAdapter = {
 
     const content: Array<
       | { type: "text"; text: string }
-      | { type: "data"; name: string; data: RecommendedCourse[] }
+      | { type: "data"; name: string; data: RecommendedCourse[] | ProfileUpdate[] }
     > = [{ type: "text", text: data.response }];
 
     if (data.recommended_courses?.length) {
@@ -77,6 +85,14 @@ const backendChatAdapter: ChatModelAdapter = {
         type: "data",
         name: "recommended_courses",
         data: data.recommended_courses,
+      });
+    }
+
+    if (data.profile_updates?.length) {
+      content.push({
+        type: "data",
+        name: "profile_updates",
+        data: data.profile_updates,
       });
     }
 

@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from pydantic import ValidationError
 from schemas.chat import ChatRequest
 from services.llm import call_openrouter, get_reply_text, extract_tool_calls
-from services.tools import TOOLS, SYSTEM_TOOL_INSTRUCTION, resolve_tool_calls
+from services.tools import TOOLS, build_system_prompt, resolve_tool_calls
 
 chat_bp = Blueprint("chat", __name__)
 
@@ -16,8 +16,15 @@ def chat():
 
     try:
         req = ChatRequest.model_validate(data)
+
+        system_prompt = build_system_prompt(
+            goal=req.goal,
+            current_skills=req.current_skills,
+            required_skills=req.required_skills,
+        )
+
         model_messages: list[dict[str, object]] = [
-            {"role": "system", "content": SYSTEM_TOOL_INSTRUCTION},
+            {"role": "system", "content": system_prompt},
             *req.to_openrouter_messages(),
         ]
 
@@ -25,15 +32,25 @@ def chat():
         tool_calls = extract_tool_calls(result)
 
         if tool_calls:
-            assistant_text, recommended_courses = resolve_tool_calls(
+            assistant_text, recommended_courses, profile_updates = resolve_tool_calls(
                 tool_calls, model_messages, req.model,
-                goal=req.goal, required_skills=req.required_skills,
+                goal=req.goal,
+                current_skills=req.current_skills,
+                required_skills=req.required_skills,
             )
         else:
             assistant_text = get_reply_text(result)
             recommended_courses = []
+            profile_updates = None
 
-        return {"response": assistant_text, "recommended_courses": recommended_courses}, 200
+        response_body: dict[str, object] = {
+            "response": assistant_text,
+            "recommended_courses": recommended_courses,
+        }
+        if profile_updates:
+            response_body["profile_updates"] = profile_updates
+
+        return response_body, 200
     except (ValueError, ValidationError) as e:
         return jsonify({"error": str(e)}), 400
     except EnvironmentError as e:

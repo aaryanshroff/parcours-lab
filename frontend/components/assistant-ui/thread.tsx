@@ -33,11 +33,78 @@ import {
   RefreshCwIcon,
   SquareIcon,
 } from "lucide-react";
-import { useRef, useEffect, useState, type FC } from "react";
-import type { RecommendedCourse } from "@/lib/types";
+import { useRef, useEffect, useState, useCallback, type FC } from "react";
+import type { RecommendedCourse, ProfileUpdate } from "@/lib/types";
 import { addCourse, isCourseRecorded } from "@/lib/courses";
 
 const EMPTY_RECOMMENDED_COURSES: RecommendedCourse[] = [];
+const EMPTY_PROFILE_UPDATES: ProfileUpdate[] = [];
+
+/* ── localStorage keys (same as onboarding.tsx) ───────────────── */
+const GOAL_KEY = "parcours-goal";
+const KNOWN_SKILLS_KEY = "parcours-known-skills";
+const REQUIRED_SKILLS_KEY = "parcours-required-skills";
+
+function readList(key: string): string[] {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeList(key: string, items: string[]) {
+  localStorage.setItem(key, JSON.stringify(items));
+}
+
+/** Apply a single ProfileUpdate to localStorage and return the undo function. */
+function applyProfileUpdate(upd: ProfileUpdate): () => void {
+  const fieldKey =
+    upd.field === "goal"
+      ? GOAL_KEY
+      : upd.field === "current_skills"
+        ? KNOWN_SKILLS_KEY
+        : REQUIRED_SKILLS_KEY;
+
+  if (upd.field === "goal") {
+    const prev = localStorage.getItem(GOAL_KEY) || "";
+    const newGoal = typeof upd.value === "string" ? upd.value : upd.value.join(" ");
+    localStorage.setItem(GOAL_KEY, newGoal);
+    return () => localStorage.setItem(GOAL_KEY, prev);
+  }
+
+  // Skill list fields
+  const prev = readList(fieldKey);
+
+  if (upd.action === "add") {
+    const toAdd = Array.isArray(upd.value) ? upd.value : [upd.value];
+    const merged = [...prev, ...toAdd.filter((v) => !prev.includes(v))];
+    writeList(fieldKey, merged);
+  } else if (upd.action === "remove") {
+    const toRemove = new Set(Array.isArray(upd.value) ? upd.value : [upd.value]);
+    writeList(fieldKey, prev.filter((v) => !toRemove.has(v)));
+  } else {
+    // set
+    const newList = Array.isArray(upd.value) ? upd.value : [upd.value];
+    writeList(fieldKey, newList);
+  }
+
+  return () => writeList(fieldKey, prev);
+}
+
+/* ── Human-readable label helpers ─────────────────────────────── */
+const FIELD_LABELS: Record<string, string> = {
+  goal: "Goal",
+  current_skills: "Current skills",
+  required_skills: "Skills to learn",
+};
+
+const ACTION_LABELS: Record<string, string> = {
+  add: "Add",
+  remove: "Remove",
+  set: "Set",
+};
 
 const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
   const title = course.title || "Untitled course";
@@ -80,6 +147,107 @@ const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
             className="rounded-md bg-red-500 px-3 py-1.5 font-medium text-white text-xs hover:bg-red-600"
           >
             Reject
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+/* ── Profile Update Card ──────────────────────────────────────── */
+
+type ProfileUpdateGroupProps = {
+  updates: ProfileUpdate[];
+};
+
+const ProfileUpdateGroup: FC<ProfileUpdateGroupProps> = ({ updates }) => {
+  const [status, setStatus] = useState<"pending" | "confirmed" | "reverted">("pending");
+  const undosRef = useRef<Array<() => void>>([]);
+
+  const handleConfirm = useCallback(() => {
+    const undos: Array<() => void> = [];
+    for (const upd of updates) {
+      undos.push(applyProfileUpdate(upd));
+    }
+    undosRef.current = undos;
+    setStatus("confirmed");
+  }, [updates]);
+
+  const handleRevert = useCallback(() => {
+    // If already confirmed, undo the applied changes
+    for (const undo of [...undosRef.current].reverse()) {
+      undo();
+    }
+    undosRef.current = [];
+    setStatus("reverted");
+  }, []);
+
+  return (
+    <div className="rounded-xl border border-border bg-background/80 p-4 shadow-sm space-y-3">
+      <div className="flex items-center gap-2">
+        <span className="inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+          Profile Update
+        </span>
+        {status === "confirmed" && (
+          <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+            ✓ Applied
+          </span>
+        )}
+        {status === "reverted" && (
+          <span className="text-xs text-amber-600 dark:text-amber-400 font-medium">
+            ↺ Reverted
+          </span>
+        )}
+      </div>
+
+      <ul className="space-y-1.5 text-sm">
+        {updates.map((upd, i) => {
+          const fieldLabel = FIELD_LABELS[upd.field] || upd.field;
+          const actionLabel = ACTION_LABELS[upd.action] || upd.action;
+          const displayValue = Array.isArray(upd.value) ? upd.value.join(", ") : upd.value;
+
+          return (
+            <li key={`${upd.field}-${upd.action}-${i}`} className="flex items-start gap-2">
+              <span className="font-medium text-muted-foreground shrink-0">{actionLabel}</span>
+              <span>
+                <span className="font-semibold">{fieldLabel}</span>
+                {upd.action === "set" ? (
+                  <span className="ml-1">→ {displayValue}</span>
+                ) : (
+                  <span className="ml-1">
+                    {upd.action === "add" ? "+" : "−"} {displayValue}
+                  </span>
+                )}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+
+      {status === "pending" && (
+        <div className="flex items-center gap-2 pt-1">
+          <button
+            onClick={handleConfirm}
+            className="rounded-md bg-emerald-500 px-3 py-1.5 font-medium text-white text-xs hover:bg-emerald-600 transition-colors"
+          >
+            Confirm
+          </button>
+          <button
+            onClick={() => setStatus("reverted")}
+            className="rounded-md bg-zinc-200 dark:bg-zinc-700 px-3 py-1.5 font-medium text-zinc-700 dark:text-zinc-200 text-xs hover:bg-zinc-300 dark:hover:bg-zinc-600 transition-colors"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
+
+      {status === "confirmed" && (
+        <div className="pt-1">
+          <button
+            onClick={handleRevert}
+            className="rounded-md bg-amber-100 dark:bg-amber-900/30 px-3 py-1.5 font-medium text-amber-700 dark:text-amber-300 text-xs hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors"
+          >
+            Undo changes
           </button>
         </div>
       )}
@@ -243,6 +411,18 @@ const AssistantMessage: FC = () => {
     return dataPart.data as RecommendedCourse[];
   });
 
+  const profileUpdates = useAuiState(({ message }) => {
+    const dataPart = message.parts.find(
+      (part) => part.type === "data" && part.name === "profile_updates",
+    );
+
+    if (!dataPart || !("data" in dataPart) || !Array.isArray(dataPart.data)) {
+      return EMPTY_PROFILE_UPDATES;
+    }
+
+    return dataPart.data as ProfileUpdate[];
+  });
+
   return (
     <MessagePrimitive.Root
       className="aui-assistant-message-root fade-in slide-in-from-bottom-1 relative mx-auto w-full max-w-(--thread-max-width) animate-in py-3 text-left duration-150"
@@ -258,6 +438,12 @@ const AssistantMessage: FC = () => {
           }}
         />
         <MessageError />
+
+        {profileUpdates.length > 0 && (
+          <div className="mt-4">
+            <ProfileUpdateGroup updates={profileUpdates} />
+          </div>
+        )}
 
         {recommendedCourses.length > 0 && (
           <div className="mt-4 space-y-3">
