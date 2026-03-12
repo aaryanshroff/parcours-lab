@@ -25,6 +25,8 @@ import { useRef, useEffect, useState, type FC } from "react";
 import type { RecommendedCourse } from "@/lib/types";
 import { addCourse, isCourseRecorded } from "@/lib/courses";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { API_BASE_URL } from "@/lib/api";
+import { cn } from "@/lib/utils";
 
 const EMPTY_RECOMMENDED_COURSES: RecommendedCourse[] = [];
 
@@ -43,12 +45,21 @@ const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
   const [customReason, setCustomReason] = useState("");
 
 const handle = async (status: "accepted" | "rejected") => {
-  const endpoint =
-    status === "accepted"
-      ? "http://127.0.0.1:5001/api/courses/accept"
-      : "http://127.0.0.1:5001/api/courses/reject";
 
-  await fetch(endpoint, {
+  if (status === "rejected" && !rejecting) {
+    setRejecting(true);
+    return;
+  }
+
+  let reason: string | undefined;
+
+  if (status === "rejected") {
+    const parts = [...selectedChips];
+    if (customReason.trim()) parts.push(customReason.trim());
+    reason = parts.join("; ") || undefined;
+  }
+
+  await fetch(`${API_BASE_URL}/api/courses`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -56,21 +67,15 @@ const handle = async (status: "accepted" | "rejected") => {
     body: JSON.stringify({
       user_id: "550e8400-e29b-41d4-a716-446655440000",
       course_id: title,
+      status,
+      reason,
     }),
   });
 
-  addCourse({ title, status });
+  addCourse({ title, status, reason });
   setRecorded(true);
+  setRejecting(false);
 };
-
-
-  const handleRejectSubmit = () => {
-    const parts = [...selectedChips];
-    if (customReason.trim()) parts.push(customReason.trim());
-    addCourse({ title, status: "rejected", reason: parts.join("; ") || undefined });
-    setRecorded(true);
-    setRejecting(false);
-  };
 
   const toggleChip = (chip: string) => {
     setSelectedChips((prev) => {
@@ -144,7 +149,7 @@ const handle = async (status: "accepted" | "rejected") => {
           />
           <div className="flex items-center gap-2">
             <button
-              onClick={handleRejectSubmit}
+              onClick={() => handle("rejected")}
               className="rounded-md border border-border px-3 py-1.5 font-medium text-muted-foreground text-xs hover:bg-muted"
             >
               Submit
@@ -160,13 +165,13 @@ const handle = async (status: "accepted" | "rejected") => {
       ) : (
         <div className="mt-3 flex items-center gap-2">
           <button
-            onClick={handleAccept}
+            onClick={() => handle("accepted")}
             className="rounded-md bg-emerald-500 px-3 py-1.5 font-medium text-white text-xs hover:bg-emerald-600"
           >
             Accept
           </button>
           <button
-            onClick={() => setRejecting(true)}
+            onClick={() => handle("rejected")}
             className="rounded-md bg-red-500 px-3 py-1.5 font-medium text-white text-xs hover:bg-red-600"
           >
             Reject

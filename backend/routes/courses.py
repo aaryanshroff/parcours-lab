@@ -1,36 +1,20 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, jsonify
 from config.db import supabase
+from utils import validate_request_body
+from schemas.courses import CourseActionRequest
 
 courses_bp = Blueprint("courses", __name__)
 
-@courses_bp.route("/courses/accept", methods=["POST"])
-def accept_course():
-    data = request.json
+@courses_bp.route("/courses", methods=["POST"])
+@validate_request_body(CourseActionRequest)
+def handle_course(payload: CourseActionRequest):
 
-    user_id = data.get("user_id")
-    course_id = data.get("course_id")
+    decision = "keep" if payload.status == "accepted" else "reject"
 
     response = supabase.table("course_history").insert({
-        "user_id": user_id,
-        "course_id": course_id,
-        "decision": "keep"
+        "user_id": payload.user_id,
+        "course_id": payload.course_id,
+        "decision": decision
     }).execute()
 
     return jsonify(response.data)
-
-@courses_bp.route("/courses/reject", methods=["POST"])
-def reject_course():
-    data = request.json
-
-    user_id = data.get("user_id")
-    course_id = data.get("course_id")
-
-    response = supabase.table("course_history").insert({
-        "user_id": user_id,
-        "course_id": course_id,
-        "decision": "reject"
-    }).execute()
-
-    return jsonify(response.data)
-
-
