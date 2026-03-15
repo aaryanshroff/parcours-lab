@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from pydantic import ValidationError
+from middleware.auth import require_auth
 from schemas.chat import ChatRequest
 from services.llm import call_openrouter, get_reply_text, extract_tool_calls
 from services.tools import TOOLS, build_system_instruction, resolve_tool_calls
@@ -8,6 +9,7 @@ chat_bp = Blueprint("chat", __name__)
 
 
 @chat_bp.route("/chat", methods=["POST"])
+@require_auth
 def chat():
     """Accept chat messages and return assistant response."""
     data = request.get_json(silent=True)

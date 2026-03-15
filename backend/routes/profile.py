@@ -4,6 +4,7 @@ import json
 from flask import Blueprint, request, jsonify
 from openrouter import OpenRouter
 from dotenv import load_dotenv
+from middleware.auth import require_auth
 from services.skill_matcher import match_skills
 from config.db import supabase
 from schemas.profile import BuildProfileRequest, SetSkillsRequest, SetGoalRequest
@@ -70,6 +71,7 @@ def validate_profile_structure(profile: dict) -> None:
 
 
 @profile_bp.route("/profile", methods=["POST"])
+@require_auth
 @validate_request_body(BuildProfileRequest)
 def build_profile(payload: BuildProfileRequest):
     """Accept a bio and return a structured profile with extracted goal and skills."""
@@ -101,6 +103,7 @@ def build_profile(payload: BuildProfileRequest):
 
 
 @profile_bp.route("/profile/<user_id>", methods=["GET"])
+@require_auth
 def get_profile(user_id: str):
     """Return the user's goal and skills."""
     result = (
@@ -122,6 +125,7 @@ def get_profile(user_id: str):
 
 
 @profile_bp.route("/profile/<user_id>/skills", methods=["PUT"])
+@require_auth
 @validate_request_body(SetSkillsRequest)
 def set_skills(payload: SetSkillsRequest, user_id: str):
     """Set the user's current skills."""
@@ -139,6 +143,7 @@ def set_skills(payload: SetSkillsRequest, user_id: str):
 
 
 @profile_bp.route("/profile/<user_id>/goal", methods=["PUT"])
+@require_auth
 @validate_request_body(SetGoalRequest)
 def set_goal(payload: SetGoalRequest, user_id: str):
     """Set the user's learning goal."""

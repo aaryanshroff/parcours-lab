@@ -1,5 +1,8 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import type { Session } from "@supabase/supabase-js";
 import {
   AssistantRuntimeProvider,
   useLocalRuntime,
@@ -19,8 +22,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { API_BASE_URL } from "@/lib/api";
 import type { ChatResponse, RecommendedCourse } from "@/lib/types";
-
-const conversationId = crypto.randomUUID();
+import { createClient } from "@/lib/supabase/client";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -30,80 +32,113 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
-const backendChatAdapter: ChatModelAdapter = {
-  async run({ messages, abortSignal }) {
-    const goal = localStorage.getItem("parcours-goal") || "";
-    const requiredSkills: string[] = (() => {
-      try {
-        const raw = localStorage.getItem("parcours-required-skills");
-        return raw ? JSON.parse(raw) : [];
-      } catch {
-        return [];
-      }
-    })();
+const conversationId = crypto.randomUUID();
+const supabase = createClient();
 
-    const courseHistory: Array<{ title: string; status: string; reason: string }> = (() => {
-      try {
-        const raw = localStorage.getItem("parcours-course-history");
-        if (!raw) return [];
-        const parsed = JSON.parse(raw) as Array<{ title?: string; status?: string; reason?: string }>;
-        return Array.isArray(parsed)
-          ? parsed.map((c) => ({ title: c.title ?? "", status: c.status ?? "", reason: c.reason ?? "" }))
-          : [];
-      } catch {
-        return [];
-      }
-    })();
-
-    const response = await fetch(`${API_BASE_URL}/api/chat`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages, goal, required_skills: requiredSkills, conversation_id: conversationId, course_history: courseHistory }),
-      signal: abortSignal,
-    });
-
-    if (!response.ok) {
-      let errorMessage = `Chat request failed (${response.status})`;
-      try {
-        const errorData = (await response.json()) as ChatResponse;
-        if (typeof errorData.error === "string" && errorData.error.trim()) {
-          errorMessage = errorData.error;
+function createBackendChatAdapter(session: Session): ChatModelAdapter {
+  return {
+    async run({ messages, abortSignal }) {
+      const goal = localStorage.getItem("parcours-goal") || "";
+      const requiredSkills: string[] = (() => {
+        try {
+          const raw = localStorage.getItem("parcours-required-skills");
+          return raw ? JSON.parse(raw) : [];
+        } catch {
+          return [];
         }
-      } catch {
-        // Response was not JSON; keep status-based error.
-      }
-      throw new Error(errorMessage);
-    }
+      })();
 
-    let data: ChatResponse;
-    try {
-      data = (await response.json()) as ChatResponse;
-    } catch {
-      throw new Error("Chat response was not valid JSON");
-    }
+      const courseHistory: Array<{
+        title: string;
+        status: string;
+        reason: string;
+      }> = (() => {
+        try {
+          const raw = localStorage.getItem("parcours-course-history");
+          if (!raw) return [];
+          const parsed = JSON.parse(raw) as Array<{
+            title?: string;
+            status?: string;
+            reason?: string;
+          }>;
+          return Array.isArray(parsed)
+            ? parsed.map((c) => ({
+                title: c.title ?? "",
+                status: c.status ?? "",
+                reason: c.reason ?? "",
+              }))
+            : [];
+        } catch {
+          return [];
+        }
+      })();
 
-    const content: Array<
-      | { type: "text"; text: string }
-      | { type: "data"; name: string; data: RecommendedCourse[] }
-    > = [{ type: "text", text: data.response }];
-
-    if (data.recommended_courses?.length) {
-      content.push({
-        type: "data",
-        name: "recommended_courses",
-        data: data.recommended_courses,
+      const response = await fetch(`${API_BASE_URL}/api/chat`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          messages,
+          goal,
+          required_skills: requiredSkills,
+          conversation_id: conversationId,
+          course_history: courseHistory,
+        }),
+        signal: abortSignal,
       });
-    }
 
-    return {
-      content,
-    };
-  },
-};
+      if (!response.ok) {
+        let errorMessage = `Chat request failed (${response.status})`;
+        try {
+          const errorData = (await response.json()) as ChatResponse;
+          if (typeof errorData.error === "string" && errorData.error.trim()) {
+            errorMessage = errorData.error;
+          }
+        } catch {
+          // Response was not JSON; keep status-based error.
+        }
+        throw new Error(errorMessage);
+      }
 
-export const Assistant = () => {
-  const runtime = useLocalRuntime(backendChatAdapter);
-  const { isComplete, isLoaded, markComplete, reset } = useOnboardingComplete();
+      let data: ChatResponse;
+      try {
+        data = (await response.json()) as ChatResponse;
+      } catch {
+        throw new Error("Chat response was not valid JSON");
+      }
+
+      const content: Array<
+        | { type: "text"; text: string }
+        | { type: "data"; name: string; data: RecommendedCourse[] }
+      > = [{ type: "text", text: data.response }];
+
+      if (data.recommended_courses?.length) {
+        content.push({
+          type: "data",
+          name: "recommended_courses",
+          data: data.recommended_courses,
+        });
+      }
+
+      return {
+        content,
+      };
+    },
+  };
+}
+
+function AuthenticatedAssistant({ session }: { session: Session }) {
+  const adapter = createBackendChatAdapter(session);
+  const runtime = useLocalRuntime(adapter);
+  const { isComplete, isLoaded, markComplete, reset } =
+    useOnboardingComplete();
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    reset();
+  };
 
   return (
     <AssistantRuntimeProvider runtime={runtime}>
@@ -112,7 +147,7 @@ export const Assistant = () => {
       ) : (
         <SidebarProvider>
           <div className="flex h-dvh w-full pr-0.5">
-            <ThreadListSidebar onLogout={reset} />
+            <ThreadListSidebar onLogout={handleLogout} />
             <SidebarInset>
               <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
                 <SidebarTrigger />
@@ -144,4 +179,37 @@ export const Assistant = () => {
       )}
     </AssistantRuntimeProvider>
   );
+}
+
+export const Assistant = () => {
+  const router = useRouter();
+  const [session, setSession] = useState<Session | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setLoading(false);
+      if (!session) {
+        router.replace("/login");
+      }
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      if (!session) {
+        router.replace("/login");
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [router]);
+
+  if (loading || !session) {
+    return null;
+  }
+
+  return <AuthenticatedAssistant session={session} />;
 };
