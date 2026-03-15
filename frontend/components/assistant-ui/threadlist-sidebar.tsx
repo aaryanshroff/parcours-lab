@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Github, MessagesSquare } from "lucide-react";
 import Link from "next/link";
+import { supabase } from "@/lib/supabase/client";
 import {
   Sidebar,
   SidebarContent,
@@ -20,6 +21,14 @@ export function ThreadListSidebar({
   onLogout,
   ...props
 }: React.ComponentProps<typeof Sidebar> & { onLogout: () => void }) {
+  const [email, setEmail] = React.useState<string>("");
+
+  React.useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setEmail(session?.user?.email ?? "");
+    });
+  }, []);
+
   return (
     <Sidebar {...props}>
       <SidebarHeader className="aui-sidebar-header mb-2 border-b">
@@ -65,7 +74,7 @@ export function ThreadListSidebar({
                 </div>
                 <div className="aui-sidebar-footer-heading flex flex-col gap-0.5 leading-none">
                   <span className="aui-sidebar-footer-title font-semibold">
-                    John Doe
+                    {email || "User"}
                   </span>
                   <span>Free</span>
                 </div>

@@ -21,7 +21,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { API_BASE_URL, authFetch } from "@/lib/api";
 import type { ChatResponse, RecommendedCourse } from "@/lib/types";
-import { createClient } from "@/lib/supabase/client";
+import { supabase } from "@/lib/supabase/client";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -30,8 +30,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-
-const supabase = createClient();
 
 const backendChatAdapter: ChatModelAdapter = {
   async run({ messages, abortSignal }) {
