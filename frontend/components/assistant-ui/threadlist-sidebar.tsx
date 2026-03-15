@@ -76,7 +76,6 @@ export function ThreadListSidebar({
                   <span className="aui-sidebar-footer-title font-semibold">
                     {email || "User"}
                   </span>
-                  <span>Free</span>
                 </div>
               </Link>
             </SidebarMenuButton>

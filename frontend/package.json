@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "dev:backend": "cd ../backend && poetry run flask run --debug",
-    "dev:all": "concurrently -n FRONTEND,BACKEND npm:dev npm:dev:backend",
+    "dev:supabase": "cd ../backend && npx supabase start",
+    "dev:all": "concurrently -n FRONTEND,BACKEND,SUPABASE npm:dev npm:dev:backend npm:dev:supabase",
     "build": "next build",
     "start": "next start",
     "lint": "biome check .",
