@@ -6,7 +6,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { API_BASE_URL, authFetch } from "@/lib/api";
 
 const BIO_STORAGE_KEY = "parcours-onboarding-bio";
-const PROFILE_COMPLETE_KEY = "parcours-profile-complete";
 const GOAL_STORAGE_KEY = "parcours-goal";
 const KNOWN_SKILLS_STORAGE_KEY = "parcours-known-skills";
 const STARRED_SKILLS_STORAGE_KEY = "parcours-starred-skills";
@@ -31,7 +30,6 @@ export function Onboarding({ onComplete }: OnboardingProps) {
       "Communication",
     ];
     localStorage.setItem(BIO_STORAGE_KEY, "Debug default profile");
-    localStorage.setItem(PROFILE_COMPLETE_KEY, "true");
     localStorage.setItem(
       "parcours-goal",
       "Transition into a senior full-stack engineering role",
@@ -77,7 +75,6 @@ export function Onboarding({ onComplete }: OnboardingProps) {
       );
 
       localStorage.setItem(BIO_STORAGE_KEY, bio);
-      localStorage.setItem(PROFILE_COMPLETE_KEY, "true");
       localStorage.setItem(GOAL_STORAGE_KEY, profile.goal);
       localStorage.setItem(KNOWN_SKILLS_STORAGE_KEY, JSON.stringify(currentSkills));
       localStorage.setItem(REQUIRED_SKILLS_STORAGE_KEY, JSON.stringify(requiredSkills));
@@ -229,13 +226,34 @@ export function useOnboardingComplete() {
   const [isLoaded, setIsLoaded] = React.useState(false);
 
   React.useEffect(() => {
-    const complete = localStorage.getItem(PROFILE_COMPLETE_KEY) === "true";
-    setIsComplete(complete);
-    setIsLoaded(true);
+    authFetch(`${API_BASE_URL}/api/profile/me`)
+      .then((res) => {
+        if (!res.ok) throw new Error("no profile");
+        return res.json();
+      })
+      .then((profile: { goal?: string; current_skills?: Array<{ label: string }>; required_skills?: Array<{ label: string }> }) => {
+        const goal = profile.goal || "";
+        const currentSkills = (profile.current_skills ?? []).map(
+          (s) => typeof s === "string" ? s : s.label,
+        );
+        const requiredSkills = (profile.required_skills ?? []).map(
+          (s) => typeof s === "string" ? s : s.label,
+        );
+
+        localStorage.setItem(GOAL_STORAGE_KEY, goal);
+        localStorage.setItem(KNOWN_SKILLS_STORAGE_KEY, JSON.stringify(currentSkills));
+        localStorage.setItem(REQUIRED_SKILLS_STORAGE_KEY, JSON.stringify(requiredSkills));
+        setIsComplete(true);
+      })
+      .catch(() => {
+        setIsComplete(false);
+      })
+      .finally(() => {
+        setIsLoaded(true);
+      });
   }, []);
 
   const markComplete = () => {
-    localStorage.setItem(PROFILE_COMPLETE_KEY, "true");
     setIsComplete(true);
   };
 

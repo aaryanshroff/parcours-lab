@@ -1,7 +1,7 @@
 import logging
 import os
 import json
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, g, request, jsonify
 from openrouter import OpenRouter
 from dotenv import load_dotenv
 from middleware.auth import require_auth
@@ -87,6 +87,16 @@ def build_profile(payload: BuildProfileRequest):
         goal = profile.get("goal", "")
         profile["required_skills"] = match_skills(goal, top_k=5, threshold=0.35) if goal else []
 
+        # Persist to DB using the authenticated user's ID
+        user = g.user
+        supabase.table(TABLE).upsert({
+            "id": user.id,
+            "email": user.email,
+            "goal": goal,
+            "current_skills": profile["current_skills"],
+            "required_skills": profile["required_skills"],
+        }).execute()
+
         return jsonify(profile), 200
 
     except json.JSONDecodeError as e:
@@ -100,6 +110,29 @@ def build_profile(payload: BuildProfileRequest):
 
 
 # ── Profile CRUD (Supabase) ────────────────────────────────────────────
+
+
+@profile_bp.route("/profile/me", methods=["GET"])
+@require_auth
+def get_my_profile():
+    """Return the authenticated user's profile."""
+    result = (
+        supabase.table(TABLE)
+        .select("id, goal, current_skills, required_skills")
+        .eq("id", g.user.id)
+        .execute()
+    )
+
+    if not result.data:
+        return jsonify({"error": "profile not found"}), 404
+
+    row = result.data[0]
+    return jsonify({
+        "id": row["id"],
+        "goal": row.get("goal") or "",
+        "current_skills": row.get("current_skills") or [],
+        "required_skills": row.get("required_skills") or [],
+    })
 
 
 @profile_bp.route("/profile/<user_id>", methods=["GET"])
