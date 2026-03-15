@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { Session } from "@supabase/supabase-js";
 import {
   AssistantRuntimeProvider,
   useLocalRuntime,
@@ -20,7 +19,7 @@ import {
   useOnboardingComplete,
 } from "@/components/assistant-ui/onboarding";
 import { Separator } from "@/components/ui/separator";
-import { API_BASE_URL } from "@/lib/api";
+import { API_BASE_URL, authFetch } from "@/lib/api";
 import type { ChatResponse, RecommendedCourse } from "@/lib/types";
 import { createClient } from "@/lib/supabase/client";
 import {
@@ -35,59 +34,55 @@ import {
 const conversationId = crypto.randomUUID();
 const supabase = createClient();
 
-function createBackendChatAdapter(session: Session): ChatModelAdapter {
-  return {
-    async run({ messages, abortSignal }) {
-      const goal = localStorage.getItem("parcours-goal") || "";
-      const requiredSkills: string[] = (() => {
-        try {
-          const raw = localStorage.getItem("parcours-required-skills");
-          return raw ? JSON.parse(raw) : [];
-        } catch {
-          return [];
-        }
-      })();
+const backendChatAdapter: ChatModelAdapter = {
+  async run({ messages, abortSignal }) {
+    const goal = localStorage.getItem("parcours-goal") || "";
+    const requiredSkills: string[] = (() => {
+      try {
+        const raw = localStorage.getItem("parcours-required-skills");
+        return raw ? JSON.parse(raw) : [];
+      } catch {
+        return [];
+      }
+    })();
 
-      const courseHistory: Array<{
-        title: string;
-        status: string;
-        reason: string;
-      }> = (() => {
-        try {
-          const raw = localStorage.getItem("parcours-course-history");
-          if (!raw) return [];
-          const parsed = JSON.parse(raw) as Array<{
-            title?: string;
-            status?: string;
-            reason?: string;
-          }>;
-          return Array.isArray(parsed)
-            ? parsed.map((c) => ({
-                title: c.title ?? "",
-                status: c.status ?? "",
-                reason: c.reason ?? "",
-              }))
-            : [];
-        } catch {
-          return [];
-        }
-      })();
+    const courseHistory: Array<{
+      title: string;
+      status: string;
+      reason: string;
+    }> = (() => {
+      try {
+        const raw = localStorage.getItem("parcours-course-history");
+        if (!raw) return [];
+        const parsed = JSON.parse(raw) as Array<{
+          title?: string;
+          status?: string;
+          reason?: string;
+        }>;
+        return Array.isArray(parsed)
+          ? parsed.map((c) => ({
+              title: c.title ?? "",
+              status: c.status ?? "",
+              reason: c.reason ?? "",
+            }))
+          : [];
+      } catch {
+        return [];
+      }
+    })();
 
-      const response = await fetch(`${API_BASE_URL}/api/chat`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.access_token}`,
-        },
-        body: JSON.stringify({
-          messages,
-          goal,
-          required_skills: requiredSkills,
-          conversation_id: conversationId,
-          course_history: courseHistory,
-        }),
-        signal: abortSignal,
-      });
+    const response = await authFetch(`${API_BASE_URL}/api/chat`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        messages,
+        goal,
+        required_skills: requiredSkills,
+        conversation_id: conversationId,
+        course_history: courseHistory,
+      }),
+      signal: abortSignal,
+    });
 
       if (!response.ok) {
         let errorMessage = `Chat request failed (${response.status})`;
@@ -126,12 +121,11 @@ function createBackendChatAdapter(session: Session): ChatModelAdapter {
         content,
       };
     },
-  };
-}
+  },
+};
 
-function AuthenticatedAssistant({ session }: { session: Session }) {
-  const adapter = createBackendChatAdapter(session);
-  const runtime = useLocalRuntime(adapter);
+function AuthenticatedAssistant() {
+  const runtime = useLocalRuntime(backendChatAdapter);
   const { isComplete, isLoaded, markComplete, reset } =
     useOnboardingComplete();
 
@@ -183,13 +177,11 @@ function AuthenticatedAssistant({ session }: { session: Session }) {
 
 export const Assistant = () => {
   const router = useRouter();
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [authenticated, setAuthenticated] = useState<boolean | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setLoading(false);
+      setAuthenticated(!!session);
       if (!session) {
         router.replace("/login");
       }
@@ -198,7 +190,7 @@ export const Assistant = () => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
+      setAuthenticated(!!session);
       if (!session) {
         router.replace("/login");
       }
@@ -207,9 +199,9 @@ export const Assistant = () => {
     return () => subscription.unsubscribe();
   }, [router]);
 
-  if (loading || !session) {
+  if (!authenticated) {
     return null;
   }
 
-  return <AuthenticatedAssistant session={session} />;
+  return <AuthenticatedAssistant />;
 };
