@@ -31,7 +31,6 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
-const conversationId = crypto.randomUUID();
 const supabase = createClient();
 
 const backendChatAdapter: ChatModelAdapter = {
@@ -78,49 +77,47 @@ const backendChatAdapter: ChatModelAdapter = {
         messages,
         goal,
         required_skills: requiredSkills,
-        conversation_id: conversationId,
         course_history: courseHistory,
       }),
       signal: abortSignal,
     });
 
-      if (!response.ok) {
-        let errorMessage = `Chat request failed (${response.status})`;
-        try {
-          const errorData = (await response.json()) as ChatResponse;
-          if (typeof errorData.error === "string" && errorData.error.trim()) {
-            errorMessage = errorData.error;
-          }
-        } catch {
-          // Response was not JSON; keep status-based error.
-        }
-        throw new Error(errorMessage);
-      }
-
-      let data: ChatResponse;
+    if (!response.ok) {
+      let errorMessage = `Chat request failed (${response.status})`;
       try {
-        data = (await response.json()) as ChatResponse;
+        const errorData = (await response.json()) as ChatResponse;
+        if (typeof errorData.error === "string" && errorData.error.trim()) {
+          errorMessage = errorData.error;
+        }
       } catch {
-        throw new Error("Chat response was not valid JSON");
+        // Response was not JSON; keep status-based error.
       }
+      throw new Error(errorMessage);
+    }
 
-      const content: Array<
-        | { type: "text"; text: string }
-        | { type: "data"; name: string; data: RecommendedCourse[] }
-      > = [{ type: "text", text: data.response }];
+    let data: ChatResponse;
+    try {
+      data = (await response.json()) as ChatResponse;
+    } catch {
+      throw new Error("Chat response was not valid JSON");
+    }
 
-      if (data.recommended_courses?.length) {
-        content.push({
-          type: "data",
-          name: "recommended_courses",
-          data: data.recommended_courses,
-        });
-      }
+    const content: Array<
+      | { type: "text"; text: string }
+      | { type: "data"; name: string; data: RecommendedCourse[] }
+    > = [{ type: "text", text: data.response }];
 
-      return {
-        content,
-      };
-    },
+    if (data.recommended_courses?.length) {
+      content.push({
+        type: "data",
+        name: "recommended_courses",
+        data: data.recommended_courses,
+      });
+    }
+
+    return {
+      content,
+    };
   },
 };
 

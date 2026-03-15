@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, g, request, jsonify
 from pydantic import ValidationError
 from middleware.auth import require_auth
 from schemas.chat import ChatRequest
@@ -27,11 +27,13 @@ def chat():
         result = call_openrouter(model_messages, model=req.model, tools=TOOLS, tool_choice="auto")
         tool_calls = extract_tool_calls(result)
 
+        user_id = g.user.id
+
         if tool_calls:
             assistant_text, recommended_courses = resolve_tool_calls(
                 tool_calls, model_messages, req.model,
                 goal=req.goal, required_skills=req.required_skills,
-                conversation_id=req.conversation_id,
+                conversation_id=user_id,
                 course_history=req.course_history,
             )
         else:
