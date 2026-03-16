@@ -14,7 +14,9 @@ import { Button } from "@/components/ui/button";
 import { SidebarSection } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { SKILLS_LIST, SUGGESTED_SKILLS, MAX_SKILLS } from "@/lib/skills";
+import { MAX_SKILLS } from "@/lib/skills";
+import { API_BASE_URL, authFetch } from "@/lib/api";
+import { supabase } from "@/lib/supabase/client";
 
 function sortStarredFirst(skills: string[], starred: Set<string>): string[] {
   return [...skills].sort((a, b) => {
@@ -111,6 +113,15 @@ function SkillsModal({
   const [highlightedIndex, setHighlightedIndex] = React.useState(0);
   const [isSearchFocused, setIsSearchFocused] = React.useState(false);
   const [displayOrder, setDisplayOrder] = React.useState<string[]>([]);
+  const [allSkills, setAllSkills] = React.useState<string[]>([]);
+  const [shuffledSkills, setShuffledSkills] = React.useState<string[]>([]);
+
+  React.useEffect(() => {
+    fetch(`${API_BASE_URL}/api/skills`)
+      .then((r) => r.json())
+      .then((data: { label: string }[]) => setAllSkills([...new Set(data.map((s) => s.label.charAt(0).toUpperCase() + s.label.slice(1)))]))
+      .catch(() => {});
+  }, []);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const listRef = React.useRef<HTMLUListElement>(null);
 
@@ -125,6 +136,7 @@ function SkillsModal({
       setHighlightedIndex(0);
       setIsSearchFocused(false);
       setDisplayOrder(sortStarredFirst(selected, starred));
+      setShuffledSkills([...allSkills].sort(() => Math.random() - 0.5));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
@@ -144,14 +156,14 @@ function SkillsModal({
   const searchResults = React.useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return [];
-    return SKILLS_LIST.filter(
+    return allSkills.filter(
       (s) => !selectedSet.has(s) && s.toLowerCase().includes(q),
     );
-  }, [selectedSet, query]);
+  }, [selectedSet, query, allSkills]);
 
   const suggestedSkills = React.useMemo(
-    () => SUGGESTED_SKILLS.filter((s) => !selectedSet.has(s)),
-    [selectedSet],
+    () => shuffledSkills.filter((s) => !selectedSet.has(s)).slice(0, 10),
+    [selectedSet, shuffledSkills],
   );
 
   const showDropdown =
@@ -411,16 +423,31 @@ export function SkillsSection() {
   const [modalOpen, setModalOpen] = React.useState(false);
   const [isHydrated, setIsHydrated] = React.useState(false);
 
+  // Load: prefer backend if authenticated, fall back to localStorage
   React.useEffect(() => {
-    setSelected(loadKnownSkills());
-    setStarred(loadStarredSkills());
-    setIsHydrated(true);
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (session) {
+        try {
+          const res = await authFetch(`${API_BASE_URL}/api/profile/me`);
+          if (res.ok) {
+            const data = await res.json();
+            const skills = (data.current_skills as { label: string }[] | string[]).map(
+              (s) => (typeof s === "string" ? s : s.label),
+            );
+            setSelected(skills);
+            setStarred(loadStarredSkills());
+            setIsHydrated(true);
+            return;
+          }
+        } catch {
+          // fall through to localStorage
+        }
+      }
+      setSelected(loadKnownSkills());
+      setStarred(loadStarredSkills());
+      setIsHydrated(true);
+    });
   }, []);
-
-  React.useEffect(() => {
-    if (!isHydrated) return;
-    saveKnownSkills(selected);
-  }, [selected, isHydrated]);
 
   React.useEffect(() => {
     if (!isHydrated) return;
@@ -437,8 +464,9 @@ export function SkillsSection() {
   }, []);
 
   // Clean up starred skills that have been removed
-  const handleSelectedChange = React.useCallback((newSelected: string[]) => {
+  const handleSelectedChange = React.useCallback(async (newSelected: string[]) => {
     setSelected(newSelected);
+    saveKnownSkills(newSelected);
     const newSet = new Set(newSelected);
     setStarred((prev) => {
       const next = new Set(prev);
@@ -451,6 +479,14 @@ export function SkillsSection() {
       }
       return changed ? next : prev;
     });
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      authFetch(`${API_BASE_URL}/api/profile/save`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ current_skills: newSelected.map((label) => ({ label })) }),
+      }).catch(() => {});
+    }
   }, []);
 
   return (
