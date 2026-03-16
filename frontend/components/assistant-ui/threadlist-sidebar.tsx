@@ -11,75 +11,81 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-  SidebarSection,
 } from "@/components/ui/sidebar";
-import { useCourseHistory } from "@/lib/courses";
 import { SkillsSection, RequiredSkillsSection } from "@/components/assistant-ui/skill-selector";
 import { GoalsSection } from "@/components/assistant-ui/goals-section";
 import { CourseHistorySection } from "@/components/assistant-ui/course-history";
+
 export function ThreadListSidebar({
-  onLogout,
+  onReset,
   ...props
-}: React.ComponentProps<typeof Sidebar> & { onLogout: () => void }) {
-  const [email, setEmail] = React.useState<string>("");
+}: React.ComponentProps<typeof Sidebar> & { onReset: () => void }) {
+  const [email, setEmail] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setEmail(session?.user?.email ?? "");
+      setEmail(session?.user?.email ?? null);
     });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setEmail(session?.user?.email ?? null);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   return (
     <Sidebar {...props}>
       <SidebarHeader className="aui-sidebar-header mb-2 border-b">
-        <div className="aui-sidebar-header-content flex items-center justify-between">
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton size="lg">
-                <div className="aui-sidebar-header-icon-wrapper flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  <MessagesSquare className="aui-sidebar-header-icon size-4" />
-                </div>
-                <div className="aui-sidebar-header-heading mr-6 flex flex-col gap-0.5 leading-none">
-                  <span className="aui-sidebar-header-title font-semibold">
-                    Your Profile
-                  </span>
-                </div>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </div>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton size="lg">
+              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                <MessagesSquare className="size-4" />
+              </div>
+              <span className="font-semibold">Your Profile</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent className="aui-sidebar-content px-2">
+      <SidebarContent className="px-2">
         <GoalsSection />
         <SkillsSection />
         <RequiredSkillsSection />
         <CourseHistorySection />
       </SidebarContent>
       <SidebarRail />
-      <SidebarFooter className="aui-sidebar-footer border-t">
+      <SidebarFooter className="border-t">
         <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="sm" onClick={onLogout}>
-              Logout
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
-              <Link
-                href="https://github.com/assistant-ui/assistant-ui"
-                target="_blank"
-              >
-                <div className="aui-sidebar-footer-icon-wrapper flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  <Github className="aui-sidebar-footer-icon size-4" />
-                </div>
-                <div className="aui-sidebar-footer-heading flex flex-col gap-0.5 leading-none">
-                  <span className="aui-sidebar-footer-title font-semibold">
-                    {email || "User"}
-                  </span>
-                </div>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+          {email ? (
+            <>
+              <SidebarMenuItem>
+                <SidebarMenuButton size="lg">
+                  <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                    <Github className="size-4" />
+                  </div>
+                  <span className="truncate text-sm font-medium">{email}</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  size="sm"
+                  onClick={async () => {
+                    await supabase.auth.signOut();
+                    onReset();
+                  }}
+                >
+                  Sign out
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </>
+          ) : (
+            <SidebarMenuItem>
+              <SidebarMenuButton size="sm" asChild>
+                <Link href="/login">Save progress — sign in</Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          )}
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>

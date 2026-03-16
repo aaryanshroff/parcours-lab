@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import {
   AssistantRuntimeProvider,
   useLocalRuntime,
@@ -20,8 +19,9 @@ import {
 } from "@/components/assistant-ui/onboarding";
 import { Separator } from "@/components/ui/separator";
 import { API_BASE_URL, authFetch } from "@/lib/api";
-import type { ChatResponse, RecommendedCourse } from "@/lib/types";
 import { supabase } from "@/lib/supabase/client";
+import type { ChatResponse, RecommendedCourse } from "@/lib/types";
+import { getCourseHistory, setCourseHistory } from "@/lib/courses";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -30,6 +30,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+
+const conversationId = crypto.randomUUID();
 
 const backendChatAdapter: ChatModelAdapter = {
   async run({ messages, abortSignal }) {
@@ -75,6 +77,7 @@ const backendChatAdapter: ChatModelAdapter = {
         messages,
         goal,
         required_skills: requiredSkills,
+        conversation_id: conversationId,
         course_history: courseHistory,
       }),
       signal: abortSignal,
@@ -113,21 +116,65 @@ const backendChatAdapter: ChatModelAdapter = {
       });
     }
 
+    // Persist turn to localStorage so it can be flushed to DB on sign-in
+    const lastUserMsg = [...messages].reverse().find((m) => m.role === "user");
+    if (lastUserMsg) {
+      const userText = lastUserMsg.content
+        .filter((p): p is { type: "text"; text: string } => p.type === "text")
+        .map((p) => p.text)
+        .join("\n");
+      const stored = JSON.parse(localStorage.getItem("parcours-messages") || "[]");
+      stored.push({ role: "user", content: userText });
+      stored.push({ role: "assistant", content: data.response });
+      localStorage.setItem("parcours-messages", JSON.stringify(stored));
+    }
+
     return {
       content,
     };
   },
 };
 
-function AuthenticatedAssistant() {
+export const Assistant = () => {
   const runtime = useLocalRuntime(backendChatAdapter);
-  const { isComplete, isLoaded, markComplete, reset } =
-    useOnboardingComplete();
+  const { isComplete, isLoaded, markComplete, reset } = useOnboardingComplete();
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    reset();
-  };
+  useEffect(() => {
+    if (!isComplete) return;
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (!session) return;
+      try {
+        const res = await authFetch(`${API_BASE_URL}/api/conversations/me`);
+        if (!res.ok) return;
+        const { messages } = await res.json() as { messages: { role: "user" | "assistant"; content: string }[] };
+        if (messages?.length) {
+          runtime.thread.reset(messages.map((m) => ({ role: m.role, content: m.content })));
+        }
+      } catch {
+        // No history — start fresh
+      }
+
+      try {
+        const localCourses = getCourseHistory();
+        const res = await authFetch(`${API_BASE_URL}/api/profile/me`);
+        if (res.ok) {
+          const body = await res.json() as { course_history?: typeof localCourses };
+          const serverCourses = Array.isArray(body.course_history) ? body.course_history : [];
+          if (serverCourses.length > 0) {
+            setCourseHistory(serverCourses, { sync: false });
+          } else if (localCourses.length > 0) {
+            await authFetch(`${API_BASE_URL}/api/profile/save`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ course_history: localCourses }),
+            });
+          }
+        }
+      } catch {
+        // Best-effort sync only.
+      }
+    });
+  }, [runtime, isComplete]);
 
   return (
     <AssistantRuntimeProvider runtime={runtime}>
@@ -136,7 +183,7 @@ function AuthenticatedAssistant() {
       ) : (
         <SidebarProvider>
           <div className="flex h-dvh w-full pr-0.5">
-            <ThreadListSidebar onLogout={handleLogout} />
+            <ThreadListSidebar onReset={reset} />
             <SidebarInset>
               <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
                 <SidebarTrigger />
@@ -168,35 +215,4 @@ function AuthenticatedAssistant() {
       )}
     </AssistantRuntimeProvider>
   );
-}
-
-export const Assistant = () => {
-  const router = useRouter();
-  const [authenticated, setAuthenticated] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setAuthenticated(!!session);
-      if (!session) {
-        router.replace("/login");
-      }
-    });
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setAuthenticated(!!session);
-      if (!session) {
-        router.replace("/login");
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [router]);
-
-  if (!authenticated) {
-    return null;
-  }
-
-  return <AuthenticatedAssistant />;
 };

@@ -26,6 +26,7 @@ const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
 
   const handleAccept = () => {
     addCourse({
+      id: course.id,
       title,
       status: "accepted",
       provider: course.provider,
@@ -44,6 +45,7 @@ const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
 
   const handleRejectSubmit = () => {
     addCourse({
+      id: course.id,
       title,
       status: "rejected",
       rejection_reason: rejectReason.trim() || undefined,

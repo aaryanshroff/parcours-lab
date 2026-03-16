@@ -117,3 +117,18 @@ def get_recommended_courses(
             break
 
     return results
+
+
+@lru_cache(maxsize=1)
+def _course_payload_map() -> dict[str, dict[str, object]]:
+    courses = load_course_catalog()
+    mapping: dict[str, dict[str, object]] = {}
+    for idx, course in enumerate(courses):
+        payload = CoursePayload.from_raw(course, idx).model_dump()
+        mapping[str(payload.get("id"))] = payload
+    return mapping
+
+
+def get_courses_by_ids(course_ids: list[str]) -> dict[str, dict[str, object]]:
+    lookup = _course_payload_map()
+    return {cid: lookup.get(cid) for cid in course_ids}

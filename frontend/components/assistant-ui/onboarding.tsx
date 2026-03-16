@@ -4,11 +4,11 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { API_BASE_URL, authFetch } from "@/lib/api";
+import { supabase } from "@/lib/supabase/client";
 
 const BIO_STORAGE_KEY = "parcours-onboarding-bio";
 const GOAL_STORAGE_KEY = "parcours-goal";
 const KNOWN_SKILLS_STORAGE_KEY = "parcours-known-skills";
-const STARRED_SKILLS_STORAGE_KEY = "parcours-starred-skills";
 const REQUIRED_SKILLS_STORAGE_KEY = "parcours-required-skills";
 
 interface OnboardingProps {
@@ -140,6 +140,12 @@ export function Onboarding({ onComplete }: OnboardingProps) {
             >
               {isLoading ? "Building your profile..." : "Build profile"}
             </Button>
+            <p className="text-center text-sm text-muted-foreground">
+              Already have an account?{" "}
+              <a href="/login" className="underline underline-offset-4 hover:text-foreground transition-colors">
+                Sign in
+              </a>
+            </p>
             <button
               type="button"
               onClick={handleDebugBypass}
@@ -226,31 +232,26 @@ export function useOnboardingComplete() {
   const [isLoaded, setIsLoaded] = React.useState(false);
 
   React.useEffect(() => {
-    authFetch(`${API_BASE_URL}/api/profile/me`)
-      .then((res) => {
-        if (!res.ok) throw new Error("no profile");
-        return res.json();
-      })
-      .then((profile: { goal?: string; current_skills?: Array<{ label: string }>; required_skills?: Array<{ label: string }> }) => {
-        const goal = profile.goal || "";
-        const currentSkills = (profile.current_skills ?? []).map(
-          (s) => typeof s === "string" ? s : s.label,
-        );
-        const requiredSkills = (profile.required_skills ?? []).map(
-          (s) => typeof s === "string" ? s : s.label,
-        );
-
-        localStorage.setItem(GOAL_STORAGE_KEY, goal);
-        localStorage.setItem(KNOWN_SKILLS_STORAGE_KEY, JSON.stringify(currentSkills));
-        localStorage.setItem(REQUIRED_SKILLS_STORAGE_KEY, JSON.stringify(requiredSkills));
-        setIsComplete(true);
-      })
-      .catch(() => {
-        setIsComplete(false);
-      })
-      .finally(() => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (!session) {
         setIsLoaded(true);
-      });
+        return;
+      }
+
+      try {
+        const res = await authFetch(`${API_BASE_URL}/api/profile/me`);
+        if (!res.ok) throw new Error();
+        const profile = await res.json() as { goal?: string; current_skills?: Array<{ label: string }>; required_skills?: Array<{ label: string }> };
+        localStorage.setItem(GOAL_STORAGE_KEY, profile.goal ?? "");
+        localStorage.setItem(KNOWN_SKILLS_STORAGE_KEY, JSON.stringify((profile.current_skills ?? []).map((s) => s.label)));
+        localStorage.setItem(REQUIRED_SKILLS_STORAGE_KEY, JSON.stringify((profile.required_skills ?? []).map((s) => s.label)));
+        setIsComplete(true);
+      } catch {
+        // No profile in DB — show onboarding
+      } finally {
+        setIsLoaded(true);
+      }
+    });
   }, []);
 
   const markComplete = () => {

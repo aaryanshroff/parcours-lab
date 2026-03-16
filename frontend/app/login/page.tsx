@@ -36,8 +36,7 @@ export default function LoginPage() {
         <div className="mx-auto w-full max-w-sm space-y-4 text-center">
           <h1 className="text-2xl font-bold">Check your email</h1>
           <p className="text-muted-foreground">
-            We sent a magic link to <strong>{email}</strong>. Click the link to
-            sign in.
+            We sent a magic link to <strong>{email}</strong>. Click it to sign in.
           </p>
         </div>
       </div>
@@ -46,15 +45,11 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-dvh items-center justify-center">
-      <form
-        onSubmit={handleSubmit}
-        className="mx-auto w-full max-w-sm space-y-4"
-      >
+      <form onSubmit={handleSubmit} className="mx-auto w-full max-w-sm space-y-4">
         <h1 className="text-2xl font-bold">Sign in to ParcoursLab</h1>
         <p className="text-muted-foreground">
           Enter your email to receive a magic link.
         </p>
-
         <input
           type="email"
           required
@@ -63,9 +58,7 @@ export default function LoginPage() {
           onChange={(e) => setEmail(e.target.value)}
           className="w-full rounded-md border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary"
         />
-
         {error && <p className="text-sm text-red-500">{error}</p>}
-
         <button
           type="submit"
           disabled={loading}
