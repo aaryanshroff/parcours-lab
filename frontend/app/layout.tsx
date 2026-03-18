@@ -1,9 +1,16 @@
 import type { Metadata } from "next";
-import { Lora } from "next/font/google";
+import { Libre_Baskerville, Rubik } from "next/font/google";
 import "./globals.css";
 
-const lora = Lora({
-  variable: "--font-lora",
+const libreBaskerville = Libre_Baskerville({
+  variable: "--font-baskerville",
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  style: ["normal", "italic"],
+});
+
+const rubik = Rubik({
+  variable: "--font-rubik",
   subsets: ["latin"],
 });
 
@@ -20,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${lora.variable} antialiased`}
+        className={`${libreBaskerville.variable} ${rubik.variable} antialiased`}
       >
         {children}
       </body>
