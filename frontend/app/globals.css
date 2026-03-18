@@ -51,6 +51,14 @@
       background-position: -100% 0;
     }
   }
+  @keyframes indeterminate {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(300%);
+    }
+  }
 }
 
 :root {

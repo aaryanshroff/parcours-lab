@@ -173,7 +173,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
     return (
       <div className="flex h-screen w-full flex-col items-center justify-center gap-3 px-6">
         <div className="h-1.5 w-48 overflow-hidden rounded-full bg-muted">
-          <div className="h-full w-1/3 animate-[shimmer_1.5s_ease-in-out_infinite] rounded-full bg-primary/60" />
+          <div className="h-full w-1/2 animate-[indeterminate_1.5s_ease-in-out_infinite] rounded-full bg-primary/60" />
         </div>
         <p className="text-sm text-muted-foreground">
           {displayedText}
