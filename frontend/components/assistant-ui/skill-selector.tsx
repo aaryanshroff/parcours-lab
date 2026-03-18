@@ -28,20 +28,22 @@ function sortStarredFirst(skills: string[], starred: Set<string>): string[] {
 
 // -- Sidebar display --------------------------------------------------------
 
+const COLLAPSED_COUNT = 5;
+
 export function SkillSelector({
   selected,
   starred,
   className,
-  onMoreClick,
 }: {
   selected: string[];
   starred: Set<string>;
   className?: string;
   onMoreClick?: () => void;
 }) {
+  const [collapsed, setCollapsed] = React.useState(true);
   const sorted = sortStarredFirst(selected, starred);
-  const visible = sorted.slice(0, MAX_SKILLS);
-  const hasMore = selected.length > MAX_SKILLS;
+  const visible = collapsed ? sorted.slice(0, COLLAPSED_COUNT) : sorted;
+  const hiddenCount = sorted.length - COLLAPSED_COUNT;
 
   return (
     <div className={cn("flex flex-col gap-3 py-1", className)}>
@@ -57,20 +59,23 @@ export function SkillSelector({
             {skill}
           </span>
         ))}
-        {hasMore && (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                type="button"
-                onClick={onMoreClick}
-                className="inline-flex items-center rounded-full bg-sidebar-accent/70 px-2 py-1 text-xs font-medium text-sidebar-accent-foreground/80 hover:bg-sidebar-accent focus:outline-none focus:ring-2 focus:ring-ring"
-                aria-label="View all"
-              >
-                ...
-              </button>
-            </TooltipTrigger>
-            <TooltipContent side="bottom">View all</TooltipContent>
-          </Tooltip>
+        {collapsed && hiddenCount > 0 && (
+          <button
+            type="button"
+            onClick={() => setCollapsed(false)}
+            className="inline-flex items-center rounded-full bg-sidebar-accent/70 px-2.5 py-1 text-xs font-medium text-sidebar-accent-foreground/80 hover:bg-sidebar-accent focus:outline-none"
+          >
+            +{hiddenCount} more
+          </button>
+        )}
+        {!collapsed && sorted.length > COLLAPSED_COUNT && (
+          <button
+            type="button"
+            onClick={() => setCollapsed(true)}
+            className="inline-flex items-center rounded-full bg-sidebar-accent/70 px-2.5 py-1 text-xs font-medium text-sidebar-accent-foreground/80 hover:bg-sidebar-accent focus:outline-none"
+          >
+            Show less
+          </button>
         )}
       </div>
     </div>
@@ -381,6 +386,7 @@ function loadRequiredSkills(): string[] {
 export function RequiredSkillsSection() {
   const [skills, setSkills] = React.useState<string[]>([]);
   const [isHydrated, setIsHydrated] = React.useState(false);
+  const [collapsed, setCollapsed] = React.useState(true);
 
   React.useEffect(() => {
     setSkills(loadRequiredSkills());
@@ -397,11 +403,14 @@ export function RequiredSkillsSection() {
 
   if (skills.length === 0) return null;
 
+  const visible = collapsed ? skills.slice(0, COLLAPSED_COUNT) : skills;
+  const hiddenCount = skills.length - COLLAPSED_COUNT;
+
   return (
     <SidebarSection title="Required Skills">
       <div className="flex flex-col gap-3 py-1 animate-in fade-in-0 duration-200">
         <div className="flex flex-wrap items-center gap-2">
-          {skills.map((skill) => (
+          {visible.map((skill) => (
             <span
               key={skill}
               className="inline-flex items-center rounded-full bg-sidebar-accent px-3 py-1 text-xs font-medium text-sidebar-accent-foreground"
@@ -409,6 +418,24 @@ export function RequiredSkillsSection() {
               {skill}
             </span>
           ))}
+          {collapsed && hiddenCount > 0 && (
+            <button
+              type="button"
+              onClick={() => setCollapsed(false)}
+              className="inline-flex items-center rounded-full bg-sidebar-accent/70 px-2.5 py-1 text-xs font-medium text-sidebar-accent-foreground/80 hover:bg-sidebar-accent focus:outline-none"
+            >
+              +{hiddenCount} more
+            </button>
+          )}
+          {!collapsed && skills.length > COLLAPSED_COUNT && (
+            <button
+              type="button"
+              onClick={() => setCollapsed(true)}
+              className="inline-flex items-center rounded-full bg-sidebar-accent/70 px-2.5 py-1 text-xs font-medium text-sidebar-accent-foreground/80 hover:bg-sidebar-accent focus:outline-none"
+            >
+              Show less
+            </button>
+          )}
         </div>
       </div>
     </SidebarSection>

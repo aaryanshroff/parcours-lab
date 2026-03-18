@@ -143,6 +143,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
       localStorage.setItem(GOAL_STORAGE_KEY, profile.goal);
       localStorage.setItem(KNOWN_SKILLS_STORAGE_KEY, JSON.stringify(currentSkills));
       localStorage.setItem(REQUIRED_SKILLS_STORAGE_KEY, JSON.stringify(requiredSkills));
+      localStorage.removeItem("parcours-initial-prompt-sent");
 
       onComplete({ goal: profile.goal, skills: currentSkills });
     } catch (err) {
@@ -200,7 +201,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
                 disabled={isLoading}
               />
               <div className="flex flex-wrap gap-1.5">
-                {["Software dev → project management", "HR professional learning ML", "Marketing manager → leadership", "Designer learning to code"].map((ex) => (
+                {["Developer → machine learning engineer", "Software engineer pivoting to cybersecurity", "CS grad specializing in databases", "Programmer learning computer vision"].map((ex) => (
                   <button key={ex} type="button" onClick={() => setBio(ex)} disabled={isLoading}
                     className="rounded-full border border-border bg-background px-3 py-1 text-xs text-muted-foreground transition-all hover:border-primary/40 hover:bg-primary/5 hover:text-foreground active:scale-95">
                     {ex}
