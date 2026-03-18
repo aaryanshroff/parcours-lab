@@ -202,6 +202,7 @@ export const Assistant = () => {
     useState(false);
 
   useEffect(() => {
+    console.log("[initialPrompt] effect fired — isLoaded:", isLoaded, "isComplete:", isComplete);
     if (!isLoaded || !isComplete) {
       setIsInitialRecommendationsPending(false);
       setIsInitialRecommendationsCompleting(false);
@@ -209,6 +210,7 @@ export const Assistant = () => {
     }
 
     const sentStatus = localStorage.getItem(INITIAL_PROMPT_SENT_KEY);
+    console.log("[initialPrompt] sentStatus:", sentStatus);
     if (sentStatus === "true") {
       setIsInitialRecommendationsPending(false);
       setIsInitialRecommendationsCompleting(false);
@@ -231,6 +233,7 @@ export const Assistant = () => {
         const goal = localStorage.getItem("parcours-goal") || "";
         const courseHistory = getCourseHistoryFromStorage();
         const initialPrompt = getInitialRecommendationPrompt();
+        console.log("[initialPrompt] sending — goal:", goal, "prompt:", initialPrompt);
 
         const response = await fetch(`${API_BASE_URL}/api/chat`, {
           method: "POST",
@@ -249,14 +252,19 @@ export const Assistant = () => {
           signal: abortController.signal,
         });
 
+        console.log("[initialPrompt] response status:", response.status);
         if (!response.ok) {
+          const errBody = await response.text();
+          console.error("[initialPrompt] error body:", errBody);
           throw new Error(`Initial prompt request failed (${response.status})`);
         }
 
         const data = (await response.json()) as ChatResponse;
+        console.log("[initialPrompt] response data:", data);
         setIsInitialRecommendationsCompleting(true);
         await new Promise((resolve) => setTimeout(resolve, 250));
 
+        console.log("[initialPrompt] appending to thread");
         runtime.thread.append({
           role: "assistant",
           content: toAssistantContent(data),
@@ -266,7 +274,9 @@ export const Assistant = () => {
         localStorage.setItem(INITIAL_PROMPT_SENT_KEY, "true");
         setIsInitialRecommendationsCompleting(false);
         setIsInitialRecommendationsPending(false);
-      } catch {
+        console.log("[initialPrompt] done");
+      } catch (err) {
+        console.error("[initialPrompt] caught error:", err);
         localStorage.removeItem(INITIAL_PROMPT_SENT_KEY);
         setIsInitialRecommendationsCompleting(false);
         setIsInitialRecommendationsPending(false);
@@ -276,6 +286,7 @@ export const Assistant = () => {
     runInitialPrompt();
 
     return () => {
+      console.log("[initialPrompt] cleanup — aborting");
       abortController.abort();
     };
   }, [isComplete, isLoaded, runtime]);

@@ -177,8 +177,8 @@ export function Onboarding({ onComplete }: OnboardingProps) {
               P
             </div>
             <div>
-              <h1 className="text-xl font-bold tracking-tight leading-none">ParcoursLab</h1>
-              <p className="text-xs text-muted-foreground mt-0.5">Tell us where you're headed. We'll map the learning path.</p>
+              <h1 className="text-3xl font-bold tracking-tight leading-none">ParcoursLab</h1>
+              <p className="text-sm text-muted-foreground mt-0.5">Tell us where you're headed. We'll map the learning path.</p>
             </div>
           </div>
 
@@ -279,7 +279,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
         <div className="space-y-8">
 
           <div className="space-y-1">
-            <h2 className="text-lg font-bold tracking-tight">How it works</h2>
+            <h2 className="text-2xl font-bold tracking-tight">How it works</h2>
             <p className="text-sm text-muted-foreground">From your background to a personalized learning path in seconds.</p>
           </div>
 

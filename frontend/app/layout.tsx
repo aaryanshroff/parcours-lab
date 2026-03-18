@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import { Libre_Baskerville, Rubik } from "next/font/google";
+import { Young_Serif, Rubik } from "next/font/google";
 import "./globals.css";
 
-const libreBaskerville = Libre_Baskerville({
-  variable: "--font-baskerville",
+const youngSerif = Young_Serif({
+  variable: "--font-young-serif",
   subsets: ["latin"],
-  weight: ["400", "700"],
-  style: ["normal", "italic"],
+  weight: "400",
 });
 
 const rubik = Rubik({
@@ -27,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${libreBaskerville.variable} ${rubik.variable} antialiased`}
+        className={`${youngSerif.variable} ${rubik.variable} antialiased`}
       >
         {children}
       </body>
