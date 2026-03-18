@@ -108,16 +108,18 @@ export function Onboarding({ onComplete }: OnboardingProps) {
 
   if (isLoading) {
     return (
-      <div className="relative flex h-screen w-full flex-col items-center justify-center gap-10 px-6 overflow-hidden">
+      <div className="flex h-screen w-full flex-col items-center justify-center gap-6 px-6">
         {/* Pulsing glow circle */}
-        <motion.div
-          className="absolute rounded-full bg-primary blur-3xl"
-          style={{ width: 200, height: 200 }}
-          animate={{ scale: [1, 1.15, 1], opacity: [0.15, 0.3, 0.15] }}
-          transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
-        />
+        <div className="relative flex items-center justify-center" style={{ width: 80, height: 80 }}>
+          <motion.div
+            className="absolute rounded-full bg-primary blur-2xl"
+            style={{ width: 80, height: 80 }}
+            animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.85, 0.5] }}
+            transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </div>
 
-        <div className="relative h-8 overflow-hidden">
+        <div className="h-8 overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.p
               key={loadingMessageIndex}
