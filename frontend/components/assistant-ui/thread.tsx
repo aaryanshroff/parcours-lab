@@ -8,6 +8,7 @@ import { Reasoning, ReasoningGroup } from "@/components/assistant-ui/reasoning";
 import { ToolFallback } from "@/components/assistant-ui/tool-fallback";
 import { TooltipIconButton } from "@/components/assistant-ui/tooltip-icon-button";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
   AssistantIf,
   ComposerPrimitive,
@@ -21,14 +22,63 @@ import {
   ArrowUpIcon,
   SquareIcon,
 } from "lucide-react";
-import { useRef, useEffect, type FC } from "react";
+import { useRef, useEffect, useState, type FC } from "react";
 import type { RecommendedCourse } from "@/lib/types";
 import { CourseCarousel } from "@/components/assistant-ui/course-carousel";
 
 const EMPTY_RECOMMENDED_COURSES: RecommendedCourse[] = [];
 
 
-export const Thread: FC = () => {
+const SixSecondLoadingBar: FC<{ complete?: boolean }> = ({ complete = false }) => {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    if (complete) {
+      setProgress(100);
+      return;
+    }
+
+    const start = performance.now();
+    let frame = 0;
+
+    const tick = (now: number) => {
+      const elapsed = now - start;
+      const nextProgress = Math.min((elapsed / 6000) * 100, 100);
+      setProgress(nextProgress);
+
+      if (elapsed < 6000) {
+        frame = requestAnimationFrame(tick);
+      }
+    };
+
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [complete]);
+
+  return (
+    <div className="mt-2 w-full max-w-md" aria-label="Loading recommendations">
+      <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
+        <div
+          className={cn(
+            "h-full rounded-full bg-primary",
+            complete && "transition-[width] duration-100 ease-linear",
+          )}
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+    </div>
+  );
+};
+
+export const Thread: FC<{
+  initialRecommendationsPending?: boolean;
+  initialRecommendationsCompleting?: boolean;
+  disableComposer?: boolean;
+}> = ({
+  initialRecommendationsPending = false,
+  initialRecommendationsCompleting = false,
+  disableComposer = false,
+}) => {
   return (
     <ThreadPrimitive.Root
       className="aui-root aui-thread-root @container flex h-full flex-col bg-background"
@@ -40,9 +90,22 @@ export const Thread: FC = () => {
         turnAnchor="top"
         className="aui-thread-viewport relative flex flex-1 flex-col overflow-x-auto overflow-y-scroll scroll-smooth px-4 pt-4"
       >
-        <AssistantIf condition={({ thread }) => thread.isEmpty}>
-          <ThreadWelcome />
-        </AssistantIf>
+        {initialRecommendationsPending && (
+          <AssistantIf condition={({ thread }) => thread.isEmpty}>
+            <div className="aui-thread-welcome-root mx-auto my-auto flex w-full max-w-(--thread-max-width) grow flex-col justify-center px-4">
+              <h1 className="aui-thread-welcome-message-inner fade-in slide-in-from-bottom-1 animate-in font-semibold text-2xl">
+                Recommendations pending...
+              </h1>
+              <p className="aui-thread-welcome-message-inner fade-in slide-in-from-bottom-1 animate-in text-muted-foreground text-xl">
+                Generating your first personalized course suggestions.
+              </p>
+              <p className="aui-thread-welcome-message-inner fade-in slide-in-from-bottom-1 animate-in text-muted-foreground text-m">
+                This can take up to 6 seconds to load!
+              </p>
+              <SixSecondLoadingBar complete={initialRecommendationsCompleting} />
+            </div>
+          </AssistantIf>
+        )}
 
         <ThreadPrimitive.Messages
           components={{
@@ -53,7 +116,7 @@ export const Thread: FC = () => {
 
         <ThreadPrimitive.ViewportFooter className="aui-thread-viewport-footer sticky bottom-0 mx-auto mt-auto flex w-full max-w-(--thread-max-width) flex-col gap-4 overflow-visible rounded-t-3xl bg-background pb-4 md:pb-6">
           <ThreadScrollToBottom />
-          <Composer />
+          <Composer disabled={disableComposer} />
         </ThreadPrimitive.ViewportFooter>
       </ThreadPrimitive.Viewport>
     </ThreadPrimitive.Root>
@@ -74,32 +137,16 @@ const ThreadScrollToBottom: FC = () => {
   );
 };
 
-const ThreadWelcome: FC = () => {
-  return (
-    <div className="aui-thread-welcome-root mx-auto my-auto flex w-full max-w-(--thread-max-width) grow flex-col">
-      <div className="aui-thread-welcome-center flex w-full grow flex-col items-center justify-center">
-        <div className="aui-thread-welcome-message flex size-full flex-col justify-center px-4">
-          <h1 className="aui-thread-welcome-message-inner fade-in slide-in-from-bottom-1 animate-in font-semibold text-2xl duration-200">
-            Hello there!
-          </h1>
-          <p className="aui-thread-welcome-message-inner fade-in slide-in-from-bottom-1 animate-in text-muted-foreground text-xl delay-75 duration-200">
-            How can I help you today?
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const Composer: FC = () => {
+const Composer: FC<{ disabled?: boolean }> = ({ disabled = false }) => {
   const isRunning = useAuiState(({ thread }) => thread.isRunning);
+  const isInputDisabled = isRunning || disabled;
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    if (!isRunning) {
+    if (!isInputDisabled) {
       inputRef.current?.focus();
     }
-  }, [isRunning]);
+  }, [isInputDisabled]);
 
   return (
     <ComposerPrimitive.Root className="aui-composer-root relative flex w-full flex-col">
@@ -113,7 +160,7 @@ const Composer: FC = () => {
             rows={1}
             autoFocus
             aria-label="Message input"
-            disabled={isRunning}
+            disabled={isInputDisabled}
           />
           <ComposerAction />
         </div>

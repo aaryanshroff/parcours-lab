@@ -30,6 +30,74 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { useEffect, useState } from "react";
+
+const INITIAL_PROMPT_SENT_KEY = "parcours-initial-prompt-sent";
+
+
+const getCourseHistoryFromStorage = (): Array<{
+  title: string;
+  status: string;
+  reason: string;
+}> => {
+  try {
+    const raw = localStorage.getItem("parcours-course-history");
+    if (!raw) return [];
+    const parsed = JSON.parse(raw) as Array<{
+      title?: string;
+      status?: string;
+      reason?: string;
+    }>;
+    return Array.isArray(parsed)
+      ? parsed.map((course) => ({
+          title: course.title ?? "",
+          status: course.status ?? "",
+          reason: course.reason ?? "",
+        }))
+      : [];
+  } catch {
+    return [];
+  }
+};
+
+const toAssistantContent = (data: ChatResponse) => {
+  const content: Array<
+    | { type: "text"; text: string }
+    | { type: "data"; name: string; data: RecommendedCourse[] }
+  > = [{ type: "text", text: data.response }];
+
+  if (data.recommended_courses?.length) {
+    content.push({
+      type: "data",
+      name: "recommended_courses",
+      data: data.recommended_courses,
+    });
+  }
+
+  return content;
+};
+
+const getInitialRecommendationPrompt = () => {
+  const goal = localStorage.getItem("parcours-goal")?.trim() ?? "";
+
+  const knownSkills: string[] = (() => {
+    try {
+      const raw = localStorage.getItem("parcours-known-skills");
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
+    }
+  })();
+
+  const goalText = goal
+    ? `My goal is: ${goal}.`
+    : "Use my profile to infer a realistic learning goal.";
+  const knownSkillsText = knownSkills.length
+    ? `My current skills include: ${knownSkills.join(", ")}.`
+    : "Assume I have beginner-to-intermediate baseline skills.";
+
+  return `${goalText} ${knownSkillsText} Recommend 5 courses.`;
+};
 
 const conversationId = crypto.randomUUID();
 
@@ -130,7 +198,7 @@ const backendChatAdapter: ChatModelAdapter = {
     }
 
     return {
-      content,
+      content: toAssistantContent(data),
     };
   },
 };
@@ -138,6 +206,89 @@ const backendChatAdapter: ChatModelAdapter = {
 export const Assistant = () => {
   const runtime = useLocalRuntime(backendChatAdapter);
   const { isComplete, isLoaded, markComplete, reset } = useOnboardingComplete();
+  const [isInitialRecommendationsPending, setIsInitialRecommendationsPending] =
+    useState(false);
+  const [isInitialRecommendationsCompleting, setIsInitialRecommendationsCompleting] =
+    useState(false);
+
+  useEffect(() => {
+    if (!isLoaded || !isComplete) {
+      setIsInitialRecommendationsPending(false);
+      setIsInitialRecommendationsCompleting(false);
+      return;
+    }
+
+    const sentStatus = localStorage.getItem(INITIAL_PROMPT_SENT_KEY);
+    if (sentStatus === "true") {
+      setIsInitialRecommendationsPending(false);
+      setIsInitialRecommendationsCompleting(false);
+      return;
+    }
+
+    if (sentStatus === "pending") {
+      setIsInitialRecommendationsPending(true);
+      setIsInitialRecommendationsCompleting(false);
+      return;
+    }
+
+    const abortController = new AbortController();
+    localStorage.setItem(INITIAL_PROMPT_SENT_KEY, "pending");
+    setIsInitialRecommendationsPending(true);
+    setIsInitialRecommendationsCompleting(false);
+
+    const runInitialPrompt = async () => {
+      try {
+        const goal = localStorage.getItem("parcours-goal") || "";
+        const courseHistory = getCourseHistoryFromStorage();
+        const initialPrompt = getInitialRecommendationPrompt();
+
+        const response = await fetch(`${API_BASE_URL}/api/chat`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            messages: [
+              {
+                role: "user",
+                content: [{ type: "text", text: initialPrompt }],
+              },
+            ],
+            goal,
+            conversation_id: conversationId,
+            course_history: courseHistory,
+          }),
+          signal: abortController.signal,
+        });
+
+        if (!response.ok) {
+          throw new Error(`Initial prompt request failed (${response.status})`);
+        }
+
+        const data = (await response.json()) as ChatResponse;
+        setIsInitialRecommendationsCompleting(true);
+        await new Promise((resolve) => setTimeout(resolve, 250));
+
+        runtime.thread.append({
+          role: "assistant",
+          content: toAssistantContent(data),
+          startRun: false,
+        });
+
+        localStorage.setItem(INITIAL_PROMPT_SENT_KEY, "true");
+        setIsInitialRecommendationsCompleting(false);
+        setIsInitialRecommendationsPending(false);
+      } catch {
+        localStorage.removeItem(INITIAL_PROMPT_SENT_KEY);
+        setIsInitialRecommendationsCompleting(false);
+        setIsInitialRecommendationsPending(false);
+      }
+    };
+
+    runInitialPrompt();
+
+    return () => {
+      abortController.abort();
+    };
+  }, [isComplete, isLoaded, runtime]);
 
   useEffect(() => {
     if (!isComplete) return;
@@ -207,7 +358,11 @@ export const Assistant = () => {
                 </Breadcrumb>
               </header>
               <div className="flex-1 overflow-hidden">
-                <Thread />
+                <Thread
+                  initialRecommendationsPending={isInitialRecommendationsPending}
+                  initialRecommendationsCompleting={isInitialRecommendationsCompleting}
+                  disableComposer={isInitialRecommendationsPending}
+                />
               </div>
             </SidebarInset>
           </div>
