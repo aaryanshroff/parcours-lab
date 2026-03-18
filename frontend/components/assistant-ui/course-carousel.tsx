@@ -138,7 +138,7 @@ const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
           {(skillsExpanded ? course.skills : course.skills.slice(0, 5)).map((skill, i) => (
             <span
               key={i}
-              className="rounded bg-muted/60 px-1.5 py-0.5 text-[11px] text-muted-foreground"
+              className="rounded border border-border bg-muted px-1.5 py-0.5 text-[11px] text-foreground/70"
             >
               {skill.name}
             </span>
@@ -190,7 +190,7 @@ const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
           <div className="flex items-center gap-2">
             <button
               onClick={handleRejectSubmit}
-              className="rounded-md px-3 py-1.5 font-medium text-white text-xs transition-colors"
+              className="rounded-md px-3 py-1.5 font-medium text-primary-foreground text-xs transition-colors"
               style={{ backgroundColor: "var(--course-reject)" }}
               onMouseEnter={(e) =>
                 (e.currentTarget.style.backgroundColor =
@@ -217,7 +217,7 @@ const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
         <div className="mt-1 flex items-center gap-2">
           <button
             onClick={handleAccept}
-            className="rounded-md px-3 py-1.5 font-medium text-white text-xs transition-colors"
+            className="rounded-md px-3 py-1.5 font-medium text-primary-foreground text-xs transition-colors"
             style={{ backgroundColor: "var(--course-accept)" }}
             onMouseEnter={(e) =>
               (e.currentTarget.style.backgroundColor =
@@ -231,7 +231,7 @@ const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
           </button>
           <button
             onClick={() => setShowRejectForm(true)}
-            className="rounded-md px-3 py-1.5 font-medium text-white text-xs transition-colors"
+            className="rounded-md px-3 py-1.5 font-medium text-primary-foreground text-xs transition-colors"
             style={{ backgroundColor: "var(--course-reject)" }}
             onMouseEnter={(e) =>
               (e.currentTarget.style.backgroundColor =
