@@ -153,7 +153,27 @@ Be specific — use precise skill names (e.g. "Python", "TensorFlow", "SQL") rat
     parsed = json.loads(cleaned)
     if not isinstance(parsed.get("skills"), list):
         raise ValueError("LLM did not return a skills array")
+    logger.info("[infer_required_skills] goal=%r", goal)
+    logger.info("[infer_required_skills] LLM returned skills: %s", [s.get("label") for s in parsed["skills"]])
     return parsed["skills"]
+
+
+def match_skills_individually(raw_skills: list[dict], threshold: float = 0.5, max_results: int = 10) -> list[dict]:
+    """Match each LLM-extracted skill label against ESCO individually and deduplicate."""
+    matched = []
+    seen = set()
+    for skill in raw_skills:
+        label = skill.get("label", "").strip()
+        if not label:
+            continue
+        results = match_skills(label, top_k=1, threshold=threshold)
+        for r in results:
+            if r["label"] not in seen:
+                seen.add(r["label"])
+                matched.append(r)
+        if len(matched) >= max_results:
+            break
+    return matched
 
 
 def extract_skills_from_job_text(text: str) -> tuple[list[dict], str]:
@@ -199,8 +219,7 @@ def parse_job():
             return jsonify({"error": "Could not extract text from job posting"}), 422
 
         raw_skills, raw_llm = extract_skills_from_job_text(text)
-        skill_str = " ".join(s["label"] for s in raw_skills if s.get("label"))
-        matched = match_skills(skill_str, top_k=10, threshold=0.3) if skill_str else []
+        matched = match_skills_individually(raw_skills, threshold=0.65, max_results=10)
         return jsonify({
             "skills": matched,
             "_debug": {
@@ -234,8 +253,7 @@ def parse_resume():
             return jsonify({"error": "Could not extract text from resume"}), 422
 
         raw_skills = extract_skills_from_resume_text(text)
-        skill_str = " ".join(s["label"] for s in raw_skills if s.get("label"))
-        matched = match_skills(skill_str, top_k=10, threshold=0.3) if skill_str else []
+        matched = match_skills_individually(raw_skills, threshold=0.65, max_results=10)
         return jsonify({"skills": matched}), 200
 
     except ValueError as e:
@@ -268,7 +286,10 @@ def build_profile(payload: BuildProfileRequest):
             if goal:
                 inferred = infer_required_skills_from_goal(goal)
                 skill_str = " ".join(s["label"] for s in inferred if s.get("label"))
-                profile["required_skills"] = match_skills(skill_str, top_k=5, threshold=0.45) if skill_str else []
+                logger.info("[build_profile] skill_str passed to match_skills: %r", skill_str)
+                matched = match_skills(skill_str, top_k=5, threshold=0.45) if skill_str else []
+                logger.info("[build_profile] match_skills returned: %s", [s.get("label") for s in matched])
+                profile["required_skills"] = matched
             else:
                 profile["required_skills"] = []
 
