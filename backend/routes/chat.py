@@ -62,7 +62,12 @@ def get_my_conversation():
     return jsonify({"messages": messages}), 200
 
 
-def _persist_messages(user_id: str, incoming_messages: list, assistant_text: str) -> None:
+def _persist_messages(
+    user_id: str,
+    incoming_messages: list,
+    assistant_text: str,
+    recommended_courses: list | None = None
+) -> None:
     """Append the latest user + assistant turn to the user's conversation row."""
     try:
         _ensure_profile_row()
@@ -73,9 +78,13 @@ def _persist_messages(user_id: str, incoming_messages: list, assistant_text: str
         if not user_message:
             return
 
+        assistant_msg = {"role": "assistant", "content": assistant_text}
+        if recommended_courses:
+            assistant_msg["recommended_courses"] = recommended_courses
+
         new_turns = [
             {"role": "user", "content": user_message.text_content()},
-            {"role": "assistant", "content": assistant_text},
+            assistant_msg,
         ]
 
         existing = (
@@ -128,7 +137,7 @@ def chat():
             recommended_courses = []
 
         if g.user:
-            _persist_messages(g.user.id, req.messages, assistant_text)
+            _persist_messages(g.user.id, req.messages, assistant_text, recommended_courses)
 
         return {"response": assistant_text, "recommended_courses": recommended_courses}, 200
     except (ValueError, ValidationError) as e:
