@@ -22,7 +22,7 @@ import {
   ArrowUpIcon,
   SquareIcon,
 } from "lucide-react";
-import { useRef, useEffect, type FC } from "react";
+import { useRef, useEffect, useState, type FC } from "react";
 import type { RecommendedCourse } from "@/lib/types";
 import { CourseCarousel } from "@/components/assistant-ui/course-carousel";
 
