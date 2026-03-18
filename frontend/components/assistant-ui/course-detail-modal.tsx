@@ -99,7 +99,7 @@ export const CourseDetailModal: FC<{
                     onClick={() => updateCourseProgress(course.id, opt.value)}
                     className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
                       currentProgress === opt.value
-                        ? "text-white"
+                        ? "text-primary-foreground"
                         : "bg-muted text-muted-foreground hover:bg-muted/80"
                     }`}
                     style={
@@ -131,7 +131,7 @@ export const CourseDetailModal: FC<{
                 reacceptCourse(course.id);
                 onOpenChange(false);
               }}
-              className="mt-1 self-start rounded-md px-4 py-1.5 text-xs font-medium text-white transition-colors"
+              className="mt-1 self-start rounded-md px-4 py-1.5 text-xs font-medium text-primary-foreground transition-colors"
               style={{ backgroundColor: "var(--course-accept)" }}
               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--course-accept-hover)")}
               onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "var(--course-accept)")}

@@ -63,45 +63,45 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.141 0.005 285.823);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.141 0.005 285.823);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.141 0.005 285.823);
-  --primary: oklch(0.21 0.006 285.885);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.967 0.001 286.375);
-  --secondary-foreground: oklch(0.21 0.006 285.885);
-  --muted: oklch(0.967 0.001 286.375);
-  --muted-foreground: oklch(0.552 0.016 285.938);
-  --accent: oklch(0.967 0.001 286.375);
-  --accent-foreground: oklch(0.21 0.006 285.885);
+  --background: #f4f2eb;
+  --foreground: #3d3229;
+  --card: #f4f2eb;
+  --card-foreground: #3d3229;
+  --popover: #f4f2eb;
+  --popover-foreground: #3d3229;
+  --primary: #3d3229;
+  --primary-foreground: #f4f2eb;
+  --secondary: #eceae2;
+  --secondary-foreground: #3d3229;
+  --muted: #eceae2;
+  --muted-foreground: #8a7e72;
+  --accent: #eceae2;
+  --accent-foreground: #3d3229;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.92 0.004 286.32);
-  --input: oklch(0.92 0.004 286.32);
-  --ring: oklch(0.705 0.015 286.067);
+  --border: #e8e4db;
+  --input: #e8e4db;
+  --ring: #b0a898;
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.141 0.005 285.823);
-  --sidebar-primary: oklch(0.21 0.006 285.885);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.967 0.001 286.375);
-  --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
-  --sidebar-border: oklch(0.92 0.004 286.32);
-  --sidebar-ring: oklch(0.705 0.015 286.067);
-  --course-accept: #0e8b8b;
-  --course-accept-hover: #0b7272;
-  --course-reject: #b04058;
-  --course-reject-hover: #943648;
+  --sidebar: #f5f3ed;
+  --sidebar-foreground: #3d3229;
+  --sidebar-primary: #3d3229;
+  --sidebar-primary-foreground: #f4f2eb;
+  --sidebar-accent: #edeae3;
+  --sidebar-accent-foreground: #3d3229;
+  --sidebar-border: #e8e4db;
+  --sidebar-ring: #b0a898;
+  --course-accept: #6b5e50;
+  --course-accept-hover: #5a4e42;
+  --course-reject: #a08272;
+  --course-reject-hover: #8a6f60;
 }
 
 .dark {
-  --background: oklch(0.141 0.005 285.823);
+  --background: #3d3229;
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.21 0.006 285.885);
   --card-foreground: oklch(0.985 0 0);
@@ -132,10 +132,10 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.552 0.016 285.938);
-  --course-accept: #0e8b8b;
-  --course-accept-hover: #0b7272;
-  --course-reject: #b04058;
-  --course-reject-hover: #943648;
+  --course-accept: #6b5e50;
+  --course-accept-hover: #5a4e42;
+  --course-reject: #a08272;
+  --course-reject-hover: #8a6f60;
 }
 
 @layer base {

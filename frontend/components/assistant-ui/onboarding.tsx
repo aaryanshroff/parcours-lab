@@ -178,7 +178,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
             </div>
             <div>
               <h1 className="text-3xl font-bold tracking-tight leading-none">ParcoursLab</h1>
-              <p className="text-sm text-muted-foreground mt-0.5">Tell us where you're headed. We'll map the learning path.</p>
+              <p className="text-sm text-muted-foreground mt-0.5">Tell us where you&apos;re headed. We&apos;ll map the learning path.</p>
             </div>
           </div>
 
