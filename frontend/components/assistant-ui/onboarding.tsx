@@ -1,10 +1,20 @@
 "use client";
 
 import * as React from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { API_BASE_URL, authFetch } from "@/lib/api";
 import { supabase } from "@/lib/supabase/client";
+
+const LOADING_MESSAGES = [
+  "Analyzing your background…",
+  "Identifying your current skills…",
+  "Mapping your career goals…",
+  "Searching for the best courses…",
+  "Personalizing your learning path…",
+  "Almost there…",
+];
 
 const BIO_STORAGE_KEY = "parcours-onboarding-bio";
 const GOAL_STORAGE_KEY = "parcours-goal";
@@ -19,6 +29,16 @@ export function Onboarding({ onComplete }: OnboardingProps) {
   const [bio, setBio] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const [loadingMessageIndex, setLoadingMessageIndex] = React.useState(0);
+
+  React.useEffect(() => {
+    if (!isLoading) return;
+    setLoadingMessageIndex(0);
+    const interval = setInterval(() => {
+      setLoadingMessageIndex((i) => Math.min(i + 1, LOADING_MESSAGES.length - 1));
+    }, 1800);
+    return () => clearInterval(interval);
+  }, [isLoading]);
 
   // Bypasses the endpoint (FOR DEBUG) -------------------------------------------
   const handleDebugBypass = () => {
@@ -86,6 +106,35 @@ export function Onboarding({ onComplete }: OnboardingProps) {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="relative flex h-screen w-full flex-col items-center justify-center gap-10 px-6 overflow-hidden">
+        {/* Pulsing glow circle */}
+        <motion.div
+          className="absolute rounded-full bg-primary blur-3xl"
+          style={{ width: 200, height: 200 }}
+          animate={{ scale: [1, 1.15, 1], opacity: [0.15, 0.3, 0.15] }}
+          transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
+        />
+
+        <div className="relative h-8 overflow-hidden">
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={loadingMessageIndex}
+              className="text-center text-lg text-muted-foreground"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.35, ease: "easeInOut" }}
+            >
+              {LOADING_MESSAGES[loadingMessageIndex]}
+            </motion.p>
+          </AnimatePresence>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="h-full w-full overflow-y-auto">
       <div className="flex min-h-screen w-full flex-col items-center justify-center px-6 py-12">
@@ -138,7 +187,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
               className="w-full text-base shadow-lg transition-all hover:shadow-xl"
               size="lg"
             >
-              {isLoading ? "Building your profile..." : "Build profile"}
+              Build profile
             </Button>
             <p className="text-center text-sm text-muted-foreground">
               Already have an account?{" "}

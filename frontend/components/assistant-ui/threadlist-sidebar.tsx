@@ -1,13 +1,12 @@
 import * as React from "react";
-import { Github, MessagesSquare } from "lucide-react";
+import { Github } from "lucide-react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase/client";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarHeader,
-  SidebarMenu,
+SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
@@ -36,19 +35,7 @@ export function ThreadListSidebar({
 
   return (
     <Sidebar {...props}>
-      <SidebarHeader className="aui-sidebar-header mb-2 border-b">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="lg">
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                <MessagesSquare className="size-4" />
-              </div>
-              <span className="font-semibold">Your Profile</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarHeader>
-      <SidebarContent className="px-2">
+<SidebarContent className="px-2">
         <GoalsSection />
         <SkillsSection />
         <RequiredSkillsSection />
