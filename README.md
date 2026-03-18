@@ -11,17 +11,17 @@ poetry install
 eval $(poetry env activate)
 ```
 
+Create `backend/.env` (ask @aaryanshroff for real OpenRouter key):
+```bash
+OPENROUTER_API_KEY=shared_key
+SUPABASE_URL=https://yxyupkqmvrmrdbrtbwby.supabase.co
+```
+
 ### DB
 
 ```bash
 npx supabase link
 ```
-
-Create `backend/.env`:
-```bash
-OPENROUTER_API_KEY=shared_key
-```
-
 
 ## Run
 
