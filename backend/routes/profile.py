@@ -126,6 +126,36 @@ def scrape_job_text(url: str) -> str:
     return response.text
 
 
+def infer_required_skills_from_goal(goal: str) -> list[dict]:
+    """Ask the LLM to enumerate specific skills required to achieve the given career goal."""
+    response = call_openrouter(
+        model="minimax/minimax-m2",
+        messages=[
+            {
+                "role": "system",
+                "content": """You are a career skills advisor. Given a career goal, list the specific technical skills, tools, and knowledge areas a person would need to achieve it.
+
+Return ONLY valid JSON in this exact format:
+{
+  "skills": [
+    {"label": "skill name"},
+    {"label": "another skill"}
+  ]
+}
+
+Be specific — use precise skill names (e.g. "Python", "TensorFlow", "SQL") rather than vague phrases. Return 8-12 skills.""",
+            },
+            {"role": "user", "content": goal},
+        ],
+    )
+    raw = get_reply_text(response)
+    cleaned = clean_llm_json_response(raw)
+    parsed = json.loads(cleaned)
+    if not isinstance(parsed.get("skills"), list):
+        raise ValueError("LLM did not return a skills array")
+    return parsed["skills"]
+
+
 def extract_skills_from_job_text(text: str) -> tuple[list[dict], str]:
     """Ask the LLM to extract required skills from a job posting. Returns (skills, raw_llm_response)."""
     response = call_openrouter(
@@ -235,7 +265,12 @@ def build_profile(payload: BuildProfileRequest):
         if payload.required_skills is not None:
             profile["required_skills"] = payload.required_skills
         else:
-            profile["required_skills"] = match_skills(goal, top_k=5, threshold=0.3) if goal else []
+            if goal:
+                inferred = infer_required_skills_from_goal(goal)
+                skill_str = " ".join(s["label"] for s in inferred if s.get("label"))
+                profile["required_skills"] = match_skills(skill_str, top_k=5, threshold=0.45) if skill_str else []
+            else:
+                profile["required_skills"] = []
 
         if g.user:
             supabase.table(TABLE).upsert({
