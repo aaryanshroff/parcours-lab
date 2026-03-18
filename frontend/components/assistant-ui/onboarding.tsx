@@ -33,6 +33,13 @@ export function Onboarding({ onComplete }: OnboardingProps) {
   const [jobLink, setJobLink] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const [isSignedIn, setIsSignedIn] = React.useState(false);
+
+  React.useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsSignedIn(!!session);
+    });
+  }, []);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const handleFileDrop = (e: React.DragEvent<HTMLDivElement>) => {
@@ -70,31 +77,6 @@ export function Onboarding({ onComplete }: OnboardingProps) {
     }, 40);
     return () => clearInterval(interval);
   }, [loadingMessageIndex, isLoading]);
-
-  // Bypasses the endpoint (FOR DEBUG) -------------------------------------------
-  const handleDebugBypass = () => {
-    const defaultSkills = [
-      "JavaScript",
-      "TypeScript",
-      "React",
-      "Python",
-      "Communication",
-    ];
-    localStorage.setItem(BIO_STORAGE_KEY, "Debug default profile");
-    localStorage.setItem(
-      "parcours-goal",
-      "Transition into a senior full-stack engineering role",
-    );
-    localStorage.setItem(
-      "parcours-known-skills",
-      JSON.stringify(defaultSkills),
-    );
-    onComplete({
-      goal: "Transition into a senior full-stack engineering role",
-      skills: defaultSkills,
-    });
-    // ----------------------------------------------------------------------------------
-  };
 
   const handleSubmit = async () => {
     if (!bio.trim()) {
@@ -186,7 +168,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
   return (
     <div className="flex h-screen w-full">
       {/* Left: form — scrolls independently if viewport is too small */}
-      <div className="flex flex-1 flex-col items-center overflow-y-auto px-8 py-8">
+      <div className="flex flex-1 flex-col items-center justify-center overflow-y-auto px-8 py-8">
         <div className="w-full max-w-md space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-700">
 
           {/* Brand */}
@@ -280,21 +262,20 @@ export function Onboarding({ onComplete }: OnboardingProps) {
                 Build my learning path
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
               </Button>
-              <p className="text-center text-xs text-muted-foreground">
-                Already have an account?{" "}
-                <a href="/login" className="font-medium text-foreground underline underline-offset-4 transition-colors hover:text-primary">Sign in</a>
-              </p>
+              {!isSignedIn && (
+                <p className="text-center text-xs text-muted-foreground">
+                  Already have an account?{" "}
+                  <a href="/login" className="font-medium text-foreground underline underline-offset-4 transition-colors hover:text-primary">Sign in</a>
+                </p>
+              )}
             </div>
           </div>
 
-          <button type="button" onClick={handleDebugBypass} className="w-full text-xs text-muted-foreground/30 transition-colors hover:text-muted-foreground/60">
-            Generate default profile (debug)
-          </button>
         </div>
       </div>
 
       {/* Right: How it works */}
-      <div className="flex flex-1 flex-col overflow-y-auto border-l bg-muted/30 px-8 py-8">
+      <div className="flex flex-1 flex-col justify-center overflow-y-auto border-l bg-muted/30 px-8 py-8">
         <div className="space-y-8">
 
           <div className="space-y-1">
