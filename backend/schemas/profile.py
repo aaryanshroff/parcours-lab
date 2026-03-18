@@ -1,8 +1,11 @@
 from pydantic import BaseModel, field_validator
+from typing import Optional
 
 
 class BuildProfileRequest(BaseModel):
     bio: str
+    current_skills: Optional[list[dict]] = None
+    required_skills: Optional[list[dict]] = None
 
     @field_validator("bio")
     @classmethod

@@ -1,9 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import { API_BASE_URL, authFetch } from "@/lib/api";
 import { supabase } from "@/lib/supabase/client";
 
@@ -27,9 +27,26 @@ interface OnboardingProps {
 
 export function Onboarding({ onComplete }: OnboardingProps) {
   const [bio, setBio] = React.useState("");
+  const [resumeFile, setResumeFile] = React.useState<File | null>(null);
+  const [isDragging, setIsDragging] = React.useState(false);
+  const [jobLink, setJobLink] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  const handleFileDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files[0];
+    if (file) setResumeFile(file);
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) setResumeFile(file);
+  };
   const [loadingMessageIndex, setLoadingMessageIndex] = React.useState(0);
+  const [displayedText, setDisplayedText] = React.useState("");
 
   React.useEffect(() => {
     if (!isLoading) return;
@@ -39,6 +56,19 @@ export function Onboarding({ onComplete }: OnboardingProps) {
     }, 1800);
     return () => clearInterval(interval);
   }, [isLoading]);
+
+  React.useEffect(() => {
+    if (!isLoading) return;
+    const message = LOADING_MESSAGES[loadingMessageIndex];
+    setDisplayedText("");
+    let i = 0;
+    const interval = setInterval(() => {
+      i++;
+      setDisplayedText(message.slice(0, i));
+      if (i >= message.length) clearInterval(interval);
+    }, 40);
+    return () => clearInterval(interval);
+  }, [loadingMessageIndex, isLoading]);
 
   // Bypasses the endpoint (FOR DEBUG) -------------------------------------------
   const handleDebugBypass = () => {
@@ -75,10 +105,42 @@ export function Onboarding({ onComplete }: OnboardingProps) {
     setError(null);
 
     try {
+      const [parsedResume, parsedJob] = await Promise.all([
+        resumeFile
+          ? authFetch(`${API_BASE_URL}/api/resume/parse`, {
+              method: "POST",
+              body: (() => { const f = new FormData(); f.append("file", resumeFile); return f; })(),
+            }).then((r) => r.json())
+          : Promise.resolve(null),
+        jobLink.trim()
+          ? authFetch(`${API_BASE_URL}/api/job/parse`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ url: jobLink.trim() }),
+            }).then((r) => r.json())
+          : Promise.resolve(null),
+      ]);
+
+      const resumeSkills: { label: string }[] | null = parsedResume?.skills ?? null;
+      const jobSkills: { label: string }[] | null = parsedJob?.skills ?? null;
+      const resumeLabels = new Set((resumeSkills ?? []).map((s) => s.label));
+      const diffSkills = (jobSkills ?? []).filter((s) => !resumeLabels.has(s.label));
+
+      console.log("[submit] parsedResume:", parsedResume);
+      console.log("[submit] parsedJob:", parsedJob);
+      console.log("[submit] resumeSkills:", resumeSkills);
+      console.log("[submit] jobSkills:", jobSkills);
+      console.log("[submit] diffSkills:", diffSkills);
+
+      const body: Record<string, unknown> = { bio };
+      if (resumeSkills !== null) body.current_skills = resumeSkills;
+      if (jobSkills !== null) body.required_skills = diffSkills;
+      console.log("[submit] body:", body);
+
       const response = await authFetch(`${API_BASE_URL}/api/profile`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ bio }),
+        body: JSON.stringify(body),
       });
 
       if (!response.ok) {
@@ -108,31 +170,11 @@ export function Onboarding({ onComplete }: OnboardingProps) {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen w-full flex-col items-center justify-center gap-6 px-6">
-        {/* Pulsing glow circle */}
-        <div className="relative flex items-center justify-center" style={{ width: 80, height: 80 }}>
-          <motion.div
-            className="absolute rounded-full bg-primary blur-2xl"
-            style={{ width: 80, height: 80 }}
-            animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.85, 0.5] }}
-            transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </div>
-
-        <div className="h-8 overflow-hidden">
-          <AnimatePresence mode="wait">
-            <motion.p
-              key={loadingMessageIndex}
-              className="text-center text-lg text-muted-foreground"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.35, ease: "easeInOut" }}
-            >
-              {LOADING_MESSAGES[loadingMessageIndex]}
-            </motion.p>
-          </AnimatePresence>
-        </div>
+      <div className="flex h-screen w-full flex-col items-center justify-center px-6">
+        <p className="text-center text-lg text-muted-foreground">
+          {displayedText}
+          <span className="animate-pulse">|</span>
+        </p>
       </div>
     );
   }
@@ -159,6 +201,54 @@ export function Onboarding({ onComplete }: OnboardingProps) {
               }
               placeholder="Tell us about your background, skills, and goals..."
               className="min-h-32 resize-none p-4 text-sm shadow-lg transition-shadow focus-visible:shadow-xl md:min-h-48 md:text-base"
+              disabled={isLoading}
+            />
+
+            {/* Resume upload */}
+            <div
+              onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+              onDragLeave={() => setIsDragging(false)}
+              onDrop={handleFileDrop}
+              onClick={() => fileInputRef.current?.click()}
+              className={`flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed px-4 py-6 text-sm transition-colors ${
+                isDragging
+                  ? "border-primary bg-primary/5 text-primary"
+                  : "border-muted-foreground/30 text-muted-foreground hover:border-muted-foreground/60"
+              }`}
+            >
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".pdf,.doc,.docx"
+                className="hidden"
+                onChange={handleFileSelect}
+              />
+              {resumeFile ? (
+                <div className="flex items-center gap-2">
+                  <span className="font-medium text-foreground">{resumeFile.name}</span>
+                  <button
+                    type="button"
+                    onClick={(e) => { e.stopPropagation(); setResumeFile(null); }}
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <span>Drop your resume here or <span className="underline">browse</span></span>
+                  <span className="text-xs text-muted-foreground/70">PDF, DOC, DOCX — optional</span>
+                </>
+              )}
+            </div>
+
+            {/* Job link */}
+            <Input
+              type="url"
+              value={jobLink}
+              onChange={(e) => setJobLink(e.target.value)}
+              placeholder="Job posting URL (optional)"
+              className="shadow-lg transition-shadow focus-visible:shadow-xl"
               disabled={isLoading}
             />
 

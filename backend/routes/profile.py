@@ -1,11 +1,13 @@
 import logging
 import os
+import io
 import json
 from flask import Blueprint, g, request, jsonify
 from openrouter import OpenRouter
 from dotenv import load_dotenv
 from middleware.auth import optional_auth, require_auth
 from services.skill_matcher import match_skills
+from services.llm import call_openrouter, get_reply_text
 from services.course_history_store import load_course_history, save_course_history
 from config.db import supabase
 from schemas.profile import BuildProfileRequest, SetSkillsRequest, SetGoalRequest
@@ -68,6 +70,151 @@ def validate_profile_structure(profile: dict) -> None:
         raise ValueError("current_skills must be an array")
 
 
+def parse_resume_text(file_bytes: bytes, filename: str) -> str:
+    """Extract plain text from a PDF or DOCX file."""
+    lower = filename.lower()
+    if lower.endswith(".pdf"):
+        from pypdf import PdfReader
+        reader = PdfReader(io.BytesIO(file_bytes))
+        return "\n".join(page.extract_text() or "" for page in reader.pages)
+    elif lower.endswith(".docx"):
+        from docx import Document
+        doc = Document(io.BytesIO(file_bytes))
+        return "\n".join(p.text for p in doc.paragraphs)
+    else:
+        raise ValueError(f"Unsupported file type: {filename}")
+
+
+def extract_skills_from_resume_text(text: str) -> list[dict]:
+    """Ask the LLM to extract skills from resume text."""
+    response = call_openrouter(
+        model="minimax/minimax-m2",
+        messages=[
+            {
+                "role": "system",
+                "content": """You are a resume parsing assistant. Given resume text, extract a list of skills the person has.
+Include technical skills, tools, programming languages, frameworks, and relevant soft skills.
+
+Return ONLY valid JSON in this exact format:
+{
+  "skills": [
+    {"label": "skill name"},
+    {"label": "another skill"}
+  ]
+}
+
+If no skills are found, return an empty array.""",
+            },
+            {"role": "user", "content": text[:8000]},
+        ],
+    )
+    raw = get_reply_text(response)
+    cleaned = clean_llm_json_response(raw)
+    parsed = json.loads(cleaned)
+    if not isinstance(parsed.get("skills"), list):
+        raise ValueError("LLM did not return a skills array")
+    return parsed["skills"]
+
+
+def scrape_job_text(url: str) -> str:
+    """Fetch a job posting URL via Jina reader (handles JS-rendered pages) and return plain text."""
+    import requests as http_requests
+    jina_url = f"https://r.jina.ai/{url}"
+    headers = {"User-Agent": "Mozilla/5.0 (compatible; parcours-lab/1.0)", "Accept": "text/plain"}
+    response = http_requests.get(jina_url, headers=headers, timeout=20)
+    response.raise_for_status()
+    return response.text
+
+
+def extract_skills_from_job_text(text: str) -> tuple[list[dict], str]:
+    """Ask the LLM to extract required skills from a job posting. Returns (skills, raw_llm_response)."""
+    response = call_openrouter(
+        model="minimax/minimax-m2",
+        messages=[
+            {
+                "role": "system",
+                "content": """You are a job posting parser. Given job posting text, extract a list of skills, tools, technologies, and qualifications required for the role.
+
+Return ONLY valid JSON in this exact format:
+{
+  "skills": [
+    {"label": "skill name"},
+    {"label": "another skill"}
+  ]
+}
+
+If no skills are found, return an empty array.""",
+            },
+            {"role": "user", "content": text[:8000]},
+        ],
+    )
+    raw = get_reply_text(response)
+    cleaned = clean_llm_json_response(raw)
+    parsed = json.loads(cleaned)
+    if not isinstance(parsed.get("skills"), list):
+        raise ValueError("LLM did not return a skills array")
+    return parsed["skills"], raw
+
+
+@profile_bp.route("/job/parse", methods=["POST"])
+@optional_auth
+def parse_job():
+    data = request.get_json(silent=True)
+    if not data or not data.get("url"):
+        return jsonify({"error": "Missing url"}), 400
+
+    try:
+        text = scrape_job_text(data["url"])
+        if not text.strip():
+            return jsonify({"error": "Could not extract text from job posting"}), 422
+
+        raw_skills, raw_llm = extract_skills_from_job_text(text)
+        skill_str = " ".join(s["label"] for s in raw_skills if s.get("label"))
+        matched = match_skills(skill_str, top_k=10, threshold=0.3) if skill_str else []
+        return jsonify({
+            "skills": matched,
+            "_debug": {
+                "text_preview": text[:500],
+                "text_length": len(text),
+                "raw_llm": raw_llm,
+            },
+        }), 200
+
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 422
+    except Exception as e:
+        logger.exception("Job parsing failed")
+        return jsonify({"error": f"Job parsing failed: {str(e)}"}), 500
+
+
+@profile_bp.route("/resume/parse", methods=["POST"])
+@optional_auth
+def parse_resume():
+    if "file" not in request.files:
+        return jsonify({"error": "No file uploaded"}), 400
+
+    file = request.files["file"]
+    if not file.filename:
+        return jsonify({"error": "Empty filename"}), 400
+
+    try:
+        file_bytes = file.read()
+        text = parse_resume_text(file_bytes, file.filename)
+        if not text.strip():
+            return jsonify({"error": "Could not extract text from resume"}), 422
+
+        raw_skills = extract_skills_from_resume_text(text)
+        skill_str = " ".join(s["label"] for s in raw_skills if s.get("label"))
+        matched = match_skills(skill_str, top_k=10, threshold=0.3) if skill_str else []
+        return jsonify({"skills": matched}), 200
+
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 422
+    except Exception as e:
+        logger.exception("Resume parsing failed")
+        return jsonify({"error": f"Resume parsing failed: {str(e)}"}), 500
+
+
 @profile_bp.route("/profile", methods=["POST"])
 @optional_auth
 @validate_request_body(BuildProfileRequest)
@@ -78,11 +225,17 @@ def build_profile(payload: BuildProfileRequest):
         profile = json.loads(cleaned_json)
         validate_profile_structure(profile)
 
-        llm_skills = " ".join(s["label"] for s in profile["current_skills"] if s.get("label"))
-        profile["current_skills"] = match_skills(llm_skills, top_k=5, threshold=0.45) if llm_skills else []
+        if payload.current_skills is not None:
+            profile["current_skills"] = payload.current_skills
+        else:
+            llm_skills = " ".join(s["label"] for s in profile["current_skills"] if s.get("label"))
+            profile["current_skills"] = match_skills(llm_skills, top_k=5, threshold=0.3) if llm_skills else []
 
         goal = profile.get("goal", "")
-        profile["required_skills"] = match_skills(goal, top_k=5, threshold=0.35) if goal else []
+        if payload.required_skills is not None:
+            profile["required_skills"] = payload.required_skills
+        else:
+            profile["required_skills"] = match_skills(goal, top_k=5, threshold=0.3) if goal else []
 
         if g.user:
             supabase.table(TABLE).upsert({

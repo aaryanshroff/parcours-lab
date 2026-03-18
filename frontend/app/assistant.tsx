@@ -16,19 +16,10 @@ import {
   Onboarding,
   useOnboardingComplete,
 } from "@/components/assistant-ui/onboarding";
-import { Separator } from "@/components/ui/separator";
 import { API_BASE_URL, authFetch } from "@/lib/api";
 import { supabase } from "@/lib/supabase/client";
 import type { ChatResponse, RecommendedCourse } from "@/lib/types";
 import { getCourseHistory, setCourseHistory } from "@/lib/courses";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { useEffect, useState } from "react";
 
 const INITIAL_PROMPT_SENT_KEY = "parcours-initial-prompt-sent";
@@ -335,28 +326,8 @@ export const Assistant = () => {
           <div className="flex h-dvh w-full pr-0.5">
             <ThreadListSidebar onReset={reset} />
             <SidebarInset>
-              <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-                <SidebarTrigger />
-                <Separator orientation="vertical" className="mr-2 h-4" />
-                <Breadcrumb>
-                  <BreadcrumbList>
-                    <BreadcrumbItem className="hidden md:block">
-                      <BreadcrumbLink
-                        href="https://www.assistant-ui.com/docs/getting-started"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        ParcoursLab
-                      </BreadcrumbLink>
-                    </BreadcrumbItem>
-                    <BreadcrumbSeparator className="hidden md:block" />
-                    <BreadcrumbItem>
-                      <BreadcrumbPage>Courses for Javanese</BreadcrumbPage>
-                    </BreadcrumbItem>
-                  </BreadcrumbList>
-                </Breadcrumb>
-              </header>
-              <div className="flex-1 overflow-hidden">
+              <div className="relative flex-1 overflow-hidden h-full">
+                <SidebarTrigger className="absolute top-3 left-3 z-10" />
                 <Thread
                   initialRecommendationsPending={isInitialRecommendationsPending}
                   initialRecommendationsCompleting={isInitialRecommendationsCompleting}
