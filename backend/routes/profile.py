@@ -167,6 +167,10 @@ def match_skills_individually(raw_skills: list[dict], threshold: float = 0.5, ma
         if not label:
             continue
         results = match_skills(label, top_k=1, threshold=threshold)
+        if results:
+            logger.info("[match_individually] %r -> %r (score=%.3f)", label, results[0]["label"], results[0]["score"])
+        else:
+            logger.info("[match_individually] %r -> no match above threshold", label)
         for r in results:
             if r["label"] not in seen:
                 seen.add(r["label"])
