@@ -35,13 +35,14 @@ function getRequiredSkillsSet(): Set<string> {
   }
 }
 
-const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
+export const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
   const title = course.title || "Untitled course";
   const [recordedStatus, setRecordedStatus] = useState<
     "accepted" | "rejected" | null
   >(() => (isCourseRecorded(title) ? "accepted" : null));
   const [showRejectForm, setShowRejectForm] = useState(false);
-  const [rejectReason, setRejectReason] = useState("");
+  const [rejectQuickReason, setRejectQuickReason] = useState("");
+  const [rejectCustomReason, setRejectCustomReason] = useState("");
   const [skillsExpanded, setSkillsExpanded] = useState(false);
   const requiredSkills = getRequiredSkillsSet();
 
@@ -69,7 +70,7 @@ const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
       id: course.id,
       title,
       status: "rejected",
-      rejection_reason: rejectReason.trim() || undefined,
+      rejection_reason: [rejectQuickReason, rejectCustomReason.trim()].filter(Boolean).join(": ") || undefined,
       provider: course.provider,
       url: course.url,
       summary: course.summary,
@@ -195,9 +196,9 @@ const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
             {REJECT_REASONS.map((reason) => (
               <button
                 key={reason}
-                onClick={() => setRejectReason((prev) => prev === reason ? "" : reason)}
+                onClick={() => setRejectQuickReason((prev: string) => prev === reason ? "" : reason)}
                 className={`rounded-md border px-2.5 py-1 text-xs transition-colors ${
-                  rejectReason === reason
+                  rejectQuickReason === reason
                     ? "border-foreground/30 bg-foreground/10 text-foreground"
                     : "border-border text-muted-foreground hover:bg-muted"
                 }`}
@@ -208,8 +209,8 @@ const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
           </div>
           <input
             type="text"
-            value={REJECT_REASONS.includes(rejectReason) ? "" : rejectReason}
-            onChange={(e) => setRejectReason(e.target.value)}
+            value={rejectCustomReason}
+            onChange={(e) => setRejectCustomReason(e.target.value)}
             placeholder="Other reason (optional)"
             className="w-full rounded-md border border-border bg-background px-3 py-1.5 text-xs placeholder:text-muted-foreground/60 focus:outline-none focus:ring-1 focus:ring-ring"
           />
@@ -231,7 +232,8 @@ const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
             <button
               onClick={() => {
                 setShowRejectForm(false);
-                setRejectReason("");
+                setRejectQuickReason("");
+                setRejectCustomReason("");
               }}
               className="rounded-md border border-border px-3 py-1.5 font-medium text-xs text-muted-foreground transition-colors hover:bg-muted"
             >

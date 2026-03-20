@@ -14,6 +14,9 @@ TOOLS = [
                 "Generate a personalized skill roadmap with course recommendations. "
                 "Call this when the user asks for course recommendations, a learning path, "
                 "or what they should learn."
+                "Fetch personalized course recommendations. Takes no arguments — "
+                "the server already knows the user's goal and skills. "
+                "Call this whenever the user asks for course suggestions."
             ),
             "parameters": {
                 "type": "object",
@@ -30,6 +33,8 @@ _BASE_SYSTEM_INSTRUCTION = (
     "When tool output is available, provide a brief high-level overview of the roadmap. "
     "The frontend renders an interactive skill-tree graph with courses attached to each skill. "
     "Do NOT list individual courses or skills in your text — keep it concise and encouraging."
+    "If the user has rejected courses before, briefly explain how you took that feedback into account "
+    "(e.g. 'Since you found X too advanced, I focused on more introductory options')."
 )
 
 
@@ -79,6 +84,10 @@ For each skill, return:
 
 Create a meaningful dependency tree — not a linear chain. Some skills can be \
 learned in parallel. Order so prerequisites come first.
+Return ONLY a JSON array of objects with "id" and "explanation" fields, e.g. \
+[{{"id": "id1", "explanation": "one sentence why"}}, ...]. \
+Keep each explanation to one concise sentence. If a course was chosen or avoided because of user feedback on rejected courses, say so in the explanation. \
+No markdown, just the JSON array."""
 
 Return ONLY a JSON array. No markdown fences, no commentary, just raw JSON."""
 
@@ -173,6 +182,12 @@ def _attach_courses(
             skill["course"] = course
         else:
             skill["course"] = None
+    # Build map of id -> explanation from the LLM response
+    explanations: dict[str, str] = {}
+    for item in parsed:
+        if isinstance(item, dict):
+            cid = str(item.get("id", ""))
+            explanations[cid] = str(item.get("explanation", ""))
 
     return skills
 
