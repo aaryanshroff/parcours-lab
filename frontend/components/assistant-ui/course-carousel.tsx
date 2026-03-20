@@ -15,6 +15,26 @@ function capitalize(s: string) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
+function getRequiredSkillsSet(): Set<string> {
+  try {
+    const raw = localStorage.getItem("parcours-required-skills");
+    if (!raw) return new Set();
+    const parsed = JSON.parse(raw) as Array<string | { label?: string | null } | null>;
+    if (!Array.isArray(parsed)) return new Set();
+    return new Set(
+      parsed
+        .map((item) => {
+          if (typeof item === "string") return item.trim().toLowerCase();
+          if (item && typeof item === "object" && typeof item.label === "string") return item.label.trim().toLowerCase();
+          return "";
+        })
+        .filter(Boolean),
+    );
+  } catch {
+    return new Set();
+  }
+}
+
 const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
   const title = course.title || "Untitled course";
   const [recordedStatus, setRecordedStatus] = useState<
@@ -23,6 +43,7 @@ const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
   const [showRejectForm, setShowRejectForm] = useState(false);
   const [rejectReason, setRejectReason] = useState("");
   const [skillsExpanded, setSkillsExpanded] = useState(false);
+  const requiredSkills = getRequiredSkillsSet();
 
   const handleAccept = () => {
     addCourse({
@@ -135,14 +156,19 @@ const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
       {/* Skills */}
       {course.skills && course.skills.length > 0 && (
         <div className="mb-3 flex flex-wrap gap-1">
-          {(skillsExpanded ? course.skills : course.skills.slice(0, 5)).map((skill, i) => (
-            <span
-              key={i}
-              className="rounded bg-muted/60 px-1.5 py-0.5 text-[11px] text-muted-foreground"
-            >
-              {skill.name}
-            </span>
-          ))}
+          {(skillsExpanded ? course.skills : course.skills.slice(0, 5)).map((skill, i) => {
+            const isRequired = requiredSkills.has(skill.name.toLowerCase());
+            return (
+              <span
+                key={i}
+                className={isRequired
+                  ? "rounded border border-primary/30 bg-primary/15 px-1.5 py-0.5 text-[11px] text-primary font-medium"
+                  : "rounded bg-muted/60 px-1.5 py-0.5 text-[11px] text-muted-foreground"}
+              >
+                {skill.name}
+              </span>
+            );
+          })}
           {course.skills.length > 5 && !skillsExpanded && (
             <button
               onClick={() => setSkillsExpanded(true)}
