@@ -8,6 +8,7 @@ import { API_BASE_URL, authFetch } from "@/lib/api";
 import { supabase } from "@/lib/supabase/client";
 import { FileText, Link2, Upload, X, ArrowRight } from "lucide-react";
 import type { ChatResponse } from "@/lib/types";
+import { setCourseHistory } from "@/lib/courses";
 
 const LOADING_MESSAGES = [
   "Analyzing your background…",
@@ -162,7 +163,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
       localStorage.setItem(REQUIRED_SKILLS_STORAGE_KEY, JSON.stringify(requiredSkills));
       localStorage.removeItem("parcours-initial-prompt-sent");
       localStorage.removeItem("parcours-initial-prompt-goal");
-      localStorage.removeItem("parcours-course-history");
+      setCourseHistory([], { sync: false });
       localStorage.removeItem("parcours-messages");
 
       // Fire the initial chat recommendation while the loading screen is still

@@ -8,7 +8,6 @@ import { Reasoning, ReasoningGroup } from "@/components/assistant-ui/reasoning";
 import { ToolFallback } from "@/components/assistant-ui/tool-fallback";
 import { TooltipIconButton } from "@/components/assistant-ui/tooltip-icon-button";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import {
   AssistantIf,
   ComposerPrimitive,
@@ -25,6 +24,7 @@ import {
 import { useRef, useEffect, useState, type FC } from "react";
 import type { RecommendedCourse } from "@/lib/types";
 import { CourseCarousel } from "@/components/assistant-ui/course-carousel";
+import { cn } from "@/lib/utils";
 
 const EMPTY_RECOMMENDED_COURSES: RecommendedCourse[] = [];
 

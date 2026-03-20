@@ -159,7 +159,7 @@ Be specific — use precise skill names (e.g. "Python", "TensorFlow", "SQL") rat
 
 
 def match_skills_individually(raw_skills: list[dict], threshold: float = 0.5, max_results: int = 10) -> list[dict]:
-    """Match each LLM-extracted skill label against ESCO individually and deduplicate."""
+    """Match each LLM-extracted skill label against ESCO individually, tracking source label."""
     matched = []
     seen = set()
     for skill in raw_skills:
@@ -174,10 +174,54 @@ def match_skills_individually(raw_skills: list[dict], threshold: float = 0.5, ma
         for r in results:
             if r["label"] not in seen:
                 seen.add(r["label"])
-                matched.append(r)
+                matched.append({**r, "input_label": label})
         if len(matched) >= max_results:
             break
     return matched
+
+
+def filter_skill_matches_with_llm(matched: list[dict]) -> list[dict]:
+    """Use LLM to filter out false-positive ESCO mappings.
+
+    Each item in matched must have an 'input_label' (raw extracted term) and
+    'label' (ESCO match) so the LLM can judge whether they are the same concept.
+    """
+    if not matched:
+        return matched
+
+    pairs = [{"extracted": m["input_label"], "esco": m["label"]} for m in matched]
+
+    prompt = (
+        "You are a skill taxonomy validator. Below are pairs of (extracted skill from a job posting) "
+        "and the closest ESCO skill found via semantic search.\n\n"
+        "Keep a pair ONLY if the ESCO skill is a genuine, close match for the extracted skill — "
+        "same concept, just possibly different phrasing. Discard pairs where the ESCO skill is "
+        "unrelated or only superficially similar.\n\n"
+        f"Pairs:\n{json.dumps(pairs, indent=2)}\n\n"
+        'Return ONLY a JSON array of approved ESCO labels, e.g. ["cyber security", "risk assessment"]. '
+        "No markdown, no explanation."
+    )
+
+    try:
+        result = call_openrouter(
+            model="minimax/minimax-m2",
+            messages=[{"role": "user", "content": prompt}],
+        )
+        raw = get_reply_text(result).strip()
+        cleaned = clean_llm_json_response(raw)
+        approved: list[str] = json.loads(cleaned)
+        if not isinstance(approved, list):
+            raise ValueError("not a list")
+        approved_set = {label.lower() for label in approved if isinstance(label, str)}
+        # Strip internal input_label before returning
+        return [
+            {k: v for k, v in m.items() if k != "input_label"}
+            for m in matched
+            if m.get("label", "").lower() in approved_set
+        ]
+    except Exception:
+        logger.warning("LLM skill filter failed, returning unfiltered matches")
+        return [{k: v for k, v in m.items() if k != "input_label"} for m in matched]
 
 
 def extract_skills_from_job_text(text: str) -> tuple[list[dict], str]:
@@ -223,7 +267,8 @@ def parse_job():
             return jsonify({"error": "Could not extract text from job posting"}), 422
 
         raw_skills, raw_llm = extract_skills_from_job_text(text)
-        matched = match_skills_individually(raw_skills, threshold=0.65, max_results=10)
+        matched = match_skills_individually(raw_skills, threshold=0.5, max_results=10)
+        matched = filter_skill_matches_with_llm(matched)
         return jsonify({
             "skills": matched,
             "_debug": {
@@ -296,6 +341,13 @@ def build_profile(payload: BuildProfileRequest):
                 profile["required_skills"] = matched
             else:
                 profile["required_skills"] = []
+
+        # Subtract current_skills from required_skills to avoid overlap
+        current_labels = {s.get("label", "").lower() for s in profile["current_skills"] if s.get("label")}
+        profile["required_skills"] = [
+            s for s in profile["required_skills"]
+            if s.get("label", "").lower() not in current_labels
+        ]
 
         if g.user:
             supabase.table(TABLE).upsert({

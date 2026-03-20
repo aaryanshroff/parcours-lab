@@ -11,8 +11,9 @@ TOOLS = [
         "function": {
             "name": RECOMMENDED_COURSES_TOOL_NAME,
             "description": (
-                "Return recommended courses based on the user's goal and required skills. "
-                "Call this when the user asks for course recommendations."
+                "Fetch personalized course recommendations. Takes no arguments — "
+                "the server already knows the user's goal and skills. "
+                "Call this whenever the user asks for course suggestions."
             ),
             "parameters": {
                 "type": "object",
@@ -27,7 +28,9 @@ _BASE_SYSTEM_INSTRUCTION = (
     "If the user asks for course recommendations or courses to take, "
     f"first call the {RECOMMENDED_COURSES_TOOL_NAME} tool and then use the tool output. "
     "When tool output is available, do not list course titles or URLs in the assistant text. "
-    "Keep text brief and high-level; the frontend will render course cards from structured data."
+    "Keep text brief and high-level; the frontend will render course cards from structured data. "
+    "If the user has rejected courses before, briefly explain how you took that feedback into account "
+    "(e.g. 'Since you found X too advanced, I focused on more introductory options')."
 )
 
 
@@ -71,7 +74,8 @@ Candidates (JSON array):
 
 Return ONLY a JSON array of objects with "id" and "explanation" fields, e.g. \
 [{{"id": "id1", "explanation": "one sentence why"}}, ...]. \
-Keep each explanation to one concise sentence. No markdown, just the JSON array."""
+Keep each explanation to one concise sentence. If a course was chosen or avoided because of user feedback on rejected courses, say so in the explanation. \
+No markdown, just the JSON array."""
 
 _CANDIDATE_COUNT = 10
 _PICK_COUNT = 3
@@ -128,11 +132,12 @@ def _llm_rerank_courses(
     except (json.JSONDecodeError, ValueError):
         return candidates[:pick]
 
-    # Build a map of id -> explanation from the LLM response
+    # Build map of id -> explanation from the LLM response
     explanations: dict[str, str] = {}
     for item in parsed:
         if isinstance(item, dict):
-            explanations[str(item.get("id", ""))] = str(item.get("explanation", ""))
+            cid = str(item.get("id", ""))
+            explanations[cid] = str(item.get("explanation", ""))
 
     reranked: list[dict[str, str]] = []
     for c in candidates:

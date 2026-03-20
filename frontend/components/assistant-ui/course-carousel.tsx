@@ -35,7 +35,7 @@ function getRequiredSkillsSet(): Set<string> {
   }
 }
 
-const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
+export const CourseCard: FC<{ course: RecommendedCourse }> = ({ course }) => {
   const title = course.title || "Untitled course";
   const [recordedStatus, setRecordedStatus] = useState<
     "accepted" | "rejected" | null
