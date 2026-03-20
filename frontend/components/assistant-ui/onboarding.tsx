@@ -162,6 +162,8 @@ export function Onboarding({ onComplete }: OnboardingProps) {
       localStorage.setItem(REQUIRED_SKILLS_STORAGE_KEY, JSON.stringify(requiredSkills));
       localStorage.removeItem("parcours-initial-prompt-sent");
       localStorage.removeItem("parcours-initial-prompt-goal");
+      localStorage.removeItem("parcours-course-history");
+      localStorage.removeItem("parcours-messages");
 
       // Fire the initial chat recommendation while the loading screen is still
       // showing so chat is ready the moment the user arrives.
