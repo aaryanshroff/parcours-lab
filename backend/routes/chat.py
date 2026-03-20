@@ -4,7 +4,6 @@ from middleware.auth import optional_auth, require_auth
 from schemas.chat import ChatRequest
 from services.llm import call_openrouter, get_reply_text, extract_tool_calls
 from services.tools import TOOLS, build_system_instruction, resolve_tool_calls
-from services.courses import get_recommended_courses
 from config.db import supabase
 
 chat_bp = Blueprint("chat", __name__)
@@ -67,20 +66,21 @@ def _persist_messages(
     user_id: str,
     incoming_messages: list,
     assistant_text: str,
-    skill_roadmap: dict | None = None,
+    recommended_courses: list | None = None
 ) -> None:
     """Append the latest user + assistant turn to the user's conversation row."""
     try:
         _ensure_profile_row()
+        # Get the last user message from the incoming messages
         user_message = next(
             (m for m in reversed(incoming_messages) if m.role == "user"), None
         )
         if not user_message:
             return
 
-        assistant_msg: dict = {"role": "assistant", "content": assistant_text}
-        if skill_roadmap:
-            assistant_msg["skill_roadmap"] = skill_roadmap
+        assistant_msg = {"role": "assistant", "content": assistant_text}
+        if recommended_courses:
+            assistant_msg["recommended_courses"] = recommended_courses
 
         new_turns = [
             {"role": "user", "content": user_message.text_content()},
@@ -102,7 +102,7 @@ def _persist_messages(
         else:
             supabase.table("conversations").insert({"profile_id": user_id, "messages": new_turns}).execute()
     except Exception:
-        pass
+        pass  # Don't fail the chat request if persistence fails
 
 
 @chat_bp.route("/chat", methods=["POST"])
@@ -126,7 +126,7 @@ def chat():
         conversation_id = g.user.id if g.user else req.conversation_id
 
         if tool_calls:
-            assistant_text, skill_roadmap = resolve_tool_calls(
+            assistant_text, recommended_courses = resolve_tool_calls(
                 tool_calls, model_messages, req.model,
                 goal=req.goal, required_skills=req.required_skills,
                 conversation_id=conversation_id,
@@ -134,47 +134,15 @@ def chat():
             )
         else:
             assistant_text = get_reply_text(result)
-            skill_roadmap = {}
+            recommended_courses = []
 
         if g.user:
-            _persist_messages(g.user.id, req.messages, assistant_text, skill_roadmap or None)
+            _persist_messages(g.user.id, req.messages, assistant_text, recommended_courses)
 
-        response: dict = {"response": assistant_text}
-        if skill_roadmap:
-            response["skill_roadmap"] = skill_roadmap
-
-        return response, 200
+        return {"response": assistant_text, "recommended_courses": recommended_courses}, 200
     except (ValueError, ValidationError) as e:
         return jsonify({"error": str(e)}), 400
     except EnvironmentError as e:
         return jsonify({"error": str(e)}), 500
     except Exception as e:
         return jsonify({"error": f"Chat request failed: {str(e)}"}), 500
-
-
-@chat_bp.route("/replace_course", methods=["POST"])
-@optional_auth
-def replace_course():
-    """Find a replacement course for a rejected skill-course pairing."""
-    data = request.get_json(silent=True)
-    if not isinstance(data, dict):
-        return jsonify({"error": "Invalid request"}), 400
-
-    skill_name = data.get("skill_name", "")
-    skill_description = data.get("skill_description", "")
-    goal = data.get("goal", "")
-    exclude_ids = set(data.get("exclude_course_ids", []))
-
-    if not skill_name:
-        return jsonify({"error": "skill_name is required"}), 400
-
-    query = " ".join(filter(None, [goal, skill_name, skill_description]))
-    candidates = get_recommended_courses(
-        query, [skill_name], count=3,
-        exclude_course_ids=exclude_ids,
-    )
-
-    if not candidates:
-        return jsonify({"error": "No alternative courses available"}), 404
-
-    return jsonify({"course": candidates[0]}), 200
