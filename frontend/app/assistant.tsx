@@ -24,11 +24,13 @@ import { getCourseHistory, setCourseHistory } from "@/lib/courses";
 import { useEffect, useState } from "react";
 
 const INITIAL_PROMPT_SENT_KEY = "parcours-initial-prompt-sent";
+const INITIAL_PROMPT_GOAL_KEY = "parcours-initial-prompt-goal";
+const GOAL_UPDATED_EVENT = "parcours:goal-updated";
 
 
 const getCourseHistoryFromStorage = (): Array<{
   title: string;
-  status: string;
+  status: "accepted" | "rejected";
   reason: string;
 }> => {
   try {
@@ -38,14 +40,37 @@ const getCourseHistoryFromStorage = (): Array<{
       title?: string;
       status?: string;
       reason?: string;
+      rejection_reason?: string;
     }>;
-    return Array.isArray(parsed)
-      ? parsed.map((course) => ({
-          title: course.title ?? "",
-          status: course.status ?? "",
-          reason: course.reason ?? "",
-        }))
-      : [];
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .filter((course) => course.status === "accepted" || course.status === "rejected")
+      .map((course) => ({
+        title: course.title ?? "",
+        status: course.status as "accepted" | "rejected",
+        reason: course.reason ?? course.rejection_reason ?? "",
+      }));
+  } catch {
+    return [];
+  }
+};
+
+const getRequiredSkillsFromStorage = (): string[] => {
+  try {
+    const raw = localStorage.getItem("parcours-required-skills");
+    if (!raw) return [];
+    const parsed = JSON.parse(raw) as Array<string | { label?: string | null } | null>;
+    if (!Array.isArray(parsed)) return [];
+
+    return parsed
+      .map((item) => {
+        if (typeof item === "string") return item.trim();
+        if (item && typeof item === "object" && typeof item.label === "string") {
+          return item.label.trim();
+        }
+        return "";
+      })
+      .filter((skill) => skill.length > 0);
   } catch {
     return [];
   }
@@ -95,39 +120,9 @@ const conversationId = crypto.randomUUID();
 const backendChatAdapter: ChatModelAdapter = {
   async run({ messages, abortSignal }) {
     const goal = localStorage.getItem("parcours-goal") || "";
-    const requiredSkills: string[] = (() => {
-      try {
-        const raw = localStorage.getItem("parcours-required-skills");
-        return raw ? JSON.parse(raw) : [];
-      } catch {
-        return [];
-      }
-    })();
+    const requiredSkills = getRequiredSkillsFromStorage();
 
-    const courseHistory: Array<{
-      title: string;
-      status: string;
-      reason: string;
-    }> = (() => {
-      try {
-        const raw = localStorage.getItem("parcours-course-history");
-        if (!raw) return [];
-        const parsed = JSON.parse(raw) as Array<{
-          title?: string;
-          status?: string;
-          reason?: string;
-        }>;
-        return Array.isArray(parsed)
-          ? parsed.map((c) => ({
-              title: c.title ?? "",
-              status: c.status ?? "",
-              reason: c.reason ?? "",
-            }))
-          : [];
-      } catch {
-        return [];
-      }
-    })();
+    const courseHistory = getCourseHistoryFromStorage();
 
     const response = await authFetch(`${API_BASE_URL}/api/chat`, {
       method: "POST",
@@ -197,16 +192,34 @@ const backendChatAdapter: ChatModelAdapter = {
 export const Assistant = () => {
   const runtime = useLocalRuntime(backendChatAdapter);
   const { isComplete, isLoaded, markComplete, reset } = useOnboardingComplete();
+  const [goalUpdateSignal, setGoalUpdateSignal] = useState(0);
   const [isInitialRecommendationsPending, setIsInitialRecommendationsPending] =
     useState(false);
   const [isInitialRecommendationsCompleting, setIsInitialRecommendationsCompleting] =
     useState(false);
 
   useEffect(() => {
+    const handleGoalUpdated = () => {
+      setGoalUpdateSignal((v) => v + 1);
+    };
+
+    window.addEventListener(GOAL_UPDATED_EVENT, handleGoalUpdated);
+    return () => {
+      window.removeEventListener(GOAL_UPDATED_EVENT, handleGoalUpdated);
+    };
+  }, []);
+
+  useEffect(() => {
     if (!isLoaded || !isComplete) {
       setIsInitialRecommendationsPending(false);
       setIsInitialRecommendationsCompleting(false);
       return;
+    }
+
+    const currentGoal = localStorage.getItem("parcours-goal")?.trim() ?? "";
+    const lastInitialPromptGoal = localStorage.getItem(INITIAL_PROMPT_GOAL_KEY)?.trim() ?? "";
+    if (currentGoal !== lastInitialPromptGoal) {
+      localStorage.removeItem(INITIAL_PROMPT_SENT_KEY);
     }
 
     const preloaded = sessionStorage.getItem(INITIAL_PROMPT_RESULT_KEY);
@@ -219,8 +232,10 @@ export const Assistant = () => {
           startRun: false,
         });
         localStorage.setItem(INITIAL_PROMPT_SENT_KEY, "true");
+        localStorage.setItem(INITIAL_PROMPT_GOAL_KEY, currentGoal);
       } catch {
         localStorage.removeItem(INITIAL_PROMPT_SENT_KEY);
+        localStorage.removeItem(INITIAL_PROMPT_GOAL_KEY);
       } finally {
         sessionStorage.removeItem(INITIAL_PROMPT_RESULT_KEY);
       }
@@ -253,14 +268,7 @@ export const Assistant = () => {
         const goal = localStorage.getItem("parcours-goal") || "";
         const courseHistory = getCourseHistoryFromStorage();
         const initialPrompt = getInitialRecommendationPrompt();
-        const requiredSkills: string[] = (() => {
-          try {
-            const raw = localStorage.getItem("parcours-required-skills");
-            return raw ? JSON.parse(raw) : [];
-          } catch {
-            return [];
-          }
-        })();
+        const requiredSkills = getRequiredSkillsFromStorage();
 
         const response = await fetch(`${API_BASE_URL}/api/chat`, {
           method: "POST",
@@ -281,7 +289,16 @@ export const Assistant = () => {
         });
 
         if (!response.ok) {
-          throw new Error(`Initial prompt request failed (${response.status})`);
+          let errorMessage = `Initial prompt request failed (${response.status})`;
+          try {
+            const errorData = (await response.json()) as ChatResponse;
+            if (typeof errorData.error === "string" && errorData.error.trim()) {
+              errorMessage = errorData.error;
+            }
+          } catch {
+            // Keep the status-based fallback error message.
+          }
+          throw new Error(errorMessage);
         }
 
         const data = (await response.json()) as ChatResponse;
@@ -295,10 +312,13 @@ export const Assistant = () => {
         });
 
         localStorage.setItem(INITIAL_PROMPT_SENT_KEY, "true");
+        localStorage.setItem(INITIAL_PROMPT_GOAL_KEY, goal.trim());
         setIsInitialRecommendationsCompleting(false);
         setIsInitialRecommendationsPending(false);
-      } catch {
+      } catch (error) {
+        console.error("Initial prompt failed:", error);
         localStorage.removeItem(INITIAL_PROMPT_SENT_KEY);
+        localStorage.removeItem(INITIAL_PROMPT_GOAL_KEY);
         setIsInitialRecommendationsCompleting(false);
         setIsInitialRecommendationsPending(false);
       }
@@ -309,7 +329,7 @@ export const Assistant = () => {
     return () => {
       abortController.abort();
     };
-  }, [isComplete, isLoaded, runtime]);
+  }, [isComplete, isLoaded, runtime, goalUpdateSignal]);
 
   useEffect(() => {
     if (!isComplete) return;

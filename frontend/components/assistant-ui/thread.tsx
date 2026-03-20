@@ -107,12 +107,27 @@ export const Thread: FC<{
           </AssistantIf>
         )}
 
+
         <ThreadPrimitive.Messages
           components={{
             UserMessage,
             AssistantMessage,
           }}
         />
+
+        {initialRecommendationsPending && (
+          <AssistantIf condition={({ thread }) => !thread.isEmpty}>
+            <div className="fade-in animate-in mx-auto mb-4 w-full max-w-(--thread-max-width) px-4">
+              <p className="mb-1 text-sm text-muted-foreground">
+                Generating new recommendations based on your updated goal…
+              </p>
+              <p className="mb-2 text-xs text-muted-foreground">
+                This can take up to 6 seconds to load!
+              </p>
+              <SixSecondLoadingBar complete={initialRecommendationsCompleting} />
+            </div>
+          </AssistantIf>
+        )}
 
         <ThreadPrimitive.ViewportFooter className="aui-thread-viewport-footer sticky bottom-0 mx-auto mt-auto flex w-full max-w-(--thread-max-width) flex-col gap-4 overflow-visible rounded-t-3xl bg-background pb-4 md:pb-6">
           <ThreadScrollToBottom />
