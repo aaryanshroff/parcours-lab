@@ -105,7 +105,7 @@ Return ONLY valid JSON in this exact format:
 
 If no skills are found, return an empty array.""",
             },
-            {"role": "user", "content": text[:8000]},
+            {"role": "user", "content": text[:16000]},
         ],
     )
     raw = get_reply_text(response)
@@ -224,6 +224,24 @@ def filter_skill_matches_with_llm(matched: list[dict]) -> list[dict]:
         return [{k: v for k, v in m.items() if k != "input_label"} for m in matched]
 
 
+import re
+
+_JOB_SECTION_PATTERNS = re.compile(
+    r"(requirements|qualifications|responsibilities|what you.?ll need|"
+    r"what we.?re looking for|skills|must have|nice to have|about the role)",
+    re.IGNORECASE,
+)
+
+
+def _find_relevant_section(text: str, limit: int = 16000) -> str:
+    """Return a window of text starting from the first relevant job section header."""
+    match = _JOB_SECTION_PATTERNS.search(text)
+    if match:
+        start = max(match.start() - 200, 0)  # include a bit of context before the header
+        return text[start : start + limit]
+    return text[:limit]
+
+
 def extract_skills_from_job_text(text: str) -> tuple[list[dict], str]:
     """Ask the LLM to extract required skills from a job posting. Returns (skills, raw_llm_response)."""
     response = call_openrouter(
@@ -243,7 +261,7 @@ Return ONLY valid JSON in this exact format:
 
 If no skills are found, return an empty array.""",
             },
-            {"role": "user", "content": text[:8000]},
+            {"role": "user", "content": _find_relevant_section(text)},
         ],
     )
     raw = get_reply_text(response)
