@@ -23,10 +23,8 @@ import {
   SquareIcon,
 } from "lucide-react";
 import { useRef, useEffect, useState, type FC } from "react";
-import type { RecommendedCourse } from "@/lib/types";
-import { CourseCarousel } from "@/components/assistant-ui/course-carousel";
-
-const EMPTY_RECOMMENDED_COURSES: RecommendedCourse[] = [];
+import type { SkillRoadmap } from "@/lib/types";
+import { CourseRoadmap } from "@/components/assistant-ui/course-roadmap";
 
 
 const SixSecondLoadingBar: FC<{ complete?: boolean }> = ({ complete = false }) => {
@@ -233,16 +231,13 @@ const MessageError: FC = () => {
 };
 
 const AssistantMessage: FC = () => {
-  const recommendedCourses = useAuiState(({ message }) => {
+  const skillRoadmap = useAuiState(({ message }) => {
     const dataPart = message.parts.find(
-      (part) => part.type === "data" && part.name === "recommended_courses",
+      (part) => part.type === "data" && part.name === "skill_roadmap",
     );
 
-    if (!dataPart || !("data" in dataPart) || !Array.isArray(dataPart.data)) {
-      return EMPTY_RECOMMENDED_COURSES;
-    }
-
-    return dataPart.data as RecommendedCourse[];
+    if (!dataPart || !("data" in dataPart)) return null;
+    return dataPart.data as SkillRoadmap;
   });
 
   return (
@@ -261,8 +256,8 @@ const AssistantMessage: FC = () => {
         />
         <MessageError />
 
-        {recommendedCourses.length > 0 && (
-          <CourseCarousel courses={recommendedCourses} />
+        {skillRoadmap && skillRoadmap.skills?.length > 0 && (
+          <CourseRoadmap roadmap={skillRoadmap} />
         )}
       </div>
 
