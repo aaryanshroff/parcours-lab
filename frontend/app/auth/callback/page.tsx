@@ -5,6 +5,24 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
 import { API_BASE_URL, authFetch } from "@/lib/api";
 
+const INITIAL_PROMPT_SENT_KEY = "parcours-initial-prompt-sent";
+const INITIAL_PROMPT_GOAL_KEY = "parcours-initial-prompt-goal";
+const INITIAL_PROMPT_RESULT_KEY = "parcours-initial-prompt-result";
+
+function toSkillLabels(parsed: unknown): string[] {
+  if (!Array.isArray(parsed)) return [];
+  return parsed
+    .map((item) => {
+      if (typeof item === "string") return item.trim();
+      if (item && typeof item === "object" && "label" in item) {
+        const value = (item as { label?: unknown }).label;
+        return typeof value === "string" ? value.trim() : "";
+      }
+      return "";
+    })
+    .filter((label) => label.length > 0);
+}
+
 export default function AuthCallbackPage() {
   const router = useRouter();
   const hasPersistedRef = useRef(false);
@@ -17,6 +35,9 @@ export default function AuthCallbackPage() {
           hasPersistedRef.current = true;
           subscription.unsubscribe();
           await Promise.all([persistProfile(), persistMessages()]);
+          localStorage.removeItem(INITIAL_PROMPT_SENT_KEY);
+          localStorage.removeItem(INITIAL_PROMPT_GOAL_KEY);
+          sessionStorage.removeItem(INITIAL_PROMPT_RESULT_KEY);
           router.replace("/");
         }
       },
@@ -35,8 +56,8 @@ export default function AuthCallbackPage() {
 async function persistProfile() {
   const goal = localStorage.getItem("parcours-goal");
   if (!goal) return;
-  const currentSkills = JSON.parse(localStorage.getItem("parcours-known-skills") || "[]");
-  const requiredSkills = JSON.parse(localStorage.getItem("parcours-required-skills") || "[]");
+  const currentSkills = toSkillLabels(JSON.parse(localStorage.getItem("parcours-known-skills") || "[]"));
+  const requiredSkills = toSkillLabels(JSON.parse(localStorage.getItem("parcours-required-skills") || "[]"));
   try {
     await authFetch(`${API_BASE_URL}/api/profile/save`, {
       method: "POST",

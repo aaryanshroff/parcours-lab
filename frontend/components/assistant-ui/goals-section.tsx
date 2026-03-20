@@ -11,6 +11,10 @@ import { API_BASE_URL, authFetch } from "@/lib/api";
 import { supabase } from "@/lib/supabase/client";
 
 const GOAL_STORAGE_KEY = "parcours-goal";
+const INITIAL_PROMPT_SENT_KEY = "parcours-initial-prompt-sent";
+const INITIAL_PROMPT_GOAL_KEY = "parcours-initial-prompt-goal";
+const INITIAL_PROMPT_RESULT_KEY = "parcours-initial-prompt-result";
+const GOAL_UPDATED_EVENT = "parcours:goal-updated";
 const MAX_DISPLAY_LENGTH = 80;
 
 function loadGoal(): string {
@@ -26,6 +30,10 @@ function saveGoalLocally(goal: string) {
   if (typeof window === "undefined") return;
   try {
     window.localStorage.setItem(GOAL_STORAGE_KEY, goal);
+    window.localStorage.removeItem(INITIAL_PROMPT_SENT_KEY);
+    window.localStorage.removeItem(INITIAL_PROMPT_GOAL_KEY);
+    window.sessionStorage.removeItem(INITIAL_PROMPT_RESULT_KEY);
+    window.dispatchEvent(new Event(GOAL_UPDATED_EVENT));
   } catch {
     // ignore
   }
