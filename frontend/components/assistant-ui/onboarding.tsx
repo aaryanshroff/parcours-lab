@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { API_BASE_URL, authFetch } from "@/lib/api";
 import { supabase } from "@/lib/supabase/client";
 import { FileText, Link2, Upload, X, ArrowRight } from "lucide-react";
+import type { ChatResponse } from "@/lib/types";
 
 const LOADING_MESSAGES = [
   "Analyzing your background…",
@@ -21,6 +22,7 @@ const BIO_STORAGE_KEY = "parcours-onboarding-bio";
 const GOAL_STORAGE_KEY = "parcours-goal";
 const KNOWN_SKILLS_STORAGE_KEY = "parcours-known-skills";
 const REQUIRED_SKILLS_STORAGE_KEY = "parcours-required-skills";
+export const INITIAL_PROMPT_RESULT_KEY = "parcours-initial-prompt-result";
 
 interface OnboardingProps {
   onComplete: (profile: { goal: string; skills: string[] }) => void;
@@ -145,6 +147,46 @@ export function Onboarding({ onComplete }: OnboardingProps) {
       localStorage.setItem(REQUIRED_SKILLS_STORAGE_KEY, JSON.stringify(requiredSkills));
       localStorage.removeItem("parcours-initial-prompt-sent");
 
+      // Fire the initial chat recommendation while the loading screen is still
+      // showing so chat is ready the moment the user arrives.
+      const goalText = profile.goal
+        ? `My goal is: ${profile.goal}.`
+        : "Use my profile to infer a realistic learning goal.";
+      const knownSkillsText = currentSkills.length
+        ? `My current skills include: ${currentSkills.join(", ")}.`
+        : "Assume I have beginner-to-intermediate baseline skills.";
+      const initialPrompt = `${goalText} ${knownSkillsText} Recommend 5 courses.`;
+
+      const courseHistory: Array<{ title: string; status: string; reason: string }> = (() => {
+        try {
+          const raw = localStorage.getItem("parcours-course-history");
+          if (!raw) return [];
+          const parsed = JSON.parse(raw) as Array<{ title?: string; status?: string; reason?: string }>;
+          return Array.isArray(parsed)
+            ? parsed.map((c) => ({ title: c.title ?? "", status: c.status ?? "", reason: c.reason ?? "" }))
+            : [];
+        } catch { return []; }
+      })();
+
+      try {
+        const chatRes = await authFetch(`${API_BASE_URL}/api/chat`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            messages: [{ role: "user", content: [{ type: "text", text: initialPrompt }] }],
+            goal: profile.goal,
+            required_skills: requiredSkills,
+            course_history: courseHistory,
+          }),
+        });
+        if (chatRes.ok) {
+          const chatData = (await chatRes.json()) as ChatResponse;
+          sessionStorage.setItem(INITIAL_PROMPT_RESULT_KEY, JSON.stringify(chatData));
+        }
+      } catch {
+        // Best-effort — chat will fall back to its own fetch on load
+      }
+
       onComplete({ goal: profile.goal, skills: currentSkills });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
@@ -162,6 +204,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
           {displayedText}
           <span className="animate-pulse">|</span>
         </p>
+        <p className="text-xs text-muted-foreground/80">This can take up to 10 seconds!</p>
       </div>
     );
   }
@@ -383,6 +426,9 @@ export function useOnboardingComplete() {
     Object.keys(localStorage)
       .filter((k) => k.startsWith("parcours-"))
       .forEach((k) => localStorage.removeItem(k));
+    Object.keys(sessionStorage)
+      .filter((k) => k.startsWith("parcours-"))
+      .forEach((k) => sessionStorage.removeItem(k));
     setIsComplete(false);
     window.location.reload();
   };

@@ -14,6 +14,7 @@ import {
 import { ThreadListSidebar } from "@/components/assistant-ui/threadlist-sidebar";
 import {
   Onboarding,
+  INITIAL_PROMPT_RESULT_KEY,
   useOnboardingComplete,
 } from "@/components/assistant-ui/onboarding";
 import { API_BASE_URL, authFetch } from "@/lib/api";
@@ -208,6 +209,27 @@ export const Assistant = () => {
       return;
     }
 
+    const preloaded = sessionStorage.getItem(INITIAL_PROMPT_RESULT_KEY);
+    if (preloaded) {
+      try {
+        const data = JSON.parse(preloaded) as ChatResponse;
+        runtime.thread.append({
+          role: "assistant",
+          content: toAssistantContent(data),
+          startRun: false,
+        });
+        localStorage.setItem(INITIAL_PROMPT_SENT_KEY, "true");
+      } catch {
+        localStorage.removeItem(INITIAL_PROMPT_SENT_KEY);
+      } finally {
+        sessionStorage.removeItem(INITIAL_PROMPT_RESULT_KEY);
+      }
+
+      setIsInitialRecommendationsPending(false);
+      setIsInitialRecommendationsCompleting(false);
+      return;
+    }
+
     const sentStatus = localStorage.getItem(INITIAL_PROMPT_SENT_KEY);
     if (sentStatus === "true") {
       setIsInitialRecommendationsPending(false);
@@ -231,6 +253,14 @@ export const Assistant = () => {
         const goal = localStorage.getItem("parcours-goal") || "";
         const courseHistory = getCourseHistoryFromStorage();
         const initialPrompt = getInitialRecommendationPrompt();
+        const requiredSkills: string[] = (() => {
+          try {
+            const raw = localStorage.getItem("parcours-required-skills");
+            return raw ? JSON.parse(raw) : [];
+          } catch {
+            return [];
+          }
+        })();
 
         const response = await fetch(`${API_BASE_URL}/api/chat`, {
           method: "POST",
@@ -243,6 +273,7 @@ export const Assistant = () => {
               },
             ],
             goal,
+            required_skills: requiredSkills,
             conversation_id: conversationId,
             course_history: courseHistory,
           }),
