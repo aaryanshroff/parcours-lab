@@ -174,7 +174,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
       const knownSkillsText = currentSkills.length
         ? `My current skills include: ${currentSkills.join(", ")}.`
         : "Assume I have beginner-to-intermediate baseline skills.";
-      const initialPrompt = `${goalText} ${knownSkillsText} Recommend 5 courses.`;
+      const initialPrompt = `${goalText} ${knownSkillsText} Create a skill roadmap with course recommendations.`;
 
       const courseHistory: Array<{
         title: string;
