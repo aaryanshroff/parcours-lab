@@ -124,6 +124,13 @@ export const CourseDetailModal: FC<{
             </div>
           )}
 
+          {/* Rejection reason */}
+          {course.status === "rejected" && course.rejection_reason && (
+            <p className="text-sm text-muted-foreground">
+              <span className="font-medium">Rejected:</span> {course.rejection_reason}
+            </p>
+          )}
+
           {/* Re-accept (rejected courses) */}
           {course.status === "rejected" && (
             <button

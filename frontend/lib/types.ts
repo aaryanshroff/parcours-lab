@@ -19,22 +19,8 @@ export type RecommendedCourse = {
   }>;
 };
 
-export type SkillNode = {
-  id: string;
-  name: string;
-  description: string;
-  why: string;
-  level: string;
-  depends_on: string[];
-  course: RecommendedCourse | null;
-};
-
-export type SkillRoadmap = {
-  skills: SkillNode[];
-};
-
 export type ChatResponse = {
   response: string;
-  skill_roadmap?: SkillRoadmap;
+  recommended_courses?: RecommendedCourse[];
   error?: string;
 };

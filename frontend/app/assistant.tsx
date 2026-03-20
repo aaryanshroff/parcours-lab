@@ -19,7 +19,7 @@ import {
 } from "@/components/assistant-ui/onboarding";
 import { API_BASE_URL, authFetch } from "@/lib/api";
 import { supabase } from "@/lib/supabase/client";
-import type { ChatResponse, SkillRoadmap } from "@/lib/types";
+import type { ChatResponse, RecommendedCourse } from "@/lib/types";
 import { getCourseHistory, setCourseHistory } from "@/lib/courses";
 import { useEffect, useState } from "react";
 
@@ -79,14 +79,14 @@ const getRequiredSkillsFromStorage = (): string[] => {
 const toAssistantContent = (data: ChatResponse) => {
   const content: Array<
     | { type: "text"; text: string }
-    | { type: "data"; name: string; data: SkillRoadmap }
+    | { type: "data"; name: string; data: RecommendedCourse[] }
   > = [{ type: "text", text: data.response }];
 
-  if (data.skill_roadmap?.skills?.length) {
+  if (data.recommended_courses?.length) {
     content.push({
       type: "data",
-      name: "skill_roadmap",
-      data: data.skill_roadmap,
+      name: "recommended_courses",
+      data: data.recommended_courses,
     });
   }
 
@@ -112,7 +112,7 @@ const getInitialRecommendationPrompt = () => {
     ? `My current skills include: ${knownSkills.join(", ")}.`
     : "Assume I have beginner-to-intermediate baseline skills.";
 
-  return `${goalText} ${knownSkillsText} Create a skill roadmap with course recommendations.`;
+  return `${goalText} ${knownSkillsText} Recommend 5 courses.`;
 };
 
 const conversationId = crypto.randomUUID();
@@ -155,6 +155,19 @@ const backendChatAdapter: ChatModelAdapter = {
       data = (await response.json()) as ChatResponse;
     } catch {
       throw new Error("Chat response was not valid JSON");
+    }
+
+    const content: Array<
+      | { type: "text"; text: string }
+      | { type: "data"; name: string; data: RecommendedCourse[] }
+    > = [{ type: "text", text: data.response }];
+
+    if (data.recommended_courses?.length) {
+      content.push({
+        type: "data",
+        name: "recommended_courses",
+        data: data.recommended_courses,
+      });
     }
 
     // Persist turn to localStorage so it can be flushed to DB on sign-in
