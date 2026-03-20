@@ -94,10 +94,10 @@
   --sidebar-accent-foreground: #3d3229;
   --sidebar-border: #e8e4db;
   --sidebar-ring: #b0a898;
-  --course-accept: #6b5e50;
-  --course-accept-hover: #5a4e42;
-  --course-reject: #a08272;
-  --course-reject-hover: #8a6f60;
+  --course-accept: #4a6274;
+  --course-accept-hover: #3b5060;
+  --course-reject: #c4883a;
+  --course-reject-hover: #a87430;
 }
 
 .dark {
@@ -132,10 +132,10 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.552 0.016 285.938);
-  --course-accept: #6b5e50;
-  --course-accept-hover: #5a4e42;
-  --course-reject: #a08272;
-  --course-reject-hover: #8a6f60;
+  --course-accept: #4a6274;
+  --course-accept-hover: #3b5060;
+  --course-reject: #c4883a;
+  --course-reject-hover: #a87430;
 }
 
 @layer base {
