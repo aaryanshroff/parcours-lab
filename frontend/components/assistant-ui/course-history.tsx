@@ -9,10 +9,10 @@ function getProgress(course: Course): CourseProgress {
   return course.progress ?? (course.done ? "done" : "not_started");
 }
 
-const PROGRESS_INDICATOR: Record<CourseProgress, string> = {
-  not_started: "○",
-  in_progress: "◐",
-  done: "✓",
+const PROGRESS_LABEL: Record<CourseProgress, string> = {
+  not_started: "Not Started",
+  in_progress: "In Progress",
+  done: "Completed",
 };
 
 export function CourseHistorySection() {
@@ -61,7 +61,7 @@ export function CourseHistorySection() {
                     key={course.id}
                     type="button"
                     onClick={() => setSelectedId(course.id)}
-                    className={`relative flex w-full items-center rounded-md border border-border bg-background/60 p-2 pr-7 text-left transition-colors hover:bg-accent ${isDone ? "opacity-50" : ""}`}
+                    className={`relative flex w-full items-center rounded-md border border-border bg-background/60 p-2 pr-20 text-left transition-colors hover:bg-accent ${isDone ? "opacity-50" : ""}`}
                   >
                     <div className={`truncate text-xs ${isDone ? "line-through" : ""}`}>
                       {course.provider && (
@@ -69,12 +69,12 @@ export function CourseHistorySection() {
                       )}
                       <span className="font-medium">{course.title}</span>
                     </div>
-                    <div
-                      className="absolute right-2 text-sm font-semibold"
+                    <span
+                      className="absolute right-2 text-[10px] font-medium"
                       style={{ color: "var(--course-accept)" }}
                     >
-                      {PROGRESS_INDICATOR[progress]}
-                    </div>
+                      {PROGRESS_LABEL[progress]}
+                    </span>
                   </button>
                 );
               })}
@@ -90,7 +90,7 @@ export function CourseHistorySection() {
                   key={course.id}
                   type="button"
                   onClick={() => setSelectedId(course.id)}
-                  className="relative flex w-full items-center rounded-md border border-border bg-background/60 p-2 pr-7 text-left transition-colors hover:bg-accent"
+                  className="relative flex w-full items-center rounded-md border border-border bg-background/60 p-2 pr-20 text-left transition-colors hover:bg-accent"
                 >
                   <div className="truncate text-xs">
                     {course.provider && (
@@ -98,12 +98,12 @@ export function CourseHistorySection() {
                     )}
                     <span className="font-medium">{course.title}</span>
                   </div>
-                  <div
-                    className="absolute right-2 text-sm font-semibold"
+                  <span
+                    className="absolute right-2 text-[10px] font-medium"
                     style={{ color: "var(--course-reject)" }}
                   >
-                    ✕
-                  </div>
+                    Rejected
+                  </span>
                 </button>
               ))}
             </div>
