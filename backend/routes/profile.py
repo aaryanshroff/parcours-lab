@@ -2,6 +2,7 @@ import logging
 import os
 import io
 import json
+import re
 from flask import Blueprint, g, request, jsonify
 from openrouter import OpenRouter
 from dotenv import load_dotenv
@@ -223,8 +224,6 @@ def filter_skill_matches_with_llm(matched: list[dict]) -> list[dict]:
         logger.warning("LLM skill filter failed, returning unfiltered matches")
         return [{k: v for k, v in m.items() if k != "input_label"} for m in matched]
 
-
-import re
 
 _JOB_SECTION_PATTERNS = re.compile(
     r"(requirements|qualifications|responsibilities|what you.?ll need|"
