@@ -1,20 +1,23 @@
-[project]
+[tool.poetry]
 name = "parcours-lab-backend"
 version = "0.1.0"
-requires-python = ">=3.11"
-dependencies = [
-    "flask",
-    "flask-cors",
-    "openai",
-    "openrouter",
-    "pydantic",
-    "pypdf",
-    "python-docx",
-    "python-dotenv",
-    "requests (>=2.32.5,<3.0.0)",
-    "beautifulsoup4",
-    "gunicorn",
-]
+description = ""
+packages = []
 
-[tool.setuptools]
-py-modules = []
+[tool.poetry.dependencies]
+python = ">=3.11,<4.0"
+flask = "*"
+flask-cors = "*"
+openai = "*"
+openrouter = "*"
+pydantic = "*"
+pypdf = "*"
+python-docx = "*"
+python-dotenv = "*"
+requests = ">=2.32.5,<3.0.0"
+beautifulsoup4 = "*"
+gunicorn = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
