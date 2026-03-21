@@ -1,2 +1,6 @@
 @import "tailwindcss";
 @import "@xyflow/react/dist/style.css";
+
+body {
+  font-family: "Manrope", sans-serif;
+}

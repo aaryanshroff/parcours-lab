@@ -1,0 +1,19 @@
+[project]
+name = "parcours-lab-backend"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "flask",
+    "flask-cors",
+    "openai",
+    "openrouter",
+    "pydantic",
+    "pypdf",
+    "python-docx",
+    "python-dotenv",
+    "requests (>=2.32.5,<3.0.0)",
+    "beautifulsoup4",
+]
+
+[tool.setuptools]
+py-modules = []
