@@ -153,9 +153,9 @@ export default function GoatChat({ context, onAction }: GoatChatProps) {
       >
         <img src={goatImg} alt="Goat mascot" className="h-20 w-20 sm:h-28 sm:w-28 object-contain" />
         {!open && (
-          <span className="absolute top-0 left-0 flex h-5 w-5">
+          <span className="absolute top-0 left-0 flex h-3 w-3">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
-            <span className="relative inline-flex h-5 w-5 rounded-full bg-amber-500" />
+            <span className="relative inline-flex h-3 w-3 rounded-full bg-amber-500" />
           </span>
         )}
       </button>

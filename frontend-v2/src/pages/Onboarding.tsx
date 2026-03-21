@@ -509,7 +509,6 @@ export default function Onboarding() {
               <div className={`pb-5 ${i === arr.length - 1 ? 'pb-0' : ''}`}>
                 <div className="flex items-center gap-0.5">
                   <span className="text-sm font-semibold text-stone-700">{item.title}</span>
-                  {item.step === '5' && <img src={goatImg} alt="Goat mascot" className="h-8 w-8 object-contain -ml-0.5" />}
                 </div>
                 <span className="block text-sm text-stone-500 mt-0.5 leading-relaxed">{item.desc}</span>
               </div>
