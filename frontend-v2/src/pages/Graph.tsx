@@ -901,7 +901,7 @@ export default function Graph() {
         {/* Graph — full screen, user pans freely */}
         <div className="relative w-full h-full">
           {loading && (
-            <div className="absolute inset-0 z-[15] flex flex-col items-center justify-center gap-3 pointer-events-none">
+            <div className="absolute inset-x-0 bottom-0 top-[60%] sm:top-0 z-[15] flex flex-col items-center justify-center gap-3 pointer-events-none">
               <Loader2 size={28} className="text-blue-800 animate-spin" />
               <p className="text-stone-400 text-sm">Building your skill tree…</p>
             </div>
