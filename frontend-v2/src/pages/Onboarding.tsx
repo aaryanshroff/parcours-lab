@@ -185,7 +185,7 @@ export default function Onboarding() {
 
   return (
     <div className="min-h-screen bg-stone-50 flex items-center justify-center px-12 py-16">
-      <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-12 items-center justify-items-center">
+      <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-12 items-start justify-items-center">
 
       {/* Left column — form */}
       <div className="w-full max-w-lg">
@@ -465,7 +465,7 @@ export default function Onboarding() {
         <div className="relative flex flex-col gap-0">
           {[
             { step: '1', title: 'Describe your goal', desc: 'Tell us what you want to learn or where you want to go in your career.' },
-            { step: '2', title: 'Add context (optional)', desc: 'Upload your resume or paste a job link to help us understand your starting point.' },
+            { step: '2', title: 'Optionally, add context', desc: 'Upload your resume or paste a job link to help us understand your starting point.' },
             { step: '3', title: 'We map your skills', desc: 'Your skills are matched to the ESCO taxonomy — the European standard for classifying skills and occupations.' },
             { step: '4', title: 'Get your skill tree', desc: 'We generate a personalized learning path with curated course recommendations for each skill gap.' },
             { step: '5', title: 'Refine and explore', desc: 'Replace courses, add or remove skills, and chat with the goat to customize your path.' },
