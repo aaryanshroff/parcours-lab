@@ -109,7 +109,16 @@ export default function Onboarding() {
 
     fetch('/api/resume/skills', { method: 'POST', body: formData })
       .then((r) => r.json())
-      .then((data) => setResumeSkills(data.skills ?? []))
+      .then((data) => {
+        const skills: EscoSkill[] = data.skills ?? []
+        const existing = new Set(goalExistingSkills.map((s) => s.esco_label))
+        const seen = new Set<string>()
+        setResumeSkills(skills.filter((s) => {
+          if (existing.has(s.esco_label) || seen.has(s.esco_label)) return false
+          seen.add(s.esco_label)
+          return true
+        }))
+      })
       .finally(() => setParsing(false))
   }
 
