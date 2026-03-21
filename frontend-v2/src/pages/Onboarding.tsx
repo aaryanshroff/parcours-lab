@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowRight, Upload, Link, Loader2, X, Plus } from 'lucide-react'
+import { ArrowRight, Upload, Link, Loader2, X, Plus, ChevronDown } from 'lucide-react'
 
 
 interface EscoSkill {
@@ -18,6 +18,7 @@ export default function Onboarding() {
   const [resumeSkills, setResumeSkills] = useState<EscoSkill[]>([])
   const [skillInput, setSkillInput] = useState('')
   const [dragging, setDragging] = useState(false)
+  const [optionalCollapsed, setOptionalCollapsed] = useState(true)
   const [goalExistingSkills, setGoalExistingSkills] = useState<EscoSkill[]>([])
   const [goalDesiredSkills, setGoalDesiredSkills] = useState<EscoSkill[]>([])
   const [goalParsing, setGoalParsing] = useState(false)
@@ -183,22 +184,26 @@ export default function Onboarding() {
   const hasGoalSkills = goalExistingSkills.length > 0 || goalDesiredSkills.length > 0
 
   return (
-    <div className="min-h-screen bg-stone-50 flex flex-col items-center justify-center px-4 py-16">
-      {/* Hero */}
-      <div className="text-center mb-12 max-w-xl">
-        <h1 className="text-4xl font-bold text-stone-900 leading-tight mb-4" style={{ fontFamily: '"Manrope", sans-serif' }}>
-          What do you want to learn?
-        </h1>
-        <p className="text-stone-500 text-lg leading-relaxed">
-          Tell us your goal and we'll build a personalized skill tree with curated courses to get you there.
-        </p>
-      </div>
+    <div className="min-h-screen bg-stone-50 flex items-center justify-center px-12 py-16">
+      <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-12 items-center justify-items-center">
 
-      {/* Form */}
-      <form onSubmit={handleSubmit} className="w-full max-w-lg space-y-4">
+      {/* Left column — form */}
+      <div className="w-full max-w-lg">
+        {/* Hero */}
+        <div className="mb-6">
+          <h1 className="text-4xl font-bold text-stone-800 leading-tight mb-4" style={{ fontFamily: '"Manrope", sans-serif' }}>
+            What do you want to learn?
+          </h1>
+          <p className="text-stone-500 text-lg leading-relaxed">
+            Tell us your goal and we'll build a personalized skill tree with curated courses to get you there.
+          </p>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="w-full space-y-4">
         {/* Goal — primary input */}
         <div>
-          <label htmlFor="goal" className="block text-sm font-semibold text-stone-800 mb-2">
+          <label htmlFor="goal" className="block text-sm font-semibold text-stone-700 mb-2">
             Describe your goal
           </label>
           <textarea
@@ -207,7 +212,7 @@ export default function Onboarding() {
             onChange={(e) => setGoal(e.target.value)}
             placeholder="e.g. I'm a cybersecurity engineer and want to transition into full-stack development..."
             rows={4}
-            className="w-full border border-stone-200 rounded-xl px-4 py-3 text-stone-900 text-base leading-relaxed outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-600/15 resize-none transition-all duration-150 placeholder:text-stone-400"
+            className="w-full border border-stone-200 rounded-xl px-4 py-3 text-stone-800 text-base leading-relaxed outline-none focus:border-blue-800 focus:ring-2 focus:ring-blue-900/15 resize-none transition-all duration-150 placeholder:text-stone-400"
           />
 
           {/* Goal skills */}
@@ -225,19 +230,19 @@ export default function Onboarding() {
                 <div>
                   <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-stone-400 mb-1.5">
                     Skills you have
-                    {goalParsing && <Loader2 size={10} className="animate-spin text-teal-500" />}
+                    {goalParsing && <Loader2 size={10} className="animate-spin text-amber-500" />}
                   </span>
                   <div className="flex flex-wrap gap-1.5">
                     {goalExistingSkills.map((skill) => (
                       <span
                         key={skill.esco_label}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full bg-teal-50 text-teal-700 transition-colors duration-150"
+                        className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full bg-blue-50 text-blue-900 transition-colors duration-150"
                       >
                         {skill.esco_label}
                         <button
                           type="button"
                           onClick={() => removeGoalExisting(skill.esco_label)}
-                          className="p-0.5 -mr-1 rounded-full text-teal-400 hover:text-teal-700 hover:bg-teal-200 cursor-pointer transition-all duration-150"
+                          className="p-0.5 -mr-1 rounded-full text-blue-400 hover:text-blue-900 hover:bg-blue-200 cursor-pointer transition-all duration-150"
                           aria-label={`Remove ${skill.esco_label}`}
                         >
                           <X size={10} />
@@ -280,11 +285,24 @@ export default function Onboarding() {
         </div>
 
         {/* Optional section — secondary */}
-        <div className="border border-stone-200 rounded-xl p-4 space-y-4">
-          <span className="block text-[11px] font-semibold uppercase tracking-wider text-stone-400">
-            Optional — helps us personalize
-          </span>
+        <div className="border border-stone-200 rounded-xl p-4">
+          <button
+            type="button"
+            onClick={() => setOptionalCollapsed((v) => !v)}
+            className="flex items-center gap-1.5 bg-transparent border-none p-0 cursor-pointer"
+          >
+            <ChevronDown size={14} className={`text-stone-400 transition-transform duration-150 ${optionalCollapsed ? '-rotate-90' : ''}`} />
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-stone-400">
+              Optional — helps us personalize
+            </span>
+          </button>
 
+          <div
+            className="grid transition-all duration-300 ease-in-out"
+            style={{ gridTemplateRows: optionalCollapsed ? '0fr' : '1fr' }}
+          >
+          <div className="overflow-hidden">
+          <div className="space-y-4 pt-4">
           {/* Resume upload */}
           <div>
             <label className="block text-sm font-medium text-stone-700 mb-1.5">
@@ -304,17 +322,17 @@ export default function Onboarding() {
               onDragEnter={(e) => { e.preventDefault(); setDragging(true) }}
               onDragLeave={() => setDragging(false)}
               onDrop={handleDrop}
-              className={`w-full flex items-center gap-3 px-4 py-3 border border-dashed rounded-xl text-sm text-stone-500 cursor-pointer transition-all duration-150 ${dragging ? 'border-teal-500 bg-teal-50' : 'border-stone-300 hover:border-stone-400 hover:bg-stone-50'}`}
+              className={`w-full flex items-center gap-3 px-4 py-3 border border-dashed rounded-xl text-sm text-stone-500 cursor-pointer transition-all duration-150 ${dragging ? 'border-amber-500 bg-blue-50' : 'border-stone-300 hover:border-stone-400 hover:bg-stone-50'}`}
             >
               {parsing ? (
-                <Loader2 size={16} className="text-teal-600 shrink-0 animate-spin" />
+                <Loader2 size={16} className="text-blue-800 shrink-0 animate-spin" />
               ) : (
                 <Upload size={16} className="text-stone-400 shrink-0" />
               )}
               {parsing ? (
-                <span className="text-teal-600 font-medium">Extracting skills…</span>
+                <span className="text-blue-800 font-medium">Extracting skills…</span>
               ) : fileName ? (
-                <span className="text-stone-900 font-medium truncate">{fileName}</span>
+                <span className="text-stone-800 font-medium truncate">{fileName}</span>
               ) : (
                 <span>Upload PDF or DOCX</span>
               )}
@@ -330,13 +348,13 @@ export default function Onboarding() {
                   {resumeSkills.map((skill) => (
                     <span
                       key={skill.esco_label}
-                      className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full bg-teal-50 text-teal-700 transition-colors duration-150"
+                      className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full bg-blue-50 text-blue-900 transition-colors duration-150"
                     >
                       {skill.esco_label}
                       <button
                         type="button"
                         onClick={() => removeResumeSkill(skill.esco_label)}
-                        className="p-0.5 -mr-1 rounded-full text-teal-400 hover:text-teal-700 hover:bg-teal-200 cursor-pointer transition-all duration-150"
+                        className="p-0.5 -mr-1 rounded-full text-blue-400 hover:text-blue-900 hover:bg-blue-200 cursor-pointer transition-all duration-150"
                         aria-label={`Remove ${skill.esco_label}`}
                       >
                         <X size={10} />
@@ -351,12 +369,12 @@ export default function Onboarding() {
                     value={skillInput}
                     onChange={(e) => setSkillInput(e.target.value)}
                     onKeyDown={handleSkillKeyDown}
-                    className="flex-1 border border-stone-300 rounded-lg px-2.5 py-1.5 text-sm text-stone-900 outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-600/15 transition-all duration-150 placeholder:text-stone-400"
+                    className="flex-1 border border-stone-300 rounded-lg px-2.5 py-1.5 text-sm text-stone-800 outline-none focus:border-blue-800 focus:ring-2 focus:ring-blue-900/15 transition-all duration-150 placeholder:text-stone-400"
                   />
                   <button
                     type="button"
                     onClick={addSkill}
-                    className="p-1.5 rounded-lg text-stone-400 hover:text-teal-700 hover:bg-teal-50 cursor-pointer transition-colors duration-150"
+                    className="p-1.5 rounded-lg text-stone-400 hover:text-blue-900 hover:bg-blue-50 cursor-pointer transition-colors duration-150"
                     aria-label="Add skill"
                   >
                     <Plus size={16} />
@@ -371,7 +389,7 @@ export default function Onboarding() {
             <label htmlFor="job-url" className="block text-sm font-medium text-stone-700 mb-1.5">
               Job posting link
             </label>
-            <div className="flex items-center border border-stone-300 rounded-xl overflow-hidden focus-within:border-teal-600 focus-within:ring-2 focus-within:ring-teal-600/15 transition-all duration-150">
+            <div className="flex items-center border border-stone-300 rounded-xl overflow-hidden focus-within:border-blue-800 focus-within:ring-2 focus-within:ring-blue-900/15 transition-all duration-150">
               <div className="pl-4 pr-2 text-stone-400">
                 <Link size={16} />
               </div>
@@ -381,7 +399,7 @@ export default function Onboarding() {
                 value={jobUrl}
                 onChange={(e) => setJobUrl(e.target.value)}
                 placeholder="https://..."
-                className="flex-1 px-2 py-3 text-sm text-stone-900 outline-none bg-transparent placeholder:text-stone-400"
+                className="flex-1 px-2 py-3 text-sm text-stone-800 outline-none bg-transparent placeholder:text-stone-400"
               />
             </div>
 
@@ -415,13 +433,16 @@ export default function Onboarding() {
               </div>
             )}
           </div>
+          </div>
+          </div>
+          </div>
         </div>
 
         {/* Submit */}
         <button
           type="submit"
           disabled={!canSubmit}
-          className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed bg-teal-700 text-white hover:bg-teal-800 shadow-sm hover:shadow-md"
+          className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed bg-blue-900 text-white hover:bg-blue-950 shadow-sm hover:shadow-md"
         >
           {parsing || goalParsing || jobParsing ? (
             <>
@@ -435,11 +456,48 @@ export default function Onboarding() {
             </>
           )}
         </button>
-      </form>
+        </form>
+      </div>
 
-      <p className="mt-8 text-xs text-stone-400 text-center max-w-sm">
-        We'll analyze your goal to identify required skills, then recommend courses for each one.
-      </p>
+      {/* Right column — How it works */}
+      <div className="hidden lg:block w-full max-w-sm">
+        <h2 className="text-2xl font-bold text-stone-800 mb-6">How it works</h2>
+        <div className="relative flex flex-col gap-0">
+          {[
+            { step: '1', title: 'Describe your goal', desc: 'Tell us what you want to learn or where you want to go in your career.' },
+            { step: '2', title: 'Add context (optional)', desc: 'Upload your resume or paste a job link to help us understand your starting point.' },
+            { step: '3', title: 'We map your skills', desc: 'Your skills are matched to the ESCO taxonomy — the European standard for classifying skills and occupations.' },
+            { step: '4', title: 'Get your skill tree', desc: 'We generate a personalized learning path with curated course recommendations for each skill gap.' },
+            { step: '5', title: 'Refine and explore', desc: 'Replace courses, add or remove skills, and chat with the goat to customize your path.' },
+          ].map((item, i, arr) => (
+            <div key={item.step} className="flex gap-4">
+              <div className="flex flex-col items-center">
+                <div className="w-8 h-8 rounded-full bg-amber-500/20 text-amber-600 flex items-center justify-center text-sm font-semibold shrink-0">
+                  {item.step}
+                </div>
+                {i < arr.length - 1 && <div className="w-px flex-1 bg-stone-200 my-1" />}
+              </div>
+              <div className={`pb-5 ${i === arr.length - 1 ? 'pb-0' : ''}`}>
+                <span className="block text-sm font-semibold text-stone-700">{item.title}</span>
+                <span className="block text-sm text-stone-500 mt-0.5 leading-relaxed">{item.desc}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* ESCO explainer */}
+        <div className="mt-6 rounded-xl bg-stone-100 border border-stone-200 px-5 py-4">
+          <span className="block text-xs font-semibold uppercase tracking-wider text-amber-600 mb-2">Powered by ESCO</span>
+          <p className="text-sm text-stone-600 leading-relaxed mb-2">
+            <strong className="text-stone-700">ESCO</strong> (European Skills, Competences, Qualifications and Occupations) is the European Commission's multilingual classification system. It defines over <strong className="text-stone-700">13,000 skills</strong> linked to 3,000 occupations.
+          </p>
+          <p className="text-sm text-stone-500 leading-relaxed">
+            We use ESCO to standardize and match your skills so your learning path is precise, comparable, and aligned with real-world job requirements.
+          </p>
+        </div>
+      </div>
+
+      </div>
     </div>
   )
 }

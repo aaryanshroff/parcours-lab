@@ -204,7 +204,7 @@ function SkillNode({ id, data }: NodeProps<Node<SkillNodeData>>) {
       {!locked && isReplacing && (
         <div className="flex flex-col gap-1.5 mt-3 nodrag">
           <textarea
-            className="nopan w-full border border-stone-300 rounded-lg px-2 py-1.5 text-xs text-stone-900 outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-600/15 resize-none transition-all duration-150"
+            className="nopan w-full border border-stone-300 rounded-lg px-2 py-1.5 text-xs text-stone-900 outline-none focus:border-blue-800 focus:ring-2 focus:ring-blue-900/15 resize-none transition-all duration-150"
             placeholder="Reason (optional)"
             value={reason}
             onChange={(e) => setReason(e.target.value)}
@@ -221,7 +221,7 @@ function SkillNode({ id, data }: NodeProps<Node<SkillNodeData>>) {
             <button
               onMouseDown={(e) => e.stopPropagation()}
               onClick={() => { submitReplace(id, reason, data.label, data.courseTitle); setReason('') }}
-              className="nopan px-2 py-1 text-[11px] font-medium rounded-lg bg-teal-700 text-white hover:bg-teal-800 cursor-pointer transition-colors duration-150"
+              className="nopan px-2 py-1 text-[11px] font-medium rounded-lg bg-blue-900 text-white hover:bg-blue-950 cursor-pointer transition-colors duration-150"
             >
               Submit
             </button>
@@ -304,47 +304,52 @@ function GoalPanel({ initialGoal, loading }: { initialGoal: string; loading?: bo
         )}
       </div>
 
-      {!collapsed && (
-        <div className="mt-2">
-          {loading ? (
-            <div className="flex items-center gap-2 py-1">
-              <Loader2 size={14} className="text-teal-600 animate-spin" />
-              <span className="text-sm text-stone-400">Loading…</span>
-            </div>
-          ) : editing ? (
-            <div className="flex flex-col gap-2">
-              <textarea
-                ref={inputRef}
-                className="w-full border border-stone-300 rounded-lg px-2.5 py-2 text-sm text-stone-900 outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-600/15 resize-none transition-all duration-150"
-                value={draft}
-                onChange={(e) => setDraft(e.target.value)}
-                onKeyDown={handleKeyDown}
-                rows={2}
-              />
-              <div className="flex gap-1.5 justify-end">
-                <button
-                  onClick={cancel}
-                  className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium border border-stone-200 rounded-lg bg-white text-stone-500 hover:bg-stone-50 cursor-pointer transition-colors duration-150"
-                >
-                  <X size={12} />
-                  Cancel
-                </button>
-                <button
-                  onClick={save}
-                  className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium border-none rounded-lg bg-teal-700 text-white hover:bg-teal-800 cursor-pointer transition-colors duration-150"
-                >
-                  <Check size={12} />
-                  Save
-                </button>
+      <div
+        className="grid transition-all duration-300 ease-in-out"
+        style={{ gridTemplateRows: collapsed ? '0fr' : '1fr' }}
+      >
+        <div className={collapsed ? 'overflow-hidden' : 'overflow-visible'}>
+          <div className="pt-2">
+            {loading ? (
+              <div className="flex items-center gap-2 py-1">
+                <Loader2 size={14} className="text-blue-800 animate-spin" />
+                <span className="text-sm text-stone-400">Loading…</span>
               </div>
-            </div>
-          ) : (
-            <p className="text-base font-medium text-stone-900 m-0 leading-snug">
-              {goal}
-            </p>
-          )}
+            ) : editing ? (
+              <div className="flex flex-col gap-2">
+                <textarea
+                  ref={inputRef}
+                  className="w-full border border-stone-300 rounded-lg px-2.5 py-2 text-sm text-stone-900 outline-none focus:border-blue-800 focus:ring-2 focus:ring-blue-900/15 resize-none transition-all duration-150"
+                  value={draft}
+                  onChange={(e) => setDraft(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  rows={2}
+                />
+                <div className="flex gap-1.5 justify-end">
+                  <button
+                    onClick={cancel}
+                    className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium border border-stone-200 rounded-lg bg-white text-stone-500 hover:bg-stone-50 cursor-pointer transition-colors duration-150"
+                  >
+                    <X size={12} />
+                    Cancel
+                  </button>
+                  <button
+                    onClick={save}
+                    className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium border-none rounded-lg bg-blue-900 text-white hover:bg-blue-950 cursor-pointer transition-colors duration-150"
+                  >
+                    <Check size={12} />
+                    Save
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <p className="text-base font-medium text-stone-900 m-0 leading-snug">
+                {goal}
+              </p>
+            )}
+          </div>
         </div>
-      )}
+      </div>
     </div>
   )
 }
@@ -435,71 +440,78 @@ function RequiredSkillsPanel({ skills, onSkillsChange, loading }: { skills: stri
         </span>
       </button>
 
-      {!collapsed && (loading && skills.length === 0 ? (
-        <div className="flex items-center gap-2 py-1 mt-3">
-          <Loader2 size={14} className="text-teal-600 animate-spin" />
-          <span className="text-sm text-stone-400">Loading…</span>
-        </div>
-      ) : <div className={`mt-3 ${loading ? 'opacity-50 pointer-events-none' : ''}`}>
-        <div className="flex flex-wrap gap-1.5 mb-3">
-          {skills.map((skill) => (
-            <span
-              key={skill}
-              className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full bg-stone-100 text-stone-700 transition-colors duration-150"
-            >
-              {skill}
-              <button
-                onClick={() => removeSkill(skill)}
-                className="p-0.5 -mr-1 rounded-full text-stone-400 hover:text-stone-700 hover:bg-stone-300 cursor-pointer transition-all duration-150"
-                aria-label={`Remove ${skill}`}
-              >
-                <X size={10} />
-              </button>
-            </span>
-          ))}
-        </div>
-
-        <div className="relative">
-          <div className="flex items-center border border-stone-300 rounded-lg overflow-hidden focus-within:border-teal-600 focus-within:ring-2 focus-within:ring-teal-600/15 transition-all duration-150">
-            <input
-              ref={inputRef}
-              type="text"
-              placeholder="Add a skill..."
-              value={query}
-              onChange={(e) => { setQuery(e.target.value); setOpen(true) }}
-              onFocus={() => setOpen(true)}
-              className="flex-1 px-2.5 py-1.5 text-sm text-stone-900 outline-none bg-transparent"
-            />
-            <ChevronDown
-              size={14}
-              className="mr-2 text-stone-400 cursor-pointer"
-              onClick={() => { setOpen(!open); inputRef.current?.focus() }}
-            />
-          </div>
-
-          {open && (searching || suggestions.length > 0) && (
-            <div
-              ref={dropdownRef}
-              className="absolute top-full left-0 right-0 mt-1 bg-white border border-stone-200 rounded-lg shadow-lg max-h-40 overflow-y-auto z-20"
-            >
-              {searching ? (
-                <div className="flex items-center gap-2 px-3 py-2">
-                  <Loader2 size={12} className="text-stone-400 animate-spin" />
-                  <span className="text-sm text-stone-400">Searching ESCO…</span>
-                </div>
-              ) : suggestions.map((skill) => (
-                <button
+      <div
+        className="grid transition-all duration-300 ease-in-out"
+        style={{ gridTemplateRows: collapsed ? '0fr' : '1fr' }}
+      >
+        <div className={collapsed ? 'overflow-hidden' : 'overflow-visible'}>
+          {loading && skills.length === 0 ? (
+            <div className="flex items-center gap-2 py-1 pt-3">
+              <Loader2 size={14} className="text-blue-800 animate-spin" />
+              <span className="text-sm text-stone-400">Loading…</span>
+            </div>
+          ) : <div className={`pt-3 ${loading ? 'opacity-50 pointer-events-none' : ''}`}>
+            <div className="flex flex-wrap gap-1.5 mb-3">
+              {skills.map((skill) => (
+                <span
                   key={skill}
-                  onClick={() => addSkill(skill)}
-                  className="w-full text-left px-3 py-1.5 text-sm text-stone-700 hover:bg-stone-50 cursor-pointer transition-colors duration-100"
+                  className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full bg-stone-100 text-stone-700 transition-colors duration-150"
                 >
                   {skill}
-                </button>
+                  <button
+                    onClick={() => removeSkill(skill)}
+                    className="p-0.5 -mr-1 rounded-full text-stone-400 hover:text-stone-700 hover:bg-stone-300 cursor-pointer transition-all duration-150"
+                    aria-label={`Remove ${skill}`}
+                  >
+                    <X size={10} />
+                  </button>
+                </span>
               ))}
             </div>
-          )}
+
+            <div className="relative">
+              <div className="flex items-center border border-stone-300 rounded-lg overflow-hidden focus-within:border-blue-800 focus-within:ring-2 focus-within:ring-blue-900/15 transition-all duration-150">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  placeholder="Add a skill..."
+                  value={query}
+                  onChange={(e) => { setQuery(e.target.value); setOpen(true) }}
+                  onFocus={() => setOpen(true)}
+                  className="flex-1 px-2.5 py-1.5 text-sm text-stone-900 outline-none bg-transparent"
+                />
+                <ChevronDown
+                  size={14}
+                  className="mr-2 text-stone-400 cursor-pointer"
+                  onClick={() => { setOpen(!open); inputRef.current?.focus() }}
+                />
+              </div>
+
+              {open && (searching || suggestions.length > 0) && (
+                <div
+                  ref={dropdownRef}
+                  className="absolute top-full left-0 right-0 mt-1 bg-white border border-stone-200 rounded-lg shadow-lg max-h-40 overflow-y-auto z-20"
+                >
+                  {searching ? (
+                    <div className="flex items-center gap-2 px-3 py-2">
+                      <Loader2 size={12} className="text-stone-400 animate-spin" />
+                      <span className="text-sm text-stone-400">Searching ESCO…</span>
+                    </div>
+                  ) : suggestions.map((skill) => (
+                    <button
+                      key={skill}
+                      onClick={() => addSkill(skill)}
+                      className="w-full text-left px-3 py-1.5 text-sm text-stone-700 hover:bg-stone-50 cursor-pointer transition-colors duration-100"
+                    >
+                      {skill}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>}
         </div>
-      </div>)}
+      </div>
     </div>
   )
 }
@@ -590,75 +602,82 @@ function MySkillsPanel({ skills, onSkillsChange, loading }: { skills: string[]; 
         </span>
       </button>
 
-      {!collapsed && (loading && skills.length === 0 ? (
-        <div className="flex items-center gap-2 py-1 mt-3">
-          <Loader2 size={14} className="text-teal-600 animate-spin" />
-          <span className="text-sm text-stone-400">Loading…</span>
-        </div>
-      ) : <div className={`mt-3 ${loading ? 'opacity-50 pointer-events-none' : ''}`}>
-        {skills.length > 0 ? (
-          <div className="flex flex-wrap gap-1.5 mb-3">
-            {skills.map((skill) => (
-              <span
-                key={skill}
-                className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full bg-teal-50 text-teal-700 transition-colors duration-150"
-              >
-                {skill}
-                <button
-                  onClick={() => removeSkill(skill)}
-                  className="p-0.5 -mr-1 rounded-full text-teal-400 hover:text-teal-700 hover:bg-teal-200 cursor-pointer transition-all duration-150"
-                  aria-label={`Remove ${skill}`}
-                >
-                  <X size={10} />
-                </button>
-              </span>
-            ))}
-          </div>
-        ) : (
-          <p className="text-sm text-stone-400 mb-3">No existing skills detected.</p>
-        )}
-
-        <div className="relative">
-          <div className="flex items-center border border-stone-300 rounded-lg overflow-hidden focus-within:border-teal-600 focus-within:ring-2 focus-within:ring-teal-600/15 transition-all duration-150">
-            <input
-              ref={inputRef}
-              type="text"
-              placeholder="Add a skill..."
-              value={query}
-              onChange={(e) => { setQuery(e.target.value); setOpen(true) }}
-              onFocus={() => setOpen(true)}
-              className="flex-1 px-2.5 py-1.5 text-sm text-stone-900 outline-none bg-transparent"
-            />
-            <ChevronDown
-              size={14}
-              className="mr-2 text-stone-400 cursor-pointer"
-              onClick={() => { setOpen(!open); inputRef.current?.focus() }}
-            />
-          </div>
-
-          {open && (searching || suggestions.length > 0) && (
-            <div
-              ref={dropdownRef}
-              className="absolute top-full left-0 right-0 mt-1 bg-white border border-stone-200 rounded-lg shadow-lg max-h-40 overflow-y-auto z-20"
-            >
-              {searching ? (
-                <div className="flex items-center gap-2 px-3 py-2">
-                  <Loader2 size={12} className="text-stone-400 animate-spin" />
-                  <span className="text-sm text-stone-400">Searching ESCO…</span>
-                </div>
-              ) : suggestions.map((skill) => (
-                <button
-                  key={skill}
-                  onClick={() => addSkill(skill)}
-                  className="w-full text-left px-3 py-1.5 text-sm text-stone-700 hover:bg-stone-50 cursor-pointer transition-colors duration-100"
-                >
-                  {skill}
-                </button>
-              ))}
+      <div
+        className="grid transition-all duration-300 ease-in-out"
+        style={{ gridTemplateRows: collapsed ? '0fr' : '1fr' }}
+      >
+        <div className={collapsed ? 'overflow-hidden' : 'overflow-visible'}>
+          {loading && skills.length === 0 ? (
+            <div className="flex items-center gap-2 py-1 pt-3">
+              <Loader2 size={14} className="text-blue-800 animate-spin" />
+              <span className="text-sm text-stone-400">Loading…</span>
             </div>
-          )}
+          ) : <div className={`pt-3 ${loading ? 'opacity-50 pointer-events-none' : ''}`}>
+            {skills.length > 0 ? (
+              <div className="flex flex-wrap gap-1.5 mb-3">
+                {skills.map((skill) => (
+                  <span
+                    key={skill}
+                    className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full bg-blue-50 text-blue-900 transition-colors duration-150"
+                  >
+                    {skill}
+                    <button
+                      onClick={() => removeSkill(skill)}
+                      className="p-0.5 -mr-1 rounded-full text-blue-400 hover:text-blue-900 hover:bg-blue-200 cursor-pointer transition-all duration-150"
+                      aria-label={`Remove ${skill}`}
+                    >
+                      <X size={10} />
+                    </button>
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-stone-400 mb-3">No existing skills detected.</p>
+            )}
+
+            <div className="relative">
+              <div className="flex items-center border border-stone-300 rounded-lg overflow-hidden focus-within:border-blue-800 focus-within:ring-2 focus-within:ring-blue-900/15 transition-all duration-150">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  placeholder="Add a skill..."
+                  value={query}
+                  onChange={(e) => { setQuery(e.target.value); setOpen(true) }}
+                  onFocus={() => setOpen(true)}
+                  className="flex-1 px-2.5 py-1.5 text-sm text-stone-900 outline-none bg-transparent"
+                />
+                <ChevronDown
+                  size={14}
+                  className="mr-2 text-stone-400 cursor-pointer"
+                  onClick={() => { setOpen(!open); inputRef.current?.focus() }}
+                />
+              </div>
+
+              {open && (searching || suggestions.length > 0) && (
+                <div
+                  ref={dropdownRef}
+                  className="absolute top-full left-0 right-0 mt-1 bg-white border border-stone-200 rounded-lg shadow-lg max-h-40 overflow-y-auto z-20"
+                >
+                  {searching ? (
+                    <div className="flex items-center gap-2 px-3 py-2">
+                      <Loader2 size={12} className="text-stone-400 animate-spin" />
+                      <span className="text-sm text-stone-400">Searching ESCO…</span>
+                    </div>
+                  ) : suggestions.map((skill) => (
+                    <button
+                      key={skill}
+                      onClick={() => addSkill(skill)}
+                      className="w-full text-left px-3 py-1.5 text-sm text-stone-700 hover:bg-stone-50 cursor-pointer transition-colors duration-100"
+                    >
+                      {skill}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>}
         </div>
-      </div>)}
+      </div>
     </div>
   )
 }
@@ -690,32 +709,37 @@ function CourseHistoryPanel({ history, onRestore }: { history: HistoryEntry[]; o
         </span>
       </button>
 
-      {!collapsed && (
-        <div className="mt-3">
-          {history.length === 0 ? (
-            <p className="text-sm text-stone-400">No replacements yet.</p>
-          ) : (
-            <div className="divide-y divide-stone-100">
-              {history.map((entry, i) => (
-                <div key={i} className="flex items-center gap-2.5 py-2.5 first:pt-0 last:pb-0">
-                  <RefreshCw size={14} className="shrink-0 text-stone-300" />
-                  <div className="min-w-0 flex-1">
-                    <span className="block text-xs font-medium text-stone-800 truncate">{entry.skill}</span>
-                    <span className="block text-[11px] text-stone-400 truncate">{entry.oldCourse}</span>
+      <div
+        className="grid transition-all duration-300 ease-in-out"
+        style={{ gridTemplateRows: collapsed ? '0fr' : '1fr' }}
+      >
+        <div className={collapsed ? 'overflow-hidden' : 'overflow-visible'}>
+          <div className="pt-3">
+            {history.length === 0 ? (
+              <p className="text-sm text-stone-400">No replacements yet.</p>
+            ) : (
+              <div className="divide-y divide-stone-100">
+                {history.map((entry, i) => (
+                  <div key={i} className="flex items-center gap-2.5 py-2.5 first:pt-0 last:pb-0">
+                    <RefreshCw size={14} className="shrink-0 text-stone-300" />
+                    <div className="min-w-0 flex-1">
+                      <span className="block text-xs font-medium text-stone-800 truncate">{entry.skill}</span>
+                      <span className="block text-[11px] text-stone-400 truncate">{entry.oldCourse}</span>
+                    </div>
+                    <button
+                      onClick={() => onRestore(i)}
+                      className="shrink-0 p-1 rounded-md text-stone-300 hover:text-blue-900 hover:bg-blue-50 cursor-pointer transition-colors duration-150"
+                      aria-label={`Restore ${entry.oldCourse}`}
+                    >
+                      <Undo2 size={14} />
+                    </button>
                   </div>
-                  <button
-                    onClick={() => onRestore(i)}
-                    className="shrink-0 p-1 rounded-md text-stone-300 hover:text-teal-700 hover:bg-teal-50 cursor-pointer transition-colors duration-150"
-                    aria-label={`Restore ${entry.oldCourse}`}
-                  >
-                    <Undo2 size={14} />
-                  </button>
-                </div>
               ))}
             </div>
           )}
+          </div>
         </div>
-      )}
+      </div>
     </div>
   )
 }
@@ -871,7 +895,7 @@ export default function Graph() {
 
         {loading && (
           <div className="absolute inset-0 z-[15] flex flex-col items-center justify-center gap-3 pointer-events-none">
-            <Loader2 size={28} className="text-teal-600 animate-spin" />
+            <Loader2 size={28} className="text-blue-800 animate-spin" />
             <p className="text-stone-400 text-sm">Building your skill tree…</p>
           </div>
         )}

@@ -104,7 +104,7 @@ export default function GoatChat({ context, onAction }: GoatChatProps) {
                 <div
                   className={`max-w-[85%] rounded-lg px-3 py-1.5 text-sm leading-snug ${
                     msg.role === 'user'
-                      ? 'bg-teal-700 text-white'
+                      ? 'bg-blue-900 text-white'
                       : 'bg-stone-100 text-stone-800'
                   }`}
                 >
@@ -137,7 +137,7 @@ export default function GoatChat({ context, onAction }: GoatChatProps) {
               <button
                 onClick={send}
                 disabled={!input.trim() || loading}
-                className="p-1.5 rounded-lg text-teal-700 hover:bg-teal-50 disabled:opacity-30 disabled:cursor-default cursor-pointer transition-colors duration-150"
+                className="p-1.5 rounded-lg text-blue-900 hover:bg-blue-50 disabled:opacity-30 disabled:cursor-default cursor-pointer transition-colors duration-150"
               >
                 <Send size={14} />
               </button>
@@ -154,8 +154,8 @@ export default function GoatChat({ context, onAction }: GoatChatProps) {
         <img src={goatImg} alt="Goat mascot" className="h-28 w-28 object-contain" />
         {!open && (
           <span className="absolute top-0 left-0 flex h-3 w-3">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-teal-400 opacity-75" />
-            <span className="relative inline-flex h-3 w-3 rounded-full bg-teal-500" />
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
+            <span className="relative inline-flex h-3 w-3 rounded-full bg-amber-500" />
           </span>
         )}
       </button>
