@@ -482,7 +482,7 @@ export default function Onboarding() {
       </div>
 
       {/* Right column — How it works */}
-      <div className="hidden lg:block w-full max-w-sm">
+      <div className="hidden lg:block w-full max-w-lg">
         <h2 className="text-2xl font-bold text-stone-800 mb-6">How it works</h2>
         <div className="relative flex flex-col gap-0">
           {[

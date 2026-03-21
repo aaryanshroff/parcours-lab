@@ -116,7 +116,7 @@ def course_replace():
         prompt += f"\nTheir reason: \"{reason}\""
     prompt += (
         "\n\nSuggest ONE alternative online course for this exact skill. "
-        "Return JSON only: {\"title\": \"<course title> — <platform>\", \"url\": \"<course url>\"}"
+        "Return JSON only: {\"title\": \"<course title> — <platform>\", \"url\": \"<course url>\", \"reason\": \"<one sentence explaining why this course is a better fit>\"}"
     )
 
     response = client.chat.completions.create(
@@ -223,7 +223,7 @@ def _execute_chat_tool(name: str, args: dict, api_key: str) -> tuple[str, dict]:
             prompt += f' They were recommended the course: "{current_course}", but want a replacement.'
         if reason:
             prompt += f' Their reason: "{reason}"'
-        prompt += '\n\nSuggest ONE alternative online course for this exact skill. Return JSON only: {"title": "<course title> — <platform>", "url": "<course url>"}'
+        prompt += '\n\nSuggest ONE alternative online course for this exact skill. Return JSON only: {"title": "<course title> — <platform>", "url": "<course url>", "reason": "<one sentence explaining why this course is a better fit>"}'
 
         resp = client.chat.completions.create(
             model="openai/gpt-4.1-mini",

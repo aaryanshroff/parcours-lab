@@ -13,7 +13,7 @@ import {
   MarkerType,
   applyNodeChanges,
 } from '@xyflow/react'
-import { ExternalLink, Pencil, Check, X, RefreshCw, ChevronDown, Loader2, Undo2 } from 'lucide-react'
+import { ExternalLink, Pencil, Check, X, RefreshCw, ChevronDown, Loader2, Undo2, HelpCircle } from 'lucide-react'
 import Dagre from '@dagrejs/dagre'
 import GoatChat from '../components/GoatChat'
 
@@ -54,6 +54,7 @@ interface SkillNodeData {
   label: string
   courseTitle: string
   courseUrl: string
+  courseReason: string
   tier: Tier
   [key: string]: unknown
 }
@@ -116,7 +117,7 @@ function CourseProvider({ children, edges, setNodes, onCourseReplaced }: { child
       setNodes((nds) =>
         nds.map((n) =>
           n.id === nodeId
-            ? { ...n, data: { ...n.data, courseTitle: data.course.title, courseUrl: data.course.url } }
+            ? { ...n, data: { ...n.data, courseTitle: data.course.title, courseUrl: data.course.url, courseReason: data.course.reason ?? '' } }
             : n,
         ),
       )
@@ -188,12 +189,24 @@ function SkillNode({ id, data }: NodeProps<Node<SkillNodeData>>) {
         </a>
       )}
 
-      <span className="block text-[9px] font-medium uppercase tracking-wider text-stone-400 mb-0.5">
-        Skill
-      </span>
-      <span className="block text-xs text-stone-400">
-        {data.label}
-      </span>
+      <div className="flex items-center gap-1.5">
+        <div>
+          <span className="block text-[9px] font-medium uppercase tracking-wider text-stone-400 mb-0.5">
+            Skill
+          </span>
+          <span className="block text-xs text-stone-400">
+            {data.label}
+          </span>
+        </div>
+        {data.courseReason && (
+          <div className="relative group shrink-0 self-end mb-0.5">
+            <HelpCircle size={13} className="text-stone-300 hover:text-stone-500 cursor-help transition-colors duration-150" />
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 w-48 px-2.5 py-1.5 text-[11px] leading-snug text-stone-600 bg-white border border-stone-200 rounded-lg shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-150 z-10">
+              {data.courseReason}
+            </div>
+          </div>
+        )}
+      </div>
 
       {!locked && state.status === 'pending' && (
         <div className="flex gap-1.5 mt-3 nodrag">
@@ -783,7 +796,7 @@ function CourseHistoryPanel({ history, onRestore }: { history: HistoryEntry[]; o
 
 /* ─── API types ─── */
 
-interface ApiCourse { title: string; url: string }
+interface ApiCourse { title: string; url: string; reason: string }
 interface ApiNode { id: string; label: string; tier: string; course: ApiCourse; position: { x: number; y: number } }
 interface ApiEdge { id: string; source: string; target: string }
 interface ApiGraph { goal: string; skills: string[]; nodes: ApiNode[]; edges: ApiEdge[] }
@@ -798,6 +811,7 @@ function toFlowNodes(apiNodes: ApiNode[]): Node<SkillNodeData>[] {
       tier: n.tier as Tier,
       courseTitle: n.course.title,
       courseUrl: n.course.url,
+      courseReason: n.course.reason ?? '',
     },
   }))
 }
@@ -971,7 +985,7 @@ export default function Graph() {
                   setNodes((nds) =>
                     nds.map((n) =>
                       n.data.label === action.skill_name
-                        ? { ...n, data: { ...n.data, courseTitle: action.course!.title, courseUrl: action.course!.url } }
+                        ? { ...n, data: { ...n.data, courseTitle: action.course!.title, courseUrl: action.course!.url, courseReason: action.course!.reason ?? '' } }
                         : n,
                     ),
                   )

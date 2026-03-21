@@ -10,7 +10,7 @@ interface Message {
 interface ChatAction {
   type: string
   skill_name?: string
-  course?: { title: string; url: string }
+  course?: { title: string; url: string; reason?: string }
 }
 
 interface ChatContext {
