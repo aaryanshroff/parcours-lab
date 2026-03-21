@@ -13,7 +13,7 @@ import {
   MarkerType,
   applyNodeChanges,
 } from '@xyflow/react'
-import { ExternalLink, Pencil, Check, X, RefreshCw, ChevronDown, Loader2, Undo2, HelpCircle } from 'lucide-react'
+import { ExternalLink, Check, X, RefreshCw, ChevronDown, Loader2, Undo2, HelpCircle } from 'lucide-react'
 import Dagre from '@dagrejs/dagre'
 import GoatChat from '../components/GoatChat'
 
@@ -281,112 +281,30 @@ const nodeTypes = { skill: SkillNode }
 
 /* ─── Goal Panel ─── */
 
-function GoalPanel({ initialGoal, loading }: { initialGoal: string; loading?: boolean }) {
-  const [goal, setGoal] = useState(initialGoal)
-  const [editing, setEditing] = useState(false)
-  const [draft, setDraft] = useState(goal)
+function GoalPanel({ goal }: { goal: string }) {
   const [collapsed, setCollapsed] = useState(false)
-
-  useEffect(() => {
-    setGoal(initialGoal)
-    setDraft(initialGoal)
-  }, [initialGoal])
-  const inputRef = useRef<HTMLTextAreaElement>(null)
-
-  useEffect(() => {
-    if (editing && inputRef.current) {
-      inputRef.current.focus()
-      inputRef.current.select()
-    }
-  }, [editing])
-
-  function save() {
-    const trimmed = draft.trim()
-    if (trimmed) setGoal(trimmed)
-    setEditing(false)
-  }
-
-  function cancel() {
-    setDraft(goal)
-    setEditing(false)
-  }
-
-  function handleKeyDown(e: React.KeyboardEvent) {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); save() }
-    if (e.key === 'Escape') cancel()
-  }
 
   return (
     <div className="w-80 bg-white rounded-xl shadow-lg border border-stone-200 p-4 hover:shadow-xl transition-shadow duration-200">
-      <div className="flex items-center justify-between">
-        <button
-          onClick={() => setCollapsed((v) => !v)}
-          className="flex items-center gap-1.5 bg-transparent border-none p-0 cursor-pointer"
-        >
-          <ChevronDown size={14} className={`text-stone-400 transition-transform duration-150 ${collapsed ? '-rotate-90' : ''}`} />
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-stone-500">
-            Goal
-          </span>
-        </button>
-        {!editing && !collapsed && (
-          <button
-            onClick={() => { setDraft(goal); setEditing(true) }}
-            className="p-1 rounded-md text-stone-400 hover:text-stone-900 hover:bg-stone-100 transition-colors duration-150 cursor-pointer"
-            aria-label="Edit goal"
-          >
-            <Pencil size={14} />
-          </button>
-        )}
-      </div>
+      <button
+        onClick={() => setCollapsed((v) => !v)}
+        className="flex items-center gap-1.5 bg-transparent border-none p-0 cursor-pointer"
+      >
+        <ChevronDown size={14} className={`text-stone-400 transition-transform duration-150 ${collapsed ? '-rotate-90' : ''}`} />
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-stone-500">
+          Goal
+        </span>
+      </button>
 
       <div
         className="grid transition-all duration-300 ease-in-out"
         style={{ gridTemplateRows: collapsed ? '0fr' : '1fr' }}
-        onTransitionEnd={(e) => {
-          if (e.propertyName === 'grid-template-rows' && !collapsed) {
-            (e.currentTarget.firstElementChild as HTMLElement)?.classList.replace('overflow-hidden', 'overflow-visible')
-          }
-        }}
       >
         <div className="overflow-hidden">
           <div className="pt-2">
-            {loading ? (
-              <div className="flex items-center gap-2 py-1">
-                <Loader2 size={14} className="text-blue-800 animate-spin" />
-                <span className="text-sm text-stone-400">Loading…</span>
-              </div>
-            ) : editing ? (
-              <div className="flex flex-col gap-2">
-                <textarea
-                  ref={inputRef}
-                  className="w-full border border-stone-300 rounded-lg px-2.5 py-2 text-sm text-stone-900 outline-none focus:border-blue-800 focus:ring-2 focus:ring-blue-900/15 resize-none transition-all duration-150"
-                  value={draft}
-                  onChange={(e) => setDraft(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  rows={2}
-                />
-                <div className="flex gap-1.5 justify-end">
-                  <button
-                    onClick={cancel}
-                    className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium border border-stone-200 rounded-lg bg-white text-stone-500 hover:bg-stone-50 cursor-pointer transition-colors duration-150"
-                  >
-                    <X size={12} />
-                    Cancel
-                  </button>
-                  <button
-                    onClick={save}
-                    className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium border-none rounded-lg bg-blue-900 text-white hover:bg-blue-950 cursor-pointer transition-colors duration-150"
-                  >
-                    <Check size={12} />
-                    Save
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <p className="text-base font-medium text-stone-900 m-0 leading-snug">
-                {goal}
-              </p>
-            )}
+            <p className="text-base font-medium text-stone-900 m-0 leading-snug">
+              {goal}
+            </p>
           </div>
         </div>
       </div>
@@ -394,10 +312,11 @@ function GoalPanel({ initialGoal, loading }: { initialGoal: string; loading?: bo
   )
 }
 
-/* ─── Required Skills Panel ─── */
+/* ─── Desired Skills Panel ─── */
 
-function RequiredSkillsPanel({ skills, onSkillsChange, loading }: { skills: string[]; onSkillsChange: (skills: string[]) => void; loading?: boolean }) {
+function DesiredSkillsPanel({ skills, onSkillsChange, loading }: { skills: string[]; onSkillsChange: (skills: string[]) => void; loading?: boolean }) {
   const [collapsed, setCollapsed] = useState(false)
+  const [overflowVisible, setOverflowVisible] = useState(true)
   const [query, setQuery] = useState('')
   const [open, setOpen] = useState(false)
   const [suggestions, setSuggestions] = useState<string[]>([])
@@ -471,12 +390,16 @@ function RequiredSkillsPanel({ skills, onSkillsChange, loading }: { skills: stri
   return (
     <div className="w-80 bg-white rounded-xl shadow-lg border border-stone-200 p-4 hover:shadow-xl transition-shadow duration-200">
       <button
-        onClick={() => setCollapsed((v) => !v)}
+        onClick={() => {
+          const willCollapse = !collapsed
+          if (willCollapse) setOverflowVisible(false)
+          setCollapsed(willCollapse)
+        }}
         className="flex items-center gap-1.5 bg-transparent border-none p-0 cursor-pointer"
       >
         <ChevronDown size={14} className={`text-stone-400 transition-transform duration-150 ${collapsed ? '-rotate-90' : ''}`} />
         <span className="text-[11px] font-semibold uppercase tracking-wider text-stone-500">
-          Required Skills
+          Desired Skills
         </span>
       </button>
 
@@ -485,11 +408,11 @@ function RequiredSkillsPanel({ skills, onSkillsChange, loading }: { skills: stri
         style={{ gridTemplateRows: collapsed ? '0fr' : '1fr' }}
         onTransitionEnd={(e) => {
           if (e.propertyName === 'grid-template-rows' && !collapsed) {
-            (e.currentTarget.firstElementChild as HTMLElement)?.classList.replace('overflow-hidden', 'overflow-visible')
+            setOverflowVisible(true)
           }
         }}
       >
-        <div className="overflow-hidden">
+        <div className={overflowVisible ? 'overflow-visible' : 'overflow-hidden'}>
           {loading && skills.length === 0 ? (
             <div className="flex items-center gap-2 py-1 pt-3">
               <Loader2 size={14} className="text-blue-800 animate-spin" />
@@ -532,7 +455,7 @@ function RequiredSkillsPanel({ skills, onSkillsChange, loading }: { skills: stri
                 />
               </div>
 
-              {open && (searching || suggestions.length > 0) && (
+              {open && (searching || suggestions.length > 0 || query.trim().length >= 2) && (
                 <div
                   ref={dropdownRef}
                   className="absolute top-full left-0 right-0 mt-1 bg-white border border-stone-200 rounded-lg shadow-lg max-h-40 overflow-y-auto z-20"
@@ -542,15 +465,26 @@ function RequiredSkillsPanel({ skills, onSkillsChange, loading }: { skills: stri
                       <Loader2 size={12} className="text-stone-400 animate-spin" />
                       <span className="text-sm text-stone-400">Searching ESCO…</span>
                     </div>
-                  ) : suggestions.map((skill) => (
-                    <button
-                      key={skill}
-                      onClick={() => addSkill(skill)}
-                      className="w-full text-left px-3 py-1.5 text-sm text-stone-700 hover:bg-stone-50 cursor-pointer transition-colors duration-100"
-                    >
-                      {skill}
-                    </button>
-                  ))}
+                  ) : <>
+                    {query.trim() && !suggestions.includes(query.trim()) && !skills.includes(query.trim()) && (
+                      <button
+                        key="__custom__"
+                        onClick={() => addSkill(query.trim())}
+                        className="w-full text-left px-3 py-1.5 text-sm text-stone-900 font-medium hover:bg-stone-50 cursor-pointer transition-colors duration-100"
+                      >
+                        Add "{query.trim()}"
+                      </button>
+                    )}
+                    {suggestions.map((skill) => (
+                      <button
+                        key={skill}
+                        onClick={() => addSkill(skill)}
+                        className="w-full text-left px-3 py-1.5 text-sm text-stone-700 hover:bg-stone-50 cursor-pointer transition-colors duration-100"
+                      >
+                        {skill}
+                      </button>
+                    ))}
+                  </>}
                 </div>
               )}
             </div>
@@ -565,6 +499,7 @@ function RequiredSkillsPanel({ skills, onSkillsChange, loading }: { skills: stri
 
 function MySkillsPanel({ skills, onSkillsChange, loading }: { skills: string[]; onSkillsChange: (skills: string[]) => void; loading?: boolean }) {
   const [collapsed, setCollapsed] = useState(false)
+  const [overflowVisible, setOverflowVisible] = useState(true)
   const [query, setQuery] = useState('')
   const [open, setOpen] = useState(false)
   const [suggestions, setSuggestions] = useState<string[]>([])
@@ -638,7 +573,11 @@ function MySkillsPanel({ skills, onSkillsChange, loading }: { skills: string[]; 
   return (
     <div className="w-80 bg-white rounded-xl shadow-lg border border-stone-200 p-4 hover:shadow-xl transition-shadow duration-200">
       <button
-        onClick={() => setCollapsed((v) => !v)}
+        onClick={() => {
+          const willCollapse = !collapsed
+          if (willCollapse) setOverflowVisible(false)
+          setCollapsed(willCollapse)
+        }}
         className="flex items-center gap-1.5 bg-transparent border-none p-0 cursor-pointer"
       >
         <ChevronDown size={14} className={`text-stone-400 transition-transform duration-150 ${collapsed ? '-rotate-90' : ''}`} />
@@ -652,11 +591,11 @@ function MySkillsPanel({ skills, onSkillsChange, loading }: { skills: string[]; 
         style={{ gridTemplateRows: collapsed ? '0fr' : '1fr' }}
         onTransitionEnd={(e) => {
           if (e.propertyName === 'grid-template-rows' && !collapsed) {
-            (e.currentTarget.firstElementChild as HTMLElement)?.classList.replace('overflow-hidden', 'overflow-visible')
+            setOverflowVisible(true)
           }
         }}
       >
-        <div className="overflow-hidden">
+        <div className={overflowVisible ? 'overflow-visible' : 'overflow-hidden'}>
           {loading && skills.length === 0 ? (
             <div className="flex items-center gap-2 py-1 pt-3">
               <Loader2 size={14} className="text-blue-800 animate-spin" />
@@ -703,7 +642,7 @@ function MySkillsPanel({ skills, onSkillsChange, loading }: { skills: string[]; 
                 />
               </div>
 
-              {open && (searching || suggestions.length > 0) && (
+              {open && (searching || suggestions.length > 0 || query.trim().length >= 2) && (
                 <div
                   ref={dropdownRef}
                   className="absolute top-full left-0 right-0 mt-1 bg-white border border-stone-200 rounded-lg shadow-lg max-h-40 overflow-y-auto z-20"
@@ -713,15 +652,26 @@ function MySkillsPanel({ skills, onSkillsChange, loading }: { skills: string[]; 
                       <Loader2 size={12} className="text-stone-400 animate-spin" />
                       <span className="text-sm text-stone-400">Searching ESCO…</span>
                     </div>
-                  ) : suggestions.map((skill) => (
-                    <button
-                      key={skill}
-                      onClick={() => addSkill(skill)}
-                      className="w-full text-left px-3 py-1.5 text-sm text-stone-700 hover:bg-stone-50 cursor-pointer transition-colors duration-100"
-                    >
-                      {skill}
-                    </button>
-                  ))}
+                  ) : <>
+                    {query.trim() && !suggestions.includes(query.trim()) && !skills.includes(query.trim()) && (
+                      <button
+                        key="__custom__"
+                        onClick={() => addSkill(query.trim())}
+                        className="w-full text-left px-3 py-1.5 text-sm text-stone-900 font-medium hover:bg-stone-50 cursor-pointer transition-colors duration-100"
+                      >
+                        Add "{query.trim()}"
+                      </button>
+                    )}
+                    {suggestions.map((skill) => (
+                      <button
+                        key={skill}
+                        onClick={() => addSkill(skill)}
+                        className="w-full text-left px-3 py-1.5 text-sm text-stone-700 hover:bg-stone-50 cursor-pointer transition-colors duration-100"
+                      >
+                        {skill}
+                      </button>
+                    ))}
+                  </>}
                 </div>
               )}
             </div>
@@ -829,7 +779,7 @@ function toFlowEdges(apiEdges: ApiEdge[]): Edge[] {
 
 export default function Graph() {
   const location = useLocation()
-  const { goal: navGoal, existingSkills, desiredSkills, jobUrl } = (location.state ?? {}) as {
+  const { goal: navGoal, existingSkills, desiredSkills: navDesiredSkills, jobUrl } = (location.state ?? {}) as {
     goal?: string
     existingSkills?: { raw: string; esco_label: string; esco_uri: string | null }[]
     desiredSkills?: { raw: string; esco_label: string; esco_uri: string | null }[]
@@ -839,7 +789,9 @@ export default function Graph() {
   const [nodes, setNodes] = useState<Node<SkillNodeData>[]>([])
   const [edges, setEdges] = useState<Edge[]>([])
   const [goal, setGoal] = useState('')
-  const [requiredSkills, setRequiredSkills] = useState<string[]>([])
+  const [desiredSkills, setDesiredSkills] = useState<string[]>(() =>
+    (navDesiredSkills ?? []).map((s) => s.esco_label),
+  )
   const [mySkills, setMySkills] = useState<string[]>(() =>
     (existingSkills ?? []).map((s) => s.esco_label),
   )
@@ -872,7 +824,6 @@ export default function Graph() {
         setNodes(layoutGraph(toFlowNodes(data.nodes), flowEdges))
         setEdges(flowEdges)
         setGoal(data.goal)
-        setRequiredSkills(data.skills)
       })
       .then(() => setLoading(false))
       .catch((e) => {
@@ -885,16 +836,14 @@ export default function Graph() {
   useEffect(() => {
     fetchGraph(
       (existingSkills ?? []).map((s) => s.esco_label),
-      (desiredSkills ?? []).map((s) => s.esco_label),
+      (navDesiredSkills ?? []).map((s) => s.esco_label),
     )
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Track user-initiated skill changes and regen
-  const handleRequiredSkillsChange = useCallback((newSkills: string[]) => {
-    setRequiredSkills(newSkills)
+  const handleDesiredSkillsChange = useCallback((newSkills: string[]) => {
+    setDesiredSkills(newSkills)
     skillChangeCounter.current += 1
     const snapshot = skillChangeCounter.current
-    // Use setTimeout to let state settle, then fetch
     setTimeout(() => {
       if (skillChangeCounter.current === snapshot) {
         fetchGraph(mySkills, newSkills)
@@ -908,10 +857,10 @@ export default function Graph() {
     const snapshot = skillChangeCounter.current
     setTimeout(() => {
       if (skillChangeCounter.current === snapshot) {
-        fetchGraph(newSkills, requiredSkills)
+        fetchGraph(newSkills, desiredSkills)
       }
     }, 0)
-  }, [fetchGraph, requiredSkills])
+  }, [fetchGraph, desiredSkills])
 
   const onNodesChange: OnNodesChange<Node<SkillNodeData>> = useCallback(
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
@@ -922,8 +871,8 @@ export default function Graph() {
     <CourseProvider edges={edges} setNodes={setNodes} onCourseReplaced={(entry) => setCourseHistory((h) => [entry, ...h])}>
       <div className="w-screen h-screen relative">
         <div className="absolute top-5 left-5 z-10 flex flex-col gap-3">
-          <GoalPanel initialGoal={navGoal ?? goal} loading={loading && !goal} />
-          <RequiredSkillsPanel skills={requiredSkills} onSkillsChange={handleRequiredSkillsChange} loading={loading} />
+          <GoalPanel goal={navGoal ?? goal} />
+          <DesiredSkillsPanel skills={desiredSkills} onSkillsChange={handleDesiredSkillsChange} loading={loading} />
           <MySkillsPanel skills={mySkills} onSkillsChange={handleMySkillsChange} loading={loading} />
         </div>
 
@@ -970,7 +919,7 @@ export default function Graph() {
         <GoatChat
           context={{
             goal: navGoal ?? goal,
-            required_skills: requiredSkills,
+            desired_skills: desiredSkills,
             my_skills: mySkills,
             nodes: nodes.map((n) => ({ skill: n.data.label, course_title: n.data.courseTitle })),
           }}
@@ -997,11 +946,11 @@ export default function Graph() {
               case 'remove_my_skill':
                 if (action.skill_name) handleMySkillsChange(mySkills.filter((s) => s !== action.skill_name))
                 break
-              case 'add_required_skill':
-                if (action.skill_name) handleRequiredSkillsChange([...requiredSkills, action.skill_name])
+              case 'add_desired_skill':
+                if (action.skill_name) handleDesiredSkillsChange([...desiredSkills, action.skill_name])
                 break
-              case 'remove_required_skill':
-                if (action.skill_name) handleRequiredSkillsChange(requiredSkills.filter((s) => s !== action.skill_name))
+              case 'remove_desired_skill':
+                if (action.skill_name) handleDesiredSkillsChange(desiredSkills.filter((s) => s !== action.skill_name))
                 break
             }
           }}

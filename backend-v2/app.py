@@ -178,8 +178,8 @@ CHAT_TOOLS = [
     {
         "type": "function",
         "function": {
-            "name": "add_required_skill",
-            "description": "Add a skill to the required skills (skills the user needs to learn).",
+            "name": "add_desired_skill",
+            "description": "Add a skill to the desired skills (skills the user needs to learn).",
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -192,8 +192,8 @@ CHAT_TOOLS = [
     {
         "type": "function",
         "function": {
-            "name": "remove_required_skill",
-            "description": "Remove a skill from the required skills.",
+            "name": "remove_desired_skill",
+            "description": "Remove a skill from the desired skills.",
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -238,7 +238,7 @@ def _execute_chat_tool(name: str, args: dict, api_key: str) -> tuple[str, dict]:
             {"type": "replace_course", "skill_name": skill, "course": course},
         )
 
-    if name in ("add_my_skill", "remove_my_skill", "add_required_skill", "remove_required_skill"):
+    if name in ("add_my_skill", "remove_my_skill", "add_desired_skill", "remove_desired_skill"):
         skill = args.get("skill_name", "")
         return (
             f"Done: {name.replace('_', ' ')} '{skill}'",

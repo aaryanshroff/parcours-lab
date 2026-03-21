@@ -42,23 +42,18 @@ def _call_llm(
                 "role": "system",
                 "content": (
                     "You are a learning path architect. Given a learning goal, existing skills (that the user already knows), "
-                    "and desired skills (that the user wants to learn), generate a skill tree.\n\n"
+                    "and desired skills (that the user wants to learn), recommend courses ONLY for the desired skills.\n\n"
                     "Rules:\n"
-                    "- Use ESCO (European Skills, Competences, Qualifications and Occupations) standard skill names for all node labels\n"
-                    "- Each node must represent a DISTINCT skill — do NOT include the same skill multiple times across different tiers\n"
-                    "- Do NOT include skills the user already has as nodes\n"
-                    "- Include the desired skills as target nodes\n"
-                    "- Fill in prerequisite skills that bridge from the user's existing knowledge to the desired skills\n"
+                    "- ONLY create nodes for the desired skills — do NOT add prerequisite or bridge skills\n"
+                    "- Use the EXACT desired skill names as provided by the user for node labels — do NOT rename or normalize them\n"
+                    "- Each node must represent a DISTINCT desired skill\n"
+                    "- A skill may have multiple course nodes if it benefits from more than one course\n"
+                    "- A single course may cover multiple desired skills — create a node for each skill it covers\n"
                     "- Each node must have a recommended course with a title and URL (use real, well-known courses)\n"
-                    "- Assign each node a tier: foundation, core, advanced, or specialization\n"
-                    "  - foundation: basic prerequisites the user needs first\n"
-                    "  - core: essential skills that build on foundations\n"
-                    "  - advanced: deeper skills that require core knowledge\n"
-                    "  - specialization: specific target skills at the end of the path\n"
+                    "- Assign each node a tier: foundation, core, advanced, or specialization based on suggested learning order\n"
+                    "- Dependencies represent recommended learning order between the desired skills\n"
                     "- Dependencies must only reference other node IDs in your output\n"
                     "- Node IDs should be short kebab-case slugs\n"
-                    "- Aim for 6-12 nodes total\n"
-                    "- Every node except foundation nodes must have at least one dependency\n"
                     "- The graph must be a DAG (no cycles)\n\n"
                     "Return ONLY valid JSON, no other text. Schema:\n"
                     "{\n"
@@ -98,24 +93,11 @@ def _call_llm(
     return json.loads(raw)
 
 
-def _normalize_to_esco(label: str) -> str:
-    """Try to match a skill label to an ESCO skill. Returns the ESCO title or the original label."""
-    from resume_parser import _fetch_esco_candidates
-
-    candidates = _fetch_esco_candidates(label, limit=1)
-    if candidates and candidates[0]["title"].lower() != label.lower():
-        return candidates[0]["title"]
-    return label if not candidates else candidates[0]["title"]
-
 
 def _build_graph_response(goal: str, raw: dict, existing_skills: list[str] | None = None) -> GraphResponse:
     """Take raw LLM output and compute layout positions."""
     existing_lower = {s.lower() for s in (existing_skills or [])}
     llm_nodes = [n for n in raw.get("nodes", []) if n.get("label", "").lower() not in existing_lower]
-
-    # Normalize labels to ESCO
-    for node in llm_nodes:
-        node["label"] = _normalize_to_esco(node["label"])
 
     # Deduplicate nodes by label (keep first, merge dependencies)
     seen: dict[str, dict] = {}

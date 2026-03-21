@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowRight, Upload, Link, Loader2, X, Plus, ChevronDown } from 'lucide-react'
+import goatImg from '../assets/mountain-goat.png'
 
 
 interface EscoSkill {
@@ -184,8 +185,14 @@ export default function Onboarding() {
   const hasGoalSkills = goalExistingSkills.length > 0 || goalDesiredSkills.length > 0
 
   return (
-    <div className="min-h-screen bg-stone-50 flex items-center justify-center px-12 py-16">
-      <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-12 items-start justify-items-center">
+    <div className="min-h-screen bg-stone-50 flex flex-col px-4 pt-6 pb-16">
+      {/* Logo */}
+      <div className="flex items-center gap-2 mb-12">
+        <img src={goatImg} alt="ParcoursLab" className="h-10 w-10 object-contain" />
+        <span className="text-xl font-bold text-stone-800" style={{ fontFamily: '"Manrope", sans-serif' }}>ParcoursLab</span>
+      </div>
+
+      <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-12 items-start justify-items-center mx-auto">
 
       {/* Left column — form */}
       <div className="w-full max-w-lg">
@@ -500,7 +507,10 @@ export default function Onboarding() {
                 {i < arr.length - 1 && <div className="w-px flex-1 bg-stone-200 my-1" />}
               </div>
               <div className={`pb-5 ${i === arr.length - 1 ? 'pb-0' : ''}`}>
-                <span className="block text-sm font-semibold text-stone-700">{item.title}</span>
+                <div className="flex items-center gap-0.5">
+                  <span className="text-sm font-semibold text-stone-700">{item.title}</span>
+                  {item.step === '5' && <img src={goatImg} alt="Goat mascot" className="h-8 w-8 object-contain -ml-0.5" />}
+                </div>
                 <span className="block text-sm text-stone-500 mt-0.5 leading-relaxed">{item.desc}</span>
               </div>
             </div>

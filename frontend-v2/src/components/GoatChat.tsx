@@ -15,7 +15,7 @@ interface ChatAction {
 
 interface ChatContext {
   goal: string
-  required_skills: string[]
+  desired_skills: string[]
   my_skills: string[]
   nodes: { skill: string; course_title: string }[]
 }
