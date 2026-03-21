@@ -1,5 +1,7 @@
 import json
+from urllib.parse import quote_plus
 
+import requests
 from openai import OpenAI
 
 from models import GraphResponse, SkillNode, Edge, Course, Position
@@ -18,7 +20,7 @@ def generate_learning_path(
 ) -> GraphResponse:
     """Generate a learning path graph from goal and skills via LLM, then compute layout."""
     raw = _call_llm(goal, existing_skills, desired_skills, api_key, model)
-    return _build_graph_response(goal, raw)
+    return _build_graph_response(goal, raw, existing_skills)
 
 
 def _call_llm(
@@ -42,6 +44,8 @@ def _call_llm(
                     "You are a learning path architect. Given a learning goal, existing skills (that the user already knows), "
                     "and desired skills (that the user wants to learn), generate a skill tree.\n\n"
                     "Rules:\n"
+                    "- Use ESCO (European Skills, Competences, Qualifications and Occupations) standard skill names for all node labels\n"
+                    "- Each node must represent a DISTINCT skill — do NOT include the same skill multiple times across different tiers\n"
                     "- Do NOT include skills the user already has as nodes\n"
                     "- Include the desired skills as target nodes\n"
                     "- Fill in prerequisite skills that bridge from the user's existing knowledge to the desired skills\n"
@@ -65,6 +69,7 @@ def _call_llm(
                     '      "tier": "foundation|core|advanced|specialization",\n'
                     '      "course_title": "Course Name — Provider",\n'
                     '      "course_url": "https://...",\n'
+                    '      "course_reason": "One sentence explaining why this course is a good fit for this skill and goal.",\n'
                     '      "dependencies": ["other-node-id"]\n'
                     "    }\n"
                     "  ]\n"
@@ -93,9 +98,50 @@ def _call_llm(
     return json.loads(raw)
 
 
-def _build_graph_response(goal: str, raw: dict) -> GraphResponse:
+def _normalize_to_esco(label: str) -> str:
+    """Try to match a skill label to an ESCO skill. Returns the ESCO title or the original label."""
+    from resume_parser import _fetch_esco_candidates
+
+    candidates = _fetch_esco_candidates(label, limit=1)
+    if candidates and candidates[0]["title"].lower() != label.lower():
+        return candidates[0]["title"]
+    return label if not candidates else candidates[0]["title"]
+
+
+def _build_graph_response(goal: str, raw: dict, existing_skills: list[str] | None = None) -> GraphResponse:
     """Take raw LLM output and compute layout positions."""
-    llm_nodes = raw.get("nodes", [])
+    existing_lower = {s.lower() for s in (existing_skills or [])}
+    llm_nodes = [n for n in raw.get("nodes", []) if n.get("label", "").lower() not in existing_lower]
+
+    # Normalize labels to ESCO
+    for node in llm_nodes:
+        node["label"] = _normalize_to_esco(node["label"])
+
+    # Deduplicate nodes by label (keep first, merge dependencies)
+    seen: dict[str, dict] = {}
+    deduped: list[dict] = []
+    id_remap: dict[str, str] = {}  # old id -> kept id
+    for node in llm_nodes:
+        label_lower = node["label"].lower()
+        if label_lower in seen:
+            # Remap this duplicate's id to the kept node's id
+            id_remap[node["id"]] = seen[label_lower]["id"]
+            # Merge dependencies
+            existing_deps = set(seen[label_lower].get("dependencies", []))
+            for dep in node.get("dependencies", []):
+                existing_deps.add(dep)
+            seen[label_lower]["dependencies"] = list(existing_deps)
+        else:
+            seen[label_lower] = node
+            deduped.append(node)
+
+    # Remap dependency references to point to kept nodes
+    for node in deduped:
+        node["dependencies"] = [
+            id_remap.get(dep, dep) for dep in node.get("dependencies", [])
+            if id_remap.get(dep, dep) != node["id"]  # no self-loops
+        ]
+    llm_nodes = deduped
 
     # Group nodes by tier
     tier_groups: dict[str, list[dict]] = {t: [] for t in TIER_ORDER}
@@ -104,6 +150,17 @@ def _build_graph_response(goal: str, raw: dict) -> GraphResponse:
         if tier not in tier_groups:
             tier = "core"
         tier_groups[tier].append(node)
+
+    # Verify course URLs
+    for node in llm_nodes:
+        url = node.get("course_url", "")
+        if url:
+            try:
+                resp = requests.head(url, timeout=5, allow_redirects=True)
+                if resp.status_code >= 400:
+                    node["course_url"] = f"https://www.coursera.org/search?query={quote_plus(node.get('course_title', node['label']))}"
+            except (requests.RequestException, Exception):
+                node["course_url"] = f"https://www.coursera.org/search?query={quote_plus(node.get('course_title', node['label']))}"
 
     # Compute positions: each tier is a row, nodes spread horizontally and centered
     positioned_nodes: list[SkillNode] = []
@@ -128,6 +185,7 @@ def _build_graph_response(goal: str, raw: dict) -> GraphResponse:
                     course=Course(
                         title=node.get("course_title", ""),
                         url=node.get("course_url", ""),
+                        reason=node.get("course_reason", ""),
                     ),
                     position=Position(x=x, y=y),
                 )

@@ -14,11 +14,36 @@ import {
   applyNodeChanges,
 } from '@xyflow/react'
 import { ExternalLink, Pencil, Check, X, RefreshCw, ChevronDown, Loader2, Undo2 } from 'lucide-react'
+import Dagre from '@dagrejs/dagre'
 import GoatChat from '../components/GoatChat'
 
 /* ─── Layout helpers ─── */
 
 const NODE_W = 260
+const NODE_H = 160
+
+function layoutGraph(nodes: Node<SkillNodeData>[], edges: Edge[]): Node<SkillNodeData>[] {
+  const g = new Dagre.graphlib.Graph()
+  g.setDefaultEdgeLabel(() => ({}))
+  g.setGraph({ rankdir: 'TB', nodesep: 60, ranksep: 100 })
+
+  for (const node of nodes) {
+    g.setNode(node.id, { width: NODE_W, height: NODE_H })
+  }
+  for (const edge of edges) {
+    g.setEdge(edge.source, edge.target)
+  }
+
+  Dagre.layout(g)
+
+  return nodes.map((node) => {
+    const pos = g.node(node.id)
+    return {
+      ...node,
+      position: { x: pos.x - NODE_W / 2, y: pos.y - NODE_H / 2 },
+    }
+  })
+}
 
 /* ─── Types ─── */
 
@@ -147,31 +172,28 @@ function SkillNode({ id, data }: NodeProps<Node<SkillNodeData>>) {
         {config.label}
       </span>
 
-      <span className="block text-[15px] font-semibold text-stone-900 leading-tight mb-2.5">
-        {data.label}
-      </span>
-
-      <span className="block text-[9px] font-medium uppercase tracking-wider text-stone-400 mb-0.5">
-        Recommended course
-      </span>
-
       {locked ? (
-        <span className="inline-flex items-start gap-1 text-xs text-stone-400" style={{ maxWidth: NODE_W - 52 }}>
-          <ExternalLink size={12} className="shrink-0" />
-          <span className="break-words">{data.courseTitle}</span>
+        <span className="block text-[15px] font-semibold text-stone-900 leading-tight mb-2">
+          {data.courseTitle}
         </span>
       ) : (
         <a
-          className="nodrag nopan inline-flex items-start gap-1 text-xs text-stone-500 no-underline hover:text-stone-900 transition-colors duration-150 cursor-pointer"
+          className="nodrag nopan block text-[15px] font-semibold text-stone-900 leading-tight mb-2 no-underline hover:text-blue-900 transition-colors duration-150 cursor-pointer"
           href={data.courseUrl}
           target="_blank"
           rel="noopener noreferrer"
-          style={{ maxWidth: NODE_W - 52 }}
         >
-          <ExternalLink size={12} className="shrink-0" />
-          <span className="break-words">{data.courseTitle}</span>
+          <ExternalLink size={12} className="inline shrink-0 mr-1 -mt-0.5" />
+          {data.courseTitle}
         </a>
       )}
+
+      <span className="block text-[9px] font-medium uppercase tracking-wider text-stone-400 mb-0.5">
+        Skill
+      </span>
+      <span className="block text-xs text-stone-400">
+        {data.label}
+      </span>
 
       {!locked && state.status === 'pending' && (
         <div className="flex gap-1.5 mt-3 nodrag">
@@ -307,8 +329,13 @@ function GoalPanel({ initialGoal, loading }: { initialGoal: string; loading?: bo
       <div
         className="grid transition-all duration-300 ease-in-out"
         style={{ gridTemplateRows: collapsed ? '0fr' : '1fr' }}
+        onTransitionEnd={(e) => {
+          if (e.propertyName === 'grid-template-rows' && !collapsed) {
+            (e.currentTarget.firstElementChild as HTMLElement)?.classList.replace('overflow-hidden', 'overflow-visible')
+          }
+        }}
       >
-        <div className={collapsed ? 'overflow-hidden' : 'overflow-visible'}>
+        <div className="overflow-hidden">
           <div className="pt-2">
             {loading ? (
               <div className="flex items-center gap-2 py-1">
@@ -443,8 +470,13 @@ function RequiredSkillsPanel({ skills, onSkillsChange, loading }: { skills: stri
       <div
         className="grid transition-all duration-300 ease-in-out"
         style={{ gridTemplateRows: collapsed ? '0fr' : '1fr' }}
+        onTransitionEnd={(e) => {
+          if (e.propertyName === 'grid-template-rows' && !collapsed) {
+            (e.currentTarget.firstElementChild as HTMLElement)?.classList.replace('overflow-hidden', 'overflow-visible')
+          }
+        }}
       >
-        <div className={collapsed ? 'overflow-hidden' : 'overflow-visible'}>
+        <div className="overflow-hidden">
           {loading && skills.length === 0 ? (
             <div className="flex items-center gap-2 py-1 pt-3">
               <Loader2 size={14} className="text-blue-800 animate-spin" />
@@ -605,8 +637,13 @@ function MySkillsPanel({ skills, onSkillsChange, loading }: { skills: string[]; 
       <div
         className="grid transition-all duration-300 ease-in-out"
         style={{ gridTemplateRows: collapsed ? '0fr' : '1fr' }}
+        onTransitionEnd={(e) => {
+          if (e.propertyName === 'grid-template-rows' && !collapsed) {
+            (e.currentTarget.firstElementChild as HTMLElement)?.classList.replace('overflow-hidden', 'overflow-visible')
+          }
+        }}
       >
-        <div className={collapsed ? 'overflow-hidden' : 'overflow-visible'}>
+        <div className="overflow-hidden">
           {loading && skills.length === 0 ? (
             <div className="flex items-center gap-2 py-1 pt-3">
               <Loader2 size={14} className="text-blue-800 animate-spin" />
@@ -698,7 +735,7 @@ function CourseHistoryPanel({ history, onRestore }: { history: HistoryEntry[]; o
   }, [history.length])
 
   return (
-    <div className="w-80 bg-white rounded-xl shadow-lg border border-stone-200 p-4 hover:shadow-xl transition-shadow duration-200">
+    <div className="w-80 bg-white rounded-xl shadow-lg border border-stone-200 p-4 hover:shadow-xl transition-shadow duration-200 overflow-hidden">
       <button
         onClick={() => setCollapsed((v) => !v)}
         className="flex items-center gap-1.5 bg-transparent border-none p-0 cursor-pointer"
@@ -713,7 +750,7 @@ function CourseHistoryPanel({ history, onRestore }: { history: HistoryEntry[]; o
         className="grid transition-all duration-300 ease-in-out"
         style={{ gridTemplateRows: collapsed ? '0fr' : '1fr' }}
       >
-        <div className={collapsed ? 'overflow-hidden' : 'overflow-visible'}>
+        <div className="overflow-hidden">
           <div className="pt-3">
             {history.length === 0 ? (
               <p className="text-sm text-stone-400">No replacements yet.</p>
@@ -796,7 +833,6 @@ export default function Graph() {
   const [courseHistory, setCourseHistory] = useState<HistoryEntry[]>([])
   const regenAbortRef = useRef<AbortController | null>(null)
   const skillChangeCounter = useRef(0)
-
   const fetchGraph = useCallback((existing: string[], desired: string[]) => {
     regenAbortRef.current?.abort()
     const controller = new AbortController()
@@ -818,8 +854,9 @@ export default function Graph() {
     })
       .then((r) => r.json())
       .then((data: ApiGraph) => {
-        setNodes(toFlowNodes(data.nodes))
-        setEdges(toFlowEdges(data.edges))
+        const flowEdges = toFlowEdges(data.edges)
+        setNodes(layoutGraph(toFlowNodes(data.nodes), flowEdges))
+        setEdges(flowEdges)
         setGoal(data.goal)
         setRequiredSkills(data.skills)
       })
@@ -911,6 +948,7 @@ export default function Graph() {
           nodesConnectable={false}
           panOnDrag
           zoomOnScroll
+          style={{ background: '#fafaf9' }}
         >
           <Background variant={BackgroundVariant.Dots} gap={20} size={1} color="#e7e5e4" />
         </ReactFlow>

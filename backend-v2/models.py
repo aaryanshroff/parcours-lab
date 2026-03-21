@@ -9,6 +9,7 @@ class Position(BaseModel):
 class Course(BaseModel):
     title: str
     url: str
+    reason: str = ""
 
 
 class SkillNode(BaseModel):
