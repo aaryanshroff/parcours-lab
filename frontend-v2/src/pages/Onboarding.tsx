@@ -215,6 +215,28 @@ export default function Onboarding() {
             className="w-full border border-stone-200 rounded-xl px-4 py-3 text-stone-800 text-base leading-relaxed outline-none focus:border-blue-800 focus:ring-2 focus:ring-blue-900/15 resize-none transition-all duration-150 placeholder:text-stone-400"
           />
 
+          {/* Quick-select chips */}
+          {!goal && (
+            <div className="mt-2">
+              <span className="block text-[11px] font-semibold uppercase tracking-wider text-stone-400 mb-1.5">Examples</span>
+            <div className="flex flex-wrap gap-2">
+              {[
+                "I'm a marketer and want to transition into data science",
+                "I'm a cybersecurity engineer and want to learn full-stack development",
+              ].map((example) => (
+                <button
+                  key={example}
+                  type="button"
+                  onClick={() => setGoal(example)}
+                  className="px-3 py-1.5 text-xs font-medium rounded-full border border-stone-200 text-stone-500 hover:border-blue-800 hover:text-blue-900 hover:bg-blue-50 cursor-pointer transition-all duration-150"
+                >
+                  {example}
+                </button>
+              ))}
+            </div>
+            </div>
+          )}
+
           {/* Goal skills */}
           {(goalParsing || hasGoalSkills) && (
             <div className="mt-3 space-y-2.5">
