@@ -187,21 +187,21 @@ export default function Onboarding() {
   return (
     <div className="min-h-screen bg-stone-50 flex flex-col px-4 pt-6 pb-16">
       {/* Logo */}
-      <div className="flex items-center gap-2 mb-12">
+      <div className="flex items-center gap-2 mb-8 sm:mb-12">
         <img src={goatImg} alt="ParcoursLab" className="h-10 w-10 object-contain" />
         <span className="text-xl font-bold text-stone-800" style={{ fontFamily: '"Manrope", sans-serif' }}>ParcoursLab</span>
       </div>
 
-      <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-12 items-start justify-items-center mx-auto">
+      <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start justify-items-center mx-auto">
 
       {/* Left column — form */}
       <div className="w-full max-w-lg">
         {/* Hero */}
-        <div className="mb-6">
-          <h1 className="text-4xl font-bold text-stone-800 leading-tight mb-4" style={{ fontFamily: '"Manrope", sans-serif' }}>
+        <div className="mb-4 sm:mb-6">
+          <h1 className="text-2xl sm:text-4xl font-bold text-stone-800 leading-tight mb-3 sm:mb-4" style={{ fontFamily: '"Manrope", sans-serif' }}>
             What do you want to learn?
           </h1>
-          <p className="text-stone-500 text-lg leading-relaxed">
+          <p className="text-stone-500 text-base sm:text-lg leading-relaxed">
             Tell us your goal and we'll build a personalized skill tree with curated courses to get you there.
           </p>
         </div>
@@ -489,7 +489,7 @@ export default function Onboarding() {
       </div>
 
       {/* Right column — How it works */}
-      <div className="hidden lg:block w-full max-w-lg">
+      <div className="w-full max-w-lg">
         <h2 className="text-2xl font-bold text-stone-800 mb-6">How it works</h2>
         <div className="relative flex flex-col gap-0">
           {[

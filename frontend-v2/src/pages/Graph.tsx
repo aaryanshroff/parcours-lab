@@ -285,7 +285,7 @@ function GoalPanel({ goal }: { goal: string }) {
   const [collapsed, setCollapsed] = useState(false)
 
   return (
-    <div className="w-80 bg-white rounded-xl shadow-lg border border-stone-200 p-4 hover:shadow-xl transition-shadow duration-200">
+    <div className="w-full sm:w-80 bg-white rounded-xl shadow-lg border border-stone-200 p-3 sm:p-4 hover:shadow-xl transition-shadow duration-200">
       <button
         onClick={() => setCollapsed((v) => !v)}
         className="flex items-center gap-1.5 bg-transparent border-none p-0 cursor-pointer"
@@ -302,7 +302,7 @@ function GoalPanel({ goal }: { goal: string }) {
       >
         <div className="overflow-hidden">
           <div className="pt-2">
-            <p className="text-base font-medium text-stone-900 m-0 leading-snug">
+            <p className="text-sm sm:text-base font-medium text-stone-900 m-0 leading-snug">
               {goal}
             </p>
           </div>
@@ -388,7 +388,7 @@ function DesiredSkillsPanel({ skills, onSkillsChange, loading }: { skills: strin
   }, [open])
 
   return (
-    <div className="w-80 bg-white rounded-xl shadow-lg border border-stone-200 p-4 hover:shadow-xl transition-shadow duration-200">
+    <div className="w-full sm:w-80 bg-white rounded-xl shadow-lg border border-stone-200 p-3 sm:p-4 hover:shadow-xl transition-shadow duration-200">
       <button
         onClick={() => {
           const willCollapse = !collapsed
@@ -571,7 +571,7 @@ function MySkillsPanel({ skills, onSkillsChange, loading }: { skills: string[]; 
   }, [open])
 
   return (
-    <div className="w-80 bg-white rounded-xl shadow-lg border border-stone-200 p-4 hover:shadow-xl transition-shadow duration-200">
+    <div className="w-full sm:w-80 bg-white rounded-xl shadow-lg border border-stone-200 p-3 sm:p-4 hover:shadow-xl transition-shadow duration-200">
       <button
         onClick={() => {
           const willCollapse = !collapsed
@@ -698,7 +698,7 @@ function CourseHistoryPanel({ history, onRestore }: { history: HistoryEntry[]; o
   }, [history.length])
 
   return (
-    <div className="w-80 bg-white rounded-xl shadow-lg border border-stone-200 p-4 hover:shadow-xl transition-shadow duration-200 overflow-hidden">
+    <div className="w-full sm:w-80 bg-white rounded-xl shadow-lg border border-stone-200 p-3 sm:p-4 hover:shadow-xl transition-shadow duration-200 overflow-hidden">
       <button
         onClick={() => setCollapsed((v) => !v)}
         className="flex items-center gap-1.5 bg-transparent border-none p-0 cursor-pointer"
@@ -869,52 +869,60 @@ export default function Graph() {
 
   return (
     <CourseProvider edges={edges} setNodes={setNodes} onCourseReplaced={(entry) => setCourseHistory((h) => [entry, ...h])}>
-      <div className="w-screen h-screen relative">
-        <div className="absolute top-5 left-5 z-10 flex flex-col gap-3">
-          <GoalPanel goal={navGoal ?? goal} />
-          <DesiredSkillsPanel skills={desiredSkills} onSkillsChange={handleDesiredSkillsChange} loading={loading} />
-          <MySkillsPanel skills={mySkills} onSkillsChange={handleMySkillsChange} loading={loading} />
-        </div>
+      {/* Mobile: column layout (panels on top, graph below). Desktop: absolute overlays on full-screen graph */}
+      <div className="relative w-screen h-dvh">
 
-        <div className="absolute top-5 right-5 z-10">
-          <CourseHistoryPanel
-            history={courseHistory}
-            onRestore={(index) => {
-              const entry = courseHistory[index]
-              setNodes((nds) =>
-                nds.map((n) =>
-                  n.data.label === entry.skill
-                    ? { ...n, data: { ...n.data, courseTitle: entry.oldCourse } }
-                    : n,
-                ),
-              )
-              setCourseHistory((h) => h.filter((_, i) => i !== index))
-            }}
-          />
-        </div>
-
-        {loading && (
-          <div className="absolute inset-0 z-[15] flex flex-col items-center justify-center gap-3 pointer-events-none">
-            <Loader2 size={28} className="text-blue-800 animate-spin" />
-            <p className="text-stone-400 text-sm">Building your skill tree…</p>
+        {/* Panels — absolute overlays on all sizes, pointer-events-none container */}
+        <div className="absolute inset-0 z-10 overflow-visible pointer-events-none">
+          <div className="absolute top-3 left-3 right-3 flex flex-col gap-2 pointer-events-auto sm:top-5 sm:left-5 sm:right-auto sm:gap-3">
+            <GoalPanel goal={navGoal ?? goal} />
+            <DesiredSkillsPanel skills={desiredSkills} onSkillsChange={handleDesiredSkillsChange} loading={loading} />
+            <MySkillsPanel skills={mySkills} onSkillsChange={handleMySkillsChange} loading={loading} />
           </div>
-        )}
 
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          nodeTypes={nodeTypes}
-          fitView
-          fitViewOptions={{ padding: 0.3 }}
-          proOptions={{ hideAttribution: true }}
-          nodesConnectable={false}
-          panOnDrag
-          zoomOnScroll
-          style={{ background: '#fafaf9' }}
-        >
-          <Background variant={BackgroundVariant.Dots} gap={20} size={1} color="#e7e5e4" />
-        </ReactFlow>
+          <div className="hidden pointer-events-auto sm:block sm:absolute sm:top-5 sm:right-5">
+            <CourseHistoryPanel
+              history={courseHistory}
+              onRestore={(index) => {
+                const entry = courseHistory[index]
+                setNodes((nds) =>
+                  nds.map((n) =>
+                    n.data.label === entry.skill
+                      ? { ...n, data: { ...n.data, courseTitle: entry.oldCourse } }
+                      : n,
+                  ),
+                )
+                setCourseHistory((h) => h.filter((_, i) => i !== index))
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Graph — full screen, user pans freely */}
+        <div className="relative w-full h-full">
+          {loading && (
+            <div className="absolute inset-0 z-[15] flex flex-col items-center justify-center gap-3 pointer-events-none">
+              <Loader2 size={28} className="text-blue-800 animate-spin" />
+              <p className="text-stone-400 text-sm">Building your skill tree…</p>
+            </div>
+          )}
+
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            nodeTypes={nodeTypes}
+            fitView
+            fitViewOptions={{ padding: 0.3 }}
+            proOptions={{ hideAttribution: true }}
+            nodesConnectable={false}
+            panOnDrag
+            zoomOnScroll
+            style={{ background: '#fafaf9' }}
+          >
+            <Background variant={BackgroundVariant.Dots} gap={20} size={1} color="#e7e5e4" />
+          </ReactFlow>
+        </div>
 
         <GoatChat
           context={{

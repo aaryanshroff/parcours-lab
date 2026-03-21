@@ -81,9 +81,9 @@ export default function GoatChat({ context, onAction }: GoatChatProps) {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end">
+    <div className="fixed bottom-4 right-3 left-3 sm:left-auto sm:right-4 z-50 flex flex-col items-end">
       {open && (
-        <div className="mb-2 w-80 h-96 bg-white rounded-xl shadow-lg border border-stone-200 flex flex-col overflow-hidden">
+        <div className="mb-2 w-full sm:w-80 h-80 sm:h-96 bg-white rounded-xl shadow-lg border border-stone-200 flex flex-col overflow-hidden">
           {/* Header */}
           <div className="flex items-center justify-between px-3 py-2 border-b border-stone-100">
             <span className="text-xs font-semibold uppercase tracking-wider text-stone-500">
@@ -132,7 +132,7 @@ export default function GoatChat({ context, onAction }: GoatChatProps) {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="flex-1 text-sm text-stone-900 outline-none bg-transparent placeholder:text-stone-400"
+                className="flex-1 text-base sm:text-sm text-stone-900 outline-none bg-transparent placeholder:text-stone-400"
               />
               <button
                 onClick={send}
@@ -151,7 +151,7 @@ export default function GoatChat({ context, onAction }: GoatChatProps) {
         onClick={() => setOpen((v) => !v)}
         className="relative cursor-pointer bg-transparent border-none p-0"
       >
-        <img src={goatImg} alt="Goat mascot" className="h-28 w-28 object-contain" />
+        <img src={goatImg} alt="Goat mascot" className="h-20 w-20 sm:h-28 sm:w-28 object-contain" />
         {!open && (
           <span className="absolute top-0 left-0 flex h-5 w-5">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
