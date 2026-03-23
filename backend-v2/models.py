@@ -14,7 +14,7 @@ class Course(BaseModel):
 
 class SkillNode(BaseModel):
     id: str
-    label: str
+    labels: list[str]
     tier: str
     course: Course
     position: Position

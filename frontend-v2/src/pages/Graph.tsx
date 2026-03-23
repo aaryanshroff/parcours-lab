@@ -51,7 +51,7 @@ type Tier = 'foundation' | 'core' | 'advanced' | 'specialization'
 type CourseStatus = 'pending' | 'accepted' | 'replacing' | 'loading' | 'replaced'
 
 interface SkillNodeData {
-  label: string
+  labels: string[]
   courseTitle: string
   courseUrl: string
   courseReason: string
@@ -192,11 +192,13 @@ function SkillNode({ id, data }: NodeProps<Node<SkillNodeData>>) {
       <div className="flex items-center gap-1.5">
         <div>
           <span className="block text-[9px] font-medium uppercase tracking-wider text-stone-400 mb-0.5">
-            Skill
+            {data.labels.length > 1 ? 'Skills' : 'Skill'}
           </span>
-          <span className="block text-xs text-stone-400">
-            {data.label}
-          </span>
+          <div className="flex flex-wrap gap-1">
+            {data.labels.map((skill) => (
+              <span key={skill} className="text-xs text-stone-400">{skill}</span>
+            ))}
+          </div>
         </div>
         {data.courseReason && (
           <div className="relative group shrink-0 self-end mb-0.5">
@@ -255,7 +257,7 @@ function SkillNode({ id, data }: NodeProps<Node<SkillNodeData>>) {
             </button>
             <button
               onMouseDown={(e) => e.stopPropagation()}
-              onClick={() => { submitReplace(id, reason, data.label, data.courseTitle); setReason('') }}
+              onClick={() => { submitReplace(id, reason, data.labels.join(', '), data.courseTitle); setReason('') }}
               className="nopan px-2 py-1 text-[11px] font-medium rounded-lg bg-blue-900 text-white hover:bg-blue-950 cursor-pointer transition-colors duration-150"
             >
               Submit
@@ -747,7 +749,7 @@ function CourseHistoryPanel({ history, onRestore }: { history: HistoryEntry[]; o
 /* ─── API types ─── */
 
 interface ApiCourse { title: string; url: string; reason: string }
-interface ApiNode { id: string; label: string; tier: string; course: ApiCourse; position: { x: number; y: number } }
+interface ApiNode { id: string; labels: string[]; tier: string; course: ApiCourse; position: { x: number; y: number } }
 interface ApiEdge { id: string; source: string; target: string }
 interface ApiGraph { goal: string; skills: string[]; nodes: ApiNode[]; edges: ApiEdge[] }
 
@@ -757,7 +759,7 @@ function toFlowNodes(apiNodes: ApiNode[]): Node<SkillNodeData>[] {
     type: 'skill',
     position: n.position,
     data: {
-      label: n.label,
+      labels: n.labels,
       tier: n.tier as Tier,
       courseTitle: n.course.title,
       courseUrl: n.course.url,
@@ -887,7 +889,7 @@ export default function Graph() {
                 const entry = courseHistory[index]
                 setNodes((nds) =>
                   nds.map((n) =>
-                    n.data.label === entry.skill
+                    n.data.labels.includes(entry.skill)
                       ? { ...n, data: { ...n.data, courseTitle: entry.oldCourse } }
                       : n,
                   ),
@@ -929,19 +931,19 @@ export default function Graph() {
             goal: navGoal ?? goal,
             desired_skills: desiredSkills,
             my_skills: mySkills,
-            nodes: nodes.map((n) => ({ skill: n.data.label, course_title: n.data.courseTitle })),
+            nodes: nodes.map((n) => ({ skill: n.data.labels.join(', '), course_title: n.data.courseTitle })),
           }}
           onAction={(action) => {
             switch (action.type) {
               case 'replace_course':
                 if (action.skill_name && action.course) {
-                  const oldNode = nodes.find((n) => n.data.label === action.skill_name)
+                  const oldNode = nodes.find((n) => n.data.labels.includes(action.skill_name!))
                   if (oldNode) {
                     setCourseHistory((h) => [{ skill: action.skill_name!, oldCourse: oldNode.data.courseTitle, newCourse: action.course!.title }, ...h])
                   }
                   setNodes((nds) =>
                     nds.map((n) =>
-                      n.data.label === action.skill_name
+                      n.data.labels.includes(action.skill_name!)
                         ? { ...n, data: { ...n.data, courseTitle: action.course!.title, courseUrl: action.course!.url, courseReason: action.course!.reason ?? '' } }
                         : n,
                     ),

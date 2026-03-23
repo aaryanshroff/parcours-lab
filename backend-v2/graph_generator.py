@@ -46,9 +46,8 @@ def _call_llm(
                     "Rules:\n"
                     "- ONLY create nodes for the desired skills — do NOT add prerequisite or bridge skills\n"
                     "- Use the EXACT desired skill names as provided by the user for node labels — do NOT rename or normalize them\n"
-                    "- Each node must represent a DISTINCT desired skill\n"
-                    "- A skill may have multiple course nodes if it benefits from more than one course\n"
-                    "- A single course may cover multiple desired skills — create a node for each skill it covers\n"
+                    "- If a single course covers multiple desired skills, create ONE node with all those skills in the labels array\n"
+                    "- Each desired skill should appear in exactly one node's labels array\n"
                     "- Each node must have a recommended course with a title and URL (use real, well-known courses)\n"
                     "- Assign each node a tier: foundation, core, advanced, or specialization based on suggested learning order\n"
                     "- Dependencies should only list DIRECT prerequisites — if A depends on B and B depends on C, do NOT list C as a dependency of A (it is implied through B)\n"
@@ -61,11 +60,11 @@ def _call_llm(
                     '  "nodes": [\n'
                     "    {\n"
                     '      "id": "node-slug",\n'
-                    '      "label": "Skill Name",\n'
+                    '      "labels": ["Skill Name", "Another Skill"],\n'
                     '      "tier": "foundation|core|advanced|specialization",\n'
                     '      "course_title": "Course Name — Provider",\n'
                     '      "course_url": "https://...",\n'
-                    '      "course_reason": "One sentence explaining why this course is a good fit for this skill and goal.",\n'
+                    '      "course_reason": "One sentence explaining why this course is a good fit for these skills and goal.",\n'
                     '      "dependencies": ["other-node-id"]\n'
                     "    }\n"
                     "  ]\n"
@@ -98,33 +97,47 @@ def _call_llm(
 def _build_graph_response(goal: str, raw: dict, existing_skills: list[str] | None = None) -> GraphResponse:
     """Take raw LLM output and compute layout positions."""
     existing_lower = {s.lower() for s in (existing_skills or [])}
-    llm_nodes = [n for n in raw.get("nodes", []) if n.get("label", "").lower() not in existing_lower]
 
-    # Deduplicate nodes by label (keep first, merge dependencies)
-    seen: dict[str, dict] = {}
-    deduped: list[dict] = []
-    id_remap: dict[str, str] = {}  # old id -> kept id
+    # Normalize: accept both "label" (string) and "labels" (list) from LLM
+    for node in raw.get("nodes", []):
+        if "labels" not in node:
+            node["labels"] = [node.get("label", "")]
+        node["labels"] = [l for l in node["labels"] if l.lower() not in existing_lower]
+
+    llm_nodes = [n for n in raw.get("nodes", []) if n.get("labels")]
+
+    # Merge nodes that share the same course title (safety net)
+    by_course: dict[str, dict] = {}
+    merged: list[dict] = []
+    id_remap: dict[str, str] = {}
     for node in llm_nodes:
-        label_lower = node["label"].lower()
-        if label_lower in seen:
-            # Remap this duplicate's id to the kept node's id
-            id_remap[node["id"]] = seen[label_lower]["id"]
+        course_key = node.get("course_title", "").strip().lower()
+        if course_key and course_key in by_course:
+            kept = by_course[course_key]
+            id_remap[node["id"]] = kept["id"]
+            # Merge labels (deduped)
+            existing_labels = {l.lower() for l in kept["labels"]}
+            for l in node["labels"]:
+                if l.lower() not in existing_labels:
+                    kept["labels"].append(l)
+                    existing_labels.add(l.lower())
             # Merge dependencies
-            existing_deps = set(seen[label_lower].get("dependencies", []))
+            existing_deps = set(kept.get("dependencies", []))
             for dep in node.get("dependencies", []):
                 existing_deps.add(dep)
-            seen[label_lower]["dependencies"] = list(existing_deps)
+            kept["dependencies"] = list(existing_deps)
         else:
-            seen[label_lower] = node
-            deduped.append(node)
+            if course_key:
+                by_course[course_key] = node
+            merged.append(node)
 
     # Remap dependency references to point to kept nodes
-    for node in deduped:
+    for node in merged:
         node["dependencies"] = [
             id_remap.get(dep, dep) for dep in node.get("dependencies", [])
             if id_remap.get(dep, dep) != node["id"]  # no self-loops
         ]
-    llm_nodes = deduped
+    llm_nodes = merged
 
     # Step 1: Remove cycles via DFS back-edge detection
     node_ids = {n["id"] for n in llm_nodes}
@@ -200,9 +213,9 @@ def _build_graph_response(goal: str, raw: dict, existing_skills: list[str] | Non
             try:
                 resp = requests.head(url, timeout=5, allow_redirects=True)
                 if resp.status_code >= 400:
-                    node["course_url"] = f"https://www.coursera.org/search?query={quote_plus(node.get('course_title', node['label']))}"
+                    node["course_url"] = f"https://www.coursera.org/search?query={quote_plus(node.get('course_title', node['labels'][0]))}"
             except (requests.RequestException, Exception):
-                node["course_url"] = f"https://www.coursera.org/search?query={quote_plus(node.get('course_title', node['label']))}"
+                node["course_url"] = f"https://www.coursera.org/search?query={quote_plus(node.get('course_title', node['labels'][0]))}"
 
     # Compute positions: each tier is a row, nodes spread horizontally and centered
     positioned_nodes: list[SkillNode] = []
@@ -222,7 +235,7 @@ def _build_graph_response(goal: str, raw: dict, existing_skills: list[str] | Non
             positioned_nodes.append(
                 SkillNode(
                     id=node["id"],
-                    label=node["label"],
+                    labels=node["labels"],
                     tier=tier,
                     course=Course(
                         title=node.get("course_title", ""),
@@ -232,7 +245,7 @@ def _build_graph_response(goal: str, raw: dict, existing_skills: list[str] | Non
                     position=Position(x=x, y=y),
                 )
             )
-            all_skills.append(node["label"])
+            all_skills.extend(node["labels"])
 
             # Create edges from dependencies
             for dep_id in node.get("dependencies", []):
