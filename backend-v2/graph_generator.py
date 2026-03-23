@@ -126,7 +126,7 @@ def _build_graph_response(goal: str, raw: dict, existing_skills: list[str] | Non
         ]
     llm_nodes = deduped
 
-    # Transitive reduction: remove edges implied by longer paths
+    # Step 1: Remove cycles via DFS back-edge detection
     node_ids = {n["id"] for n in llm_nodes}
     adj: dict[str, set[str]] = {n["id"]: set() for n in llm_nodes}
     for node in llm_nodes:
@@ -134,28 +134,55 @@ def _build_graph_response(goal: str, raw: dict, existing_skills: list[str] | Non
             if dep in node_ids:
                 adj[dep].add(node["id"])
 
-    def has_path(src: str, dst: str, skip_direct: bool) -> bool:
-        """BFS from src to dst, optionally skipping the direct edge."""
-        visited = set()
-        queue = []
-        for nxt in adj[src]:
-            if skip_direct and nxt == dst:
-                continue
-            queue.append(nxt)
+    visited: set[str] = set()
+    in_stack: set[str] = set()
+    back_edges: set[tuple[str, str]] = set()
+
+    def _dfs(nid: str) -> None:
+        visited.add(nid)
+        in_stack.add(nid)
+        for nxt in adj.get(nid, set()):
+            if nxt in in_stack:
+                back_edges.add((nid, nxt))
+            elif nxt not in visited:
+                _dfs(nxt)
+        in_stack.discard(nid)
+
+    for nid in node_ids:
+        if nid not in visited:
+            _dfs(nid)
+
+    for node in llm_nodes:
+        node["dependencies"] = [
+            dep for dep in node.get("dependencies", [])
+            if dep in node_ids and (dep, node["id"]) not in back_edges
+        ]
+
+    # Step 2: Transitive reduction on the now-acyclic graph
+    # Rebuild adj after cycle removal
+    adj = {n["id"]: set() for n in llm_nodes}
+    for node in llm_nodes:
+        for dep in node.get("dependencies", []):
+            adj[dep].add(node["id"])
+
+    def _has_path(src: str, dst: str) -> bool:
+        """BFS from src to dst, skipping the direct edge."""
+        queue = [nxt for nxt in adj[src] if nxt != dst]
+        seen: set[str] = set()
         while queue:
             cur = queue.pop()
             if cur == dst:
                 return True
-            if cur in visited:
+            if cur in seen:
                 continue
-            visited.add(cur)
-            queue.extend(adj[cur] - visited)
+            seen.add(cur)
+            queue.extend(adj.get(cur, set()) - seen)
         return False
 
     for node in llm_nodes:
         node["dependencies"] = [
             dep for dep in node.get("dependencies", [])
-            if dep in node_ids and not has_path(dep, node["id"], skip_direct=True)
+            if not _has_path(dep, node["id"])
         ]
 
     # Group nodes by tier
