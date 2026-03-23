@@ -51,6 +51,7 @@ def _call_llm(
                     "- A single course may cover multiple desired skills — create a node for each skill it covers\n"
                     "- Each node must have a recommended course with a title and URL (use real, well-known courses)\n"
                     "- Assign each node a tier: foundation, core, advanced, or specialization based on suggested learning order\n"
+                    "- Dependencies should only list DIRECT prerequisites — if A depends on B and B depends on C, do NOT list C as a dependency of A (it is implied through B)\n"
                     "- Dependencies represent recommended learning order between the desired skills\n"
                     "- Dependencies must only reference other node IDs in your output\n"
                     "- Node IDs should be short kebab-case slugs\n"
@@ -124,6 +125,38 @@ def _build_graph_response(goal: str, raw: dict, existing_skills: list[str] | Non
             if id_remap.get(dep, dep) != node["id"]  # no self-loops
         ]
     llm_nodes = deduped
+
+    # Transitive reduction: remove edges implied by longer paths
+    node_ids = {n["id"] for n in llm_nodes}
+    adj: dict[str, set[str]] = {n["id"]: set() for n in llm_nodes}
+    for node in llm_nodes:
+        for dep in node.get("dependencies", []):
+            if dep in node_ids:
+                adj[dep].add(node["id"])
+
+    def has_path(src: str, dst: str, skip_direct: bool) -> bool:
+        """BFS from src to dst, optionally skipping the direct edge."""
+        visited = set()
+        queue = []
+        for nxt in adj[src]:
+            if skip_direct and nxt == dst:
+                continue
+            queue.append(nxt)
+        while queue:
+            cur = queue.pop()
+            if cur == dst:
+                return True
+            if cur in visited:
+                continue
+            visited.add(cur)
+            queue.extend(adj[cur] - visited)
+        return False
+
+    for node in llm_nodes:
+        node["dependencies"] = [
+            dep for dep in node.get("dependencies", [])
+            if dep in node_ids and not has_path(dep, node["id"], skip_direct=True)
+        ]
 
     # Group nodes by tier
     tier_groups: dict[str, list[dict]] = {t: [] for t in TIER_ORDER}
