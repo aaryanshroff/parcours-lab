@@ -81,6 +81,41 @@ def job_skills():
     return jsonify({"skills": skills})
 
 
+@app.route("/api/uwaterloo/programs")
+def uwaterloo_programs():
+    from uwaterloo import search_programs
+
+    q = request.args.get("q", "").strip()
+    credential_type = request.args.get("type")
+    field_of_study = request.args.get("fieldOfStudy")
+
+    if not q and not credential_type and not field_of_study:
+        return jsonify({"programs": []})
+
+    programs = search_programs(q, credential_type, field_of_study)
+    return jsonify({"programs": programs})
+
+
+@app.route("/api/uwaterloo/programs/<pid>/requirements")
+def uwaterloo_requirements(pid):
+    from uwaterloo import get_program
+
+    program = get_program(pid)
+    if not program:
+        return jsonify({"error": "Program not found"}), 404
+    return jsonify(program)
+
+
+@app.route("/api/uwaterloo/courses/<code>/prereqs")
+def uwaterloo_course_prereqs(code):
+    from uwaterloo import get_course_prereqs
+
+    result = get_course_prereqs(code)
+    if not result:
+        return jsonify({"error": "Course not found"}), 404
+    return jsonify(result)
+
+
 @app.route("/api/esco/search")
 def esco_search():
     from resume_parser import _fetch_esco_candidates
