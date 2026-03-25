@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowRight, Upload, Link, Loader2, X, Plus, ChevronDown } from 'lucide-react'
 import goatImg from '../assets/mountain-goat.png'
+import AcademicsForm from '../components/AcademicsForm'
 
 
 interface EscoSkill {
@@ -19,6 +20,7 @@ export default function Onboarding() {
   const [resumeSkills, setResumeSkills] = useState<EscoSkill[]>([])
   const [skillInput, setSkillInput] = useState('')
   const [dragging, setDragging] = useState(false)
+  const [activeTab, setActiveTab] = useState<'career' | 'academics'>('career')
   const [optionalCollapsed, setOptionalCollapsed] = useState(true)
   const [goalExistingSkills, setGoalExistingSkills] = useState<EscoSkill[]>([])
   const [goalDesiredSkills, setGoalDesiredSkills] = useState<EscoSkill[]>([])
@@ -195,10 +197,28 @@ export default function Onboarding() {
 
   return (
     <div className="min-h-screen bg-stone-50 flex flex-col px-4 pt-6 pb-16">
-      {/* Logo */}
-      <div className="flex items-center gap-2 mb-8 sm:mb-12">
-        <img src={goatImg} alt="ParcoursLab" className="h-10 w-10 object-contain" />
-        <span className="text-xl font-bold text-stone-800" style={{ fontFamily: '"Manrope", sans-serif' }}>ParcoursLab</span>
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8 sm:mb-12">
+        <div className="flex items-center gap-2">
+          <img src={goatImg} alt="ParcoursLab" className="h-10 w-10 object-contain" />
+          <span className="text-xl font-bold text-stone-800" style={{ fontFamily: '"Manrope", sans-serif' }}>ParcoursLab</span>
+        </div>
+        <div className="flex items-center bg-stone-100 rounded-lg p-0.5">
+          <button
+            type="button"
+            onClick={() => setActiveTab('career')}
+            className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all duration-150 cursor-pointer ${activeTab === 'career' ? 'bg-white text-stone-800 shadow-sm' : 'text-stone-500 hover:text-stone-700'}`}
+          >
+            Career
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('academics')}
+            className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all duration-150 cursor-pointer ${activeTab === 'academics' ? 'bg-white text-stone-800 shadow-sm' : 'text-stone-500 hover:text-stone-700'}`}
+          >
+            Academics
+          </button>
+        </div>
       </div>
 
       <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start justify-items-center mx-auto">
@@ -208,14 +228,16 @@ export default function Onboarding() {
         {/* Hero */}
         <div className="mb-4 sm:mb-6">
           <h1 className="text-2xl sm:text-4xl font-bold text-stone-800 leading-tight mb-3 sm:mb-4" style={{ fontFamily: '"Manrope", sans-serif' }}>
-            What do you want to learn?
+            {activeTab === 'career' ? 'What do you want to learn?' : 'What are you studying?'}
           </h1>
           <p className="text-stone-500 text-base sm:text-lg leading-relaxed">
-            Tell us your goal and we'll build a personalized skill tree with curated courses to get you there.
+            {activeTab === 'career'
+              ? "Tell us your goal and we'll build a personalized skill tree with curated courses to get you there."
+              : 'Select your UWaterloo program and we\'ll help you pick the right electives for your goals.'}
           </p>
         </div>
 
-        {/* Form */}
+        {activeTab === 'career' ? (
         <form onSubmit={handleSubmit} className="w-full space-y-4">
         {/* Goal — primary input */}
         <div>
@@ -495,6 +517,9 @@ export default function Onboarding() {
           )}
         </button>
         </form>
+        ) : (
+          <AcademicsForm />
+        )}
       </div>
 
       {/* Right column — How it works */}
