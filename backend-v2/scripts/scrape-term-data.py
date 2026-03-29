@@ -2,7 +2,7 @@
 
 Usage:
   poetry run python scripts/scrape-term-data.py
-  poetry run python scripts/scrape-term-data.py --output data/programs.json
+  poetry run python scripts/scrape-term-data.py --output data/programs-NESTED.json
 
 Rule format
 -----------
@@ -10,19 +10,24 @@ Each requirement group has the shape:
   { "rule": <value>, "courses": [...], "groups": [...] }
 
 rule values:
-  "all"       — complete every course in the list
-  N (int)     — complete exactly N courses / options from the list
-  "credits"   — complete a number of credit units; see the "credits" field
-  <str>       — raw Kuali text for rules that couldn't be classified
+  "all"       - complete every course in the list
+  N (int)     - complete exactly N courses / options from the list
+  "credits"   - complete a number of credit units; see the "credits" field
+  <str>       - raw Kuali text for rules that couldn't be classified
 
 When rule == "credits" the group also has:
-  "credits": <float>   — units required (e.g. 3.0)
+  "credits": <float>   - units required (e.g. 3.0)
 
-"groups" is a list of nested RequirementGroup dicts.  Kuali nests rules in the
-DOM (e.g. "Complete 1 of: [option-A courses] OR [option-B courses]") and this
-structure is preserved recursively.
+"groups" is a list of nested RequirementGroup dicts. Kuali nests rules in the
+DOM (for example, "Complete 1 of: [option-A courses] OR [option-B bundle]").
 
-Exclusion courses are in the top-level "exclusions" list, not in groups.
+Programs may also include named course lists:
+  "lists": {
+    "List 1": [RequirementGroup, ...],
+    "Approved Courses List": [RequirementGroup, ...]
+  }
+
+Exclusion courses are stored in the top-level "exclusions" list, not in groups.
 """
 
 from __future__ import annotations
@@ -31,10 +36,9 @@ import json
 import re
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
-from typing import Any
 
 import requests
-from bs4 import BeautifulSoup, Tag
+from bs4 import BeautifulSoup, NavigableString, Tag
 
 CATALOG_ID = "663290e835aff7001cc62323"
 KUALI_BASE = "https://uwaterloocm.kuali.co/api/v1/catalog"
@@ -42,13 +46,11 @@ KUALI_LIST_URL = f"{KUALI_BASE}/programs/{CATALOG_ID}"
 KUALI_DETAIL_URL = f"{KUALI_BASE}/program/{CATALOG_ID}"
 
 OUTPUT_DIR = Path(__file__).resolve().parent.parent / "data"
+DEFAULT_OUTPUT_PATH = OUTPUT_DIR / "programs-NESTED.json"
 
 _RV_RE = re.compile(r"^ruleView-")
 _EXCLUSION_RE = re.compile(r"cannot be used towards this academic plan", re.IGNORECASE)
 _CHOOSE_ANY_RE = re.compile(r"choose any|choose courses?\s+from", re.IGNORECASE)
-
-
-# ── API fetches ────────────────────────────────────────────────────────────
 
 
 def fetch_program_list() -> list[dict]:
@@ -63,7 +65,8 @@ def fetch_program_detail(pid: str) -> dict:
     return resp.json()
 
 
-# ── Course parsing ─────────────────────────────────────────────────────────
+def _normalize_whitespace(text: str) -> str:
+    return re.sub(r"\s+", " ", text).strip()
 
 
 def parse_course_from_li(li: Tag) -> dict | None:
@@ -79,9 +82,6 @@ def parse_course_from_li(li: Tag) -> dict | None:
     title = parts[1].strip() if len(parts) > 1 else ""
     title = re.sub(r"\s*\(\d+(?:\.\d+)?\)\s*$", "", title)
     return {"code": code, "title": title, "units": None}
-
-
-# ── Rule classification ────────────────────────────────────────────────────
 
 
 def classify_rule(text: str) -> dict:
@@ -107,63 +107,130 @@ def classify_rule(text: str) -> dict:
 
     m = re.search(
         r"complete\s+(\d+)\s+(?:courses?\s+from|additional\s+courses?\s+from)",
-        text, re.IGNORECASE,
+        text,
+        re.IGNORECASE,
     )
     if m:
         return {"rule": int(m.group(1))}
 
-    # Preserve unit count rather than lossy-converting to course count
     m = re.search(r"complete\s+(\d+(?:\.\d+)?)\s+units?", text, re.IGNORECASE)
     if m:
         return {"rule": "credits", "credits": float(m.group(1))}
 
-    # Pool marker — consumed by merge_sibling_pairs, never stored in output
     if _CHOOSE_ANY_RE.search(text):
         return {"rule": "_pool"}
 
     return {"rule": text}
 
 
-# ── Group helpers ──────────────────────────────────────────────────────────
+def _make_group(
+    classification: dict,
+    courses: list[dict],
+    groups: list[dict] | None = None,
+    list_refs: list[str] | None = None,
+) -> dict:
+    group = {**classification, "courses": courses, "groups": groups or []}
+    if list_refs:
+        group["listRefs"] = list_refs
+    return group
 
 
-def _make_group(classification: dict, courses: list[dict], groups: list[dict] | None = None) -> dict:
-    return {**classification, "courses": courses, "groups": groups or []}
+def _extract_list_refs(text: str, known_list_names: list[str]) -> list[str]:
+    normalized = _normalize_whitespace(text)
+    refs: list[str] = []
+    for name in known_list_names:
+        aliases = [name]
+        if name.lower().endswith(" list"):
+            aliases.append(name[:-5])
+        if any(re.search(rf"\b{re.escape(alias)}\b", normalized, re.IGNORECASE) for alias in aliases):
+            refs.append(name)
+    return list(dict.fromkeys(refs))
+
+
+def _get_ruleview_result_div(li: Tag) -> Tag | None:
+    return li.find("div", attrs={"data-test": re.compile(r"ruleView-.*-result")})
 
 
 def _get_header_text(li: Tag) -> str:
     """Extract rule header text (text before the course list) from a ruleView LI."""
-    result_div = li.find("div", attrs={"data-test": re.compile(r"ruleView-.*-result")})
+    result_div = _get_ruleview_result_div(li)
     if not result_div:
         return ""
-    # The first direct <div> child usually contains only the rule text.
-    # Using it avoids pulling in course titles from the course list below.
-    header = result_div.find("div", recursive=False)
-    return header.get_text(" ", strip=True) if header else result_div.get_text(" ", strip=True)[:150]
+
+    parts: list[str] = []
+    for child in result_div.contents:
+        if isinstance(child, NavigableString):
+            text = _normalize_whitespace(str(child))
+            if text:
+                parts.append(text)
+            continue
+        if not isinstance(child, Tag):
+            continue
+        if child.name == "div":
+            child_text = _normalize_whitespace(child.get_text(" ", strip=True))
+            if child.find(["ul", "ol"]):
+                break
+            if child_text:
+                parts.append(child_text)
+            break
+        text = _normalize_whitespace(child.get_text(" ", strip=True))
+        if text:
+            parts.append(text)
+
+    return _normalize_whitespace(" ".join(parts))
 
 
-def _get_direct_courses(parent_li: Tag) -> list[dict]:
+def _get_wrapper_header_text(li: Tag) -> str:
+    """Extract header text from a non-ruleView wrapper li."""
+    parts: list[str] = []
+    for child in li.contents:
+        if isinstance(child, NavigableString):
+            text = _normalize_whitespace(str(child))
+            if text:
+                parts.append(text)
+            continue
+        if not isinstance(child, Tag):
+            continue
+        if child.name in {"ul", "ol"}:
+            break
+        text = _normalize_whitespace(child.get_text(" ", strip=True))
+        if text:
+            parts.append(text)
+    return _normalize_whitespace(" ".join(parts))
+
+
+def _is_group_candidate(li: Tag) -> bool:
+    if li.name != "li":
+        return False
+    if _RV_RE.match(str(li.get("data-test", ""))):
+        return True
+    child_list = li.find(["ul", "ol"], recursive=False)
+    if not child_list:
+        return False
+    return bool(_get_wrapper_header_text(li))
+
+
+def _get_direct_courses_from_ruleview(li: Tag) -> list[dict]:
     """
-    Collect course <li> elements that belong directly to parent_li's result div,
-    skipping any that are inside a nested ruleView descendant.
+    Collect course <li> elements that belong directly to a ruleView result div,
+    skipping anything inside nested groups.
     """
-    result_div = parent_li.find("div", attrs={"data-test": re.compile(r"ruleView-.*-result")})
+    result_div = _get_ruleview_result_div(li)
     if not result_div:
         return []
 
-    courses = []
+    courses: list[dict] = []
     for course_li in result_div.find_all("li"):
-        if course_li.find("ul"):
-            continue  # sub-group wrapper, not a leaf course
-        # Skip if inside a nested ruleView (any ruleView ancestor before result_div)
-        in_nested = False
+        if _is_group_candidate(course_li):
+            continue
+        in_nested_group = False
         for anc in course_li.parents:
             if anc is result_div:
                 break
-            if _RV_RE.match(str(anc.get("data-test", ""))):
-                in_nested = True
+            if isinstance(anc, Tag) and _is_group_candidate(anc):
+                in_nested_group = True
                 break
-        if in_nested:
+        if in_nested_group:
             continue
         parsed = parse_course_from_li(course_li)
         if parsed:
@@ -171,34 +238,49 @@ def _get_direct_courses(parent_li: Tag) -> list[dict]:
     return courses
 
 
-def _get_direct_child_rule_lis(parent_li: Tag) -> list[Tag]:
-    """
-    Find ruleView LIs whose nearest ruleView ancestor (within parent_li) IS parent_li.
-    These are the direct children in the requirement hierarchy.
-    """
-    result_div = parent_li.find("div", attrs={"data-test": re.compile(r"ruleView-.*-result")})
-    if not result_div:
-        return []
+def _get_direct_courses_from_wrapper(li: Tag) -> list[dict]:
+    courses: list[dict] = []
+    for child_list in li.find_all(["ul", "ol"], recursive=False):
+        for child_li in child_list.find_all("li", recursive=False):
+            if _is_group_candidate(child_li):
+                continue
+            parsed = parse_course_from_li(child_li)
+            if parsed:
+                courses.append(parsed)
+    return courses
 
-    children = []
-    for candidate in result_div.find_all("li", attrs={"data-test": _RV_RE}):
+
+def _get_group_content_root(li: Tag) -> Tag:
+    if _RV_RE.match(str(li.get("data-test", ""))):
+        return _get_ruleview_result_div(li) or li
+    return li
+
+
+def _get_direct_child_group_lis(parent_li: Tag) -> list[Tag]:
+    """
+    Find child wrapper/ruleView LIs whose nearest group ancestor is parent_li.
+    """
+    root = _get_group_content_root(parent_li)
+    children: list[Tag] = []
+    for candidate in root.find_all("li"):
+        if candidate is parent_li or not _is_group_candidate(candidate):
+            continue
         for anc in candidate.parents:
             if anc is parent_li:
                 children.append(candidate)
                 break
-            if _RV_RE.match(str(anc.get("data-test", ""))):
-                break  # closer ruleView ancestor found — not a direct child
+            if anc is root:
+                break
+            if isinstance(anc, Tag) and _is_group_candidate(anc):
+                break
     return children
-
-
-# ── Sibling pair merging ───────────────────────────────────────────────────
 
 
 def merge_sibling_pairs(groups: list[dict]) -> list[dict]:
     """
     Kuali sometimes expresses a requirement as two consecutive siblings:
-      [i]   constraint  — has a real rule, NO courses, no child groups
-      [i+1] pool        — rule "_pool" from "Choose any", HAS courses
+      [i]   constraint  - has a real rule, NO courses, no child groups
+      [i+1] pool        - rule "_pool" from "Choose any", HAS courses
 
     Merge: take the constraint's rule (and credits if present), take the pool's courses.
     Standalone _pool groups (no matching preceding constraint) become rule: 1.
@@ -225,65 +307,90 @@ def merge_sibling_pairs(groups: list[dict]) -> list[dict]:
             result.append(g)
             i += 1
 
-    # Any remaining _pool (no preceding constraint) → pick 1
     return [{**g, "rule": 1} if g["rule"] == "_pool" else g for g in result]
 
 
-# ── Recursive ruleView parsing ─────────────────────────────────────────────
-
-
-def parse_ruleview_li(li: Tag) -> dict:
+def parse_group_li(li: Tag, known_list_names: list[str] | None = None) -> dict:
     """
-    Recursively parse a ruleView LI into a group dict.
-
-    Direct courses (not inside a nested ruleView) go into "courses".
-    Direct child ruleView LIs are parsed recursively into "groups".
+    Recursively parse either a ruleView LI or an anonymous wrapper LI.
     """
-    text = _get_header_text(li)
+    if _RV_RE.match(str(li.get("data-test", ""))):
+        text = _get_header_text(li)
+        courses = _get_direct_courses_from_ruleview(li)
+    else:
+        text = _get_wrapper_header_text(li)
+        courses = _get_direct_courses_from_wrapper(li)
+
     classification = classify_rule(text)
-    courses = _get_direct_courses(li)
+    list_refs = _extract_list_refs(text, known_list_names or [])
 
-    child_lis = _get_direct_child_rule_lis(li)
-    child_groups = [parse_ruleview_li(c) for c in child_lis]
+    child_lis = _get_direct_child_group_lis(li)
+    child_groups = [parse_group_li(child, known_list_names) for child in child_lis]
     child_groups = merge_sibling_pairs(child_groups)
-    child_groups = [g for g in child_groups if g["courses"] or g["groups"]]
+    child_groups = [g for g in child_groups if _is_meaningful_group(g)]
 
-    return _make_group(classification, courses, child_groups)
-
-
-# ── Core parsing ───────────────────────────────────────────────────────────
+    return _make_group(classification, courses, child_groups, list_refs)
 
 
-def parse_requirement_groups_from_soup(soup) -> tuple[list[dict], list[dict]]:
+def _is_meaningful_group(group: dict) -> bool:
+    if group["courses"] or group["groups"] or group.get("listRefs"):
+        return True
+    rule = group["rule"]
+    if rule == "exclusion":
+        return False
+    if rule in {"all", "_pool"}:
+        return False
+    return True
+
+
+def _strip_exclusions(groups: list[dict]) -> tuple[list[dict], list[dict]]:
+    cleaned: list[dict] = []
+    exclusions: list[dict] = []
+
+    for group in groups:
+        child_groups, child_exclusions = _strip_exclusions(group["groups"])
+        exclusions.extend(child_exclusions)
+
+        current = {**group, "groups": child_groups}
+        if current["rule"] == "exclusion":
+            exclusions.extend(current["courses"])
+            continue
+        if _is_meaningful_group(current):
+            cleaned.append(current)
+
+    return cleaned, exclusions
+
+
+def parse_requirement_groups_from_soup(
+    soup: BeautifulSoup | Tag,
+    known_list_names: list[str] | None = None,
+) -> tuple[list[dict], list[dict]]:
     """
     Extract requirement groups from a BeautifulSoup subtree.
 
-    Finds only TOP-LEVEL ruleView LIs (those with no ruleView ancestor within
-    this subtree) and parses each recursively.
+    Finds top-level wrapper/ruleView LIs and parses each recursively.
 
     Returns:
-        groups     — list of group dicts
-        exclusions — list of Course dicts that cannot count toward the plan
+        groups     - list of group dicts
+        exclusions - list of Course dicts that cannot count toward the plan
     """
-    all_rvs = soup.find_all("li", attrs={"data-test": _RV_RE})
+    all_group_lis = [li for li in soup.find_all("li") if _is_group_candidate(li)]
 
-    # Filter to top-level only
-    top_rvs: list[Tag] = []
-    for li in all_rvs:
+    top_group_lis: list[Tag] = []
+    for li in all_group_lis:
         is_top = True
         for anc in li.parents:
             if anc is soup:
                 break
-            if _RV_RE.match(str(anc.get("data-test", ""))):
+            if isinstance(anc, Tag) and _is_group_candidate(anc):
                 is_top = False
                 break
         if is_top:
-            top_rvs.append(li)
+            top_group_lis.append(li)
 
-    if top_rvs:
-        raw = [parse_ruleview_li(li) for li in top_rvs]
+    if top_group_lis:
+        raw = [parse_group_li(li, known_list_names) for li in top_group_lis]
     else:
-        # Fallback: bare HTML without ruleView structure
         courses = []
         for li in soup.find_all("li"):
             if li.find("ul"):
@@ -295,23 +402,79 @@ def parse_requirement_groups_from_soup(soup) -> tuple[list[dict], list[dict]]:
             return [_make_group({"rule": "all"}, courses)], []
         return [], []
 
-    exclusions = [c for g in raw if g["rule"] == "exclusion" for c in g["courses"]]
-    groups = [g for g in raw if g["rule"] != "exclusion"]
-    groups = merge_sibling_pairs(groups)
-    groups = [g for g in groups if g["courses"] or g["groups"]]
+    groups = merge_sibling_pairs(raw)
+    groups, exclusions = _strip_exclusions(groups)
+
+    if len(groups) == 1 and groups[0]["rule"] == "all" and not groups[0]["courses"] and not groups[0].get("listRefs"):
+        groups = groups[0]["groups"]
 
     return groups, exclusions
 
 
-# ── Top-level HTML parsers ─────────────────────────────────────────────────
+def _get_section_heading(section: Tag) -> str:
+    header = section.find("header")
+    if not header:
+        return ""
+    h2 = header.find("h2")
+    if not h2:
+        return ""
+    return _normalize_whitespace(h2.get_text(" ", strip=True))
 
 
-def parse_requirements_html(html: str) -> tuple[list[dict], list[dict]]:
-    """Parse courseRequirementsNoUnits HTML into (requirementGroups, exclusions)."""
+def _get_section_body_clone(section: Tag) -> BeautifulSoup:
+    """Clone a section and drop nested sections so parsing stays section-local."""
+    clone = BeautifulSoup(str(section), "html.parser")
+    root = clone.find("section")
+    if not root:
+        return clone
+
+    for nested in root.find_all("section"):
+        if nested is root:
+            continue
+        nested.decompose()
+    return clone
+
+
+def _iter_named_list_sections(soup: BeautifulSoup) -> list[tuple[str, Tag]]:
+    sections: list[tuple[str, Tag]] = []
+    for section in soup.find_all("section"):
+        heading = _get_section_heading(section)
+        if not heading:
+            continue
+        if heading.lower() == "required courses":
+            continue
+        sections.append((heading, section))
+    return sections
+
+
+def parse_requirements_html(html: str) -> tuple[list[dict], list[dict], dict[str, list[dict]]]:
+    """Parse courseRequirementsNoUnits HTML into (requirementGroups, exclusions, lists)."""
     if not html:
-        return [], []
+        return [], [], {}
+
     soup = BeautifulSoup(html, "html.parser")
-    return parse_requirement_groups_from_soup(soup)
+    list_sections = _iter_named_list_sections(soup)
+    known_list_names = [name for name, _ in list_sections]
+
+    required_section = next(
+        (section for section in soup.find_all("section") if _get_section_heading(section).lower() == "required courses"),
+        None,
+    )
+
+    if required_section:
+        req_scope = _get_section_body_clone(required_section)
+        req_groups, exclusions = parse_requirement_groups_from_soup(req_scope, known_list_names)
+    else:
+        req_groups, exclusions = parse_requirement_groups_from_soup(soup, known_list_names)
+
+    lists: dict[str, list[dict]] = {}
+    for name, section in list_sections:
+        section_scope = _get_section_body_clone(section)
+        groups, _ = parse_requirement_groups_from_soup(section_scope, known_list_names)
+        if groups:
+            lists[name] = groups
+
+    return req_groups, exclusions, lists
 
 
 def parse_term_by_term_html(html: str) -> list[dict]:
@@ -339,9 +502,6 @@ def parse_term_by_term_html(html: str) -> list[dict]:
     return term_groups
 
 
-# ── Main scrape ────────────────────────────────────────────────────────────
-
-
 def scrape_all(output_path: Path) -> None:
     print("Fetching program list...")
     programs = fetch_program_list()
@@ -361,7 +521,7 @@ def scrape_all(output_path: Path) -> None:
         faculty = detail.get("facultyCalendarDisplay", {})
         field = detail.get("fieldOfStudy", {})
 
-        req_groups, exclusions = parse_requirements_html(requirements_html)
+        req_groups, exclusions, named_lists = parse_requirements_html(requirements_html)
 
         result: dict = {
             "pid": pid,
@@ -375,6 +535,8 @@ def scrape_all(output_path: Path) -> None:
         }
         if exclusions:
             result["exclusions"] = exclusions
+        if named_lists:
+            result["lists"] = named_lists
         return result
 
     results = []
@@ -401,6 +563,6 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--output", type=Path, default=OUTPUT_DIR / "programs.json")
+    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT_PATH)
     args = parser.parse_args()
     scrape_all(args.output)
