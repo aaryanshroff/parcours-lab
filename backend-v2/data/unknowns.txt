@@ -1,0 +1,218 @@
+These are the phrases for "choose" rules marked as unkown, with repetition count prepended!!
+    
+6  Complete 3.0 units, including at least one 1.0 unit course, from the following course list.
+6  The following cannot be used towards this academic plan: CS100 - Introduction to Computing Through Applications (0.50) M
+4  Complete 3 courses from the following choices:
+4  Complete 1 additional EARTH course at the 300-level or above
+4  The remaining 3 courses can be from List 1 or 2.
+4  Complete no more than 2 from the following: COMMST323 - Speech Writing (0.50) ENGL210E - Genres of Technical Communicati
+4  The following cannot be used towards this academic plan: MUSIC111 - Fundamentals of Music Theory (0.50)
+4  Complete 3 additional courses from either List 1 or List 2 (see Additional Constraints).
+3  Choose any of the following: BIOL355 - Biology of Human Aging (0.50) GEOG432 - Health and the Built Environment (0.50) G
+3  Complete no more than 1 from the following: ARTS280 - Statistics for Arts Students (0.50) HLTH204 - Quantitative Approac
+3  Choose any of the following: ERS456 - Transforming Canadian Resource Management (1.00) GEOG304 - Carbon in the Biosphere
+3  Complete 1 additional course from the following subject codes: BIOL, CHEM, CS, PHYS, STAT
+3  Complete 1.0 additional unit of ECON courses at the 400-level
+3  Complete 1.5 additional units of ECON courses at the 200-level or above      
+3  Complete a minimum of five courses totaling 2.5 units or greater according to the requirements below.
+3  Complete 1.0 unit of ENGL courses at the 100-level
+3  Complete 1.5 units from the courses within this list.
+3  Choose any of the following: CI250 - Truth - Reconciliation - Story (0.50) CLAS311 - Sex and Gender in the Ancient World
+3  Choose any of the following: GEOG371 - Advanced Remote Sensing Techniques (0.50) GEOG381 - Advanced Geographic Informati
+3  Complete 1.25 units of courses from the following list
+3  Choose any of the following: BIOL110 - Biodiversity, Biomes, and Evolution (0.50) BIOL130 - Introductory Cell Biology (0
+2  Complete 1 additional course at the 300- or 400-level from: ACTSC, AMATH, CO, CS, MATBUS, MATH, PMATH, STAT
+2  Complete 5 courses from List 1 and List 2, with no more than 1 course from List 2.
+2  The following cannot be used towards this academic plan: CHEM266 - Basic Organic Chemistry 1 (0.50) CHEM266L - Organic C
+2  Choose any of the following: CHEM200 - Introduction to Laboratory Techniques (0.50) CHEM220L - Quantitative Chemical Ana
+2  Complete 1.0 additional unit of MUSIC courses at the 300-level or above      
+2  The following cannot be used towards this academic plan: MUSIC316 - Music Ensemble (0.25) MUSIC317 - Music Ensemble (0.2
+2  Complete no more than 1 from the following: AMATH331 - Applied Real Analysis (0.50) PMATH331 - Applied Real Analysis (0.
+2  Complete no more than 1 from the following: AMATH332 - Applied Complex Analysis (0.50) PMATH332 - Applied Complex Analys
+2  Complete no more than 1 from the following: CS360 - Introduction to the Theory of Computing (0.50) CS365 - Models of Com
+2  Complete no more than 1 from the following: MATH237 - Calculus 3 for Honours Mathematics (0.50) MATH247 - Calculus 3 (Ad
+2  Complete no more than 1 from the following: PMATH334 - Introduction to Rings and Fields with Applications (0.50) PMATH34
+2  Complete no more than 1 from the following: PMATH340 - Elementary Number Theory (0.50) PMATH440 - Analytic Number Theory
+2  Choose any of the following: AMATH342 - Computational Methods for Differential Equations (0.50) CS475 - Computational Li
+2  Complete no more than 1 from the following: STAT340 - Stochastic Simulation Methods (0.50) STAT341 - Computational Stati
+2  Complete a total of 5.0 units of non-math courses satisfying the Breadth and Depth Requirement listed under Graduation R
+2  Choose any of the following: CO487 - Applied Cryptography (0.50) CS499T - Honours Thesis (0.50) STAT440 - Computational
+2  Choose any course from the following: CS440-CS498, any CS course at the 600- or 700-level (see Additional Constraints)
+2  Complete 1 additional course from the courses listed above or from the following list of courses.
+2  Choose any of the following: HRM400 - Honours Seminar in Human Resources Management - Special Topics (0.50) LS271 - Conf
+2  Complete 1 additional course from the following subject codes: AMATH, BIOL, CHEM, CS, MATH, MNS, PHYS, STAT
+2  Complete 3 additional courses from the following subject codes: AMATH, BIOL, CHEM, CS, MATH, MNS, PHYS, STAT
+2  The following cannot be used towards this academic plan: ECON201 - Microeconomic Theory for Business and Policy (0.50)
+2  Complete 4.0 additional units of GSJ courses or from the following list of courses
+2  Choose any of the following: HIST421 - Special Topics in History (0.50) HIST422 - Special Topics in History (0.50) HIST4
+2  Choose any of the following: CS454 - Distributed Systems (0.50) CS480 - Introduction to Machine Learning (0.50) CS484 -
+2  Complete no more than 1 from the following: CS445 - Software Requirements Specification and Analysis (0.50) ECE451 - Sof
+2  Complete no more than 1 from the following: CS446 - Software Design and Architectures (0.50) ECE452 - Software Design an
+2  Complete no more than 1 from the following: CS447 - Software Testing, Quality Assurance, and Maintenance (0.50) ECE453 -
+2  Complete no more than 1 from the following: CS453 - Software and Systems Security (0.50) CS459 - Privacy, Cryptography,
+2  Complete 2.0 additional units of MUSIC courses at the 300-level or above     
+2  Complete 2.0 additional units of MUSIC courses
+1  Complete a total of 3 courses from the list of courses below or an additional course from the following subject codes: A
+1  Choose any of the following: AFM102 - Introduction to Managerial Accounting (0.50) ARBUS202 - Professional and Business
+1  Complete 2 additional ACTSC courses at the 400-level
+1  Complete 2 additional courses from any ACTSC course at the 300- or 400-level or from the courses listed below:
+1  Choose any of the following: AFM424 - Equity Investments (0.50) STAT431 - Generalized Linear Models and their Applicatio
+1  Choose any of the following: AMATH382 - Computational Modelling of Cellular Systems (0.50) AMATH383 - Introduction to Ma
+1  Complete 7 additional math courses from the following subject codes: ACTSC, AMATH, CO, CS, MATBUS, MATH, PMATH, STAT
+1  Complete 10 math courses at the 300- or 400-level from the following subject codes (including any taken to satisfy the a
+1  Complete the List 1 requirement below
+1  Complete 3 additional courses from the following options.
+1  Complete no more than 1 from the following: LS271 - Conflict Resolution (0.50) PACS202 - Conflict Resolution (0.50)
+1  Complete no more than 1 from the following: LS319 - Negotiation: Theories and Strategies (0.50) PACS323 - Negotiation: T
+1  Choose courses from any of the following subject codes: AFM, BUS, COMM, ECON, HRM, MSE, STV
+1  Complete 4.5 units of CHEM courses from the following list.
+1  Choose any of the following: CHEM209 - Introductory Spectroscopy and Structure (0.50) CHEM212 - Structure and Bonding (0
+1  Complete 2.5 units of CHEM courses at the 300-level or above
+1  Complete a total of 6 courses
+1  Complete 3 additional courses from List 2 or List 3
+1  Choose any of the following: AMATH449 - Neural Networks (0.50) BIOL487 - Computational Neuroscience (0.50) CHE521 - Proc
+1  Complete 1 additional course from the list of Approved Courses below
+1  Complete 1 additional course from the following subject codes: AMATH, CO, MATH, PMATH, STAT
+1  Complete 3.0 units from the following list of courses
+1  Choose any of the following: CHEM209 - Introductory Spectroscopy and Structure (0.50) CHEM224L - Analytical Instrumentat
+1  Complete 1.5 units from the following list of courses
+1  Choose any of the following: AMATH382 - Computational Modelling of Cellular Systems (0.50) BIOL201 - Human Anatomy (0.50
+1  Complete 3.5 units of elective courses, with a maximum of 1.0 lab units      
+1  Complete 2 additional courses from the following list of courses or the 400-level BIOL courses listed above
+1  Choose any of the following: BIOL331 - Advanced Cell Biology (0.50) BIOL335L - Molecular Biology Techniques (0.50) BIOL3
+1  Complete 2.0 units from the following subject codes, with at least 1.5 units at the 300-level or higher: BIOL, CHEM, EAR
+1  Complete 1.5 units from the lists of approved courses below
+1  Choose any of the following: ANTH204 - Biological Anthropology (0.50) ANTH222 - Anthropologies of the Body (0.50) CS200
+1  Complete no more than 1 from the following: ARBUS202 - Professional and Business Ethics (0.50) INDEV300 - Culture and Et
+1  Complete at least 1 courses from HIST or RCS 300 - 499
+1  Complete at least 2 courses from MUSIC , excluding: MUSIC216 - Music Ensemble (0.25) MUSIC217 - Music Ensemble (0.25) MU
+1  Complete 1.25 units from the following list of courses.
+1  Complete 0.5 unit in additional CHEM courses
+1  Complete 0.5 unit from the following list of CHEM courses
+1  Complete 1.5 units from List 1. Complete 2.0 units from List 2, or additional courses from List 1 (see Additional Constr
+1  Choose any of the following: AMATH449 - Neural Networks (0.50) ANTH204 - Biological Anthropology (0.50) CS349 - User Int
+1  Choose any of the following: CS341 - Algorithms (0.50) CS466 - Algorithm Design and Analysis (0.50) CS487 - Introduction
+1  Complete 3 non-math courses, at least one of which is at the 200-, 300-, or 400-level, all from the same subject code, f
+1  Complete the List 1 and List 2 requirements below
+1  Complete 4 additional courses, taken from List 2 or List 3; choices must be in at least two different subject codes (AMA
+1  Complete 2 courses from the following choices:
+1  Complete no more than 1 from the following: CO353 - Computational Discrete Optimization (0.50) CO367 - Nonlinear Optimiz
+1  Choose any of the following: ACTSC447 - Numerical Computation for Financial Modelling (0.50) AMATH343 - Discrete Models
+1  If CO255 is taken, the following courses can be used towards this requirement:
+1  Complete 2 additional courses at the 300- or 400-level from: ACTSC, AMATH, CS, MATBUS, MATH, PMATH, STAT; excluding cour
+1  Complete 3 additional courses from: ACTSC, AMATH, CO, CS, MATBUS, MATH, PMATH, STAT
+1  Choose any of the following: CS462 - Formal Languages and Parsing (0.50) CS466 - Algorithm Design and Analysis (0.50) CS
+1  Complete 1 additional CS course chosen from CS340-CS398, CS440-CS489
+1  Complete 2 additional CS courses chosen from CS440-CS489
+1  Complete 3 additional courses from: ACTSC, AMATH, CO, PMATH, STAT (see Additional Constraints)
+1  The following cannot be used towards this academic plan: ACTSC221 - Introductory Financial Mathematics (Non-Specialist L
+1  Complete 1 additional course from the options in List 1
+1  Complete no more than 1 from the following: CO250 - Introduction to Optimization (0.50) CO255 - Introduction to Optimiza
+1  Complete no more than 1 from the following: CS245 - Logic and Computation (0.50) CS245E - Logic and Computation (Enriche
+1  Complete no more than 1 from the following: CS246 - Object-Oriented Software Development (0.50) CS246E - Object-Oriented
+1  Complete the List 1 requirement below.
+1  Complete 1 CS course at the 200-, 300-, or 400-level
+1  Complete 1 additional CS course at the 100-, 200-, 300-, or 400-level        
+1  Complete 3 additional CS courses at the 200-, 300-, or 400-level
+1  Complete 1 additional CS course at the 300- or 400-level
+1  The following cannot be used towards this academic plan: CS399 - Readings in Computer Science (0.50) CS499R - Readings i
+1  Complete 2 from this list or any additional AFM course at the 300-level or above.
+1  Choose any of the following: AFM291 - Intermediate Financial Accounting 1 (0.50) ARBUS202 - Professional and Business Et
+1  Complete 1.0 unit of additional AFM courses at the 300-level or above, and CFM401 if not taken to fulfil a requirement a
+1  Complete 1.5 units of additional AFM courses at the 300-level or above.      
+1  Complete 1 additional course from: CS440-CS498.
+1  Complete 2 additional courses from: CO487, CS251 or CS251E, CS340-CS398, CS440-CS498.
+1  Choose any of the following: APPLS205R - Second Language Acquisition (0.50)
+1  Complete 3 additional APPLS courses
+1  Complete 2.5 units of DAC courses
+1  Complete no more than 3 from the following: COMMST220 - Performance Studies (0.50) COMMST440 - Performative Inquiry and
+1  Complete 1.0 unit of courses from any of the following subject codes: ARABIC, ASL, CHINA, CI, CROAT, DUTCH, EASIA, FR, G
+1  Complete 1.5 additional units from the courses listed above or from List 1   
+1  Choose any of the following: ANTH202 - Social and Cultural Anthropology (0.50) ANTH221 - Language and Society (0.50) COM
+1  Complete 1 additional CS courses chosen from CS340-CS398, CS440-CS489.       
+1  Complete of the following: COMMST193 - Communication in the Sciences (0.50) ENGL193 - Communication in the Sciences (0.5
+1  Complete 2 language courses from the following subject codes: CHINA, JAPAN, KOREA
+1  Complete 1.0 unit of additional EASIA courses
+1  Complete 1.5 units from the following lists of courses or subjects
+1  Choose any of the following: ANTH382 - Anthropology of East Asia (0.50) EASIA120R - Monsters and Magic in Japanese Popul
+1  Choose any additional course from the following subject codes: CHINA, EASIA, JAPAN, KOREA
+1  Choose any of the following: CO250 - Introduction to Optimization (0.50) CO255 - Introduction to Optimization (Advanced
+1  Choose any of the following: CHE514 - Fundamentals of Petroleum Production (0.50) CHE571 - Industrial Ecology (0.50) CHE
+1  Complete 1.5 additional units of ENGL courses at the 200-level or above      
+1  Complete 0.5 additional unit of ENGL courses at the 200-level or above       
+1  Complete 0.5 additional unit of ENGL courses at the 300-level or above       
+1  Complete 2.0 additional units of ENGL courses
+1  Complete 1.0 additional unit of ENGL courses at the 200-level or above       
+1  Choose any of the following: GEOG453 - Urban Stormwater Management (0.50) PLAN358 - Planning Agricultural Systems (0.50)
+1  Complete no more than 2 from the following: ENVS401 - Canadian Law, Indigenous Peoples, and Natural Resource Development
+1  Complete 1.5 units from the list of courses below.
+1  Choose any of the following: AFM326 - Student Venture Fund - Analyst (0.25) AFM377 - Private Equity and Venture Capital
+1  Complete 1 additional course from the following subject codes: AMATH, CHEM, CS, MATH, PHYS
+1  Complete 1 additional course from the following subject codes: AMATH, CS, MATH, PHYS, STAT
+1  Choose any of the following: ACTSC423 - Topics in Financial Econometrics (0.50) AFM276 - Financial Statement Analysis (0
+1  Complete 2.5 additional units of FR courses
+1  The following cannot be used towards this academic plan: FR101 - Beginner French (0.50) FR151 - Basic French 1 (0.50) FR
+1  Complete 3.0 additional units of GSJ courses or from the following list of courses
+1  Complete 8 courses from List 1 and List 2, with no more than 1 course from List 2.
+1  Complete 1.5 units of the following list of HIST topics courses (see Additional Constraints).
+1  Complete 1.5 units of the following list of HIST topics courses.
+1  Complete 2.0 units from any additional HRTS courses or from the list of courses below.
+1  Choose any of the following: CDNST201 - The Indigenous Experience in Canada (0.50) CI250 - Truth - Reconciliation - Stor
+1  Complete 5 courses from any additional INDG course or from the list of courses below.
+1  Choose any of the following: ANTH233 - Inuit Cultures (0.50) ENGL211 - First Nations, Métis, and Inuit Literatures (0.50
+1  Choose any of the following: CIVE440 - Transit Planning and Operations (0.50) CIVE484 - Physical Infrastructure Planning
+1  Complete 4 courses from the following lists.
+1  Choose any of the following: CIVE343 - Traffic Simulation Modelling and Applications (0.50) ECON371 - Business Finance 1
+1  Complete no more than 1 from the following: AE392 - Economics and Life Cycle Cost Analysis (0.50) BME364 - Engineering B
+1  Complete no more than 1 from the following: BET450 - Leadership (0.50) MSE411 - Leadership and Influence (0.50)
+1  Complete no more than 1 from the following: CS480 - Introduction to Machine Learning (0.50) ECE457B - Fundamentals of Co
+1  Complete no more than 1 from the following: ECON201 - Microeconomic Theory for Business and Policy (0.50) MSE263 - Manag
+1  Complete no more than 1 from the following: MSE211 - Organizational Behaviour (0.50) PSYCH238 - Organizational Psycholog
+1  Complete the following courses with a minimum cumulative Economics average of 70.0%
+1  The following cannot be used towards this academic plan: ECON201 - Microeconomic Theory for Business and Policy (0.50) E
+1  Complete the following courses with a minimum cumulative Mathematics average of 60.0%
+1  Complete 0.5 additional unit from the following math subject codes: ACTSC, AMATH, CO, CS, MATH, PMATH, STAT
+1  Choose any of the following: CHE521 - Process Optimization (0.50) CIVE422 - Finite Element Analysis (0.50) MSE240 - Algo
+1  Complete 1.5 units of AMATH or PHYS lecture courses at the 300-level or above
+1  Complete 2 additional courses from List 1, List 2, or List 3. See Additional Constraints.
+1  Choose any of the following: BME553 - Introductory Mechanics of Biomedical and Biological Materials (0.50) BME581 - Ultr
+1  Complete 2.0 additional units of MUSIC courses at the 300-level or above     
+1  Complete 2.5 additional units of MUSIC courses
+1  Choose any of the following: CHE562 - Advanced Bioprocess Engineering (0.50) CHE565 - Synthetic Biology Project Design (
+1  Choose any of the following: ECE331 - Electronic Devices (0.50) ECE432 - Radio Frequency Integrated Devices and Circuits
+1  Choose any of the following: ME596 - Special Topics in Mechanical Engineering (0.50) MTE545 - Introduction to MEMS Fabri
+1  Choose any of the following: CHE543 - Polymer Production: Polymer Reaction Engineering (0.50) ME435 - Industrial Metallu
+1  Complete 3 courses from the following lists.
+1  Choose any of the following: CHEM220 - Intro Analytical Chemistry (0.50) CHEM221 - Multi-Component Analysis (0.50) CHEM2
+1  Complete no more than 1 from the following: CHE230 - Physical Chemistry 1 (0.50) CHEM254 - Introductory Chemical Thermod
+1  Complete no more than 1 from the following: CHEM356 - Introductory Quantum Mechanics (0.50) NE332 - Quantum Mechanics (0
+1  Complete no more than 1 from the following: CHEM370 - Introduction to Polymer Science (0.50) NE333 - Macromolecular Scie
+1  Complete 0.5 unit additional PHYS course, any level
+1  Complete 3 additional PHYS lecture courses (1.5 units) at the 400-level (exclusive of PHYS437A and PHYS437B)
+1  Choose any of the following: AMATH271 - Introduction to Theoretical Mechanics (0.50) AMATH361 - Continuum Mechanics (0.5
+1  Complete 1.0 unit additional PHYS courses, any level
+1  Complete 1 additional PHYS lecture course (0.5 unit) at the 400-level (exclusive of PHYS437A and PHYS437B)
+1  Choose any of the following: BIOL201 - Human Anatomy (0.50) BIOL211 - Introductory Vertebrate Zoology (0.50) BIOL235 - F
+1  Choose any of the following: CO432 - Information Theory and Applications (0.50)
+1  Choose any of the following: AMATH242 - Introduction to Computational Mathematics (0.50) AMATH477 - Stochastic Processes
+1  Complete no more than 1 from the following: AMATH373 - Quantum Theory 1 (0.50) PHYS334 - Quantum Physics 2 (0.50)
+1  Complete no more than 1 from the following: AMATH474 - Quantum Theory 3: Quantum Information and Foundations (0.50) PHYS
+1  Complete no more than 1 from the following: CHEM356 - Introductory Quantum Mechanics (0.50) ECE305 - Introduction to Qua
+1  Complete no more than 1 from the following: PMATH336 - Introduction to Group Theory with Applications (0.50) PMATH347 -
+1  Complete no more than 1 from the following: ECE405A - Quantum Information Processing Devices (0.50) PHYS468 - Introducti
+1  Complete one additional course (0.5 unit) from the above lists
+1  Complete 3.0 units from the courses listed below or from the following subject codes: CROAT, REES, RUSS
+1  Choose any of the following: HIST263 - The Age of Revolution: Europe in the 19th Century (0.50) HIST265 - Eastern Europe
+1  Complete 1.0 unit from the following subject codes: ACTSC, AMATH, CO, CS, MATH, PMATH, STAT
+1  Complete 6.0 units from the following subject codes: BIOL, CHEM, EARTH, MNS, PHYS, SCI (see Additional Constraints)
+1  Complete associated laboratory courses for the BIOL courses above.
+1  Complete one additional BIOL 0.5 unit, any level
+1  Complete a 0.5 unit math course from the following subject codes: ACTSC, AMATH, CO, CS, MATH, PMATH, STAT
+1  Choose any of the following: GEOG432 - Health and the Built Environment (0.50) HLTH420 - Health and the Built Environmen
+1  Complete no more than 1 from the following: REC422 - Urban Recreation (0.50) SDS312R - Homelessness and Public Policy (0
+1  Complete 3 courses from the following lists
+1  Choose any of the following: BME499 - Elective Biomedical Research Project (0.50) BME544 - Biomedical Measurement and Si
+1  Complete no more than 1 from the following: ECE417 - Image Processing (0.50) SYDE575 - Image Processing (0.50)
+1  Choose any of the following: CIVE484 - Physical Infrastructure Planning (0.50) ERS215 - Environmental and Sustainability
+1  Complete a minimum of five courses totaling 2.5 units or greater according to the requirements below
+1  Choose any of the following: BIOL462 - Applied Wetland Science (0.50) EARTH444 - Applied Wetland Science (0.50) EARTH458
