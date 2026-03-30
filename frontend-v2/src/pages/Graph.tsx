@@ -57,6 +57,8 @@ interface SkillNodeData {
   courseReason: string
   tier: Tier
   term?: string
+  sourceCount?: number
+  targetCount?: number
   [key: string]: unknown
 }
 
@@ -167,7 +169,14 @@ function SkillNode({ id, data }: NodeProps<Node<SkillNodeData>>) {
       className={`rounded-xl border-2 ${borderClass} transition-all duration-200 ${locked ? 'bg-stone-100' : 'bg-white hover:-translate-y-0.5'}`}
       style={{ width: NODE_W, padding: '14px 16px' }}
     >
-      <Handle type="target" position={data.term ? Position.Left : Position.Top} style={{ opacity: 0 }} />
+      {data.term ? (
+        Array.from({ length: Math.max(1, data.targetCount ?? 1) }, (_, i) => (
+          <Handle key={i} id={`tgt-${i}`} type="target" position={Position.Left}
+            style={{ opacity: 0, top: `${(i + 1) / (Math.max(1, data.targetCount ?? 1) + 1) * 100}%` }} />
+        ))
+      ) : (
+        <Handle type="target" position={Position.Top} style={{ opacity: 0 }} />
+      )}
 
       <div className={locked ? 'opacity-40' : ''}>
       {!data.term && (
@@ -277,7 +286,14 @@ function SkillNode({ id, data }: NodeProps<Node<SkillNodeData>>) {
       )}
       </div>
 
-      <Handle type="source" position={data.term ? Position.Right : Position.Bottom} style={{ opacity: 0 }} />
+      {data.term ? (
+        Array.from({ length: Math.max(1, data.sourceCount ?? 1) }, (_, i) => (
+          <Handle key={i} id={`src-${i}`} type="source" position={Position.Right}
+            style={{ opacity: 0, top: `${(i + 1) / (Math.max(1, data.sourceCount ?? 1) + 1) * 100}%` }} />
+        ))
+      ) : (
+        <Handle type="source" position={Position.Bottom} style={{ opacity: 0 }} />
+      )}
     </div>
   )
 }
@@ -301,7 +317,7 @@ const nodeTypes = { skill: SkillNode, termGroup: TermGroupNode }
 
 /* ─── Goal Panel ─── */
 
-function GoalPanel({ goal }: { goal: string }) {
+function GoalPanel({ goal, program }: { goal: string; program?: { title: string; faculty: string } }) {
   const [collapsed, setCollapsed] = useState(false)
 
   return (
@@ -312,7 +328,7 @@ function GoalPanel({ goal }: { goal: string }) {
       >
         <ChevronDown size={14} className={`text-stone-400 transition-transform duration-150 ${collapsed ? '-rotate-90' : ''}`} />
         <span className="text-[11px] font-semibold uppercase tracking-wider text-stone-500">
-          Goal
+          {program ? 'Program' : 'Goal'}
         </span>
       </button>
 
@@ -322,9 +338,14 @@ function GoalPanel({ goal }: { goal: string }) {
       >
         <div className="overflow-hidden">
           <div className="pt-2">
-            <p className="text-sm sm:text-base font-medium text-stone-900 m-0 leading-snug">
-              {goal}
-            </p>
+            {program ? (
+              <>
+                <p className="text-sm sm:text-base font-medium text-stone-900 m-0 leading-snug">{program.title}</p>
+                <p className="text-xs text-stone-400 mt-0.5">{program.faculty}</p>
+              </>
+            ) : (
+              <p className="text-sm sm:text-base font-medium text-stone-900 m-0 leading-snug">{goal}</p>
+            )}
           </div>
         </div>
       </div>
@@ -841,6 +862,37 @@ function toFlowEdges(apiEdges: ApiEdge[]): Edge[] {
   }))
 }
 
+function assignAcademicEdgeHandles(
+  courseNodes: Node<SkillNodeData>[],
+  flowEdges: Edge[],
+): { nodes: Node<SkillNodeData>[]; edges: Edge[] } {
+  const srcCounts: Record<string, number> = {}
+  const tgtCounts: Record<string, number> = {}
+  for (const e of flowEdges) {
+    srcCounts[e.source] = (srcCounts[e.source] ?? 0) + 1
+    tgtCounts[e.target] = (tgtCounts[e.target] ?? 0) + 1
+  }
+
+  const srcIdx: Record<string, number> = {}
+  const tgtIdx: Record<string, number> = {}
+
+  const edges = flowEdges.map((e) => {
+    const si = srcIdx[e.source] ?? 0
+    const ti = tgtIdx[e.target] ?? 0
+    srcIdx[e.source] = si + 1
+    tgtIdx[e.target] = ti + 1
+
+    return { ...e, sourceHandle: `src-${si}`, targetHandle: `tgt-${ti}` }
+  })
+
+  const nodes = courseNodes.map((n) => ({
+    ...n,
+    data: { ...n.data, sourceCount: srcCounts[n.id] ?? 0, targetCount: tgtCounts[n.id] ?? 0 },
+  }))
+
+  return { nodes, edges }
+}
+
 /* ─── Graph Page ─── */
 
 export default function Graph() {
@@ -858,6 +910,7 @@ export default function Graph() {
   const requirementGroups = navState.requirementGroups as { rule: string | number; courses: { code: string; title: string; units: number | null }[] }[] | undefined
   const specializations = navState.specializations as { pid: string }[] | undefined
   const minors = navState.minors as { pid: string }[] | undefined
+  const major = navState.major as { title: string; faculty: string } | undefined
 
   const [nodes, setNodes] = useState<Node<SkillNodeData>[]>([])
   const [edges, setEdges] = useState<Edge[]>([])
@@ -896,8 +949,9 @@ export default function Graph() {
       .then((data: ApiGraph) => {
         const flowEdges = toFlowEdges(data.edges)
         const courseNodes = toFlowNodes(data.nodes) // skip Dagre — backend positions are final
-        setNodes(addTermGroups(courseNodes))
-        setEdges(flowEdges)
+        const { nodes: handledNodes, edges: handledEdges } = assignAcademicEdgeHandles(courseNodes, flowEdges)
+        setNodes(addTermGroups(handledNodes))
+        setEdges(handledEdges)
         setGoal(data.goal)
       })
       .then(() => setLoading(false))
@@ -987,7 +1041,7 @@ export default function Graph() {
         {/* Panels — absolute overlays on all sizes, pointer-events-none container */}
         <div className="absolute inset-0 z-10 overflow-visible pointer-events-none">
           <div className="absolute top-3 left-3 right-3 flex flex-col gap-2 pointer-events-auto sm:top-5 sm:left-5 sm:right-auto sm:gap-3">
-            <GoalPanel goal={navGoal ?? goal} />
+            <GoalPanel goal={navGoal ?? goal} program={mode === 'academics' ? major : undefined} />
             {mode !== 'academics' && (
               <>
                 <DesiredSkillsPanel skills={desiredSkills} onSkillsChange={handleDesiredSkillsChange} loading={loading} />

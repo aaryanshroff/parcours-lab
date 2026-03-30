@@ -6,8 +6,8 @@ from openai import OpenAI
 from models import GraphResponse, SkillNode, Edge, Course, Position
 from uwaterloo import get_course_prereqs, get_program
 
-COL_GAP = 320   # horizontal gap between term columns
-ROW_GAP = 200   # vertical gap between courses within a column
+COL_GAP = 440   # horizontal gap between term columns
+ROW_GAP = 220   # vertical gap between courses within a column
 TERM_ORDER = ["1A", "1B", "2A", "2B", "3A", "3B", "4A", "4B"]
 TERM_TO_TIER = {
     "1A": "foundation", "1B": "foundation",
@@ -88,6 +88,8 @@ def generate_academic_graph(
     for code in elective_codes:
         prereq_map[code] = _fetch_in_program_prereqs(code, all_known)
 
+    prereq_map = _transitive_reduction(prereq_map)
+
     # ── 5. Assign terms via LLM ──
     all_codes = required_codes | elective_codes
     term_assignments = _assign_terms(
@@ -100,9 +102,45 @@ def generate_academic_graph(
         term = term_assignments.get(code, "4B")
         by_term[term].append(code)
 
-    # Sort within each term for deterministic output
-    for t in by_term:
-        by_term[t].sort()
+    # ── Sugiyama median sort: align connected courses vertically ──
+    # Build successor map (reverse of prereq_map)
+    successor_map: dict[str, list[str]] = defaultdict(list)
+    for code, prereqs in prereq_map.items():
+        for prereq in prereqs:
+            successor_map[prereq].append(code)
+
+    active_terms = [t for t in TERM_ORDER if by_term.get(t)]
+    placed_y: dict[str, float] = {}
+
+    def _score_ltr(code: str) -> tuple[float, str]:
+        prereqs = [p for p in prereq_map.get(code, []) if p in placed_y]
+        y = sum(placed_y[p] for p in prereqs) / len(prereqs) if prereqs else float("inf")
+        return (y, code)
+
+    def _score_rtl(code: str) -> tuple[float, str]:
+        succs = [s for s in successor_map.get(code, []) if s in placed_y]
+        y = sum(placed_y[s] for s in succs) / len(succs) if succs else float("inf")
+        return (y, code)
+
+    def _place(term: str, key_fn) -> None:
+        sorted_group = sorted(by_term[term], key=key_fn)
+        by_term[term] = sorted_group
+        for row, code in enumerate(sorted_group):
+            placed_y[code] = row * ROW_GAP
+
+    # Pass 1 – left to right
+    for term in active_terms:
+        _place(term, _score_ltr)
+
+    # Pass 2 – right to left
+    placed_y.clear()
+    for term in reversed(active_terms):
+        _place(term, _score_rtl)
+
+    # Pass 3 – left to right (final)
+    placed_y.clear()
+    for term in active_terms:
+        _place(term, _score_ltr)
 
     nodes: list[SkillNode] = []
     edges: list[Edge] = []
@@ -148,6 +186,39 @@ def generate_academic_graph(
 
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
+
+
+def _transitive_reduction(prereq_map: dict[str, list[str]]) -> dict[str, list[str]]:
+    """Remove edge p→c if a longer path p→…→c already exists."""
+    succ: dict[str, set[str]] = defaultdict(set)
+    for code, prereqs in prereq_map.items():
+        for p in prereqs:
+            succ[p].add(code)
+
+    reachable: dict[str, set[str]] = {}
+
+    def _reach(node: str) -> set[str]:
+        if node in reachable:
+            return reachable[node]
+        reachable[node] = set()
+        result: set[str] = set()
+        for s in succ.get(node, set()):
+            result.add(s)
+            result |= _reach(s)
+        reachable[node] = result
+        return result
+
+    all_codes = set(prereq_map.keys()) | {p for ps in prereq_map.values() for p in ps}
+    for code in all_codes:
+        _reach(code)
+
+    return {
+        code: [
+            p for p in prereqs
+            if not any(q != p and q in reachable.get(p, set()) for q in prereqs)
+        ]
+        for code, prereqs in prereq_map.items()
+    }
 
 
 def _fetch_in_program_prereqs(code: str, known_codes: set[str]) -> list[str]:

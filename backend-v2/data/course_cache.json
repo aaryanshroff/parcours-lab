@@ -279,5 +279,304 @@
     "prereqs": [],
     "coreqs": [],
     "antireqs": []
+  },
+  "STAT230": {
+    "code": "STAT230",
+    "raw": "Prereq: ((One of MATH 116, 117, 137, 147) with a minimum grade of 80%) or (MATH 128 with a minimum grade of 60%) or (one of MATH 118, 119, 138, 148); Honours Math or Math/Phys students only. Antireq: STAT 220, 240",
+    "prereqs": [
+      "MATH 116",
+      "MATH 117",
+      "MATH 137",
+      "MATH 147",
+      "MATH 128",
+      "MATH 118",
+      "MATH 119",
+      "MATH 138",
+      "MATH 148"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "STAT 220",
+      "STAT 240"
+    ]
+  },
+  "CS115": {
+    "code": "CS115",
+    "raw": "Antireq: BME 121, CS 135, 137, 138, 145, CHE 121, CIVE 121, ECE 150, GENE 121/MTE 121, ME 101, NE 111, MSE 121, PHYS 139, SYDE 121",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "BME 121",
+      "CS 135",
+      "CS 137",
+      "CS 138",
+      "CS 145",
+      "CHE 121",
+      "CIVE 121",
+      "ECE 150",
+      "GENE 121",
+      "MTE 121",
+      "ME 101",
+      "NE 111",
+      "MSE 121",
+      "PHYS 139",
+      "SYDE 121"
+    ]
+  },
+  "CS251": {
+    "code": "CS251",
+    "raw": "Prereq: One of CS 136, 138, 146; Honours Computer Science, Honours Data Science (BCS, BMath), BCFM, BSE students only. Antireq: BME 292/393, CS 251E, ECE 222, ME 262, MTE 262, SYDE 192",
+    "prereqs": [
+      "CS 136",
+      "CS 138",
+      "CS 146"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "BME 292",
+      "BME 393",
+      "CS 251E",
+      "ECE 222",
+      "ME 262",
+      "MTE 262",
+      "SYDE 192"
+    ]
+  },
+  "MATH128": {
+    "code": "MATH128",
+    "raw": "Prereq: One of MATH 116, 117, 127, 137, 147. Antireq: MATH 118, 119, 138, 148",
+    "prereqs": [
+      "MATH 116",
+      "MATH 117",
+      "MATH 127",
+      "MATH 137",
+      "MATH 147"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "MATH 118",
+      "MATH 119",
+      "MATH 138",
+      "MATH 148"
+    ]
+  },
+  "CS246": {
+    "code": "CS246",
+    "raw": "Prereq: (CS 146 and CS 136L) or (a grade of 60% or higher in CS 138) or (CS 136L and a grade of 60% or higher in CS 136); Honours Mathematics students only. Antireq: CS 246E, CS  247, MSE 342, SYDE 322",
+    "prereqs": [
+      "CS 146",
+      "CS 136L",
+      "CS 138",
+      "CS 136L",
+      "CS 136"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CS 246E",
+      "CS 247",
+      "MSE 342",
+      "SYDE 322"
+    ]
+  },
+  "CO487": {
+    "code": "CO487",
+    "raw": "Prereq: One of CS 116, 136, 138, 146; MATH 135 or 145; One of STAT 206, 220, 230, 240; Level at least 3A",
+    "prereqs": [
+      "CS 116",
+      "CS 136",
+      "CS 138",
+      "CS 146",
+      "MATH 135",
+      "MATH 145",
+      "STAT 206",
+      "STAT 220",
+      "STAT 230",
+      "STAT 240"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MATH239": {
+    "code": "MATH239",
+    "raw": "Prereq: ((MATH 106 with a grade of at least 70% or MATH 136 or 146) and (MATH 135 with a grade of at least 60% or MATH 145)) or level at least 2A Software Engineering; Honours Mathematics students only. Antireq: CO 220, MATH 229, 249",
+    "prereqs": [
+      "MATH 106",
+      "MATH 136",
+      "MATH 146",
+      "MATH 135",
+      "MATH 145"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CO 220",
+      "MATH 229",
+      "MATH 249"
+    ]
+  },
+  "MATH135": {
+    "code": "MATH135",
+    "raw": "Prereq: 4U Calculus and Vectors or 4U Mathematics of Data Management; Honours Mathematical Physics (BSc) or Honours Mathematics or Mathematics/BASE or Software Engineering students only. Antireq: MATH 145",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "MATH 145"
+    ]
+  },
+  "STAT231": {
+    "code": "STAT231",
+    "raw": "Prereq: (One of MATH 118, 119, 128, 138, 148) and (STAT 220 with a grade of at least 70% or STAT 230 or 240); Honours Math or Math/Phys students. Antireq: STAT 221, 241",
+    "prereqs": [
+      "MATH 118",
+      "MATH 119",
+      "MATH 128",
+      "MATH 138",
+      "MATH 148",
+      "STAT 220",
+      "STAT 230",
+      "STAT 240"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "STAT 221",
+      "STAT 241"
+    ]
+  },
+  "CS240": {
+    "code": "CS240",
+    "raw": "Prereq: (CS 245/245E or SE 212), (one of CS 241/241E, 246/246E, 247), (one of STAT 206, 230, 240); Honours Computer Science, Honours Data Science (BCS, BMath), BCFM, BSE students only. Antireq: BME 122, CS 234, CS 240E, ECE 250, MTE 140, SYDE 223",
+    "prereqs": [
+      "CS 245",
+      "CS 245E",
+      "SE 212",
+      "CS 241",
+      "CS 241E",
+      "CS 246",
+      "CS 246E",
+      "CS 247",
+      "STAT 206",
+      "STAT 230",
+      "STAT 240"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "BME 122",
+      "CS 234",
+      "CS 240E",
+      "ECE 250",
+      "MTE 140",
+      "SYDE 223"
+    ]
+  },
+  "PSYCH211": {
+    "code": "PSYCH211",
+    "raw": "Prereq: PSYCH 101/101R",
+    "prereqs": [
+      "PSYCH 101",
+      "PSYCH 101R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MATH127": {
+    "code": "MATH127",
+    "raw": "Prereq: MATH 104 or 4U Calculus and Vectors. Antireq: MATH 109, 116, 117, 124, 137, 147",
+    "prereqs": [
+      "MATH 104"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "MATH 109",
+      "MATH 116",
+      "MATH 117",
+      "MATH 124",
+      "MATH 137",
+      "MATH 147"
+    ]
+  },
+  "CS245": {
+    "code": "CS245",
+    "raw": "Prereq: (One of CS 136, 138, 146), (MATH 135 or MATH 145); Honours Mathematics students only. Antireq: CS 245E, PMATH 330, ECE 208, SE 212",
+    "prereqs": [
+      "CS 136",
+      "CS 138",
+      "CS 146",
+      "MATH 135",
+      "MATH 145"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CS 245E",
+      "PMATH 330",
+      "ECE 208",
+      "SE 212"
+    ]
+  },
+  "PSYCH101": {
+    "code": "PSYCH101",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS136": {
+    "code": "CS136",
+    "raw": "Prereq: One of CS 145, at least 90% in CS 115, at least 70% in CS 116, at least 60% in CS 135. Coreq: CS 136L. Antireq: CS 137, 138, 146, PHYS 239",
+    "prereqs": [
+      "CS 145",
+      "CS 115",
+      "CS 116",
+      "CS 135"
+    ],
+    "coreqs": [
+      "CS 136L"
+    ],
+    "antireqs": [
+      "CS 137",
+      "CS 138",
+      "CS 146",
+      "PHYS 239"
+    ]
+  },
+  "MATH136": {
+    "code": "MATH136",
+    "raw": "Prereq: MATH 135 with a grade of at least 60% or MATH 145. Honours Mathematics or Mathematics/BASE students or Mathematical Physics (BSC) students. Antireq: MATH 106, 114, 115, 146, NE 112",
+    "prereqs": [
+      "MATH 135",
+      "MATH 145"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "MATH 106",
+      "MATH 114",
+      "MATH 115",
+      "MATH 146",
+      "NE 112"
+    ]
+  },
+  "PSYCH207": {
+    "code": "PSYCH207",
+    "raw": "Prereq: Level at least 1B",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS241": {
+    "code": "CS241",
+    "raw": "Prereq: CS 138 or (CS 246/246E and CS 136L) or (CS 136L and a grade of 85% or higher in one of CS 136 or 146); Honours Computer Science, Honours Data Science (BCS, BMath), BCFM, BSE students only. Antireq: CS 230, CS 241E, ECE 351",
+    "prereqs": [
+      "CS 138",
+      "CS 246",
+      "CS 246E",
+      "CS 136L",
+      "CS 136L",
+      "CS 136",
+      "CS 146"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CS 230",
+      "CS 241E",
+      "ECE 351"
+    ]
   }
 }
