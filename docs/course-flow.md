@@ -3,9 +3,9 @@
 How we model, display, and resolve university program requirements into a term-by-term course plan.
 
 Current artifacts:
-- `programs-NESTED.json` is the current structured artifact with nested `groups`, named `lists`, term data for engineering, and preserved raw-text rules
-- `programs-FLAT.json` is the older flat artifact with better rule classification than the original scraper, but no real nesting or named-list linkage
-- `programs copy.json` was the first version with no term data and many `"unknown"` rules
+- `programs-NESTED2.json` is the current structured artifact with nested `groups`, named `lists`, term data for engineering, and preserved raw-text rules. Subject-code / range rules with no resolvable course list are stored as raw text.
+- `programs-FLAT.json` is the older flat artifact with no nesting or named-list linkage
+- `programs-NESTED.json` was an intermediate nested version that had a bug where subject-code filter rules (e.g. "Complete 3 from ACTSC, AMATH…") were classified as `rule: N` with empty courses instead of raw text
 
 The current scraper preserves Kuali's nested HTML structure well enough for Chemistry-style grouped choices and CS-style named lists.
 
@@ -30,10 +30,10 @@ Run with:
 
 ```bash
 poetry run python scripts/scrape-term-data.py
-poetry run python scripts/scrape-term-data.py --output data/programs-NESTED.json
+poetry run python scripts/scrape-term-data.py --output data/programs-NESTED2.json
 ```
 
-Default output: `backend-v2/data/programs-NESTED.json`
+Default output: `backend-v2/data/programs-NESTED2.json`
 
 ---
 

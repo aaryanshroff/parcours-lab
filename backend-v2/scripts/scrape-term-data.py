@@ -46,7 +46,7 @@ KUALI_LIST_URL = f"{KUALI_BASE}/programs/{CATALOG_ID}"
 KUALI_DETAIL_URL = f"{KUALI_BASE}/program/{CATALOG_ID}"
 
 OUTPUT_DIR = Path(__file__).resolve().parent.parent / "data"
-DEFAULT_OUTPUT_PATH = OUTPUT_DIR / "programs-NESTED.json"
+DEFAULT_OUTPUT_PATH = OUTPUT_DIR / "programs-NESTED2.json"
 
 _RV_RE = re.compile(r"^ruleView-")
 _EXCLUSION_RE = re.compile(r"cannot be used towards this academic plan", re.IGNORECASE)
@@ -328,6 +328,13 @@ def parse_group_li(li: Tag, known_list_names: list[str] | None = None) -> dict:
     child_groups = [parse_group_li(child, known_list_names) for child in child_lis]
     child_groups = merge_sibling_pairs(child_groups)
     child_groups = [g for g in child_groups if _is_meaningful_group(g)]
+
+    # If classified as a count or pool but has nothing to apply it to, the rule
+    # text describes a subject-code / level-range filter — keep as raw text.
+    if not courses and not child_groups and not list_refs:
+        rule = classification.get("rule")
+        if isinstance(rule, int) or rule == "_pool":
+            classification = {"rule": text}
 
     return _make_group(classification, courses, child_groups, list_refs)
 
