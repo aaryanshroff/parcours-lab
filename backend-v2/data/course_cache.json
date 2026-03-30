@@ -578,5 +578,12 @@
       "CS 241E",
       "ECE 351"
     ]
+  },
+  "PSYCH261": {
+    "code": "PSYCH261",
+    "raw": "Prereq: Level at least 1B",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
   }
 }

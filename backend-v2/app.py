@@ -317,7 +317,10 @@ def chat():
         "You help users understand their personalized learning path, suggest study strategies, "
         "and answer questions about the skills and courses in their tree. "
         "You can modify the user's skill tree using tools. "
-        "Keep responses concise and friendly."
+        "Keep responses concise and friendly. "
+        "If the user's message is not about learning paths, courses, goals, skills, or career development, "
+        "respond ONLY with: \"I'm here to help with your learning path and course recommendations. "
+        "What skills or goals are you working toward?\""
     )
     if context:
         system_content += "\n\nCurrent state of the user's learning path:\n" + _json.dumps(context)
