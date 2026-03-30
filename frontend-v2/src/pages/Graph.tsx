@@ -56,6 +56,7 @@ interface SkillNodeData {
   courseUrl: string
   courseReason: string
   tier: Tier
+  term?: string
   [key: string]: unknown
 }
 
@@ -166,12 +167,14 @@ function SkillNode({ id, data }: NodeProps<Node<SkillNodeData>>) {
       className={`rounded-xl border-2 ${borderClass} transition-all duration-200 ${locked ? 'bg-stone-100' : 'bg-white hover:-translate-y-0.5'}`}
       style={{ width: NODE_W, padding: '14px 16px' }}
     >
-      <Handle type="target" position={Position.Top} style={{ opacity: 0 }} />
+      <Handle type="target" position={data.term ? Position.Left : Position.Top} style={{ opacity: 0 }} />
 
       <div className={locked ? 'opacity-40' : ''}>
-      <span className={`block text-[10px] font-semibold uppercase tracking-wide ${config.text} mb-1`}>
-        {config.label}
-      </span>
+      {!data.term && (
+        <span className={`block text-[10px] font-semibold uppercase tracking-wide ${config.text} mb-1`}>
+          {config.label}
+        </span>
+      )}
 
       {locked ? (
         <span className="block text-[15px] font-semibold text-stone-900 leading-tight mb-2">
@@ -274,12 +277,27 @@ function SkillNode({ id, data }: NodeProps<Node<SkillNodeData>>) {
       )}
       </div>
 
-      <Handle type="source" position={Position.Bottom} style={{ opacity: 0 }} />
+      <Handle type="source" position={data.term ? Position.Right : Position.Bottom} style={{ opacity: 0 }} />
     </div>
   )
 }
 
-const nodeTypes = { skill: SkillNode }
+function TermGroupNode({ data }: NodeProps<Node<SkillNodeData>>) {
+  return (
+    <div
+      className="rounded-2xl border-2 border-dashed border-stone-200 bg-stone-50/30"
+      style={{ width: '100%', height: '100%', position: 'relative' }}
+    >
+      <div className="absolute inset-x-0 top-2 flex justify-center">
+        <span className="px-3 py-0.5 rounded-full bg-white border border-stone-200 text-[11px] font-bold uppercase tracking-wider text-stone-400 shadow-sm">
+          Term {data.term}
+        </span>
+      </div>
+    </div>
+  )
+}
+
+const nodeTypes = { skill: SkillNode, termGroup: TermGroupNode }
 
 /* ─── Goal Panel ─── */
 
@@ -749,7 +767,7 @@ function CourseHistoryPanel({ history, onRestore }: { history: HistoryEntry[]; o
 /* ─── API types ─── */
 
 interface ApiCourse { title: string; url: string; reason: string }
-interface ApiNode { id: string; labels: string[]; tier: string; course: ApiCourse; position: { x: number; y: number } }
+interface ApiNode { id: string; labels: string[]; tier: string; course: ApiCourse; position: { x: number; y: number }; term?: string }
 interface ApiEdge { id: string; source: string; target: string }
 interface ApiGraph { goal: string; skills: string[]; nodes: ApiNode[]; edges: ApiEdge[] }
 
@@ -761,11 +779,57 @@ function toFlowNodes(apiNodes: ApiNode[]): Node<SkillNodeData>[] {
     data: {
       labels: n.labels,
       tier: n.tier as Tier,
+      term: n.term,
       courseTitle: n.course.title,
       courseUrl: n.course.url,
       courseReason: n.course.reason ?? '',
     },
   }))
+}
+
+const TERM_ORDER = ['1A', '1B', '2A', '2B', '3A', '3B', '4A', '4B']
+
+function addTermGroups(courseNodes: Node<SkillNodeData>[]): Node<SkillNodeData>[] {
+  // Group courses by term and create dashed vertical swim-lane columns behind them
+  const byTerm: Record<string, Node<SkillNodeData>[]> = {}
+  for (const n of courseNodes) {
+    const t = n.data.term
+    if (!t) continue
+    if (!byTerm[t]) byTerm[t] = []
+    byTerm[t].push(n)
+  }
+
+  // Find global Y range so all columns share the same height
+  const allYs = courseNodes.map((n) => n.position.y)
+  const globalMinY = Math.min(...allYs)
+  const globalMaxY = Math.max(...allYs) + NODE_H
+
+  const PAD_X = 20
+  const PAD_TOP = 36
+  const PAD_BOTTOM = 24
+  const groupNodes: Node<SkillNodeData>[] = []
+
+  for (const term of TERM_ORDER) {
+    const members = byTerm[term]
+    if (!members || members.length === 0) continue
+
+    const xs = members.map((n) => n.position.x)
+    const minX = Math.min(...xs) - PAD_X
+    const maxX = Math.max(...xs) + NODE_W + PAD_X
+
+    groupNodes.push({
+      id: `term-${term}`,
+      type: 'termGroup',
+      position: { x: minX, y: globalMinY - PAD_TOP },
+      data: { labels: [term], tier: 'foundation' as Tier, courseTitle: '', courseUrl: '', courseReason: '', term },
+      style: { width: maxX - minX, height: (globalMaxY - globalMinY) + PAD_TOP + PAD_BOTTOM },
+      selectable: false,
+      draggable: false,
+    } as Node<SkillNodeData>)
+  }
+
+  // Groups rendered first (behind), then course nodes on top
+  return [...groupNodes, ...courseNodes]
 }
 
 function toFlowEdges(apiEdges: ApiEdge[]): Edge[] {
@@ -781,12 +845,19 @@ function toFlowEdges(apiEdges: ApiEdge[]): Edge[] {
 
 export default function Graph() {
   const location = useLocation()
-  const { goal: navGoal, existingSkills, desiredSkills: navDesiredSkills, jobUrl } = (location.state ?? {}) as {
-    goal?: string
-    existingSkills?: { raw: string; esco_label: string; esco_uri: string | null }[]
-    desiredSkills?: { raw: string; esco_label: string; esco_uri: string | null }[]
-    jobUrl?: string
-  }
+  const navState = (location.state ?? {}) as Record<string, unknown>
+  const mode = (navState.mode as string) ?? 'career'
+
+  // Career-mode fields
+  const navGoal = navState.goal as string | undefined
+  const existingSkills = navState.existingSkills as { raw: string; esco_label: string; esco_uri: string | null }[] | undefined
+  const navDesiredSkills = navState.desiredSkills as { raw: string; esco_label: string; esco_uri: string | null }[] | undefined
+  const jobUrl = navState.jobUrl as string | undefined
+
+  // Academics-mode fields
+  const requirementGroups = navState.requirementGroups as { rule: string | number; courses: { code: string; title: string; units: number | null }[] }[] | undefined
+  const specializations = navState.specializations as { pid: string }[] | undefined
+  const minors = navState.minors as { pid: string }[] | undefined
 
   const [nodes, setNodes] = useState<Node<SkillNodeData>[]>([])
   const [edges, setEdges] = useState<Edge[]>([])
@@ -801,6 +872,41 @@ export default function Graph() {
   const [courseHistory, setCourseHistory] = useState<HistoryEntry[]>([])
   const regenAbortRef = useRef<AbortController | null>(null)
   const skillChangeCounter = useRef(0)
+
+  const fetchAcademicGraph = useCallback(() => {
+    regenAbortRef.current?.abort()
+    const controller = new AbortController()
+    regenAbortRef.current = controller
+    setLoading(true)
+    setNodes([])
+    setEdges([])
+
+    fetch('/api/graph/academics', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        requirement_groups: requirementGroups ?? [],
+        specialization_pids: (specializations ?? []).map((s) => s.pid),
+        minor_pids: (minors ?? []).map((m) => m.pid),
+        goal: navGoal ?? '',
+      }),
+      signal: controller.signal,
+    })
+      .then((r) => r.json())
+      .then((data: ApiGraph) => {
+        const flowEdges = toFlowEdges(data.edges)
+        const courseNodes = toFlowNodes(data.nodes) // skip Dagre — backend positions are final
+        setNodes(addTermGroups(courseNodes))
+        setEdges(flowEdges)
+        setGoal(data.goal)
+      })
+      .then(() => setLoading(false))
+      .catch((e) => {
+        if (e.name === 'AbortError') return
+        setLoading(false)
+      })
+  }, [navGoal, requirementGroups, specializations, minors])
+
   const fetchGraph = useCallback((existing: string[], desired: string[]) => {
     regenAbortRef.current?.abort()
     const controller = new AbortController()
@@ -836,10 +942,14 @@ export default function Graph() {
 
   // Initial load
   useEffect(() => {
-    fetchGraph(
-      (existingSkills ?? []).map((s) => s.esco_label),
-      (navDesiredSkills ?? []).map((s) => s.esco_label),
-    )
+    if (mode === 'academics') {
+      fetchAcademicGraph()
+    } else {
+      fetchGraph(
+        (existingSkills ?? []).map((s) => s.esco_label),
+        (navDesiredSkills ?? []).map((s) => s.esco_label),
+      )
+    }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleDesiredSkillsChange = useCallback((newSkills: string[]) => {
@@ -878,8 +988,12 @@ export default function Graph() {
         <div className="absolute inset-0 z-10 overflow-visible pointer-events-none">
           <div className="absolute top-3 left-3 right-3 flex flex-col gap-2 pointer-events-auto sm:top-5 sm:left-5 sm:right-auto sm:gap-3">
             <GoalPanel goal={navGoal ?? goal} />
-            <DesiredSkillsPanel skills={desiredSkills} onSkillsChange={handleDesiredSkillsChange} loading={loading} />
-            <MySkillsPanel skills={mySkills} onSkillsChange={handleMySkillsChange} loading={loading} />
+            {mode !== 'academics' && (
+              <>
+                <DesiredSkillsPanel skills={desiredSkills} onSkillsChange={handleDesiredSkillsChange} loading={loading} />
+                <MySkillsPanel skills={mySkills} onSkillsChange={handleMySkillsChange} loading={loading} />
+              </>
+            )}
           </div>
 
           <div className="hidden pointer-events-auto sm:block sm:absolute sm:top-5 sm:right-5">
@@ -905,7 +1019,7 @@ export default function Graph() {
           {loading && (
             <div className="absolute inset-x-0 bottom-0 top-[60%] sm:top-0 z-[15] flex flex-col items-center justify-center gap-3 pointer-events-none">
               <Loader2 size={28} className="text-blue-800 animate-spin" />
-              <p className="text-stone-400 text-sm">Building your skill tree…</p>
+              <p className="text-stone-400 text-sm">{mode === 'academics' ? 'Building your course graph…' : 'Building your skill tree…'}</p>
             </div>
           )}
 

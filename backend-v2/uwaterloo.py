@@ -82,7 +82,16 @@ def _parse_requirements_text(text: str) -> dict:
         return m.group(1).strip() if m else ""
 
     def extract_courses(section: str) -> list[str]:
-        return re.findall(r"[A-Z]{2,}\s*\d{3}[A-Z]?", section)
+        # Match full codes (CS 240) and bare catalog numbers (240E) that inherit the previous subject
+        courses: list[str] = []
+        last_subject = ""
+        for m in re.finditer(r"([A-Z]{2,})\s*(\d{3}[A-Z]?)|(?<!\w)(\d{3}[A-Z]?)(?!\w)", section):
+            if m.group(1):
+                last_subject = m.group(1)
+                courses.append(f"{m.group(1)} {m.group(2)}")
+            elif m.group(3) and last_subject:
+                courses.append(f"{last_subject} {m.group(3)}")
+        return courses
 
     return {
         "prereqs": extract_courses(extract_section("Prereq")),

@@ -18,6 +18,7 @@ class SkillNode(BaseModel):
     tier: str
     course: Course
     position: Position
+    term: str = ""
 
 
 class Edge(BaseModel):

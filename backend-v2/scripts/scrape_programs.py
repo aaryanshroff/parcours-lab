@@ -52,6 +52,50 @@ def parse_course_from_li(li) -> dict | None:
     return {"code": code, "title": title, "units": None}
 
 
+def parse_prose_elective(text: str) -> dict | None:
+    """Parse prose rules like 'Complete 3 additional CS courses chosen from CS340-CS398'."""
+    m = re.match(
+        r"Complete\s+(\d+)\s+additional\s+(\w+)\s+courses?\s+chosen\s+from\s+(.+)",
+        text, re.IGNORECASE,
+    )
+    if m:
+        return {
+            "rule": int(m.group(1)),
+            "courses": [],
+            "elective_type": "range",
+            "subject": m.group(2).upper(),
+            "description": text,
+        }
+
+    m = re.match(
+        r"Complete\s+(\d+)\s+course\s+from\s+the\s+following:\s*(.+)",
+        text, re.IGNORECASE,
+    )
+    if m:
+        return {
+            "rule": int(m.group(1)),
+            "courses": [],
+            "elective_type": "range",
+            "subject": "",
+            "description": text,
+        }
+
+    m = re.match(
+        r"Complete\s+a\s+total\s+of\s+(\d+(?:\.\d+)?)\s+units?\s+of\s+non-math\s+courses",
+        text, re.IGNORECASE,
+    )
+    if m:
+        n_courses = int(float(m.group(1)) / 0.5)
+        return {
+            "rule": n_courses,
+            "courses": [],
+            "elective_type": "breadth",
+            "description": text,
+        }
+
+    return None
+
+
 def parse_requirement_group(rule_li) -> dict:
     result_div = rule_li.find("div", attrs={"data-test": re.compile(r"ruleView-.*-result")})
     if not result_div:
@@ -74,6 +118,12 @@ def parse_requirement_group(rule_li) -> dict:
         parsed = parse_course_from_li(course_li)
         if parsed:
             courses.append(parsed)
+
+    # If no courses found, try parsing as a prose elective rule
+    if not courses:
+        prose = parse_prose_elective(text)
+        if prose:
+            return prose
 
     return {"rule": rule, "courses": courses}
 

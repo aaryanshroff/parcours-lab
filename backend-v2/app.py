@@ -81,6 +81,23 @@ def job_skills():
     return jsonify({"skills": skills})
 
 
+@app.route("/api/graph/academics", methods=["POST"])
+def graph_academics():
+    from academic_graph import generate_academic_graph
+
+    body = request.get_json() or {}
+    requirement_groups = body.get("requirement_groups", [])
+    specialization_pids = body.get("specialization_pids", [])
+    minor_pids = body.get("minor_pids", [])
+    goal = body.get("goal", "")
+
+    api_key = os.environ["OPENROUTER_API_KEY"]
+    result = generate_academic_graph(
+        requirement_groups, specialization_pids, minor_pids, goal, api_key
+    )
+    return jsonify(result.model_dump())
+
+
 @app.route("/api/uwaterloo/programs")
 def uwaterloo_programs():
     from uwaterloo import search_programs

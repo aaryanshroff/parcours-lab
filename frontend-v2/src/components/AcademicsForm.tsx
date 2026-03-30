@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowRight, Search, Loader2, X, ChevronRight, Plus } from 'lucide-react'
+import { ArrowRight, Search, Loader2, X, ChevronRight, Plus, CheckCircle2, BookOpen, GitFork, Puzzle } from 'lucide-react'
 
 interface Program {
   pid: string
@@ -193,12 +193,6 @@ export default function AcademicsForm() {
     })
   }
 
-  function ruleLabel(rule: RequirementGroup['rule']): string {
-    if (rule === 'all') return 'Complete all'
-    if (typeof rule === 'number') return `Pick ${rule}`
-    return ''
-  }
-
   const canSubmit = !!selectedMajor && !!majorDetail && !loadingMajorDetail
 
   return (
@@ -270,33 +264,47 @@ export default function AcademicsForm() {
         </div>
       )}
 
-      {/* 2. Major requirement groups */}
-      {majorDetail && majorDetail.requirementGroups.length > 0 && (
-        <div className="space-y-3">
-          {majorDetail.requirementGroups.map((group, i) => (
-            <div key={i}>
-              <span className="block text-[11px] font-semibold uppercase tracking-wider text-stone-400 mb-1.5">
-                {ruleLabel(group.rule)} ({group.courses.length})
-              </span>
-              <div className="flex flex-wrap gap-1.5">
-                {group.courses.map((course) => (
-                  <span
-                    key={course.code}
-                    className={`inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-full ${
-                      group.rule === 'all'
-                        ? 'bg-blue-50 text-blue-900'
-                        : 'bg-amber-50 text-amber-700'
-                    }`}
-                    title={course.title}
-                  >
-                    {course.code}
-                  </span>
-                ))}
-              </div>
+      {/* 2. Major requirement summary */}
+      {majorDetail && majorDetail.requirementGroups.length > 0 && (() => {
+        const required = majorDetail.requirementGroups
+          .filter((g) => g.rule === 'all')
+          .reduce((sum, g) => sum + g.courses.length, 0)
+        const choiceGroups = majorDetail.requirementGroups.filter(
+          (g) => typeof g.rule === 'number',
+        )
+        const electives = choiceGroups.reduce(
+          (sum, g) => sum + (g.rule as number),
+          0,
+        )
+        return (
+          <div className="border border-emerald-200 rounded-xl bg-emerald-50/50 overflow-hidden">
+            <div className="flex items-center gap-2 px-4 py-2.5 bg-emerald-100/60 border-b border-emerald-200">
+              <CheckCircle2 size={16} className="text-emerald-600" />
+              <span className="text-sm font-semibold text-emerald-800">Program requirements loaded</span>
             </div>
-          ))}
-        </div>
-      )}
+            <div className="px-4 py-3 space-y-2">
+              {required > 0 && (
+                <div className="flex items-center gap-2.5 text-sm text-stone-600">
+                  <BookOpen size={14} className="text-emerald-600 shrink-0" />
+                  <span><span className="font-semibold text-stone-800">{required}</span> required courses identified</span>
+                </div>
+              )}
+              {choiceGroups.length > 0 && (
+                <div className="flex items-center gap-2.5 text-sm text-stone-600">
+                  <GitFork size={14} className="text-emerald-600 shrink-0" />
+                  <span><span className="font-semibold text-stone-800">{choiceGroups.length}</span> choices for you to make</span>
+                </div>
+              )}
+              {electives > 0 && (
+                <div className="flex items-center gap-2.5 text-sm text-stone-600">
+                  <Puzzle size={14} className="text-emerald-600 shrink-0" />
+                  <span>~<span className="font-semibold text-stone-800">{electives}</span> elective slots to fill</span>
+                </div>
+              )}
+            </div>
+          </div>
+        )
+      })()}
 
       {/* 3. Specializations */}
       {majorDetail && availableSpecs.length > 0 && (
