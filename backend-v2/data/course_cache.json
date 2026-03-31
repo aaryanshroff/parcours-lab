@@ -1011,5 +1011,21 @@
     ],
     "coreqs": [],
     "antireqs": []
+  },
+  "CS442": {
+    "code": "CS442",
+    "raw": "Prereq: CS 241 or 241E; One of CS 245, CS 245E, SE 212; One of CS 246, CS 246E, CS 247; Honours Business & CS, Honours Computer Science, Honours Data Science, Honours Computing and Financial Management or Software Engineering students",
+    "prereqs": [
+      "CS 241",
+      "CS 241E",
+      "CS 245",
+      "CS 245E",
+      "SE 212",
+      "CS 246",
+      "CS 246E",
+      "CS 247"
+    ],
+    "coreqs": [],
+    "antireqs": []
   }
 }
