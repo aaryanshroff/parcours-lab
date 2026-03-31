@@ -97,7 +97,6 @@ def generate_academic_graph(
             picks = _fill_picks_with_defaults(choice_groups, picks)
         else:
             picks = _pick_defaults(choice_groups)
-
     for code, reason in picks.items():
         nc = _normalize_code(code)
         elective_codes.add(nc)
@@ -118,11 +117,12 @@ def generate_academic_graph(
 
     prereq_map = _transitive_reduction(prereq_map)
 
-    # ── 5. Assign terms via LLM ──
+    # ── 5. Assign terms via LLM, then enforce prereq ordering deterministically ──
     all_codes = required_codes | elective_codes
     term_assignments = _assign_terms(
         all_codes, prereq_map, course_info, api_key, model
     )
+    term_assignments = _enforce_prereq_ordering(term_assignments, prereq_map, all_codes)
 
     # ── 6. Layout: term-based columns (left-to-right) ──
     by_term: dict[str, list[str]] = defaultdict(list)
@@ -310,7 +310,15 @@ def _assign_terms(
         title = info.get("title", code)
         prereqs = prereq_map.get(code, [])
         prereq_str = ", ".join(prereqs) if prereqs else "none"
-        course_lines.append(f"- {code} ({title}): prereqs [{prereq_str}]")
+        try:
+            raw_data = get_course_prereqs(code)
+            raw_text = (raw_data.get("raw", "") if raw_data else "").strip()
+        except Exception:
+            raw_text = ""
+        line = f"- {code} ({title}): in-plan prereqs [{prereq_str}]"
+        if raw_text:
+            line += f"; UW requirement: \"{raw_text}\""
+        course_lines.append(line)
 
     response = client.chat.completions.create(
         model=model,
@@ -322,7 +330,10 @@ def _assign_terms(
                     "Assign each course to a term (1A, 1B, 2A, 2B, 3A, 3B, 4A, 4B) "
                     "for a co-op student following the standard study/work alternation.\n\n"
                     "Rules:\n"
-                    "- A course MUST be in a later term than ALL of its prerequisites\n"
+                    "- A course MUST be in a later term than ALL of its in-plan prerequisites\n"
+                    "- If a course has a 'UW requirement' field, respect the prerequisite level "
+                    "even if those prereqs are not in this plan (e.g. a course requiring a 200-level "
+                    "course should not be placed in 1A/1B)\n"
                     "- Balance roughly 5 courses per study term\n"
                     "- Follow typical UWaterloo course sequencing conventions\n"
                     "- MATH 1xx and CS 1xx courses go in 1A/1B\n"
@@ -356,6 +367,64 @@ def _assign_terms(
         for code, term in assignments.items()
         if term in TERM_ORDER
     }
+
+
+def _enforce_prereq_ordering(
+    term_assignments: dict[str, str],
+    prereq_map: dict[str, list[str]],
+    all_codes: set[str],
+) -> dict[str, str]:
+    """Bump courses to later terms until no prereq-ordering violations remain.
+
+    Two rules:
+    - In-plan prereq: course must be in a strictly later term than its prereq.
+    - External prereq (not in plan): floor the course's term using the catalog
+      number of the highest-level external prereq (100s→1B, 200s→2A, 300s→3A, 400s→4A).
+    """
+    LEVEL_TO_MIN_IDX = {
+        1: TERM_ORDER.index("1B"),
+        2: TERM_ORDER.index("2A"),
+        3: TERM_ORDER.index("3A"),
+        4: TERM_ORDER.index("4A"),
+    }
+
+    def _external_min_idx(code: str) -> int:
+        try:
+            prereq_data = get_course_prereqs(code)
+        except Exception:
+            return 0
+        if not prereq_data:
+            return 0
+        max_level = 0
+        for p in prereq_data.get("prereqs", []):
+            if _normalize_code(p) in all_codes:
+                continue  # in-plan; handled by prereq_map
+            m = re.search(r"(\d{3})", p)
+            if m:
+                max_level = max(max_level, int(m.group(1)) // 100)
+        return LEVEL_TO_MIN_IDX.get(min(max_level, 4), 0)
+
+    result = dict(term_assignments)
+
+    for _ in range(len(TERM_ORDER)):
+        changed = False
+        for code in list(result.keys()):
+            current = result.get(code, "4B")
+            current_idx = TERM_ORDER.index(current) if current in TERM_ORDER else len(TERM_ORDER) - 1
+            min_idx = _external_min_idx(code)
+
+            for prereq in prereq_map.get(code, []):
+                prereq_term = result.get(prereq)
+                if prereq_term in TERM_ORDER:
+                    min_idx = max(min_idx, TERM_ORDER.index(prereq_term) + 1)
+
+            if current_idx < min_idx:
+                result[code] = TERM_ORDER[min(min_idx, len(TERM_ORDER) - 1)]
+                changed = True
+        if not changed:
+            break
+
+    return result
 
 
 def _pick_defaults(choice_groups: list[dict]) -> dict[str, str]:
@@ -551,7 +620,7 @@ def _expand_elective_group(group: dict) -> list[dict]:
 
 
 def _catalog_number(code: str) -> int | None:
-    m = re.search(r"(\\d{3})", str(code))
+    m = re.search(r"(\d{3})", str(code))
     if not m:
         return None
     try:
@@ -562,7 +631,7 @@ def _catalog_number(code: str) -> int | None:
 
 def _extract_ranges_from_text(text: str) -> list[dict]:
     ranges = []
-    for m in re.finditer(r"([A-Z]{2,})\\s*(\\d{3}[A-Z]?)\\s*-\\s*([A-Z]{2,})?\\s*(\\d{3}[A-Z]?)", text):
+    for m in re.finditer(r"([A-Z]{2,})\s*(\d{3}[A-Z]?)\s*-\s*([A-Z]{2,})?\s*(\d{3}[A-Z]?)", text):
         subj = (m.group(1) or "").upper()
         end_subj = (m.group(3) or "").upper()
         if end_subj and end_subj != subj:

@@ -1027,5 +1027,151 @@
     ],
     "coreqs": [],
     "antireqs": []
+  },
+  "ME321": {
+    "code": "ME321",
+    "raw": "Prereq: (ME 201 or MTE 202) and (ME 212 or SYDE 182); Level at least 3A Mechanical Engineering or Mechatronics Engineering",
+    "prereqs": [
+      "ME 201",
+      "MTE 202",
+      "ME 212",
+      "SYDE 182"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "COGSCI 600": {
+    "code": "COGSCI 600",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "AFM 401": {
+    "code": "AFM 401",
+    "raw": "Prereq: AFM 391 or AFM 491; Accounting and Financial Management,\nBiotechnology/Chartered Professional Accountancy, Computing and Financial\nManagement, or Mathematics/Chartered Professional Accountancy students",
+    "prereqs": [
+      "AFM 391",
+      "AFM 491"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "AFM 291": {
+    "code": "AFM 291",
+    "raw": "Prereq: AFM 101 or AFM 191; Accounting and Financial Management, Biotechnology/Chartered Professional Accountancy, Computing and Financial Management, Mathematics/Chartered Professional Accountancy, or Sustainability and Financial Management students",
+    "prereqs": [
+      "AFM 101",
+      "AFM 191"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "AFM 131": {
+    "code": "AFM 131",
+    "raw": "Prereq: Not open to Arts and Business students. Antireq: AFM 132, BUS 111W",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "AFM 132",
+      "BUS 111W"
+    ]
+  },
+  "AFM 382": {
+    "code": "AFM 382",
+    "raw": "Prereq: AFM 102 or AFM 191; Accounting and Financial Management, Biotechnology/CPA, Computing and Financial Management, Mathematics/CPA, or Sustainability and Financial Management students. Antireq: AFM 481",
+    "prereqs": [
+      "AFM 102",
+      "AFM 191"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "AFM 481"
+    ]
+  },
+  "AFM 123": {
+    "code": "AFM 123",
+    "raw": "Prereq: Arts & Bus, Env & Bus, Sci & Bus, H/JH Rec Leadership & Hlth, H/JH Rec & Leisure St, Sport & Rec Mgmt, Rec & Sport Bus, Hon Biotech/Econ, Human Resources Mgmt, or Management Studies. Antireq: AFM 101, 102, 121, BUS 127W/227W, 247W, MSCI 262",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "AFM 101",
+      "AFM 102",
+      "AFM 121",
+      "BUS 127W",
+      "BUS 227W",
+      "BUS 247W",
+      "MSCI 262"
+    ]
+  },
+  "AFM 391": {
+    "code": "AFM 391",
+    "raw": "Prereq: AFM 291; Accounting and Financial Management, Biotechnology/Chartered Professional Accountancy, Computing and Financial Management, Mathematics/Chartered Professional Accountancy, or Sustainability and Financial Management students",
+    "prereqs": [
+      "AFM 291"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "AFM 424": {
+    "code": "AFM 424",
+    "raw": "Prereq: One of AFM 272/ACTSC 291, AFM 273, ACTSC 372, ECON 371. Antireq: BUS 473W",
+    "prereqs": [
+      "AFM 272",
+      "ACTSC 291",
+      "AFM 273",
+      "ACTSC 372",
+      "ECON 371"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "BUS 473W"
+    ]
+  },
+  "AFM 231": {
+    "code": "AFM 231",
+    "raw": "Prereq: Not open to Accounting and Financial Management,\nMathematics/Chartered Professional Accountancy or Biotechnology/Chartered Professional Accountancy students. Antireq: AFM 335, MTHEL 100/COMM 231,\nBUS 231W, CIVE 491, GENE 411, ME 401",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "AFM 335",
+      "MTHEL 100",
+      "COMM 231",
+      "BUS 231W",
+      "CIVE 491",
+      "GENE 411",
+      "ME 401"
+    ]
+  },
+  "AFM 451": {
+    "code": "AFM 451",
+    "raw": "Prereq: AFM 291, AFM 341; Accounting and Financial Management, Biotechnology/CPA, Computing and Financial Management, Mathematics/CPA, or Sustainability and Financial Management students. Antireq: AFM 351",
+    "prereqs": [
+      "AFM 291",
+      "AFM 341"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "AFM 351"
+    ]
+  },
+  "AFM 491": {
+    "code": "AFM 491",
+    "raw": "Prereq: AFM 391; Accounting and Financial Management, Biotechnology/Chartered Professional Accountancy, Computing and Financial Management, Mathematics/Chartered Professional Accountancy, or Sustainability and Financial Management students",
+    "prereqs": [
+      "AFM 391"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS492": {
+    "code": "CS492",
+    "raw": "Prereq: CS 240/240E; Honours Computer Science, Honours Data Science (BCS), BCFM, BSE students only",
+    "prereqs": [
+      "CS 240",
+      "CS 240E"
+    ],
+    "coreqs": [],
+    "antireqs": []
   }
 }

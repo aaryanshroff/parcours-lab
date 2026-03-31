@@ -807,5 +807,17 @@
       "title": "Special Topics",
       "units": null
     }
+  ],
+  "COGSCI": [
+    {
+      "code": "COGSCI 300",
+      "title": "Intelligence in Machines, Humans, and Other Animals",
+      "units": null
+    },
+    {
+      "code": "COGSCI 600",
+      "title": "Seminar in Cognitive Science",
+      "units": null
+    }
   ]
 }

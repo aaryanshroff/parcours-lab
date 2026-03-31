@@ -5,9 +5,11 @@ import {
   type Node,
   type Edge,
   type NodeProps,
+  type EdgeProps,
   type OnNodesChange,
   Handle,
   Position,
+  BaseEdge,
   Background,
   BackgroundVariant,
   MarkerType,
@@ -57,8 +59,6 @@ interface SkillNodeData {
   courseReason: string
   tier: Tier
   term?: string
-  sourceCount?: number
-  targetCount?: number
   [key: string]: unknown
 }
 
@@ -169,14 +169,7 @@ function SkillNode({ id, data }: NodeProps<Node<SkillNodeData>>) {
       className={`rounded-xl border-2 ${borderClass} transition-all duration-200 ${locked ? 'bg-stone-100' : 'bg-white hover:-translate-y-0.5'}`}
       style={{ width: NODE_W, padding: '14px 16px' }}
     >
-      {data.term ? (
-        Array.from({ length: Math.max(1, data.targetCount ?? 1) }, (_, i) => (
-          <Handle key={i} id={`tgt-${i}`} type="target" position={Position.Left}
-            style={{ opacity: 0, top: `${(i + 1) / (Math.max(1, data.targetCount ?? 1) + 1) * 100}%` }} />
-        ))
-      ) : (
-        <Handle type="target" position={Position.Top} style={{ opacity: 0 }} />
-      )}
+      <Handle type="target" position={Position.Top} style={{ opacity: 0 }} />
 
       <div className={locked ? 'opacity-40' : ''}>
       {!data.term && (
@@ -286,14 +279,7 @@ function SkillNode({ id, data }: NodeProps<Node<SkillNodeData>>) {
       )}
       </div>
 
-      {data.term ? (
-        Array.from({ length: Math.max(1, data.sourceCount ?? 1) }, (_, i) => (
-          <Handle key={i} id={`src-${i}`} type="source" position={Position.Right}
-            style={{ opacity: 0, top: `${(i + 1) / (Math.max(1, data.sourceCount ?? 1) + 1) * 100}%` }} />
-        ))
-      ) : (
-        <Handle type="source" position={Position.Bottom} style={{ opacity: 0 }} />
-      )}
+      <Handle type="source" position={data.term ? Position.Top : Position.Bottom} style={{ opacity: 0 }} />
     </div>
   )
 }
@@ -314,6 +300,14 @@ function TermGroupNode({ data }: NodeProps<Node<SkillNodeData>>) {
 }
 
 const nodeTypes = { skill: SkillNode, termGroup: TermGroupNode }
+
+function AcademicEdge({ sourceX, sourceY, targetX, targetY, markerEnd, style }: EdgeProps) {
+  const routeY = Math.min(sourceY, targetY) - 80
+  const path = `M ${sourceX} ${sourceY} L ${sourceX} ${routeY} L ${targetX} ${routeY} L ${targetX} ${targetY}`
+  return <BaseEdge path={path} markerEnd={markerEnd} style={style} />
+}
+
+const edgeTypes = { academicEdge: AcademicEdge }
 
 /* ─── Goal Panel ─── */
 
@@ -853,45 +847,15 @@ function addTermGroups(courseNodes: Node<SkillNodeData>[]): Node<SkillNodeData>[
   return [...groupNodes, ...courseNodes]
 }
 
-function toFlowEdges(apiEdges: ApiEdge[]): Edge[] {
+function toFlowEdges(apiEdges: ApiEdge[], edgeType = 'smoothstep'): Edge[] {
   return apiEdges.map((e) => ({
     ...e,
     style: { stroke: '#d6d3d1', strokeWidth: 1.5 },
-    type: 'smoothstep',
+    type: edgeType,
     markerEnd: { type: MarkerType.ArrowClosed, color: '#d6d3d1', width: 14, height: 14 },
   }))
 }
 
-function assignAcademicEdgeHandles(
-  courseNodes: Node<SkillNodeData>[],
-  flowEdges: Edge[],
-): { nodes: Node<SkillNodeData>[]; edges: Edge[] } {
-  const srcCounts: Record<string, number> = {}
-  const tgtCounts: Record<string, number> = {}
-  for (const e of flowEdges) {
-    srcCounts[e.source] = (srcCounts[e.source] ?? 0) + 1
-    tgtCounts[e.target] = (tgtCounts[e.target] ?? 0) + 1
-  }
-
-  const srcIdx: Record<string, number> = {}
-  const tgtIdx: Record<string, number> = {}
-
-  const edges = flowEdges.map((e) => {
-    const si = srcIdx[e.source] ?? 0
-    const ti = tgtIdx[e.target] ?? 0
-    srcIdx[e.source] = si + 1
-    tgtIdx[e.target] = ti + 1
-
-    return { ...e, sourceHandle: `src-${si}`, targetHandle: `tgt-${ti}` }
-  })
-
-  const nodes = courseNodes.map((n) => ({
-    ...n,
-    data: { ...n.data, sourceCount: srcCounts[n.id] ?? 0, targetCount: tgtCounts[n.id] ?? 0 },
-  }))
-
-  return { nodes, edges }
-}
 
 /* ─── Graph Page ─── */
 
@@ -923,8 +887,84 @@ export default function Graph() {
   )
   const [loading, setLoading] = useState(true)
   const [courseHistory, setCourseHistory] = useState<HistoryEntry[]>([])
+  const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null)
   const regenAbortRef = useRef<AbortController | null>(null)
   const skillChangeCounter = useRef(0)
+
+  const ROW_GAP = 220
+
+  const displayEdges = useMemo(() => {
+    if (mode !== 'academics') return edges
+    if (!hoveredNodeId) return edges.map((e) => ({ ...e, hidden: true }))
+    return edges.map((e) => ({
+      ...e,
+      hidden: e.source !== hoveredNodeId && e.target !== hoveredNodeId,
+      style: { stroke: '#3b82f6', strokeWidth: 2 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: '#3b82f6', width: 14, height: 14 },
+    }))
+  }, [edges, hoveredNodeId, mode])
+
+  const handleNodeDragStop = useCallback((_: React.MouseEvent, draggedNode: Node<SkillNodeData>) => {
+    if (!draggedNode.data.term) return
+
+    setNodes((prev) => {
+      const groupNodes = prev.filter((n) => n.type === 'termGroup')
+      const courseNodes = prev.filter((n) => n.type === 'skill')
+
+      // Find which term box the node's center landed in
+      const cx = draggedNode.position.x + NODE_W / 2
+      const cy = draggedNode.position.y + NODE_H / 2
+      let targetTerm = draggedNode.data.term as string
+      for (const tg of groupNodes) {
+        const w = Number((tg.style as Record<string, unknown>)?.width ?? 0)
+        const h = Number((tg.style as Record<string, unknown>)?.height ?? 0)
+        if (cx >= tg.position.x && cx <= tg.position.x + w &&
+            cy >= tg.position.y && cy <= tg.position.y + h) {
+          targetTerm = tg.data.term as string
+          break
+        }
+      }
+
+      const oldTerm = draggedNode.data.term as string
+
+      // Snap X to the term column (use existing nodes in that term, or fall back to group node)
+      const existingInTarget = courseNodes.find((n) => n.data.term === targetTerm && n.id !== draggedNode.id)
+      const snapX = existingInTarget?.position.x
+        ?? (groupNodes.find((n) => n.data.term === targetTerm)?.position.x ?? draggedNode.position.x) + 20
+
+      // Build new ordered list for target term (insert by Y)
+      const targetCourses = courseNodes
+        .filter((n) => n.data.term === targetTerm && n.id !== draggedNode.id)
+        .sort((a, b) => a.position.y - b.position.y)
+      const insertAt = targetCourses.findIndex((n) => n.position.y > draggedNode.position.y)
+      const newTargetOrder = [...targetCourses]
+      if (insertAt === -1) newTargetOrder.push(draggedNode)
+      else newTargetOrder.splice(insertAt, 0, draggedNode)
+
+      // Build new ordered list for old term (remove dragged)
+      const oldCourses = oldTerm === targetTerm
+        ? []
+        : courseNodes
+            .filter((n) => n.data.term === oldTerm && n.id !== draggedNode.id)
+            .sort((a, b) => a.position.y - b.position.y)
+      const oldSnapX = courseNodes.find((n) => n.data.term === oldTerm && n.id !== draggedNode.id)?.position.x
+        ?? draggedNode.position.x
+
+      // Build position map
+      const posMap: Record<string, { x: number; y: number; term: string }> = {}
+      newTargetOrder.forEach((n, i) => { posMap[n.id] = { x: snapX, y: i * ROW_GAP, term: targetTerm } })
+      if (oldTerm !== targetTerm) {
+        oldCourses.forEach((n, i) => { posMap[n.id] = { x: oldSnapX, y: i * ROW_GAP, term: oldTerm } })
+      }
+
+      return prev.map((n) => {
+        if (n.type !== 'skill') return n
+        const p = posMap[n.id]
+        if (!p) return n
+        return { ...n, data: { ...n.data, term: p.term }, position: { x: p.x, y: p.y } }
+      })
+    })
+  }, [])
 
   const fetchAcademicGraph = useCallback(() => {
     regenAbortRef.current?.abort()
@@ -947,11 +987,10 @@ export default function Graph() {
     })
       .then((r) => r.json())
       .then((data: ApiGraph) => {
-        const flowEdges = toFlowEdges(data.edges)
-        const courseNodes = toFlowNodes(data.nodes) // skip Dagre — backend positions are final
-        const { nodes: handledNodes, edges: handledEdges } = assignAcademicEdgeHandles(courseNodes, flowEdges)
-        setNodes(addTermGroups(handledNodes))
-        setEdges(handledEdges)
+        const flowEdges = toFlowEdges(data.edges, 'academicEdge')
+        const courseNodes = toFlowNodes(data.nodes)
+        setNodes(addTermGroups(courseNodes))
+        setEdges(flowEdges)
         setGoal(data.goal)
       })
       .then(() => setLoading(false))
@@ -1079,9 +1118,13 @@ export default function Graph() {
 
           <ReactFlow
             nodes={nodes}
-            edges={edges}
+            edges={displayEdges}
             onNodesChange={onNodesChange}
+            onNodeDragStop={handleNodeDragStop}
+            onNodeMouseEnter={(_, node) => mode === 'academics' && setHoveredNodeId(node.id)}
+            onNodeMouseLeave={() => mode === 'academics' && setHoveredNodeId(null)}
             nodeTypes={nodeTypes}
+            edgeTypes={edgeTypes}
             fitView
             fitViewOptions={{ padding: 0.3 }}
             proOptions={{ hideAttribution: true }}

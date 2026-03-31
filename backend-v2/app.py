@@ -298,7 +298,7 @@ def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None
         client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key)
 
         if ctx.get("mode") == "academics":
-            from uwaterloo import list_courses_by_subject
+            from uwaterloo import list_courses_by_subject, get_course_prereqs
 
             subject_match = _re.match(r"^([A-Z]{2,})", skill.strip().upper())
             subject = subject_match.group(1) if subject_match else ""
@@ -311,6 +311,28 @@ def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None
                 ]
 
             if candidates:
+                # Build set of course codes in the user's plan (excluding the one being replaced)
+                plan_codes: set[str] = set()
+                for node in ctx.get("nodes", []):
+                    node_skill = node.get("skill", "") if isinstance(node, dict) else ""
+                    for part in node_skill.split(","):
+                        c = part.strip().replace(" ", "").upper()
+                        if c and c != norm_current:
+                            plan_codes.add(c)
+
+                # Filter candidates to those whose prereqs are all satisfied by the plan
+                prereq_filtered = []
+                for candidate in candidates:
+                    prereq_data = get_course_prereqs(candidate["code"])
+                    if prereq_data is None:
+                        prereq_filtered.append(candidate)
+                        continue
+                    prereqs = prereq_data.get("prereqs", [])
+                    if all(p.replace(" ", "").upper() in plan_codes for p in prereqs):
+                        prereq_filtered.append(candidate)
+
+                if prereq_filtered:
+                    candidates = prereq_filtered
                 goal = ctx.get("goal", "")
                 course_list = "\n".join(f"- {c['code']}: {c['title']}" for c in candidates[:40])
                 prompt = f'The user is studying at University of Waterloo{" towards: " + goal if goal else ""}.\n'
