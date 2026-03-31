@@ -1,10 +1,17 @@
 import json
+import logging
 from collections import defaultdict
 
 from openai import OpenAI
 
 from models import GraphResponse, SkillNode, Edge, Course, Position
-from uwaterloo import get_course_prereqs, get_program
+import re
+from uwaterloo import (
+    get_course_prereqs,
+    get_program,
+    list_courses_by_subject,
+    list_courses_excluding_subjects,
+)
 
 COL_GAP = 440   # horizontal gap between term columns
 ROW_GAP = 220   # vertical gap between courses within a column
@@ -32,6 +39,7 @@ def generate_academic_graph(
 ) -> GraphResponse:
     """Build a course DAG: deterministic for required courses, LLM for elective picks."""
 
+    logger = logging.getLogger("academic_graph")
     # ── 1. Merge requirement groups from major, specializations, and minors ──
     all_groups = list(requirement_groups)
 
@@ -56,9 +64,22 @@ def generate_academic_graph(
                 course_info[nc] = c
         elif rule != "unknown":
             # numeric rule (pick N)
-            choice_groups.append(group)
+            if not courses and group.get("elective_type"):
+                expanded = _expand_elective_group(group)
+                if expanded:
+                    courses = expanded
+                    group = {**group, "courses": expanded}
+            if courses or group.get("elective_type"):
+                choice_groups.append(group)
             for c in courses:
                 course_info[_normalize_code(c["code"])] = c
+
+    logger.info(
+        "[academics] groups=%d required=%d choice_groups=%d",
+        len(all_groups),
+        len(required_codes),
+        len(choice_groups),
+    )
 
     # ── 3. Fetch prereqs for required courses, build edges within the set ──
     prereq_map: dict[str, list[str]] = {}
@@ -73,15 +94,22 @@ def generate_academic_graph(
     if choice_groups:
         if goal.strip():
             picks = _pick_electives(choice_groups, goal, api_key, model)
+            picks = _fill_picks_with_defaults(choice_groups, picks)
         else:
             picks = _pick_defaults(choice_groups)
 
-        for code, reason in picks.items():
-            nc = _normalize_code(code)
-            elective_codes.add(nc)
-            elective_reasons[nc] = reason
-            if nc not in course_info:
-                course_info[nc] = {"code": code, "title": code, "units": 0.5}
+    for code, reason in picks.items():
+        nc = _normalize_code(code)
+        elective_codes.add(nc)
+        elective_reasons[nc] = reason
+        if nc not in course_info:
+            course_info[nc] = {"code": code, "title": code, "units": 0.5}
+
+    logger.info(
+        "[academics] electives picked=%d (goal=%s)",
+        len(elective_codes),
+        "yes" if goal.strip() else "no",
+    )
 
     # Fetch prereqs for electives, linking back to required courses or other electives
     all_known = required_codes | elective_codes
@@ -334,6 +362,10 @@ def _pick_defaults(choice_groups: list[dict]) -> dict[str, str]:
     """No goal provided — just pick the first N from each group."""
     picks: dict[str, str] = {}
     for group in choice_groups:
+        if not group.get("courses"):
+            expanded = _expand_elective_group(group)
+            if expanded:
+                group["courses"] = expanded
         n = int(group["rule"])
         for c in group.get("courses", [])[:n]:
             picks[c["code"]] = "Default selection"
@@ -352,10 +384,20 @@ def _pick_electives(
     groups_desc = []
     for i, group in enumerate(choice_groups):
         n = int(group["rule"])
-        options = [f"{c['code']} — {c.get('title', c['code'])}" for c in group.get("courses", [])]
-        groups_desc.append(
-            f"Group {i + 1} (pick {n}):\n" + "\n".join(f"  - {opt}" for opt in options)
-        )
+        expanded = _expand_elective_group(group)
+        if expanded:
+            group["courses"] = expanded
+        trimmed = _downselect_elective_options(group.get("courses", []), goal)
+        options = [f"{c['code']} — {c.get('title', c['code'])}" for c in trimmed]
+        if not options:
+            continue
+        header = f"Group {i + 1} (pick {n})"
+        if group.get("description"):
+            header += f": {group['description']}"
+        groups_desc.append(header + "\n" + "\n".join(f"  - {opt}" for opt in options))
+
+    if not groups_desc:
+        return {}
 
     response = client.chat.completions.create(
         model=model,
@@ -388,3 +430,169 @@ def _pick_electives(
 
     data = json.loads(raw)
     return {p["code"]: p.get("reason", "") for p in data.get("picks", [])}
+
+
+def _fill_picks_with_defaults(
+    choice_groups: list[dict],
+    picks: dict[str, str],
+) -> dict[str, str]:
+    """Ensure each choice group contributes N picks; fill gaps with defaults."""
+    if not choice_groups:
+        return picks
+
+    normalized = {_normalize_code(code): code for code in picks.keys()}
+    filled = dict(picks)
+
+    for group in choice_groups:
+        n = int(group.get("rule", 0))
+        if n <= 0:
+            continue
+
+        options = group.get("courses", [])
+        if not options and group.get("elective_type"):
+            expanded = _expand_elective_group(group)
+            if expanded:
+                options = expanded
+
+        if not options:
+            continue
+
+        group_codes = [_normalize_code(c["code"]) for c in options]
+        picked_in_group = [code for code in group_codes if code in normalized]
+        needed = n - len(picked_in_group)
+        if needed <= 0:
+            continue
+
+        for c in options:
+            code = c["code"]
+            ncode = _normalize_code(code)
+            if ncode in normalized:
+                continue
+            filled[code] = "Default selection"
+            normalized[ncode] = code
+            needed -= 1
+            if needed == 0:
+                break
+
+    return filled
+
+
+def _expand_elective_group(group: dict) -> list[dict]:
+    """Expand elective groups with no explicit courses using UW API (range-based electives)."""
+    if group.get("courses"):
+        return group["courses"]
+
+    elective_type = group.get("elective_type")
+    if elective_type == "breadth":
+        exclude = {
+            "CS", "MATH", "STAT", "CO", "AMATH", "PMATH", "ACTSC",
+        }
+        return list_courses_excluding_subjects(exclude)
+
+    if elective_type != "range":
+        return []
+
+    subject = group.get("subject", "").upper().strip()
+    ranges = group.get("ranges") or []
+    if (not subject or not ranges) and group.get("description"):
+        parsed_ranges = _extract_ranges_from_text(group["description"])
+        if parsed_ranges:
+            ranges = ranges or parsed_ranges
+            if not subject:
+                subject = parsed_ranges[0]["subject"]
+    if not subject and ranges:
+        subject = str(ranges[0].get("subject", "")).upper().strip()
+    if not subject:
+        return []
+
+    courses = list_courses_by_subject(subject)
+    if not courses:
+        return []
+
+    if ranges:
+        filtered = []
+        for c in courses:
+            num = _catalog_number(c.get("code", ""))
+            if num is None:
+                continue
+            for r in ranges:
+                start = _catalog_number(r.get("catalog_start")) if r.get("catalog_start") else None
+                end = _catalog_number(r.get("catalog_end")) if r.get("catalog_end") else None
+                if start is not None and num < start:
+                    continue
+                if end is not None and num > end:
+                    continue
+                filtered.append(c)
+                break
+        return filtered
+
+    start = group.get("catalog_start")
+    end = group.get("catalog_end")
+    if not start and not end:
+        return courses
+
+    start_num = _catalog_number(start) if start else None
+    end_num = _catalog_number(end) if end else None
+
+    if start_num is None and end_num is None:
+        return courses
+
+    filtered = []
+    for c in courses:
+        num = _catalog_number(c.get("code", ""))
+        if num is None:
+            continue
+        if start_num is not None and num < start_num:
+            continue
+        if end_num is not None and num > end_num:
+            continue
+        filtered.append(c)
+    return filtered
+
+
+def _catalog_number(code: str) -> int | None:
+    m = re.search(r"(\\d{3})", str(code))
+    if not m:
+        return None
+    try:
+        return int(m.group(1))
+    except ValueError:
+        return None
+
+
+def _extract_ranges_from_text(text: str) -> list[dict]:
+    ranges = []
+    for m in re.finditer(r"([A-Z]{2,})\\s*(\\d{3}[A-Z]?)\\s*-\\s*([A-Z]{2,})?\\s*(\\d{3}[A-Z]?)", text):
+        subj = (m.group(1) or "").upper()
+        end_subj = (m.group(3) or "").upper()
+        if end_subj and end_subj != subj:
+            continue
+        ranges.append({
+            "subject": subj,
+            "catalog_start": m.group(2),
+            "catalog_end": m.group(4),
+        })
+    return ranges
+
+
+def _downselect_elective_options(courses: list[dict], goal: str, limit: int = 80) -> list[dict]:
+    if len(courses) <= limit:
+        return courses
+
+    tokens = set(re.findall(r"[a-zA-Z]{3,}", goal.lower()))
+    if not tokens:
+        return courses[:limit]
+
+    scored: list[tuple[int, int, dict]] = []
+    for idx, c in enumerate(courses):
+        title = str(c.get("title", "")).lower()
+        score = sum(1 for t in tokens if t in title)
+        scored.append((score, idx, c))
+
+    scored.sort(key=lambda x: (x[0], -x[1]), reverse=True)
+    top = [c for score, _, c in scored if score > 0]
+    if len(top) >= limit:
+        return top[:limit]
+
+    remaining = [c for score, _, c in scored if score <= 0]
+    return (top + remaining)[:limit]

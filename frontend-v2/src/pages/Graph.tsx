@@ -1100,6 +1100,7 @@ export default function Graph() {
             desired_skills: desiredSkills,
             my_skills: mySkills,
             nodes: nodes.map((n) => ({ skill: n.data.labels.join(', '), course_title: n.data.courseTitle })),
+            mode,
           }}
           onAction={(action) => {
             switch (action.type) {

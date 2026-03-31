@@ -585,5 +585,387 @@
     "prereqs": [],
     "coreqs": [],
     "antireqs": []
+  },
+  "PSYCH238": {
+    "code": "PSYCH238",
+    "raw": "Prereq: Level at least 1B; Not open to Accounting and Financial Management students. Antireq: PSYCH 338, AFM 280, MSE 211, BUS 288W/388W, SCBUS 225",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "PSYCH 338",
+      "AFM 280",
+      "MSE 211",
+      "BUS 288W",
+      "BUS 388W",
+      "SCBUS 225"
+    ]
+  },
+  "CS479": {
+    "code": "CS479",
+    "raw": "Prereq: One of STAT 230, STAT 240 or STAT 206 with a minimum grade of 60%. Coreq: One of AMATH 242, CS 335, CS 370 or CS 371",
+    "prereqs": [
+      "STAT 230",
+      "STAT 240",
+      "STAT 206"
+    ],
+    "coreqs": [
+      "AMATH 242",
+      "CS 335",
+      "CS 370",
+      "CS 371"
+    ],
+    "antireqs": []
+  },
+  "INTEG120": {
+    "code": "INTEG120",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ECON424": {
+    "code": "ECON424",
+    "raw": "Prereq: One of ECON 323, STAT 221, STAT 231, STAT 241; Honours students or Economics majors",
+    "prereqs": [
+      "ECON 323",
+      "STAT 221",
+      "STAT 231",
+      "STAT 241"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH398": {
+    "code": "PSYCH398",
+    "raw": "Prereq: PSYCH 207 or 261; Level at least 3A Honours Psychology or Make-Up Psychology students; Psychology average at least 74%. Coreq: PSYCH 391. Antireq: PSYCH 390, 392, 394, 396; Psychology Research Intensive Specialization",
+    "prereqs": [
+      "PSYCH 207",
+      "PSYCH 261"
+    ],
+    "coreqs": [
+      "PSYCH 391"
+    ],
+    "antireqs": [
+      "PSYCH 390",
+      "PSYCH 392",
+      "PSYCH 394",
+      "PSYCH 396"
+    ]
+  },
+  "ECE457C": {
+    "code": "ECE457C",
+    "raw": "Prereq: One of BME 213, ECE 203, MTE 201, STAT 206, STAT 230, STAT 240, SYDE 212. Antireq: ECE 493, Probablistic Reasoning and Reinforcement Learning",
+    "prereqs": [
+      "BME 213",
+      "ECE 203",
+      "MTE 201",
+      "STAT 206",
+      "STAT 230",
+      "STAT 240",
+      "SYDE 212"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "ECE 493"
+    ]
+  },
+  "CS485": {
+    "code": "CS485",
+    "raw": "Prereq: CS 341 and (STAT 206 or 230 or 240); Honours Computer Science, Honours Data Science (BCS, BMath), BCFM, BSE students only",
+    "prereqs": [
+      "CS 341",
+      "STAT 206",
+      "STAT 230",
+      "STAT 240"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHIL356": {
+    "code": "PHIL356",
+    "raw": "Prereq: PHIL/PSYCH 256",
+    "prereqs": [
+      "PSYCH 256"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "KIN357": {
+    "code": "KIN357",
+    "raw": "Prereq: KIN 255 or PSYCH 261",
+    "prereqs": [
+      "KIN 255",
+      "PSYCH 261"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "GEOG484": {
+    "code": "GEOG484",
+    "raw": "Prereq: GEOG 316, GEOG 371. Antireq: CS 480",
+    "prereqs": [
+      "GEOG 316",
+      "GEOG 371"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CS 480"
+    ]
+  },
+  "CS486": {
+    "code": "CS486",
+    "raw": "Prereq: CS 341; Computer Science and BMath (Data Science) students only. Coreq: STAT 206 or 231 or 241. Antireq: SYDE 522",
+    "prereqs": [
+      "CS 341"
+    ],
+    "coreqs": [
+      "STAT 206",
+      "STAT 231",
+      "STAT 241"
+    ],
+    "antireqs": [
+      "SYDE 522"
+    ]
+  },
+  "COGSCI300": {
+    "code": "COGSCI300",
+    "raw": "Prereq: PHIL/PSYCH 256",
+    "prereqs": [
+      "PSYCH 256"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS480": {
+    "code": "CS480",
+    "raw": "Prereq: CS 341 and (STAT 206 or 231 or 241); Computer Science and BMath (Data Science) students only. Antireq: MSE/MSCI 446",
+    "prereqs": [
+      "CS 341",
+      "STAT 206",
+      "STAT 231",
+      "STAT 241"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "MSCI 446"
+    ]
+  },
+  "SYDE577": {
+    "code": "SYDE577",
+    "raw": "Prereq: Level at least 3A BASc/BSE students. Antireq: SYDE 599, Topic 4",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "SYDE 599"
+    ]
+  },
+  "CS475": {
+    "code": "CS475",
+    "raw": "Prereq: AMATH 242/CS 371 or CS 370",
+    "prereqs": [
+      "AMATH 242",
+      "CS 371",
+      "CS 370"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MSE446": {
+    "code": "MSE446",
+    "raw": "Prereq: Lev at least 3A;One of BME 122,CS 240/240E,ECE 250,MSE 240,MTE 140,SYDE 223,MSCI 240;One of AE 224,BME 213,CHE 220,CIVE 224,ECE 307, ENVE 224,ME 202,MSE 253,MTE 201,NE 215,STAT 206,231,241,SYDE 212,MSCI 252,MSCI 253.Anti:CS 480,ECE 457B,SYDE 522",
+    "prereqs": [
+      "BME 122",
+      "CS 240",
+      "CS 240E",
+      "ECE 250",
+      "MSE 240",
+      "MTE 140",
+      "SYDE 223",
+      "MSCI 240",
+      "AE 224",
+      "BME 213",
+      "CHE 220",
+      "CIVE 224",
+      "ECE 307",
+      "ENVE 224",
+      "ME 202",
+      "MSE 253",
+      "MTE 201",
+      "NE 215",
+      "STAT 206",
+      "STAT 231",
+      "STAT 241",
+      "SYDE 212",
+      "MSCI 252",
+      "MSCI 253",
+      "CS 480",
+      "ECE 457B",
+      "SYDE 522"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MTHEL131": {
+    "code": "MTHEL131",
+    "raw": "Prereq: 4U Calculus and Vectors",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "AFM101": {
+    "code": "AFM101",
+    "raw": "Prereq: Not open to students in AFM, Mathematics/CPA, Biotechnology/CPA, CFM, Arts and Business, Environment and Business, Science and Business, or Human Resources Management. Antireq: AFM 123/ARBUS 102, AFM 191, BUS 127W/227W, MSCI 262",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "AFM 123",
+      "ARBUS 102",
+      "AFM 191",
+      "BUS 127W",
+      "BUS 227W",
+      "MSCI 262"
+    ]
+  },
+  "CS484": {
+    "code": "CS484",
+    "raw": "Prereq: (One of AMATH 242/CS 371, CS 370, MATH 235, MATH 245) and (One of STAT 206, STAT 230 or 240); Honours Computer Science, Honours Data Science (BCS, BMath), BCFM, BSE students only",
+    "prereqs": [
+      "AMATH 242",
+      "CS 371",
+      "CS 370",
+      "MATH 235",
+      "MATH 245",
+      "STAT 206",
+      "STAT 230",
+      "STAT 240"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH312": {
+    "code": "PSYCH312",
+    "raw": "Prereq: One of PSYCH 207, 211, 212/212R, 213R; Level at least 2B",
+    "prereqs": [
+      "PSYCH 207",
+      "PSYCH 211",
+      "PSYCH 212",
+      "PSYCH 212R",
+      "PSYCH 213R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH312R": {
+    "code": "PSYCH312R",
+    "raw": "Prereq: One of PSYCH 207, 211, 212/212R, 213R; Level at least 2B",
+    "prereqs": [
+      "PSYCH 207",
+      "PSYCH 211",
+      "PSYCH 212",
+      "PSYCH 212R",
+      "PSYCH 213R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MSE546": {
+    "code": "MSE546",
+    "raw": "Prereq: MSE 332; One of CS 480, ECE 457B, MSE 446, SYDE 522",
+    "prereqs": [
+      "MSE 332",
+      "CS 480",
+      "ECE 457B",
+      "MSE 446",
+      "SYDE 522"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS371": {
+    "code": "CS371",
+    "raw": "Prereq: One of CS 116, CS 136, CS 138, CS 146; One of (CS 114 with a minimum grade of 60%), CS 115, 135, 145; MATH 235 or MATH 245; MATH 237 or MATH 247",
+    "prereqs": [
+      "CS 116",
+      "CS 136",
+      "CS 138",
+      "CS 146",
+      "CS 114",
+      "CS 115",
+      "CS 135",
+      "CS 145",
+      "MATH 235",
+      "MATH 245",
+      "MATH 237",
+      "MATH 247"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CLAS221": {
+    "code": "CLAS221",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH204": {
+    "code": "ANTH204",
+    "raw": "Antireq: ANTH 260",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "ANTH 260"
+    ]
+  },
+  "ANTH201": {
+    "code": "ANTH201",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS431": {
+    "code": "CS431",
+    "raw": "Prereq: (CS 231 or 234 or 341) and (CS 251/251E or 330); Antireq: CS 451; Not open to Honours Computer Science, Honours Data Science (BCS), BCFM, BSE",
+    "prereqs": [
+      "CS 231",
+      "CS 234",
+      "CS 341",
+      "CS 251",
+      "CS 251E",
+      "CS 330"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CS 451"
+    ]
+  },
+  "ANTH202": {
+    "code": "ANTH202",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS466": {
+    "code": "CS466",
+    "raw": "Prereq: CS 341; Honours Computer Science, Honours Data Science (BCS), BCFM, BSE students only",
+    "prereqs": [
+      "CS 341"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS451": {
+    "code": "CS451",
+    "raw": "Prereq: CS 341, 348 and (CS 350 or SE 350); Honours Computer Science, Honours Data Science (BCS, BMath), BCFM, BSE students only",
+    "prereqs": [
+      "CS 341",
+      "CS 348",
+      "CS 350",
+      "SE 350"
+    ],
+    "coreqs": [],
+    "antireqs": []
   }
 }

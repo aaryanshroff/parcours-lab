@@ -54,16 +54,37 @@ def parse_course_from_li(li) -> dict | None:
 
 def parse_prose_elective(text: str) -> dict | None:
     """Parse prose rules like 'Complete 3 additional CS courses chosen from CS340-CS398'."""
+    def _extract_ranges(raw: str) -> list[dict]:
+        ranges = []
+        for m in re.finditer(r"([A-Z]{2,})\s*(\d{3}[A-Z]?)\s*-\s*([A-Z]{2,})?\s*(\d{3}[A-Z]?)", raw):
+            subj = (m.group(1) or "").upper()
+            end_subj = (m.group(3) or "").upper()
+            if end_subj and end_subj != subj:
+                continue
+            ranges.append({
+                "subject": subj,
+                "catalog_start": m.group(2),
+                "catalog_end": m.group(4),
+            })
+        return ranges
+
     m = re.match(
         r"Complete\s+(\d+)\s+additional\s+(\w+)\s+courses?\s+chosen\s+from\s+(.+)",
         text, re.IGNORECASE,
     )
     if m:
+        subject = m.group(2).upper()
+        ranges = _extract_ranges(text)
+        catalog_start = ranges[0]["catalog_start"] if ranges else None
+        catalog_end = ranges[0]["catalog_end"] if ranges else None
         return {
             "rule": int(m.group(1)),
             "courses": [],
             "elective_type": "range",
-            "subject": m.group(2).upper(),
+            "subject": subject,
+            "catalog_start": catalog_start,
+            "catalog_end": catalog_end,
+            "ranges": ranges,
             "description": text,
         }
 
@@ -72,11 +93,18 @@ def parse_prose_elective(text: str) -> dict | None:
         text, re.IGNORECASE,
     )
     if m:
+        ranges = _extract_ranges(text)
+        subject = ranges[0]["subject"] if ranges else ""
+        catalog_start = ranges[0]["catalog_start"] if ranges else None
+        catalog_end = ranges[0]["catalog_end"] if ranges else None
         return {
             "rule": int(m.group(1)),
             "courses": [],
             "elective_type": "range",
-            "subject": "",
+            "subject": subject,
+            "catalog_start": catalog_start,
+            "catalog_end": catalog_end,
+            "ranges": ranges,
             "description": text,
         }
 
@@ -140,7 +168,7 @@ def parse_requirements_html(html: str) -> list[dict]:
     if rule_lis:
         for rule_li in rule_lis:
             group = parse_requirement_group(rule_li)
-            if group["courses"]:
+            if group.get("courses") or group.get("elective_type"):
                 groups.append(group)
     else:
         courses = []

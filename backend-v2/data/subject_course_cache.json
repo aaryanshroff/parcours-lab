@@ -1,0 +1,384 @@
+{
+  "CS": [
+    {
+      "code": "CS234",
+      "title": "Data Types and Structures",
+      "units": 0.5
+    },
+    {
+      "code": "CS371",
+      "title": "Introduction to Computational Mathematics",
+      "units": 0.5
+    },
+    {
+      "code": "CS479",
+      "title": "Neural Networks",
+      "units": 0.5
+    },
+    {
+      "code": "CS231",
+      "title": "Algorithmic Problem Solving",
+      "units": 0.5
+    },
+    {
+      "code": "CS467",
+      "title": "Introduction to Quantum Information Processing",
+      "units": 0.5
+    },
+    {
+      "code": "CS475",
+      "title": "Computational Linear Algebra",
+      "units": 0.5
+    },
+    {
+      "code": "CS486",
+      "title": "Introduction to Artificial Intelligence",
+      "units": 0.5
+    },
+    {
+      "code": "CS492",
+      "title": "The Social Implications of Computing",
+      "units": 0.5
+    },
+    {
+      "code": "CS480",
+      "title": "Introduction to Machine Learning",
+      "units": 0.5
+    },
+    {
+      "code": "CS485",
+      "title": "Statistical and Computational Foundations of Machine Learning",
+      "units": 0.5
+    },
+    {
+      "code": "CS452",
+      "title": "Real-Time Programming",
+      "units": 0.5
+    },
+    {
+      "code": "CS484",
+      "title": "Computational Vision",
+      "units": 0.5
+    },
+    {
+      "code": "CS482",
+      "title": "Computational Techniques in Biological Sequence Analysis",
+      "units": 0.5
+    },
+    {
+      "code": "CS200",
+      "title": "Concepts for Advanced Computer Usage",
+      "units": 0.5
+    },
+    {
+      "code": "CS330",
+      "title": "Management Information Systems",
+      "units": 0.5
+    },
+    {
+      "code": "CS136L",
+      "title": "Tools and Techniques for Software Development",
+      "units": 0.25
+    },
+    {
+      "code": "CS341",
+      "title": "Algorithms",
+      "units": 0.5
+    },
+    {
+      "code": "CS350",
+      "title": "Operating Systems",
+      "units": 0.5
+    },
+    {
+      "code": "CS490",
+      "title": "Information Systems Management",
+      "units": 0.5
+    },
+    {
+      "code": "CS115",
+      "title": "Introduction to Computer Science 1",
+      "units": 0.5
+    },
+    {
+      "code": "CS135",
+      "title": "Designing Functional Programs",
+      "units": 0.5
+    },
+    {
+      "code": "CS145",
+      "title": "Designing Functional Programs (Advanced Level)",
+      "units": 0.5
+    },
+    {
+      "code": "CS136",
+      "title": "Elementary Algorithm Design and Data Abstraction",
+      "units": 0.5
+    },
+    {
+      "code": "CS146",
+      "title": "Elementary Algorithm Design and Data Abstraction (Advanced Level)",
+      "units": 0.5
+    },
+    {
+      "code": "CS240",
+      "title": "Data Structures and Data Management",
+      "units": 0.5
+    },
+    {
+      "code": "CS240E",
+      "title": "Data Structures and Data Management (Enriched)",
+      "units": 0.5
+    },
+    {
+      "code": "CS241",
+      "title": "Foundations of Sequential Programs",
+      "units": 0.5
+    },
+    {
+      "code": "CS241E",
+      "title": "Foundations of Sequential Programs (Enriched)",
+      "units": 0.5
+    },
+    {
+      "code": "CS245",
+      "title": "Logic and Computation",
+      "units": 0.5
+    },
+    {
+      "code": "CS245E",
+      "title": "Logic and Computation (Enriched)",
+      "units": 0.5
+    },
+    {
+      "code": "CS246",
+      "title": "Object-Oriented Software Development",
+      "units": 0.5
+    },
+    {
+      "code": "CS246E",
+      "title": "Object-Oriented Software Development (Enriched)",
+      "units": 0.5
+    },
+    {
+      "code": "CS251",
+      "title": "Computer Organization and Design",
+      "units": 0.5
+    },
+    {
+      "code": "CS251E",
+      "title": "Computer Organization and Design (Enriched)",
+      "units": 0.5
+    },
+    {
+      "code": "CS348",
+      "title": "Introduction to Database Management",
+      "units": 0.5
+    },
+    {
+      "code": "CS476",
+      "title": "Numerical Computation for Financial Modelling",
+      "units": 0.5
+    },
+    {
+      "code": "CS338",
+      "title": "Computer Applications in Business: Databases",
+      "units": 0.5
+    },
+    {
+      "code": "CS430",
+      "title": "Applications Software Engineering",
+      "units": 0.5
+    },
+    {
+      "code": "CS116",
+      "title": "Introduction to Computer Science 2",
+      "units": 0.5
+    },
+    {
+      "code": "CS370",
+      "title": "Numerical Computation",
+      "units": 0.5
+    },
+    {
+      "code": "CS230",
+      "title": "Introduction to Computers and Computer Systems",
+      "units": 0.5
+    },
+    {
+      "code": "CS349",
+      "title": "User Interfaces",
+      "units": 0.5
+    },
+    {
+      "code": "CS449",
+      "title": "Human-Computer Interaction",
+      "units": 0.5
+    },
+    {
+      "code": "CS462",
+      "title": "Formal Languages and Parsing",
+      "units": 0.5
+    },
+    {
+      "code": "CS466",
+      "title": "Algorithm Design and Analysis",
+      "units": 0.5
+    },
+    {
+      "code": "CS487",
+      "title": "Introduction to Symbolic Computation",
+      "units": 0.5
+    },
+    {
+      "code": "CS360",
+      "title": "Introduction to the Theory of Computing",
+      "units": 0.5
+    },
+    {
+      "code": "CS365",
+      "title": "Models of Computation",
+      "units": 0.5
+    },
+    {
+      "code": "CS488",
+      "title": "Introduction to Computer Graphics",
+      "units": 0.5
+    },
+    {
+      "code": "CS383",
+      "title": "Computational Digital Art Studio",
+      "units": 0.5
+    },
+    {
+      "code": "CS431",
+      "title": "Data-Intensive Distributed Analytics",
+      "units": 0.5
+    },
+    {
+      "code": "CS451",
+      "title": "Data-Intensive Distributed Computing",
+      "units": 0.5
+    },
+    {
+      "code": "CS247",
+      "title": "Software Engineering Principles",
+      "units": 0.5
+    },
+    {
+      "code": "CS499T",
+      "title": "Honours Thesis",
+      "units": 0.5
+    },
+    {
+      "code": "CS114",
+      "title": "Principles of Computing for Science",
+      "units": 0.5
+    },
+    {
+      "code": "CS399",
+      "title": "Readings in Computer Science",
+      "units": 0.5
+    },
+    {
+      "code": "CS499R",
+      "title": "Readings in Computer Science",
+      "units": 0.5
+    },
+    {
+      "code": "CS448",
+      "title": "Database Systems Implementation",
+      "units": 0.5
+    },
+    {
+      "code": "CS454",
+      "title": "Distributed Systems",
+      "units": 0.5
+    },
+    {
+      "code": "CS105",
+      "title": "Introduction to Computer Programming 1",
+      "units": 0.5
+    },
+    {
+      "code": "CS106",
+      "title": "Introduction to Computer Programming 2",
+      "units": 0.5
+    },
+    {
+      "code": "CS100",
+      "title": "Introduction to Computing Through Applications",
+      "units": 0.5
+    },
+    {
+      "code": "CS450",
+      "title": "Computer Architecture",
+      "units": 0.5
+    },
+    {
+      "code": "CS456",
+      "title": "Computer Networks",
+      "units": 0.5
+    },
+    {
+      "code": "CS457",
+      "title": "System Performance Evaluation",
+      "units": 0.5
+    },
+    {
+      "code": "CS335",
+      "title": "Computational Methods in Business and Finance",
+      "units": 0.5
+    },
+    {
+      "code": "CS445",
+      "title": "Software Requirements Specification and Analysis",
+      "units": 0.5
+    },
+    {
+      "code": "CS446",
+      "title": "Software Design and Architectures",
+      "units": 0.5
+    },
+    {
+      "code": "CS447",
+      "title": "Software Testing, Quality Assurance, and Maintenance",
+      "units": 0.5
+    },
+    {
+      "code": "CS453",
+      "title": "Software and Systems Security",
+      "units": 0.5
+    },
+    {
+      "code": "CS459",
+      "title": "Privacy, Cryptography, Network and Data Security",
+      "units": 0.5
+    },
+    {
+      "code": "CS436",
+      "title": "Networks and Distributed Computer Systems",
+      "units": 0.5
+    },
+    {
+      "code": "CS343",
+      "title": "Concurrent and Parallel Programming",
+      "units": 0.5
+    },
+    {
+      "code": "CS346",
+      "title": "Application Development",
+      "units": 0.5
+    },
+    {
+      "code": "CS442",
+      "title": "Principles of Programming Languages",
+      "units": 0.5
+    },
+    {
+      "code": "CS444",
+      "title": "Compiler Construction",
+      "units": 0.5
+    }
+  ]
+}

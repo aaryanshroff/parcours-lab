@@ -91,9 +91,33 @@ def graph_academics():
     minor_pids = body.get("minor_pids", [])
     goal = body.get("goal", "")
 
+    app.logger.info(
+        "[academics] request groups=%d specs=%d minors=%d goal_len=%d",
+        len(requirement_groups),
+        len(specialization_pids),
+        len(minor_pids),
+        len(goal or ""),
+    )
+    app.logger.info(
+        "[academics] groups with courses=%d elective_type=%d",
+        sum(1 for g in requirement_groups if g.get("courses")),
+        sum(1 for g in requirement_groups if g.get("elective_type")),
+    )
+
     api_key = os.environ["OPENROUTER_API_KEY"]
     result = generate_academic_graph(
         requirement_groups, specialization_pids, minor_pids, goal, api_key
+    )
+    elective_nodes = [
+        n for n in result.nodes
+        if getattr(n.course, "reason", "") != "Required course"
+    ]
+    terms = sorted({getattr(n, "term", "") for n in result.nodes if getattr(n, "term", "")})
+    app.logger.info(
+        "[academics] result nodes=%d electives=%d terms=%s",
+        len(result.nodes),
+        len(elective_nodes),
+        ",".join(terms),
     )
     return jsonify(result.model_dump())
 
@@ -258,9 +282,10 @@ CHAT_TOOLS = [
 ]
 
 
-def _execute_chat_tool(name: str, args: dict, api_key: str) -> tuple[str, dict]:
+def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None = None) -> tuple[str, dict]:
     """Execute a tool call. Returns (result_text, action_dict)."""
     import json as _json
+    import re as _re
 
     if name == "replace_course":
         from openai import OpenAI
@@ -268,23 +293,70 @@ def _execute_chat_tool(name: str, args: dict, api_key: str) -> tuple[str, dict]:
         skill = args.get("skill_name", "")
         reason = args.get("reason", "")
         current_course = args.get("current_course", "")
+        ctx = context or {}
 
         client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key)
-        prompt = f'The user is learning the skill: "{skill}".'
-        if current_course:
-            prompt += f' They were recommended the course: "{current_course}", but want a replacement.'
-        if reason:
-            prompt += f' Their reason: "{reason}"'
-        prompt += '\n\nSuggest ONE alternative online course for this exact skill. Return JSON only: {"title": "<course title> — <platform>", "url": "<course url>", "reason": "<one sentence explaining why this course is a better fit>"}'
 
-        resp = client.chat.completions.create(
-            model="openai/gpt-4.1-mini",
-            messages=[
-                {"role": "system", "content": "You recommend online courses. Reply with valid JSON only, no markdown."},
-                {"role": "user", "content": prompt},
-            ],
-        )
-        course = _json.loads(resp.choices[0].message.content)
+        if ctx.get("mode") == "academics":
+            from uwaterloo import list_courses_by_subject
+
+            subject_match = _re.match(r"^([A-Z]{2,})", skill.strip().upper())
+            subject = subject_match.group(1) if subject_match else ""
+            candidates = []
+            if subject:
+                norm_current = skill.replace(" ", "").upper()
+                candidates = [
+                    c for c in list_courses_by_subject(subject)
+                    if c["code"].replace(" ", "").upper() != norm_current
+                ]
+
+            if candidates:
+                goal = ctx.get("goal", "")
+                course_list = "\n".join(f"- {c['code']}: {c['title']}" for c in candidates[:40])
+                prompt = f'The user is studying at University of Waterloo{" towards: " + goal if goal else ""}.\n'
+                prompt += f'They want to replace the course "{skill}" ({current_course or "current course"}).'
+                if reason:
+                    prompt += f'\nReason: "{reason}"'
+                prompt += f"\n\nChoose ONE replacement from this list:\n{course_list}\n\nReturn JSON only: {{\"code\": \"<course code>\", \"title\": \"<course title>\", \"reason\": \"<one sentence why it's a good fit>\"}}"
+
+                resp = client.chat.completions.create(
+                    model="openai/gpt-4.1-mini",
+                    messages=[
+                        {"role": "system", "content": "You recommend University of Waterloo courses. Reply with valid JSON only, no markdown."},
+                        {"role": "user", "content": prompt},
+                    ],
+                )
+                picked = _json.loads(resp.choices[0].message.content)
+                code = picked.get("code", skill)
+                title = picked.get("title", code)
+                course = {
+                    "title": f"{code}: {title}",
+                    "url": f"https://uwflow.com/course/{code.replace(' ', '').lower()}",
+                    "reason": picked.get("reason", ""),
+                }
+            else:
+                course = {
+                    "title": skill,
+                    "url": f"https://uwflow.com/course/{skill.replace(' ', '').lower()}",
+                    "reason": "No alternative found in the same subject.",
+                }
+        else:
+            prompt = f'The user is learning the skill: "{skill}".'
+            if current_course:
+                prompt += f' They were recommended the course: "{current_course}", but want a replacement.'
+            if reason:
+                prompt += f' Their reason: "{reason}"'
+            prompt += '\n\nSuggest ONE alternative online course for this exact skill. Return JSON only: {"title": "<course title> — <platform>", "url": "<course url>", "reason": "<one sentence explaining why this course is a better fit>"}'
+
+            resp = client.chat.completions.create(
+                model="openai/gpt-4.1-mini",
+                messages=[
+                    {"role": "system", "content": "You recommend online courses. Reply with valid JSON only, no markdown."},
+                    {"role": "user", "content": prompt},
+                ],
+            )
+            course = _json.loads(resp.choices[0].message.content)
+
         return (
             f"Replaced course for {skill} with: {course['title']}",
             {"type": "replace_course", "skill_name": skill, "course": course},
@@ -312,16 +384,29 @@ def chat():
     api_key = os.environ["OPENROUTER_API_KEY"]
     client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key)
 
-    system_content = (
-        "You are a helpful learning path assistant embedded in a skill-tree app. "
-        "You help users understand their personalized learning path, suggest study strategies, "
-        "and answer questions about the skills and courses in their tree. "
-        "You can modify the user's skill tree using tools. "
-        "Keep responses concise and friendly. "
-        "If the user's message is not about learning paths, courses, goals, skills, or career development, "
-        "respond ONLY with: \"I'm here to help with your learning path and course recommendations. "
-        "What skills or goals are you working toward?\""
-    )
+    if context.get("mode") == "academics":
+        system_content = (
+            "You are a helpful academic advisor embedded in a University of Waterloo course planner. "
+            "You help students understand their course plan, suggest study strategies, "
+            "and answer questions about the courses in their plan. "
+            "You can modify the user's course plan using tools. "
+            "When replacing a course, use the replace_course tool with the course code (e.g. 'CS 135') as skill_name. "
+            "Keep responses concise and friendly. "
+            "If the user's message is not about course planning, academics, or university life, "
+            "respond ONLY with: \"I'm here to help with your course plan. "
+            "What would you like to change?\""
+        )
+    else:
+        system_content = (
+            "You are a helpful learning path assistant embedded in a skill-tree app. "
+            "You help users understand their personalized learning path, suggest study strategies, "
+            "and answer questions about the skills and courses in their tree. "
+            "You can modify the user's skill tree using tools. "
+            "Keep responses concise and friendly. "
+            "If the user's message is not about learning paths, courses, goals, skills, or career development, "
+            "respond ONLY with: \"I'm here to help with your learning path and course recommendations. "
+            "What skills or goals are you working toward?\""
+        )
     if context:
         system_content += "\n\nCurrent state of the user's learning path:\n" + _json.dumps(context)
 
@@ -343,7 +428,7 @@ def chat():
 
             for tool_call in choice.message.tool_calls:
                 args = _json.loads(tool_call.function.arguments)
-                result_text, action = _execute_chat_tool(tool_call.function.name, args, api_key)
+                result_text, action = _execute_chat_tool(tool_call.function.name, args, api_key, context)
                 if action:
                     actions.append(action)
                 api_messages.append({
