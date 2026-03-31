@@ -1173,5 +1173,37 @@
     ],
     "coreqs": [],
     "antireqs": []
+  },
+  "AFM424": {
+    "code": "AFM424",
+    "raw": "Prereq: One of AFM 272/ACTSC 291, AFM 273, ACTSC 372, ECON 371. Antireq: BUS 473W",
+    "prereqs": [
+      "AFM 272",
+      "ACTSC 291",
+      "AFM 273",
+      "ACTSC 372",
+      "ECON 371"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "BUS 473W"
+    ]
+  },
+  "ENGL378": {
+    "code": "ENGL378",
+    "raw": "Prereq: At least 70% in one of EMLS 101R, 102R, EMLS/ENGL 129R, ENGL 109, COMMST 100, 223; one of STAT 331, 371, ACTSC 331; Actuarial Science or Statistics major students",
+    "prereqs": [
+      "EMLS 101R",
+      "EMLS 102R",
+      "ENGL 129R",
+      "ENGL 109",
+      "COMMST 100",
+      "COMMST 223",
+      "STAT 331",
+      "STAT 371",
+      "ACTSC 331"
+    ],
+    "coreqs": [],
+    "antireqs": []
   }
 }
