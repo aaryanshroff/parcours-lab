@@ -967,5 +967,49 @@
     ],
     "coreqs": [],
     "antireqs": []
+  },
+  "CS370": {
+    "code": "CS370",
+    "raw": "Prereq: (One of MATH 118, 119, 128, 138, 148), (one of MATH 106, 114, 115, 136, 146), (one of CS 231, 234, 241/241E, 246/246E). Antireq: AMATH 242/CS 371, CHE 121, CIVE 121, CS 335, ECE 204, MTE 204",
+    "prereqs": [
+      "MATH 118",
+      "MATH 119",
+      "MATH 128",
+      "MATH 138",
+      "MATH 148",
+      "MATH 106",
+      "MATH 114",
+      "MATH 115",
+      "MATH 136",
+      "MATH 146",
+      "CS 231",
+      "CS 234",
+      "CS 241",
+      "CS 241E",
+      "CS 246",
+      "CS 246E"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "AMATH 242",
+      "CS 371",
+      "CHE 121",
+      "CIVE 121",
+      "CS 335",
+      "ECE 204",
+      "MTE 204"
+    ]
+  },
+  "CS482": {
+    "code": "CS482",
+    "raw": "Prereq: CS 341 and (STAT 206 with at least 70% or STAT 231 with at least 60% or STAT 241)",
+    "prereqs": [
+      "CS 341",
+      "STAT 206",
+      "STAT 231",
+      "STAT 241"
+    ],
+    "coreqs": [],
+    "antireqs": []
   }
 }
