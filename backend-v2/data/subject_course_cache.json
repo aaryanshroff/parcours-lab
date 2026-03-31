@@ -380,5 +380,432 @@
       "title": "Compiler Construction",
       "units": 0.5
     }
+  ],
+  "AFM": [
+    {
+      "code": "AFM 401",
+      "title": "Accounting Theory",
+      "units": null
+    },
+    {
+      "code": "AFM 291",
+      "title": "Intermediate Financial Accounting 1",
+      "units": null
+    },
+    {
+      "code": "AFM 131",
+      "title": "Introduction to Business in North America",
+      "units": null
+    },
+    {
+      "code": "AFM 382",
+      "title": "Cost Management Systems",
+      "units": null
+    },
+    {
+      "code": "AFM 123",
+      "title": "Accounting Information for Managers",
+      "units": null
+    },
+    {
+      "code": "AFM 391",
+      "title": "Intermediate Financial Accounting 2",
+      "units": null
+    },
+    {
+      "code": "AFM 424",
+      "title": "Equity Investments",
+      "units": null
+    },
+    {
+      "code": "AFM 231",
+      "title": "Business Law",
+      "units": null
+    },
+    {
+      "code": "AFM 451",
+      "title": "Audit Strategy",
+      "units": null
+    },
+    {
+      "code": "AFM 491",
+      "title": "Advanced Financial Accounting",
+      "units": null
+    },
+    {
+      "code": "AFM 273",
+      "title": "Financial Instruments and Capital Markets",
+      "units": null
+    },
+    {
+      "code": "AFM 274",
+      "title": "Introduction to Corporate Finance",
+      "units": null
+    },
+    {
+      "code": "AFM 433",
+      "title": "Business Strategy",
+      "units": null
+    },
+    {
+      "code": "AFM 341",
+      "title": "Accounting Information Systems",
+      "units": null
+    },
+    {
+      "code": "AFM 470",
+      "title": "Financial Management of High Growth Companies",
+      "units": null
+    },
+    {
+      "code": "AFM 442",
+      "title": "E-business: Enterprise Systems",
+      "units": null
+    },
+    {
+      "code": "AFM 280",
+      "title": "Introduction to Organizational Behaviour",
+      "units": null
+    },
+    {
+      "code": "AFM 483",
+      "title": "Applications of Analytics to Business",
+      "units": null
+    },
+    {
+      "code": "AFM 102",
+      "title": "Introduction to Managerial Accounting",
+      "units": null
+    },
+    {
+      "code": "AFM 480",
+      "title": "Introduction to Organizational Behaviour",
+      "units": null
+    },
+    {
+      "code": "AFM 443",
+      "title": "E-business: Introduction to Electronic Commerce",
+      "units": null
+    },
+    {
+      "code": "AFM 311",
+      "title": "Connections to Ethical Context",
+      "units": null
+    },
+    {
+      "code": "AFM 212",
+      "title": "Financial Analysis and Planning",
+      "units": null
+    },
+    {
+      "code": "AFM 373",
+      "title": "Cases and Applications in Corporate Finance",
+      "units": null
+    },
+    {
+      "code": "AFM 276",
+      "title": "Financial Statement Analysis",
+      "units": null
+    },
+    {
+      "code": "AFM 182",
+      "title": "Introduction to Financial Reporting and Managerial Decision Making 2",
+      "units": null
+    },
+    {
+      "code": "AFM 322",
+      "title": "Derivative Securities",
+      "units": null
+    },
+    {
+      "code": "AFM 275",
+      "title": "Corporate Finance",
+      "units": null
+    },
+    {
+      "code": "AFM 111",
+      "title": "Professional Pathways and Problem-Solving",
+      "units": null
+    },
+    {
+      "code": "AFM 377",
+      "title": "Private Equity and Venture Capital",
+      "units": null
+    },
+    {
+      "code": "AFM 335",
+      "title": "Business Law for Financial Managers",
+      "units": null
+    },
+    {
+      "code": "AFM 321",
+      "title": "Personal Financial Planning and Taxation",
+      "units": null
+    },
+    {
+      "code": "AFM 347",
+      "title": "Cybersecurity",
+      "units": null
+    },
+    {
+      "code": "AFM 485",
+      "title": "Approaches to Measuring Value",
+      "units": null
+    },
+    {
+      "code": "AFM 477",
+      "title": "Mergers and Acquisitions",
+      "units": null
+    },
+    {
+      "code": "AFM 452",
+      "title": "Internal Audit",
+      "units": null
+    },
+    {
+      "code": "AFM 285",
+      "title": "Introduction to Sustainability and Sustainable Business",
+      "units": null
+    },
+    {
+      "code": "AFM 425",
+      "title": "Fixed Income Securities",
+      "units": null
+    },
+    {
+      "code": "AFM 479",
+      "title": "Cases and Applications in Finance 2",
+      "units": null
+    },
+    {
+      "code": "AFM 272",
+      "title": "Global Capital Markets and Financial Analytics",
+      "units": null
+    },
+    {
+      "code": "AFM 427",
+      "title": "Intermediate Portfolio Management",
+      "units": null
+    },
+    {
+      "code": "AFM 482",
+      "title": "Performance Measurement and Organization Control",
+      "units": null
+    },
+    {
+      "code": "AFM 434",
+      "title": "Corporate Governance and Risk Management",
+      "units": null
+    },
+    {
+      "code": "AFM 447",
+      "title": "Governance and Ethical Issues with Data and Emerging Technologies",
+      "units": null
+    },
+    {
+      "code": "AFM 191",
+      "title": "Introduction to Financial Reporting and Managerial Decision Making 1",
+      "units": null
+    },
+    {
+      "code": "AFM 132",
+      "title": "Introduction to Business Stages",
+      "units": null
+    },
+    {
+      "code": "AFM 323",
+      "title": "Quantitative Foundations for Finance",
+      "units": null
+    },
+    {
+      "code": "AFM 333",
+      "title": "International Business",
+      "units": null
+    },
+    {
+      "code": "AFM 463",
+      "title": "Introduction to U.S. Taxation",
+      "units": null
+    },
+    {
+      "code": "AFM 345",
+      "title": "Business Applications of Social Media Analytics",
+      "units": null
+    },
+    {
+      "code": "AFM 241",
+      "title": "Impact of Technology on Business",
+      "units": null
+    },
+    {
+      "code": "AFM 101",
+      "title": "Introduction to Financial Accounting",
+      "units": null
+    },
+    {
+      "code": "AFM 324",
+      "title": "Wealth Management",
+      "units": null
+    },
+    {
+      "code": "AFM 127",
+      "title": "Introduction to Global Capital Markets and Financial Analytics",
+      "units": null
+    },
+    {
+      "code": "AFM 362",
+      "title": "Corporate Taxation",
+      "units": null
+    },
+    {
+      "code": "AFM 346",
+      "title": "Applications of Predictive Analytics in Accounting and Finance",
+      "units": null
+    },
+    {
+      "code": "AFM 446",
+      "title": "Performance Management and Tax Analytics",
+      "units": null
+    },
+    {
+      "code": "AFM 121",
+      "title": "Introduction to Global Financial Markets",
+      "units": null
+    },
+    {
+      "code": "AFM 445",
+      "title": "Information Technology Assurance and Audit Analytics",
+      "units": null
+    },
+    {
+      "code": "AFM 112",
+      "title": "Analytic Methods for Business 1",
+      "units": null
+    },
+    {
+      "code": "AFM 244",
+      "title": "Analytic Methods for Business 3",
+      "units": null
+    },
+    {
+      "code": "AFM 113",
+      "title": "Analytic Methods for Business 2",
+      "units": null
+    },
+    {
+      "code": "AFM 444",
+      "title": "Business Analytics Project Management",
+      "units": null
+    },
+    {
+      "code": "AFM 462",
+      "title": "Specialized Topics in Taxation",
+      "units": null
+    },
+    {
+      "code": "AFM 422",
+      "title": "Management of Financial Institutions",
+      "units": null
+    },
+    {
+      "code": "AFM 478",
+      "title": "International Financial Management",
+      "units": null
+    },
+    {
+      "code": "AFM 334",
+      "title": "International Study Experience",
+      "units": null
+    },
+    {
+      "code": "AFM 423",
+      "title": "Topics in Financial Econometrics",
+      "units": null
+    },
+    {
+      "code": "AFM 428",
+      "title": "Investment Management - Junior Portfolio Manager",
+      "units": null
+    },
+    {
+      "code": "AFM 418",
+      "title": "Special Topics in Finance or Accounting",
+      "units": null
+    },
+    {
+      "code": "AFM 426",
+      "title": "Student Venture Fund-Associate",
+      "units": null
+    },
+    {
+      "code": "AFM 326",
+      "title": "Student Venture Fund - Analyst",
+      "units": null
+    },
+    {
+      "code": "AFM 448",
+      "title": "Data Analytics and Emerging Technologies Consulting Group",
+      "units": null
+    },
+    {
+      "code": "AFM 200",
+      "title": "Continuation of Experiential Learning",
+      "units": null
+    },
+    {
+      "code": "AFM 100",
+      "title": "Introduction to Experiential Learning",
+      "units": null
+    },
+    {
+      "code": "AFM 328",
+      "title": "Investment Management - Junior Analyst",
+      "units": null
+    },
+    {
+      "code": "AFM 329",
+      "title": "Investment Management - Senior Analyst",
+      "units": null
+    },
+    {
+      "code": "AFM 429",
+      "title": "Investment Management - Senior Portfolio Manager",
+      "units": null
+    },
+    {
+      "code": "AFM 205",
+      "title": "Introduction to Financial Services",
+      "units": null
+    },
+    {
+      "code": "AFM 206",
+      "title": "Introduction to Tax",
+      "units": null
+    },
+    {
+      "code": "AFM 208",
+      "title": "Introduction to Assurance",
+      "units": null
+    },
+    {
+      "code": "AFM 207",
+      "title": "Introduction to Performance Analytics",
+      "units": null
+    },
+    {
+      "code": "AFM 417",
+      "title": "Special Topics in Accounting",
+      "units": null
+    },
+    {
+      "code": "AFM 416",
+      "title": "Special Topics in Finance",
+      "units": null
+    },
+    {
+      "code": "AFM 415",
+      "title": "Special Topics",
+      "units": null
+    }
   ]
 }

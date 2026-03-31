@@ -1120,16 +1120,16 @@ export default function Graph() {
                 }
                 break
               case 'add_my_skill':
-                if (action.skill_name) handleMySkillsChange([...mySkills, action.skill_name])
+                if (action.skill_name && mode !== 'academics') handleMySkillsChange([...mySkills, action.skill_name])
                 break
               case 'remove_my_skill':
-                if (action.skill_name) handleMySkillsChange(mySkills.filter((s) => s !== action.skill_name))
+                if (action.skill_name && mode !== 'academics') handleMySkillsChange(mySkills.filter((s) => s !== action.skill_name))
                 break
               case 'add_desired_skill':
-                if (action.skill_name) handleDesiredSkillsChange([...desiredSkills, action.skill_name])
+                if (action.skill_name && mode !== 'academics') handleDesiredSkillsChange([...desiredSkills, action.skill_name])
                 break
               case 'remove_desired_skill':
-                if (action.skill_name) handleDesiredSkillsChange(desiredSkills.filter((s) => s !== action.skill_name))
+                if (action.skill_name && mode !== 'academics') handleDesiredSkillsChange(desiredSkills.filter((s) => s !== action.skill_name))
                 break
             }
           }}

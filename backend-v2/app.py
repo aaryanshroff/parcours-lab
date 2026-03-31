@@ -413,12 +413,15 @@ def chat():
     api_messages = [{"role": "system", "content": system_content}, *messages]
     actions = []
 
+    academic_mode = context.get("mode") == "academics"
+    tools = [t for t in CHAT_TOOLS if t["function"]["name"] == "replace_course"] if academic_mode else CHAT_TOOLS
+
     # Tool calling loop (max 5 iterations)
     for _ in range(5):
         response = client.chat.completions.create(
             model="openai/gpt-4.1-mini",
             messages=api_messages,
-            tools=CHAT_TOOLS,
+            tools=tools,
         )
         choice = response.choices[0]
 
