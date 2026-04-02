@@ -309,14 +309,11 @@ function TermGroupNode({ data }: NodeProps<Node<SkillNodeData>>) {
 const nodeTypes = { skill: SkillNode, termGroup: TermGroupNode }
 
 function AcademicEdge({ sourceX, sourceY, targetX, targetY, markerEnd, style, data }: EdgeProps) {
-  const routeY = (data?.routeY as number | undefined) ?? Math.min(sourceY, targetY) - 80
-  const GAP = 12
+  const midX = (sourceX + targetX) / 2
   const path = [
     `M ${sourceX} ${sourceY}`,
-    `L ${sourceX + GAP} ${sourceY}`,
-    `L ${sourceX + GAP} ${routeY}`,
-    `L ${targetX - GAP} ${routeY}`,
-    `L ${targetX - GAP} ${targetY}`,
+    `L ${midX} ${sourceY}`,
+    `L ${midX} ${targetY}`,
     `L ${targetX} ${targetY}`,
   ].join(' ')
   return <BaseEdge path={path} markerEnd={markerEnd} style={style} />
@@ -1028,11 +1025,9 @@ export default function Graph() {
         const courseNodes = toFlowNodes(data.nodes)
         const termByNode: Record<string, string> = {}
         courseNodes.forEach((n) => { termByNode[n.id] = n.data.term as string })
-        const globalRouteY = Math.min(...courseNodes.map((n) => n.position.y)) - 80
         const flowEdges = toFlowEdges(
           data.edges.filter((e) => termByNode[e.source] !== termByNode[e.target]),
           'academicEdge',
-          { routeY: globalRouteY },
         )
         setNodes(addTermGroups(courseNodes))
         setEdges(flowEdges)
