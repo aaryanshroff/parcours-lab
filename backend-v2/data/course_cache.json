@@ -1205,5 +1205,945 @@
     ],
     "coreqs": [],
     "antireqs": []
+  },
+  "ANTH251": {
+    "code": "ANTH251",
+    "raw": "Antireq: ANTH 289 taken fall 2019",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "ANTH 289"
+    ]
+  },
+  "ANTH221": {
+    "code": "ANTH221",
+    "raw": "Antireq: ARTS 290 (LEC 001) taken fall 2014, ANTH 400 (SEM 001) taken fall 2016",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "ARTS 290",
+      "LEC 001",
+      "ANTH 400",
+      "SEM 001"
+    ]
+  },
+  "CS467": {
+    "code": "CS467",
+    "raw": "Prereq: MATH 235 or 245 with grade at least 80%; Level at least 3A",
+    "prereqs": [
+      "MATH 235",
+      "MATH 245"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH241": {
+    "code": "ANTH241",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH245": {
+    "code": "ANTH245",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "STAT331": {
+    "code": "STAT331",
+    "raw": "Prereq: MATH 235 or 245, (STAT 231 with a grade of at least 60%) or\u00a0STAT 241 or (SYDE 212 with a grade of at least 70%). Antireq: ECON 421, STAT 321, 371, 373,AFM 323/STAT 374, SYDE 334",
+    "prereqs": [
+      "MATH 235",
+      "MATH 245",
+      "STAT 231",
+      "STAT 241",
+      "SYDE 212"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "ECON 421",
+      "STAT 321",
+      "STAT 371",
+      "STAT 373",
+      "AFM 323",
+      "STAT 374",
+      "SYDE 334"
+    ]
+  },
+  "STAT333": {
+    "code": "STAT333",
+    "raw": "Prereq: STAT 230 with a grade of at least 60% or STAT 240; MATH 237 or 247. Antireq: STAT 334",
+    "prereqs": [
+      "STAT 230",
+      "STAT 240",
+      "MATH 237",
+      "MATH 247"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "STAT 334"
+    ]
+  },
+  "STAT332": {
+    "code": "STAT332",
+    "raw": "Prereq: (STAT 231 with a grade of at least 60%) or STAT 241 or (SYDE 212 with a grade of at least 70%). Antireq: BIOL 361, STAT 322, 372",
+    "prereqs": [
+      "STAT 231",
+      "STAT 241",
+      "SYDE 212"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "BIOL 361",
+      "STAT 322",
+      "STAT 372"
+    ]
+  },
+  "STAT330": {
+    "code": "STAT330",
+    "raw": "Prereq: MATH 237 or 247, (STAT 230 with a grade of at least 60% or STAT 240), STAT 231 or 241. Antireq: STAT 334",
+    "prereqs": [
+      "MATH 237",
+      "MATH 247",
+      "STAT 230",
+      "STAT 240",
+      "STAT 231",
+      "STAT 241"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "STAT 334"
+    ]
+  },
+  "CS457": {
+    "code": "CS457",
+    "raw": "Prereq: (CS 246/246E or 247) and (one of STAT 206, 231, 241); Honours Computer Science, Honours Data Science (BCS), BCFM, BSE students only",
+    "prereqs": [
+      "CS 246",
+      "CS 246E",
+      "CS 247",
+      "STAT 206",
+      "STAT 231",
+      "STAT 241"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "AMATH231": {
+    "code": "AMATH231",
+    "raw": "Prereq: MATH 237 or 247. Antireq: MATH 207, 212/ECE 206, MATH 217, 227",
+    "prereqs": [
+      "MATH 237",
+      "MATH 247"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "MATH 207",
+      "MATH 212",
+      "ECE 206",
+      "MATH 217",
+      "MATH 227"
+    ]
+  },
+  "MATH237": {
+    "code": "MATH237",
+    "raw": "Prereq: (One of MATH 106, 114, 115, 136, 146) and (MATH 128 with at least 70% or MATH 138 with at least 60% or MATH 148); Honours Math or Math/Physics students. Antireq: MATH 207, 212/ECE 206, MATH 212N, 217, 227, 247",
+    "prereqs": [
+      "MATH 106",
+      "MATH 114",
+      "MATH 115",
+      "MATH 136",
+      "MATH 146",
+      "MATH 128",
+      "MATH 138",
+      "MATH 148"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "MATH 207",
+      "MATH 212",
+      "ECE 206",
+      "MATH 212N",
+      "MATH 217",
+      "MATH 227",
+      "MATH 247"
+    ]
+  },
+  "ANTH 300": {
+    "code": "ANTH 300",
+    "raw": "Prereq: ANTH 202",
+    "prereqs": [
+      "ANTH 202"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 321": {
+    "code": "ANTH 321",
+    "raw": "Prereq: ANTH 201/CLAS 221",
+    "prereqs": [
+      "ANTH 201",
+      "CLAS 221"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 335": {
+    "code": "ANTH 335",
+    "raw": "Prereq: One of ANTH 201/CLAS 221, ANTH 233",
+    "prereqs": [
+      "ANTH 201",
+      "CLAS 221",
+      "ANTH 233"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 350": {
+    "code": "ANTH 350",
+    "raw": "Prereq: ANTH 202",
+    "prereqs": [
+      "ANTH 202"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 330": {
+    "code": "ANTH 330",
+    "raw": "Prereq: ANTH 202",
+    "prereqs": [
+      "ANTH 202"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 233": {
+    "code": "ANTH 233",
+    "raw": "Prereq: Level at least 2A",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 320": {
+    "code": "ANTH 320",
+    "raw": "Prereq: ANTH 201/CLAS 221",
+    "prereqs": [
+      "ANTH 201",
+      "CLAS 221"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 272": {
+    "code": "ANTH 272",
+    "raw": "Prereq: INDG 201. Antireq: ANTH 370, NATST 272",
+    "prereqs": [
+      "INDG 201"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "ANTH 370",
+      "NATST 272"
+    ]
+  },
+  "ANTH 322": {
+    "code": "ANTH 322",
+    "raw": "Prereq: ANTH 201/CLAS 221",
+    "prereqs": [
+      "ANTH 201",
+      "CLAS 221"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 309": {
+    "code": "ANTH 309",
+    "raw": "Prereq: ANTH 201/CLAS 221",
+    "prereqs": [
+      "ANTH 201",
+      "CLAS 221"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 365": {
+    "code": "ANTH 365",
+    "raw": "Prereq: ANTH 204",
+    "prereqs": [
+      "ANTH 204"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 381": {
+    "code": "ANTH 381",
+    "raw": "Prereq: ANTH 202",
+    "prereqs": [
+      "ANTH 202"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 204": {
+    "code": "ANTH 204",
+    "raw": "Antireq: ANTH 260",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "ANTH 260"
+    ]
+  },
+  "ANTH 347": {
+    "code": "ANTH 347",
+    "raw": "Prereq: ANTH 202",
+    "prereqs": [
+      "ANTH 202"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 303": {
+    "code": "ANTH 303",
+    "raw": "Prereq: ANTH 202",
+    "prereqs": [
+      "ANTH 202"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 377": {
+    "code": "ANTH 377",
+    "raw": "Prereq: ANTH 204",
+    "prereqs": [
+      "ANTH 204"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 331": {
+    "code": "ANTH 331",
+    "raw": "Prereq: ANTH 202",
+    "prereqs": [
+      "ANTH 202"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 221": {
+    "code": "ANTH 221",
+    "raw": "Antireq: ARTS 290 (LEC 001) taken fall 2014, ANTH 400 (SEM 001) taken fall 2016",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "ARTS 290",
+      "LEC 001",
+      "ANTH 400",
+      "SEM 001"
+    ]
+  },
+  "ANTH 305": {
+    "code": "ANTH 305",
+    "raw": "Prereq: ANTH 204",
+    "prereqs": [
+      "ANTH 204"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 455": {
+    "code": "ANTH 455",
+    "raw": "Prereq: ANTH 355 or ANTH 370W",
+    "prereqs": [
+      "ANTH 355",
+      "ANTH 370W"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 100": {
+    "code": "ANTH 100",
+    "raw": "Antireq: ANTH 101 or ANTH 102",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "ANTH 101",
+      "ANTH 102"
+    ]
+  },
+  "ANTH 430": {
+    "code": "ANTH 430",
+    "raw": "Prereq: Level at least 4A",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 382": {
+    "code": "ANTH 382",
+    "raw": "Prereq: ANTH 202",
+    "prereqs": [
+      "ANTH 202"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 355": {
+    "code": "ANTH 355",
+    "raw": "Prereq: ANTH 204",
+    "prereqs": [
+      "ANTH 204"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 465": {
+    "code": "ANTH 465",
+    "raw": "Prereq: ANTH 202",
+    "prereqs": [
+      "ANTH 202"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 447": {
+    "code": "ANTH 447",
+    "raw": "Prereq: Level at least 3A",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 415": {
+    "code": "ANTH 415",
+    "raw": "Prereq: ANTH 201/CLAS 221",
+    "prereqs": [
+      "ANTH 201",
+      "CLAS 221"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 440": {
+    "code": "ANTH 440",
+    "raw": "Prereq: ANTH 201/CLAS 221",
+    "prereqs": [
+      "ANTH 201",
+      "CLAS 221"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 499A": {
+    "code": "ANTH 499A",
+    "raw": "Prereq: Anthropology majors only; 80% cumulative ANTH average",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 499B": {
+    "code": "ANTH 499B",
+    "raw": "Prereq: Anthropology majors only; 80% cumulative ANTH average",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 251": {
+    "code": "ANTH 251",
+    "raw": "Antireq: ANTH 289 taken fall 2019",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "ANTH 289"
+    ]
+  },
+  "ANTH 391": {
+    "code": "ANTH 391",
+    "raw": "Prereq: Level at least 3A Honours Anthropology",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 289": {
+    "code": "ANTH 289",
+    "raw": "Prereq: Level at least 2A",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 389": {
+    "code": "ANTH 389",
+    "raw": "Prereq: Level at least 3A",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 395": {
+    "code": "ANTH 395",
+    "raw": "Prereq: at least 1.0 unit in ANTH",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 489": {
+    "code": "ANTH 489",
+    "raw": "Prereq: Level at least 4A",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 345": {
+    "code": "ANTH 345",
+    "raw": "Prereq: Level at least 3A Honours Anthropology",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 498": {
+    "code": "ANTH 498",
+    "raw": "Prereq: Level at least 4A; Anthropology majors only",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 647": {
+    "code": "ANTH 647",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 659": {
+    "code": "ANTH 659",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 661": {
+    "code": "ANTH 661",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 604": {
+    "code": "ANTH 604",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 600": {
+    "code": "ANTH 600",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 662": {
+    "code": "ANTH 662",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 660": {
+    "code": "ANTH 660",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 371": {
+    "code": "ANTH 371",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 605": {
+    "code": "ANTH 605",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 370W": {
+    "code": "ANTH 370W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 350W": {
+    "code": "ANTH 350W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 356W": {
+    "code": "ANTH 356W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 312": {
+    "code": "ANTH 312",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 290": {
+    "code": "ANTH 290",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 348": {
+    "code": "ANTH 348",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 202": {
+    "code": "ANTH 202",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 245": {
+    "code": "ANTH 245",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 222": {
+    "code": "ANTH 222",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 106": {
+    "code": "ANTH 106",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 292": {
+    "code": "ANTH 292",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 311": {
+    "code": "ANTH 311",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 201": {
+    "code": "ANTH 201",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 105": {
+    "code": "ANTH 105",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 372": {
+    "code": "ANTH 372",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 608": {
+    "code": "ANTH 608",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 614": {
+    "code": "ANTH 614",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 655": {
+    "code": "ANTH 655",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 346W": {
+    "code": "ANTH 346W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 465W": {
+    "code": "ANTH 465W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 344W": {
+    "code": "ANTH 344W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 336W": {
+    "code": "ANTH 336W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 322W": {
+    "code": "ANTH 322W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 242W": {
+    "code": "ANTH 242W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 237W": {
+    "code": "ANTH 237W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 100W": {
+    "code": "ANTH 100W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 461W": {
+    "code": "ANTH 461W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 232W": {
+    "code": "ANTH 232W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 458W": {
+    "code": "ANTH 458W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 463W": {
+    "code": "ANTH 463W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 224W": {
+    "code": "ANTH 224W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 400W": {
+    "code": "ANTH 400W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 347W": {
+    "code": "ANTH 347W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 341W": {
+    "code": "ANTH 341W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 326W": {
+    "code": "ANTH 326W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 334W": {
+    "code": "ANTH 334W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 324W": {
+    "code": "ANTH 324W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 450W": {
+    "code": "ANTH 450W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 307W": {
+    "code": "ANTH 307W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH 455W": {
+    "code": "ANTH 455W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "AMATH449": {
+    "code": "AMATH449",
+    "raw": "Prereq: One of STAT 230, STAT 240 or STAT 206 with a minimum grade of 60%. Coreq: One of AMATH 242, CS 335, CS 370 or CS 371",
+    "prereqs": [
+      "STAT 230",
+      "STAT 240",
+      "STAT 206"
+    ],
+    "coreqs": [
+      "AMATH 242",
+      "CS 335",
+      "CS 370",
+      "CS 371"
+    ],
+    "antireqs": []
+  },
+  "STAT444": {
+    "code": "STAT444",
+    "raw": "Prereq: STAT 341; STAT 331 or 371",
+    "prereqs": [
+      "STAT 341",
+      "STAT 331",
+      "STAT 371"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "STAT441": {
+    "code": "STAT441",
+    "raw": "Prereq: STAT 341; STAT 331 or 371",
+    "prereqs": [
+      "STAT 341",
+      "STAT 331",
+      "STAT 371"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CO367": {
+    "code": "CO367",
+    "raw": "Prereq: (One of CO 250, 255, 352) and MATH 128 with a grade of at least 70% or MATH 138 or 148",
+    "prereqs": [
+      "CO 250",
+      "CO 255",
+      "CO 352",
+      "MATH 128",
+      "MATH 138",
+      "MATH 148"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CO463": {
+    "code": "CO463",
+    "raw": "Prereq: (CO 255 or 367), (One of AMATH/PMATH 331, PMATH 333, PMATH 351); Cumulative overall average of at least 80%",
+    "prereqs": [
+      "CO 255",
+      "CO 367",
+      "PMATH 331",
+      "PMATH 333",
+      "PMATH 351"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "STAT341": {
+    "code": "STAT341",
+    "raw": "Prereq: MATH 237 or 247, (STAT 230 with a grade of at least 60% or STAT 240), STAT 231 or 241",
+    "prereqs": [
+      "MATH 237",
+      "MATH 247",
+      "STAT 230",
+      "STAT 240",
+      "STAT 231",
+      "STAT 241"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CO466": {
+    "code": "CO466",
+    "raw": "Prereq: (CO 367 and one of CO 250, 352) or CO 255; Cumulative overall average of at least 80%",
+    "prereqs": [
+      "CO 367",
+      "CO 250",
+      "CO 352",
+      "CO 255"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "SYDE572": {
+    "code": "SYDE572",
+    "raw": "Prereq: (Level at least 3A Biomedical Engineering) or (Level at least 3B Systems Design Engineering) or (Level at least 4A Mechatronics Engineering) or Mechatronics Option or Biomechanics Option",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
   }
 }

@@ -122,6 +122,99 @@ def graph_academics():
     return jsonify(result.model_dump())
 
 
+@app.route("/api/summary/generate", methods=["POST"])
+def summary_generate():
+    from openai import OpenAI
+
+    body = request.get_json() or {}
+    goal = body.get("goal", "")
+    mode = body.get("mode", "career")
+    program = body.get("program")
+    nodes = body.get("nodes", [])
+
+    if not nodes:
+        return jsonify({"summary": "No courses to summarize."})
+
+    is_academic = mode == "academics"
+    group_key = "term" if is_academic else "tier"
+    order = (
+        ["1A", "1B", "2A", "2B", "3A", "3B", "4A", "4B"]
+        if is_academic
+        else ["foundation", "core", "advanced", "specialization"]
+    )
+
+    groups: dict[str, list[dict]] = {}
+    for node in nodes:
+        key = node.get(group_key, "other")
+        groups.setdefault(key, []).append(node)
+
+    course_desc = []
+    for key in order:
+        items = groups.get(key)
+        if not items:
+            continue
+        label = f"Term {key}" if is_academic else key.capitalize()
+        course_desc.append(f"\n{label}:")
+        for n in items:
+            reason = n.get("courseReason") or n.get("course_reason", "")
+            skills = ", ".join(n.get("labels", []))
+            course_desc.append(
+                f"  - {n.get('courseTitle', n.get('course_title', ''))}"
+                + (f" [{skills}]" if skills else "")
+                + (f": {reason}" if reason else "")
+            )
+
+    context_header = ""
+    if is_academic and program:
+        context_header = f"Program: {program.get('title', '')} ({program.get('faculty', '')})\n"
+    if goal:
+        context_header += f"Goal: {goal}\n"
+
+    prompt = context_header + "\nCourses:\n" + "\n".join(course_desc)
+
+    client = OpenAI(
+        base_url="https://openrouter.ai/api/v1",
+        api_key=os.environ["OPENROUTER_API_KEY"],
+    )
+
+    if is_academic:
+        system_content = (
+            "You are an academic advisor writing a concise summary of a student's "
+            "course plan. Write 1–3 paragraphs that:\n"
+            "1. Describe the overall structure and progression across terms\n"
+            "2. Highlight key required courses and how elective choices connect to the student's goal\n"
+            "3. Note the balance of workload across terms objectively for accurate assessment of required student effort\n\n"
+            "Be specific — reference actual course names. Keep it under 250 words. "
+            "Do NOT use observational language like \"appears to be, looks, or seems to\"."
+            "Do NOT use language indicating this is a third party assessment of the courses - Use direct descriptions."
+            "Do NOT use markdown formatting, bullet points, or headers — write in plain prose paragraphs."
+            # maybe have some explicit guidelines here later for advisors
+        )
+    else:
+        system_content = (
+            "You are a learning path advisor writing a concise summary of a personalized skill-building "
+            "roadmap. Write 2–4 paragraphs that:\n"
+            "1. Explain the learning progression from foundational to specialized skills\n"
+            "2. Highlight why specific courses were chosen and how they connect to the goal\n"
+            "3. Describe how the skills build on each other\n"
+            "4. Offer a brief, encouraging closing remark\n\n"
+            "Be specific — reference actual course names and skills. Keep it under 250 words. "
+            "Do NOT use markdown formatting, bullet points, or headers — write in plain prose paragraphs."
+        )
+
+    response = client.chat.completions.create(
+        model="google/gemini-2.5-flash",
+        messages=[
+            {"role": "system", "content": system_content},
+            {"role": "user", "content": prompt},
+        ],
+        temperature=0.4,
+    )
+
+    summary_text = (response.choices[0].message.content or "").strip()
+    return jsonify({"summary": summary_text})
+
+
 @app.route("/api/uwaterloo/programs")
 def uwaterloo_programs():
     from uwaterloo import search_programs

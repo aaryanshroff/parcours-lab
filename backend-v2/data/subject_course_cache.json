@@ -819,5 +819,447 @@
       "title": "Seminar in Cognitive Science",
       "units": null
     }
+  ],
+  "ANTH": [
+    {
+      "code": "ANTH 300",
+      "title": "Practicing Anthropology",
+      "units": null
+    },
+    {
+      "code": "ANTH 321",
+      "title": "Archaeology of Complex Cultures",
+      "units": null
+    },
+    {
+      "code": "ANTH 335",
+      "title": "Arctic Archaeology",
+      "units": null
+    },
+    {
+      "code": "ANTH 350",
+      "title": "Anthropology of Gender",
+      "units": null
+    },
+    {
+      "code": "ANTH 330",
+      "title": "Environmental Anthropology",
+      "units": null
+    },
+    {
+      "code": "ANTH 233",
+      "title": "Inuit Cultures",
+      "units": null
+    },
+    {
+      "code": "ANTH 320",
+      "title": "Hunter-Gatherer Archaeology",
+      "units": null
+    },
+    {
+      "code": "ANTH 272",
+      "title": "Issues in Contemporary Indigenous Communities in Canada",
+      "units": null
+    },
+    {
+      "code": "ANTH 322",
+      "title": "The Archaeology of the Great Lakes Area",
+      "units": null
+    },
+    {
+      "code": "ANTH 309",
+      "title": "The Archaeology of North America",
+      "units": null
+    },
+    {
+      "code": "ANTH 365",
+      "title": "Human Evolution",
+      "units": null
+    },
+    {
+      "code": "ANTH 381",
+      "title": "Anthropology of South Asia",
+      "units": null
+    },
+    {
+      "code": "ANTH 204",
+      "title": "Biological Anthropology",
+      "units": null
+    },
+    {
+      "code": "ANTH 347",
+      "title": "Medical Anthropology",
+      "units": null
+    },
+    {
+      "code": "ANTH 303",
+      "title": "Anthropology of Digital Media",
+      "units": null
+    },
+    {
+      "code": "ANTH 377",
+      "title": "Dental Anthropology",
+      "units": null
+    },
+    {
+      "code": "ANTH 331",
+      "title": "Anthropology of Childhood",
+      "units": null
+    },
+    {
+      "code": "ANTH 221",
+      "title": "Language and Society",
+      "units": null
+    },
+    {
+      "code": "ANTH 305",
+      "title": "Paleopathology of Health and Disease",
+      "units": null
+    },
+    {
+      "code": "ANTH 455",
+      "title": "Skeletal Biology and Forensics",
+      "units": null
+    },
+    {
+      "code": "ANTH 100",
+      "title": "Introduction to Anthropology",
+      "units": null
+    },
+    {
+      "code": "ANTH 430",
+      "title": "Science as Practice and Culture",
+      "units": null
+    },
+    {
+      "code": "ANTH 382",
+      "title": "Anthropology of East Asia",
+      "units": null
+    },
+    {
+      "code": "ANTH 355",
+      "title": "Human Osteology",
+      "units": null
+    },
+    {
+      "code": "ANTH 465",
+      "title": "Borders, Boundaries, and Crossings",
+      "units": null
+    },
+    {
+      "code": "ANTH 447",
+      "title": "Global Health and Medical Anthropology",
+      "units": null
+    },
+    {
+      "code": "ANTH 415",
+      "title": "Archaeologies of Landscape",
+      "units": null
+    },
+    {
+      "code": "ANTH 440",
+      "title": "Archaeological Analysis and Interpretation",
+      "units": null
+    },
+    {
+      "code": "ANTH 499A",
+      "title": "Honours Essay",
+      "units": null
+    },
+    {
+      "code": "ANTH 499B",
+      "title": "Honours Essay",
+      "units": null
+    },
+    {
+      "code": "ANTH 251",
+      "title": "Doing Ethnography",
+      "units": null
+    },
+    {
+      "code": "ANTH 391",
+      "title": "Reading in Anthropology",
+      "units": null
+    },
+    {
+      "code": "ANTH 289",
+      "title": "Special Topics in Anthropology",
+      "units": null
+    },
+    {
+      "code": "ANTH 389",
+      "title": "Special Topics in Anthropology",
+      "units": null
+    },
+    {
+      "code": "ANTH 395",
+      "title": "Anthropological Study Abroad",
+      "units": null
+    },
+    {
+      "code": "ANTH 489",
+      "title": "Special Topics in Anthropology",
+      "units": null
+    },
+    {
+      "code": "ANTH 345",
+      "title": "Directed Research in Anthropology",
+      "units": null
+    },
+    {
+      "code": "ANTH 498",
+      "title": "Anthropology Capstone",
+      "units": null
+    },
+    {
+      "code": "ANTH 647",
+      "title": "Global Health and Medical Anthropology",
+      "units": null
+    },
+    {
+      "code": "ANTH 659",
+      "title": "Conservation, Communities and Globalization",
+      "units": null
+    },
+    {
+      "code": "ANTH 661",
+      "title": "Research Seminar in Public Issues Anthropology",
+      "units": null
+    },
+    {
+      "code": "ANTH 604",
+      "title": "Human Development in a Cross-Cultural Perspective",
+      "units": null
+    },
+    {
+      "code": "ANTH 600",
+      "title": "Public Issues Anthropology",
+      "units": null
+    },
+    {
+      "code": "ANTH 662",
+      "title": "Human Adaptation and Evolution",
+      "units": null
+    },
+    {
+      "code": "ANTH 660",
+      "title": "Reading Course",
+      "units": null
+    },
+    {
+      "code": "ANTH 371",
+      "title": "Anthropological Field Experience",
+      "units": null
+    },
+    {
+      "code": "ANTH 605",
+      "title": "Selected Topics in Theory and Research",
+      "units": null
+    },
+    {
+      "code": "ANTH 370W",
+      "title": "Introduction to Osteology",
+      "units": null
+    },
+    {
+      "code": "ANTH 350W",
+      "title": "Violence and Terrorism (WLU)",
+      "units": null
+    },
+    {
+      "code": "ANTH 356W",
+      "title": "Applied Anthropology (WLU)",
+      "units": null
+    },
+    {
+      "code": "ANTH 312",
+      "title": "Muslim Lives and Practices Worldwide",
+      "units": null
+    },
+    {
+      "code": "ANTH 290",
+      "title": "Visual Anthropology",
+      "units": null
+    },
+    {
+      "code": "ANTH 348",
+      "title": "Anthropology of Tourism",
+      "units": null
+    },
+    {
+      "code": "ANTH 202",
+      "title": "Social and Cultural Anthropology",
+      "units": null
+    },
+    {
+      "code": "ANTH 245",
+      "title": "Anthropology of Education",
+      "units": null
+    },
+    {
+      "code": "ANTH 222",
+      "title": "Anthropologies of the Body",
+      "units": null
+    },
+    {
+      "code": "ANTH 241",
+      "title": "Food as Culture",
+      "units": null
+    },
+    {
+      "code": "ANTH 106",
+      "title": "Technologies of Being Human",
+      "units": null
+    },
+    {
+      "code": "ANTH 292",
+      "title": "Skeletons: Sex, Disease, and Death",
+      "units": null
+    },
+    {
+      "code": "ANTH 311",
+      "title": "Anthropology of Religion",
+      "units": null
+    },
+    {
+      "code": "ANTH 201",
+      "title": "Introduction to Archaeology",
+      "units": null
+    },
+    {
+      "code": "ANTH 105",
+      "title": "Prehistoric Peoples and Places",
+      "units": null
+    },
+    {
+      "code": "ANTH 372",
+      "title": "Archaeological Field School",
+      "units": null
+    },
+    {
+      "code": "ANTH 608",
+      "title": "Anthropological Theory",
+      "units": null
+    },
+    {
+      "code": "ANTH 614",
+      "title": "Research Methods",
+      "units": null
+    },
+    {
+      "code": "ANTH 655",
+      "title": "Skeletal Biology and Forensics",
+      "units": null
+    },
+    {
+      "code": "ANTH 346W",
+      "title": "Transnationalism and Cosmopolitanism (WLU)",
+      "units": null
+    },
+    {
+      "code": "ANTH 465W",
+      "title": "Cultures of Business Work (WLU)",
+      "units": null
+    },
+    {
+      "code": "ANTH 344W",
+      "title": "Writing Cultures (WLU)",
+      "units": null
+    },
+    {
+      "code": "ANTH 336W",
+      "title": "Culture, Power and Politics",
+      "units": null
+    },
+    {
+      "code": "ANTH 322W",
+      "title": "Religion, Ritual and Magic",
+      "units": null
+    },
+    {
+      "code": "ANTH 242W",
+      "title": "Race, Ethnicity and Nationalism (WLU)",
+      "units": null
+    },
+    {
+      "code": "ANTH 237W",
+      "title": "Cross-cultural Studies of Change (WLU)",
+      "units": null
+    },
+    {
+      "code": "ANTH 100W",
+      "title": "Cultures Today (WLU)",
+      "units": null
+    },
+    {
+      "code": "ANTH 461W",
+      "title": "Anthropology of the Body (WLU)",
+      "units": null
+    },
+    {
+      "code": "ANTH 232W",
+      "title": "Special Topics",
+      "units": null
+    },
+    {
+      "code": "ANTH 458W",
+      "title": "Special Topics in Anthropology (WLU)",
+      "units": null
+    },
+    {
+      "code": "ANTH 463W",
+      "title": "Environments, Environmentalisms and Nature/culture (WLU)",
+      "units": null
+    },
+    {
+      "code": "ANTH 224W",
+      "title": "Anthropology of the Lifecourse (WLU)",
+      "units": null
+    },
+    {
+      "code": "ANTH 400W",
+      "title": "Doing Fieldwork (WLU)",
+      "units": null
+    },
+    {
+      "code": "ANTH 347W",
+      "title": "Science, Technology, & Culture (WLU)",
+      "units": null
+    },
+    {
+      "code": "ANTH 341W",
+      "title": "Kinship, Marriage and Gender (WLU)",
+      "units": null
+    },
+    {
+      "code": "ANTH 326W",
+      "title": "Culture as Performance (WLU)",
+      "units": null
+    },
+    {
+      "code": "ANTH 334W",
+      "title": "Folklore, Myth & Oral Narrative (WLU)",
+      "units": null
+    },
+    {
+      "code": "ANTH 324W",
+      "title": "Symbolic Systems & Ideologies (WLU)",
+      "units": null
+    },
+    {
+      "code": "ANTH 450W",
+      "title": "Contemporary Theory in Ethnography (WLU)",
+      "units": null
+    },
+    {
+      "code": "ANTH 307W",
+      "title": "Special Topics in Anthropology (WLU)",
+      "units": null
+    },
+    {
+      "code": "ANTH 455W",
+      "title": "Directed Studies (WLU)",
+      "units": null
+    }
   ]
 }
