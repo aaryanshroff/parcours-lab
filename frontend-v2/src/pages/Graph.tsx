@@ -87,6 +87,15 @@ interface CourseContextValue {
   cancelReplace: (nodeId: string) => void
 }
 
+/* ─── Drag validation context ─── */
+
+interface DragValidationContextValue {
+  disabledTerms: Set<string>
+  shakeNodeId: string | null
+}
+
+const DragValidationContext = createContext<DragValidationContextValue>({ disabledTerms: new Set(), shakeNodeId: null })
+
 const CourseContext = createContext<CourseContextValue>(null!)
 
 function CourseProvider({ children, edges, setNodes, onCourseReplaced }: { children: React.ReactNode; edges: Edge[]; setNodes: React.Dispatch<React.SetStateAction<Node<SkillNodeData>[]>>; onCourseReplaced?: (entry: HistoryEntry) => void }) {
@@ -160,15 +169,17 @@ function useCourse(nodeId: string) {
 function SkillNode({ id, data }: NodeProps<Node<SkillNodeData>>) {
   const config = tierConfig[data.tier]
   const { state, locked, accept, startReplace, submitReplace, cancelReplace } = useCourse(id)
+  const { shakeNodeId } = useContext(DragValidationContext)
   const [reason, setReason] = useState('')
 
   const isAccepted = state.status === 'accepted'
   const isReplacing = state.status === 'replacing'
-  const borderClass = locked ? 'border-stone-200' : isAccepted ? config.borderAccepted : config.border
+  const isShaking = shakeNodeId === id
+  const borderClass = isShaking ? 'border-red-400' : locked ? 'border-stone-200' : isAccepted ? config.borderAccepted : config.border
 
   return (
     <div
-      className={`rounded-xl border-2 ${borderClass} transition-all duration-200 ${locked ? 'bg-stone-100' : 'bg-white hover:-translate-y-0.5'}`}
+      className={`rounded-xl border-2 ${borderClass} transition-all duration-200 ${isShaking ? 'shake-reject bg-red-50' : locked ? 'bg-stone-100' : 'bg-white hover:-translate-y-0.5'}`}
       style={{ width: NODE_W, padding: '14px 16px' }}
     >
       <Handle type="target" position={data.term ? Position.Left : Position.Top} style={{ opacity: 0 }} />
@@ -289,17 +300,23 @@ function SkillNode({ id, data }: NodeProps<Node<SkillNodeData>>) {
 function TermGroupNode({ data }: NodeProps<Node<SkillNodeData>>) {
   const credits = data.termCredits ?? 0
   const over = credits > 3.25
+  const { disabledTerms } = useContext(DragValidationContext)
+  const disabled = disabledTerms.has(data.term as string)
   return (
     <div
-      className="rounded-2xl border-2 border-dashed border-stone-200 bg-stone-50/30"
+      className={`rounded-2xl border-2 border-dashed transition-colors duration-200 ${disabled ? 'border-red-300 bg-red-50/40' : 'border-stone-200 bg-stone-50/30'}`}
       style={{ width: '100%', height: '100%', position: 'relative' }}
     >
       <div className="absolute inset-x-0 top-2 flex justify-center">
-        <span className={`px-3 py-0.5 rounded-full bg-white border text-[11px] font-bold uppercase tracking-wider shadow-sm flex items-center gap-1.5 ${over ? 'border-red-300 text-red-500' : 'border-stone-200 text-stone-400'}`}>
+        <span className={`px-3 py-0.5 rounded-full bg-white border text-[11px] font-bold uppercase tracking-wider shadow-sm flex items-center gap-1.5 ${disabled ? 'border-red-300 text-red-400' : over ? 'border-red-300 text-red-500' : 'border-stone-200 text-stone-400'}`}>
           Term {data.term}
-          <span className={`font-normal normal-case tracking-normal ${over ? 'text-red-400' : 'text-stone-300'}`}>
-            {credits.toFixed(2)} cr{over ? ' ⚠ >3.25' : ''}
-          </span>
+          {disabled ? (
+            <span className="font-normal normal-case tracking-normal text-red-300">prereqs not met</span>
+          ) : (
+            <span className={`font-normal normal-case tracking-normal ${over ? 'text-red-400' : 'text-stone-300'}`}>
+              {credits.toFixed(2)} cr{over ? ' ⚠ >3.25' : ''}
+            </span>
+          )}
         </span>
       </div>
     </div>
@@ -905,10 +922,22 @@ export default function Graph() {
   const [loading, setLoading] = useState(true)
   const [courseHistory, setCourseHistory] = useState<HistoryEntry[]>([])
   const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null)
+  const [disabledTerms, setDisabledTerms] = useState<Set<string>>(new Set())
+  const [shakeNodeId, setShakeNodeId] = useState<string | null>(null)
   const regenAbortRef = useRef<AbortController | null>(null)
   const skillChangeCounter = useRef(0)
 
   const ROW_GAP = 220
+
+  // Prereq map for drag validation: target → [source prereq ids]
+  const prereqMap = useMemo(() => {
+    const map: Record<string, string[]> = {}
+    for (const e of edges) {
+      if (!map[e.target]) map[e.target] = []
+      map[e.target].push(e.source)
+    }
+    return map
+  }, [edges])
 
   const displayEdges = useMemo(() => {
     if (mode !== 'academics') return edges
@@ -921,8 +950,33 @@ export default function Graph() {
     }))
   }, [edges, hoveredNodeId, mode])
 
+  const handleNodeDragStart = useCallback((_: React.MouseEvent, draggedNode: Node<SkillNodeData>) => {
+    if (!draggedNode.data.term) return
+    // Find the latest term among all prerequisites of this node
+    const prereqIds = prereqMap[draggedNode.id] ?? []
+    if (prereqIds.length === 0) { setDisabledTerms(new Set()); return }
+
+    const courseNodes = nodes.filter((n) => n.type === 'skill')
+    let latestPrereqTermIdx = -1
+    for (const pid of prereqIds) {
+      const prereqNode = courseNodes.find((n) => n.id === pid)
+      if (!prereqNode?.data.term) continue
+      const idx = TERM_ORDER.indexOf(prereqNode.data.term as string)
+      if (idx > latestPrereqTermIdx) latestPrereqTermIdx = idx
+    }
+
+    // All terms up to and including the latest prereq term are disabled
+    if (latestPrereqTermIdx >= 0) {
+      setDisabledTerms(new Set(TERM_ORDER.slice(0, latestPrereqTermIdx + 1)))
+    } else {
+      setDisabledTerms(new Set())
+    }
+  }, [prereqMap, nodes])
+
   const handleNodeDragStop = useCallback((_: React.MouseEvent, draggedNode: Node<SkillNodeData>) => {
     if (!draggedNode.data.term) return
+
+    setDisabledTerms(new Set())
 
     setNodes((prev) => {
       const groupNodes = prev.filter((n) => n.type === 'termGroup')
@@ -943,6 +997,22 @@ export default function Graph() {
       }
 
       const oldTerm = draggedNode.data.term as string
+
+      // Enforce prerequisite ordering: course must be in a later term than all prereqs
+      if (targetTerm !== oldTerm) {
+        const prereqIds = prereqMap[draggedNode.id] ?? []
+        const targetTermIdx = TERM_ORDER.indexOf(targetTerm)
+        const violated = prereqIds.some((pid) => {
+          const prereqNode = courseNodes.find((n) => n.id === pid)
+          if (!prereqNode?.data.term) return false
+          return TERM_ORDER.indexOf(prereqNode.data.term as string) >= targetTermIdx
+        })
+        if (violated) {
+          setShakeNodeId(draggedNode.id)
+          setTimeout(() => setShakeNodeId(null), 500)
+          return prev
+        }
+      }
 
       // Enforce 3.25 credit cap when moving to a different term
       if (targetTerm !== oldTerm) {
@@ -1002,7 +1072,7 @@ export default function Graph() {
 
       return [...updatedGroupNodes, ...updatedCourseNodes]
     })
-  }, [])
+  }, [prereqMap])
 
   const fetchAcademicGraph = useCallback(() => {
     regenAbortRef.current?.abort()
@@ -1117,7 +1187,10 @@ export default function Graph() {
     [],
   )
 
+  const dragValidation = useMemo(() => ({ disabledTerms, shakeNodeId }), [disabledTerms, shakeNodeId])
+
   return (
+    <DragValidationContext.Provider value={dragValidation}>
     <CourseProvider edges={edges} setNodes={setNodes} onCourseReplaced={(entry) => setCourseHistory((h) => [entry, ...h])}>
       {/* Mobile: column layout (panels on top, graph below). Desktop: absolute overlays on full-screen graph */}
       <div className="relative w-screen h-dvh">
@@ -1165,6 +1238,7 @@ export default function Graph() {
             nodes={nodes}
             edges={displayEdges}
             onNodesChange={onNodesChange}
+            onNodeDragStart={handleNodeDragStart}
             onNodeDragStop={handleNodeDragStop}
             onNodeMouseEnter={(_, node) => mode === 'academics' && setHoveredNodeId(node.id)}
             onNodeMouseLeave={() => mode === 'academics' && setHoveredNodeId(null)}
@@ -1224,5 +1298,6 @@ export default function Graph() {
         />
       </div>
     </CourseProvider>
+    </DragValidationContext.Provider>
   )
 }
