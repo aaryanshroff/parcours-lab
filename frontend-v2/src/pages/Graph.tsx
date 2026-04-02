@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback, useMemo, createContext, useContext } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import {
   ReactFlow,
   type Node,
@@ -15,7 +15,7 @@ import {
   MarkerType,
   applyNodeChanges,
 } from '@xyflow/react'
-import { ExternalLink, Check, X, RefreshCw, ChevronDown, Loader2, Undo2, HelpCircle } from 'lucide-react'
+import { ExternalLink, Check, X, RefreshCw, ChevronDown, Loader2, Undo2, HelpCircle, FileText } from 'lucide-react'
 import Dagre from '@dagrejs/dagre'
 import GoatChat from '../components/GoatChat'
 
@@ -878,6 +878,7 @@ function toFlowEdges(apiEdges: ApiEdge[], edgeType = 'smoothstep', extraData?: R
 
 export default function Graph() {
   const location = useLocation()
+  const navigate = useNavigate()
   const navState = (location.state ?? {}) as Record<string, unknown>
   const mode = (navState.mode as string) ?? 'career'
 
@@ -1134,7 +1135,7 @@ export default function Graph() {
             )}
           </div>
 
-          <div className="hidden pointer-events-auto sm:block sm:absolute sm:top-5 sm:right-5">
+          <div className="hidden pointer-events-auto sm:flex sm:flex-col sm:gap-3 sm:absolute sm:top-5 sm:right-5">
             <CourseHistoryPanel
               history={courseHistory}
               onRestore={(index) => {
@@ -1181,6 +1182,32 @@ export default function Graph() {
             <Background variant={BackgroundVariant.Dots} gap={20} size={1} color="#e7e5e4" />
           </ReactFlow>
         </div>
+
+        {/* Summary FAB — bottom-left */}
+        <button
+          onClick={() => {
+            const courseNodes = nodes
+              .filter((n) => n.type === 'skill')
+              .map((n) => ({
+                id: n.id,
+                labels: n.data.labels,
+                courseTitle: n.data.courseTitle,
+                courseUrl: n.data.courseUrl,
+                courseReason: n.data.courseReason,
+                tier: n.data.tier,
+                term: n.data.term,
+              }))
+            navigate('/summary', {
+              state: { goal: navGoal ?? goal, mode, program: mode === 'academics' ? major : undefined, courses: courseNodes },
+            })
+          }}
+          disabled={loading || nodes.filter((n) => n.type === 'skill').length === 0}
+          className="fab-enter fixed bottom-8 left-6 z-20 h-11 pl-3.5 pr-4 rounded-full bg-stone-900 text-white shadow-md hover:shadow-lg hover:bg-stone-800 active:scale-[0.97] disabled:opacity-0 disabled:pointer-events-none cursor-pointer transition-all duration-200 flex items-center gap-2"
+          aria-label="View Summary"
+        >
+          <FileText size={16} />
+          <span className="text-[13px] font-medium">Summary</span>
+        </button>
 
         <GoatChat
           context={{
