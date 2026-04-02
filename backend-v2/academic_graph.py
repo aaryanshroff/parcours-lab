@@ -193,6 +193,7 @@ def generate_academic_graph(
                     title=info.get("title", code),
                     url=f"https://uwflow.com/course/{code.lower()}",
                     reason=elective_reasons.get(code, "Required course") if is_elective else "Required course",
+                    units=float(info.get("units", 0.5)),
                 ),
                 position=Position(x=col * COL_GAP, y=row * ROW_GAP),
             ))
@@ -334,7 +335,7 @@ def _assign_terms(
                     "- If a course has a 'UW requirement' field, respect the prerequisite level "
                     "even if those prereqs are not in this plan (e.g. a course requiring a 200-level "
                     "course should not be placed in 1A/1B)\n"
-                    "- Balance roughly 5 courses per study term\n"
+                    "- Keep total credits per term at or below 3.25 (most courses are 0.5 credits; check the units field if provided)\n"
                     "- Follow typical UWaterloo course sequencing conventions\n"
                     "- MATH 1xx and CS 1xx courses go in 1A/1B\n"
                     "- Only assign to study terms: 1A, 1B, 2A, 2B, 3A, 3B, 4A, 4B\n\n"
