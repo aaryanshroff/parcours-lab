@@ -10,6 +10,7 @@ class Course(BaseModel):
     title: str
     url: str
     reason: str = ""
+    units: float = 0.5
 
 
 class SkillNode(BaseModel):

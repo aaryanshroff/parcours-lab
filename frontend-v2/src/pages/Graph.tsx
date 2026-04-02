@@ -57,8 +57,10 @@ interface SkillNodeData {
   courseTitle: string
   courseUrl: string
   courseReason: string
+  courseUnits: number
   tier: Tier
   term?: string
+  termCredits?: number
   [key: string]: unknown
 }
 
@@ -285,14 +287,19 @@ function SkillNode({ id, data }: NodeProps<Node<SkillNodeData>>) {
 }
 
 function TermGroupNode({ data }: NodeProps<Node<SkillNodeData>>) {
+  const credits = data.termCredits ?? 0
+  const over = credits > 3.25
   return (
     <div
       className="rounded-2xl border-2 border-dashed border-stone-200 bg-stone-50/30"
       style={{ width: '100%', height: '100%', position: 'relative' }}
     >
       <div className="absolute inset-x-0 top-2 flex justify-center">
-        <span className="px-3 py-0.5 rounded-full bg-white border border-stone-200 text-[11px] font-bold uppercase tracking-wider text-stone-400 shadow-sm">
+        <span className={`px-3 py-0.5 rounded-full bg-white border text-[11px] font-bold uppercase tracking-wider shadow-sm flex items-center gap-1.5 ${over ? 'border-red-300 text-red-500' : 'border-stone-200 text-stone-400'}`}>
           Term {data.term}
+          <span className={`font-normal normal-case tracking-normal ${over ? 'text-red-400' : 'text-stone-300'}`}>
+            {credits.toFixed(2)} cr{over ? ' ⚠ >3.25' : ''}
+          </span>
         </span>
       </div>
     </div>
@@ -789,7 +796,7 @@ function CourseHistoryPanel({ history, onRestore }: { history: HistoryEntry[]; o
 
 /* ─── API types ─── */
 
-interface ApiCourse { title: string; url: string; reason: string }
+interface ApiCourse { title: string; url: string; reason: string; units?: number }
 interface ApiNode { id: string; labels: string[]; tier: string; course: ApiCourse; position: { x: number; y: number }; term?: string }
 interface ApiEdge { id: string; source: string; target: string }
 interface ApiGraph { goal: string; skills: string[]; nodes: ApiNode[]; edges: ApiEdge[] }
@@ -806,6 +813,7 @@ function toFlowNodes(apiNodes: ApiNode[]): Node<SkillNodeData>[] {
       courseTitle: n.course.title,
       courseUrl: n.course.url,
       courseReason: n.course.reason ?? '',
+      courseUnits: n.course.units ?? 0.5,
     },
   }))
 }
@@ -844,7 +852,7 @@ function addTermGroups(courseNodes: Node<SkillNodeData>[]): Node<SkillNodeData>[
       id: `term-${term}`,
       type: 'termGroup',
       position: { x: minX, y: globalMinY - PAD_TOP },
-      data: { labels: [term], tier: 'foundation' as Tier, courseTitle: '', courseUrl: '', courseReason: '', term },
+      data: { labels: [term], tier: 'foundation' as Tier, courseTitle: '', courseUrl: '', courseReason: '', courseUnits: 0, term, termCredits: members.reduce((s, n) => s + (n.data.courseUnits ?? 0.5), 0) },
       style: { width: maxX - minX, height: (globalMaxY - globalMinY) + PAD_TOP + PAD_BOTTOM },
       selectable: false,
       draggable: false,
@@ -936,6 +944,14 @@ export default function Graph() {
 
       const oldTerm = draggedNode.data.term as string
 
+      // Enforce 3.25 credit cap when moving to a different term
+      if (targetTerm !== oldTerm) {
+        const targetCredits = courseNodes
+          .filter((n) => n.data.term === targetTerm)
+          .reduce((s, n) => s + (n.data.courseUnits ?? 0.5), 0)
+        if (targetCredits + (draggedNode.data.courseUnits ?? 0.5) > 3.25) return prev
+      }
+
       // Snap X to the term column (use existing nodes in that term, or fall back to group node)
       const existingInTarget = courseNodes.find((n) => n.data.term === targetTerm && n.id !== draggedNode.id)
       const snapX = existingInTarget?.position.x
@@ -966,12 +982,25 @@ export default function Graph() {
         oldCourses.forEach((n, i) => { posMap[n.id] = { x: oldSnapX, y: i * ROW_GAP, term: oldTerm } })
       }
 
-      return prev.map((n) => {
-        if (n.type !== 'skill') return n
-        const p = posMap[n.id]
-        if (!p) return n
-        return { ...n, data: { ...n.data, term: p.term }, position: { x: p.x, y: p.y } }
-      })
+      const updatedCourseNodes = prev
+        .filter((n) => n.type === 'skill')
+        .map((n) => {
+          const p = posMap[n.id]
+          if (!p) return n
+          return { ...n, data: { ...n.data, term: p.term }, position: { x: p.x, y: p.y } }
+        })
+
+      // Recompute termCredits on group nodes
+      const creditsByTerm: Record<string, number> = {}
+      for (const n of updatedCourseNodes) {
+        const t = n.data.term as string
+        if (t) creditsByTerm[t] = (creditsByTerm[t] ?? 0) + (n.data.courseUnits ?? 0.5)
+      }
+      const updatedGroupNodes = prev
+        .filter((n) => n.type === 'termGroup')
+        .map((n) => ({ ...n, data: { ...n.data, termCredits: creditsByTerm[n.data.term as string] ?? 0 } }))
+
+      return [...updatedGroupNodes, ...updatedCourseNodes]
     })
   }, [])
 
