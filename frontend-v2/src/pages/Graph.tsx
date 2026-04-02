@@ -169,7 +169,7 @@ function SkillNode({ id, data }: NodeProps<Node<SkillNodeData>>) {
       className={`rounded-xl border-2 ${borderClass} transition-all duration-200 ${locked ? 'bg-stone-100' : 'bg-white hover:-translate-y-0.5'}`}
       style={{ width: NODE_W, padding: '14px 16px' }}
     >
-      <Handle type="target" position={Position.Top} style={{ opacity: 0 }} />
+      <Handle type="target" position={data.term ? Position.Left : Position.Top} style={{ opacity: 0 }} />
 
       <div className={locked ? 'opacity-40' : ''}>
       {!data.term && (
@@ -279,7 +279,7 @@ function SkillNode({ id, data }: NodeProps<Node<SkillNodeData>>) {
       )}
       </div>
 
-      <Handle type="source" position={data.term ? Position.Top : Position.Bottom} style={{ opacity: 0 }} />
+      <Handle type="source" position={data.term ? Position.Right : Position.Bottom} style={{ opacity: 0 }} />
     </div>
   )
 }
@@ -301,9 +301,17 @@ function TermGroupNode({ data }: NodeProps<Node<SkillNodeData>>) {
 
 const nodeTypes = { skill: SkillNode, termGroup: TermGroupNode }
 
-function AcademicEdge({ sourceX, sourceY, targetX, targetY, markerEnd, style }: EdgeProps) {
-  const routeY = Math.min(sourceY, targetY) - 80
-  const path = `M ${sourceX} ${sourceY} L ${sourceX} ${routeY} L ${targetX} ${routeY} L ${targetX} ${targetY}`
+function AcademicEdge({ sourceX, sourceY, targetX, targetY, markerEnd, style, data }: EdgeProps) {
+  const routeY = (data?.routeY as number | undefined) ?? Math.min(sourceY, targetY) - 80
+  const GAP = 12
+  const path = [
+    `M ${sourceX} ${sourceY}`,
+    `L ${sourceX + GAP} ${sourceY}`,
+    `L ${sourceX + GAP} ${routeY}`,
+    `L ${targetX - GAP} ${routeY}`,
+    `L ${targetX - GAP} ${targetY}`,
+    `L ${targetX} ${targetY}`,
+  ].join(' ')
   return <BaseEdge path={path} markerEnd={markerEnd} style={style} />
 }
 
@@ -847,12 +855,13 @@ function addTermGroups(courseNodes: Node<SkillNodeData>[]): Node<SkillNodeData>[
   return [...groupNodes, ...courseNodes]
 }
 
-function toFlowEdges(apiEdges: ApiEdge[], edgeType = 'smoothstep'): Edge[] {
+function toFlowEdges(apiEdges: ApiEdge[], edgeType = 'smoothstep', extraData?: Record<string, unknown>): Edge[] {
   return apiEdges.map((e) => ({
     ...e,
     style: { stroke: '#d6d3d1', strokeWidth: 1.5 },
     type: edgeType,
     markerEnd: { type: MarkerType.ArrowClosed, color: '#d6d3d1', width: 14, height: 14 },
+    ...(extraData ? { data: extraData } : {}),
   }))
 }
 
@@ -987,8 +996,15 @@ export default function Graph() {
     })
       .then((r) => r.json())
       .then((data: ApiGraph) => {
-        const flowEdges = toFlowEdges(data.edges, 'academicEdge')
         const courseNodes = toFlowNodes(data.nodes)
+        const termByNode: Record<string, string> = {}
+        courseNodes.forEach((n) => { termByNode[n.id] = n.data.term as string })
+        const globalRouteY = Math.min(...courseNodes.map((n) => n.position.y)) - 80
+        const flowEdges = toFlowEdges(
+          data.edges.filter((e) => termByNode[e.source] !== termByNode[e.target]),
+          'academicEdge',
+          { routeY: globalRouteY },
+        )
         setNodes(addTermGroups(courseNodes))
         setEdges(flowEdges)
         setGoal(data.goal)
