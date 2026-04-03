@@ -80,6 +80,9 @@ Required skills: {skills}
 Candidates (JSON array):
 {candidates_json}
 
+Prefer the standard/regular version of a course over its advanced equivalent (e.g. CS 136 over CS 146) unless the user's goal or existing skills clearly indicate they are ready for or require the advanced version. \
+Only recommend an advanced course if the standard version would genuinely be too easy or insufficient for their stated goal.
+
 Return ONLY a JSON array of objects with "id" and "explanation" fields, e.g. \
 [{{"id": "id1", "explanation": "one sentence why"}}, ...]. \
 Keep each explanation to one concise sentence. If a course was chosen or avoided because of user feedback on rejected courses, say so in the explanation. \

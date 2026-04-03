@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback, useMemo, createContext, useContext } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import {
   ReactFlow,
   type Node,
@@ -15,7 +15,7 @@ import {
   MarkerType,
   applyNodeChanges,
 } from '@xyflow/react'
-import { ExternalLink, Check, X, RefreshCw, ChevronDown, Loader2, Undo2, HelpCircle } from 'lucide-react'
+import { ExternalLink, Check, X, RefreshCw, ChevronDown, Loader2, Undo2, HelpCircle, FileText } from 'lucide-react'
 import Dagre from '@dagrejs/dagre'
 import GoatChat from '../components/GoatChat'
 
@@ -350,7 +350,9 @@ function GoalPanel({ goal, program }: { goal: string; program?: { title: string;
                 <p className="text-xs text-stone-400 mt-0.5">{program.faculty}</p>
               </>
             ) : (
-              <p className="text-sm sm:text-base font-medium text-stone-900 m-0 leading-snug">{goal}</p>
+              <p className="text-sm sm:text-base font-medium text-stone-900 m-0 leading-snug">
+                {goal || <span className="text-stone-400 font-normal italic">No goal specified</span>}
+              </p>
             )}
           </div>
         </div>
@@ -875,6 +877,7 @@ function toFlowEdges(apiEdges: ApiEdge[], edgeType = 'smoothstep', extraData?: R
 
 export default function Graph() {
   const location = useLocation()
+  const navigate = useNavigate()
   const navState = (location.state ?? {}) as Record<string, unknown>
   const mode = (navState.mode as string) ?? 'career'
 
@@ -904,6 +907,7 @@ export default function Graph() {
   const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null)
   const regenAbortRef = useRef<AbortController | null>(null)
   const skillChangeCounter = useRef(0)
+  const dragCleanupRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const ROW_GAP = 220
 
@@ -913,10 +917,37 @@ export default function Graph() {
     return edges.map((e) => ({
       ...e,
       hidden: e.source !== hoveredNodeId && e.target !== hoveredNodeId,
-      style: { stroke: '#3b82f6', strokeWidth: 2 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: '#3b82f6', width: 14, height: 14 },
+      style: { stroke: '#a8a29e', strokeWidth: 2 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: '#a8a29e', width: 14, height: 14 },
     }))
   }, [edges, hoveredNodeId, mode])
+
+  const handleNodeDrag = useCallback((_: React.MouseEvent, draggedNode: Node<SkillNodeData>) => {
+    if (!draggedNode.data.term) return
+    const term = draggedNode.data.term as string
+
+    setNodes((prev) => {
+      const courseNodes = prev.filter((n) => n.type === 'skill')
+      const sameTerm = courseNodes
+        .filter((n) => n.data.term === term && n.id !== draggedNode.id)
+        .sort((a, b) => a.position.y - b.position.y)
+
+      const insertAt = sameTerm.findIndex((n) => n.position.y > draggedNode.position.y)
+      const newOrder = [...sameTerm]
+      if (insertAt === -1) newOrder.push(draggedNode)
+      else newOrder.splice(insertAt, 0, draggedNode)
+
+      const posMap: Record<string, number> = {}
+      newOrder.forEach((n, i) => { if (n.id !== draggedNode.id) posMap[n.id] = i * ROW_GAP })
+
+      return prev.map((n) => {
+        if (n.type !== 'skill' || n.id === draggedNode.id) return n
+        const newY = posMap[n.id]
+        if (newY === undefined || n.position.y === newY) return n
+        return { ...n, position: { x: n.position.x, y: newY }, style: { ...n.style, transition: 'transform 150ms ease' } }
+      })
+    })
+  }, [])
 
   const handleNodeDragStop = useCallback((_: React.MouseEvent, draggedNode: Node<SkillNodeData>) => {
     if (!draggedNode.data.term) return
@@ -979,26 +1010,23 @@ export default function Graph() {
         oldCourses.forEach((n, i) => { posMap[n.id] = { x: oldSnapX, y: i * ROW_GAP, term: oldTerm } })
       }
 
-      const updatedCourseNodes = prev
-        .filter((n) => n.type === 'skill')
-        .map((n) => {
-          const p = posMap[n.id]
-          if (!p) return n
-          return { ...n, data: { ...n.data, term: p.term }, position: { x: p.x, y: p.y } }
-        })
-
-      // Recompute termCredits on group nodes
-      const creditsByTerm: Record<string, number> = {}
-      for (const n of updatedCourseNodes) {
-        const t = n.data.term as string
-        if (t) creditsByTerm[t] = (creditsByTerm[t] ?? 0) + (n.data.courseUnits ?? 0.5)
-      }
-      const updatedGroupNodes = prev
-        .filter((n) => n.type === 'termGroup')
-        .map((n) => ({ ...n, data: { ...n.data, termCredits: creditsByTerm[n.data.term as string] ?? 0 } }))
-
-      return [...updatedGroupNodes, ...updatedCourseNodes]
+      return prev.map((n) => {
+        if (n.type !== 'skill') return n
+        const p = posMap[n.id]
+        if (!p) return n
+        return { ...n, data: { ...n.data, term: p.term }, position: { x: p.x, y: p.y } }
+      })
     })
+
+    // Strip transitions after animation completes
+    if (dragCleanupRef.current) clearTimeout(dragCleanupRef.current)
+    dragCleanupRef.current = setTimeout(() => {
+      setNodes((prev) => prev.map((n) => {
+        if (n.type !== 'skill' || !(n.style as Record<string, unknown>)?.transition) return n
+        const { transition: _, ...rest } = n.style as Record<string, unknown>
+        return { ...n, style: rest as React.CSSProperties }
+      }))
+    }, 200)
   }, [])
 
   const fetchAcademicGraph = useCallback(() => {
@@ -1121,6 +1149,9 @@ export default function Graph() {
         <div className="absolute inset-0 z-10 overflow-visible pointer-events-none">
           <div className="absolute top-3 left-3 right-3 flex flex-col gap-2 pointer-events-auto sm:top-5 sm:left-5 sm:right-auto sm:gap-3">
             <GoalPanel goal={navGoal ?? goal} program={mode === 'academics' ? major : undefined} />
+            {mode === 'academics' && (
+              <GoalPanel goal={navGoal ?? goal} />
+            )}
             {mode !== 'academics' && (
               <>
                 <DesiredSkillsPanel skills={desiredSkills} onSkillsChange={handleDesiredSkillsChange} loading={loading} />
@@ -1129,7 +1160,7 @@ export default function Graph() {
             )}
           </div>
 
-          <div className="hidden pointer-events-auto sm:block sm:absolute sm:top-5 sm:right-5">
+          <div className="hidden pointer-events-auto sm:flex sm:flex-col sm:gap-3 sm:absolute sm:top-5 sm:right-5">
             <CourseHistoryPanel
               history={courseHistory}
               onRestore={(index) => {
@@ -1160,6 +1191,7 @@ export default function Graph() {
             nodes={nodes}
             edges={displayEdges}
             onNodesChange={onNodesChange}
+            onNodeDrag={handleNodeDrag}
             onNodeDragStop={handleNodeDragStop}
             onNodeMouseEnter={(_, node) => mode === 'academics' && setHoveredNodeId(node.id)}
             onNodeMouseLeave={() => mode === 'academics' && setHoveredNodeId(null)}
@@ -1176,6 +1208,32 @@ export default function Graph() {
             <Background variant={BackgroundVariant.Dots} gap={20} size={1} color="#e7e5e4" />
           </ReactFlow>
         </div>
+
+        {/* Summary FAB — bottom-left */}
+        <button
+          onClick={() => {
+            const courseNodes = nodes
+              .filter((n) => n.type === 'skill')
+              .map((n) => ({
+                id: n.id,
+                labels: n.data.labels,
+                courseTitle: n.data.courseTitle,
+                courseUrl: n.data.courseUrl,
+                courseReason: n.data.courseReason,
+                tier: n.data.tier,
+                term: n.data.term,
+              }))
+            navigate('/summary', {
+              state: { goal: navGoal ?? goal, mode, program: mode === 'academics' ? major : undefined, courses: courseNodes },
+            })
+          }}
+          disabled={loading || nodes.filter((n) => n.type === 'skill').length === 0}
+          className="fab-enter fixed bottom-8 left-6 z-20 h-11 pl-3.5 pr-4 rounded-full bg-stone-900 text-white shadow-md hover:shadow-lg hover:bg-stone-800 active:scale-[0.97] disabled:opacity-0 disabled:pointer-events-none cursor-pointer transition-all duration-200 flex items-center gap-2"
+          aria-label="View Summary"
+        >
+          <FileText size={16} />
+          <span className="text-[13px] font-medium">Summary</span>
+        </button>
 
         <GoatChat
           context={{
