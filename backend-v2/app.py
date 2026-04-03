@@ -8,6 +8,18 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
+# needed to add thsi to fix a bug with goat chat
+def _parse_llm_json(raw: str) -> dict:
+    """Strip markdown fences before JSON parsing."""
+    import json as _json
+    raw = raw.strip()
+    if raw.startswith("```"):
+        raw = raw.split("\n", 1)[1] if "\n" in raw else raw[3:]
+        if raw.endswith("```"):
+            raw = raw[:-3]
+        raw = raw.strip()
+    return _json.loads(raw)
+
 
 @app.route("/api/health")
 def health():
@@ -264,39 +276,26 @@ def esco_search():
 
 @app.route("/api/course/replace", methods=["POST"])
 def course_replace():
-    import json as _json
-    from openai import OpenAI
-
     body = request.get_json() or {}
     skill = body.get("skill", "")
     current_course = body.get("current_course", "")
     reason = body.get("reason", "")
+    mode = body.get("mode", "")
+    choice_options = body.get("choice_options", [])
 
-    client = OpenAI(
-        base_url="https://openrouter.ai/api/v1",
-        api_key=os.environ["OPENROUTER_API_KEY"],
-    )
+    if body.get("is_locked"):
+        return jsonify({"error": f"{skill} is a mandatory degree requirement and cannot be replaced."}), 400
 
-    prompt = (
-        f"The user is learning the skill: \"{skill}\".\n"
-        f"They were recommended the course: \"{current_course}\", but want a replacement."
+    api_key = os.environ["OPENROUTER_API_KEY"]
+    result_text, action = _execute_chat_tool(
+        "replace_course",
+        {"skill_name": skill, "reason": reason, "current_course": current_course},
+        api_key,
+        context={"mode": mode, "nodes": [{"skill": skill, "locked": False, "choice_options": choice_options}]},
     )
-    if reason:
-        prompt += f"\nTheir reason: \"{reason}\""
-    prompt += (
-        "\n\nSuggest ONE alternative online course for this exact skill. "
-        "Return JSON only: {\"title\": \"<course title> — <platform>\", \"url\": \"<course url>\", \"reason\": \"<one sentence explaining why this course is a better fit>\"}"
-    )
-
-    response = client.chat.completions.create(
-        model="openai/gpt-4.1-mini",
-        messages=[
-            {"role": "system", "content": "You recommend online courses. Reply with valid JSON only, no markdown."},
-            {"role": "user", "content": prompt},
-        ],
-    )
-
-    course = _json.loads(response.choices[0].message.content)
+    course = action.get("course") if action else None
+    if not course:
+        return jsonify({"error": "Could not find a replacement."}), 500
     return jsonify({"course": course})
 
 
@@ -388,20 +387,48 @@ def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None
         current_course = args.get("current_course", "")
         ctx = context or {}
 
+        # Hard block: locked courses (rule="all") cannot be replaced
+        norm_skill = skill.replace(" ", "").upper()
+        node_choice_options: list[str] = []
+        for node in ctx.get("nodes", []):
+            if isinstance(node, dict):
+                node_code = node.get("skill", "").replace(" ", "").upper()
+                if node_code == norm_skill:
+                    if node.get("locked"):
+                        return (f"{skill} is a mandatory degree requirement and cannot be replaced.", {})
+                    node_choice_options = [c.replace(" ", "").upper() for c in (node.get("choice_options") or [])]
+
+        print(f"[replace_course] skill={skill!r} norm={norm_skill!r} choice_options={node_choice_options}")
+
         client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key)
 
         if ctx.get("mode") == "academics":
             from uwaterloo import list_courses_by_subject, get_course_prereqs
 
-            subject_match = _re.match(r"^([A-Z]{2,})", skill.strip().upper())
-            subject = subject_match.group(1) if subject_match else ""
+            norm_current = norm_skill
             candidates = []
-            if subject:
-                norm_current = skill.replace(" ", "").upper()
-                candidates = [
-                    c for c in list_courses_by_subject(subject)
-                    if c["code"].replace(" ", "").upper() != norm_current
-                ]
+
+            if node_choice_options:
+                # Constrained swap: must pick from the group's alternatives only
+                print(f"[replace_course] constrained to choice_options: {node_choice_options}")
+                for code in node_choice_options:
+                    subject_match = _re.match(r"^([A-Z]{2,})", code)
+                    subject = subject_match.group(1) if subject_match else ""
+                    for c in list_courses_by_subject(subject):
+                        if c["code"].replace(" ", "").upper() == code:
+                            candidates.append(c)
+                            break
+                if not candidates:
+                    return (f"No alternatives available for {skill} — it is the only option in its requirement group.", {})
+            else:
+                # Free swap: search same subject
+                subject_match = _re.match(r"^([A-Z]{2,})", skill.strip().upper())
+                subject = subject_match.group(1) if subject_match else ""
+                if subject:
+                    candidates = [
+                        c for c in list_courses_by_subject(subject)
+                        if c["code"].replace(" ", "").upper() != norm_current
+                    ]
 
             if candidates:
                 # Build set of course codes in the user's plan (excluding the one being replaced)
@@ -427,6 +454,7 @@ def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None
                 if prereq_filtered:
                     candidates = prereq_filtered
                 goal = ctx.get("goal", "")
+                print(f"[replace_course] final candidates ({len(candidates)}): {[c['code'] for c in candidates[:10]]}")
                 course_list = "\n".join(f"- {c['code']}: {c['title']}" for c in candidates[:40])
                 prompt = f'The user is studying at University of Waterloo{" towards: " + goal if goal else ""}.\n'
                 prompt += f'They want to replace the course "{skill}" ({current_course or "current course"}).'
@@ -441,7 +469,7 @@ def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None
                         {"role": "user", "content": prompt},
                     ],
                 )
-                picked = _json.loads(resp.choices[0].message.content)
+                picked = _parse_llm_json(resp.choices[0].message.content)
                 code = picked.get("code", skill)
                 title = picked.get("title", code)
                 course = {
@@ -470,7 +498,7 @@ def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None
                     {"role": "user", "content": prompt},
                 ],
             )
-            course = _json.loads(resp.choices[0].message.content)
+            course = _parse_llm_json(resp.choices[0].message.content)
 
         return (
             f"Replaced course for {skill} with: {course['title']}",
@@ -506,6 +534,9 @@ def chat():
             "and answer questions about the courses in their plan. "
             "You can modify the user's course plan using tools. "
             "When replacing a course, use the replace_course tool with the course code (e.g. 'CS 135') as skill_name. "
+            "Each course in the plan has a 'locked' flag and a 'choice_options' list. "
+            "If locked=true: this exact course is a mandatory degree requirement — NEVER call replace_course on it, tell the user it cannot be changed. "
+            "If locked=false: this is a chosen elective from a required slot — it CAN be replaced, but only with a course from its choice_options list if one is provided. "
             "Keep responses concise and friendly. "
             "If the user's message is not about course planning, academics, or university life, "
             "respond ONLY with: \"I'm here to help with your course plan. "

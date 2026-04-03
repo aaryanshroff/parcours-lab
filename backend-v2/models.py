@@ -20,6 +20,9 @@ class SkillNode(BaseModel):
     course: Course
     position: Position
     term: str = ""
+    is_locked: bool = False        # rule="all": this exact course is mandatory, no swapping
+    is_required: bool = False      # rule=N: slot must be filled, but course can be swapped within choice_options
+    choice_options: list[str] = [] # sibling codes available for swapping (only set when not locked)
 
 
 class Edge(BaseModel):
