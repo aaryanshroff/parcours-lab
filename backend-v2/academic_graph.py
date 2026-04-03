@@ -90,13 +90,25 @@ def generate_academic_graph(
     # ── 4. Pick electives via LLM (or default) ──
     elective_codes: set[str] = set()
     elective_reasons: dict[str, str] = {}
+    elective_group_options: dict[str, list[str]] = {}  # nc -> sibling codes in the same choice group
 
+    picks: dict[str, str] = {}
     if choice_groups:
         if goal.strip():
             picks = _pick_electives(choice_groups, goal, api_key, model)
             picks = _fill_picks_with_defaults(choice_groups, picks)
         else:
             picks = _pick_defaults(choice_groups)
+
+    # Build group-options map so each picked course knows its siblings
+    for group in choice_groups:
+        group_codes = [_normalize_code(c["code"]) for c in group.get("courses", [])]
+        for nc in group_codes:
+            if nc not in elective_group_options:
+                elective_group_options[nc] = []
+            # siblings = all others in the group
+            elective_group_options[nc] = [c for c in group_codes if c != nc]
+
     for code, reason in picks.items():
         nc = _normalize_code(code)
         elective_codes.add(nc)
@@ -189,10 +201,13 @@ def generate_academic_graph(
                 labels=[info.get("code", code)],
                 tier=tier,
                 term=term,
+                is_locked=not is_elective,
+                is_required=True,  # every node in the graph is a required slot
+                choice_options=elective_group_options.get(code, []) if is_elective else [],
                 course=Course(
                     title=info.get("title", code),
                     url=f"https://uwflow.com/course/{code.lower()}",
-                    reason=elective_reasons.get(code, "Required course") if is_elective else "Required course",
+                    reason=elective_reasons.get(code, "") if is_elective else "Required course",
                     units=float(info.get("units", 0.5)),
                 ),
                 position=Position(x=col * COL_GAP, y=row * ROW_GAP),
@@ -557,7 +572,16 @@ def _expand_elective_group(group: dict) -> list[dict]:
         exclude = {
             "CS", "MATH", "STAT", "CO", "AMATH", "PMATH", "ACTSC",
         }
-        return list_courses_excluding_subjects(exclude)
+        # Prefer common humanities/social-science subjects; sort by catalog number so
+        # lower-level (more accessible) courses appear first.
+        preferred_subjects = {"ENGL", "ECON", "PSYCH", "SOC", "PHIL", "COMMST", "SCI", "ARTS", "HRM", "MUSIC", "FINE"}
+        courses = list_courses_excluding_subjects(exclude)
+        preferred = sorted(
+            [c for c in courses if c.get("code", "").split()[0].upper() in preferred_subjects],
+            key=lambda c: _catalog_number(c.get("code", "")) or 9999,
+        )
+        other = [c for c in courses if c.get("code", "").split()[0].upper() not in preferred_subjects]
+        return preferred + other
 
     if elective_type != "range":
         return []

@@ -58,6 +58,9 @@ interface SkillNodeData {
   courseUrl: string
   courseReason: string
   courseUnits: number
+  isLocked: boolean
+  isRequired: boolean
+  choiceOptions: string[]
   tier: Tier
   term?: string
   termCredits?: number
@@ -83,13 +86,13 @@ interface CourseContextValue {
   prerequisites: Record<string, string[]>
   accept: (nodeId: string) => void
   startReplace: (nodeId: string) => void
-  submitReplace: (nodeId: string, reason: string, skill: string, currentCourse: string) => void
+  submitReplace: (nodeId: string, reason: string, skill: string, currentCourse: string, isLocked: boolean, choiceOptions: string[]) => void
   cancelReplace: (nodeId: string) => void
 }
 
 const CourseContext = createContext<CourseContextValue>(null!)
 
-function CourseProvider({ children, edges, setNodes, onCourseReplaced }: { children: React.ReactNode; edges: Edge[]; setNodes: React.Dispatch<React.SetStateAction<Node<SkillNodeData>[]>>; onCourseReplaced?: (entry: HistoryEntry) => void }) {
+function CourseProvider({ children, edges, setNodes, onCourseReplaced, mode }: { children: React.ReactNode; edges: Edge[]; setNodes: React.Dispatch<React.SetStateAction<Node<SkillNodeData>[]>>; onCourseReplaced?: (entry: HistoryEntry) => void; mode?: string }) {
   const [store, setStore] = useState<Record<string, CourseState>>({})
 
   const prerequisites = useMemo(() => {
@@ -109,13 +112,14 @@ function CourseProvider({ children, edges, setNodes, onCourseReplaced }: { child
     setStore((s) => ({ ...s, [nodeId]: { status: 'replacing' } }))
   }, [])
 
-  const submitReplace = useCallback(async (nodeId: string, reason: string, skill: string, currentCourse: string) => {
+  const submitReplace = useCallback(async (nodeId: string, reason: string, skill: string, currentCourse: string, isLocked: boolean, choiceOptions: string[]) => {
+    if (isLocked) return  // hard block on the client too
     setStore((s) => ({ ...s, [nodeId]: { status: 'loading' } }))
     try {
       const res = await fetch('/api/course/replace', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ skill, current_course: currentCourse, reason }),
+        body: JSON.stringify({ skill, current_course: currentCourse, reason, mode, choice_options: choiceOptions }),
       })
       const data = await res.json()
       onCourseReplaced?.({ skill, oldCourse: currentCourse, newCourse: data.course.title })
@@ -264,7 +268,7 @@ function SkillNode({ id, data }: NodeProps<Node<SkillNodeData>>) {
             </button>
             <button
               onMouseDown={(e) => e.stopPropagation()}
-              onClick={() => { submitReplace(id, reason, data.labels.join(', '), data.courseTitle); setReason('') }}
+              onClick={() => { submitReplace(id, reason, data.labels.join(', '), data.courseTitle, data.isLocked, data.choiceOptions as string[]); setReason('') }}
               className="nopan px-2 py-1 text-[11px] font-medium rounded-lg bg-blue-900 text-white hover:bg-blue-950 cursor-pointer transition-colors duration-150"
             >
               Submit
@@ -799,7 +803,7 @@ function CourseHistoryPanel({ history, onRestore }: { history: HistoryEntry[]; o
 /* ─── API types ─── */
 
 interface ApiCourse { title: string; url: string; reason: string; units?: number }
-interface ApiNode { id: string; labels: string[]; tier: string; course: ApiCourse; position: { x: number; y: number }; term?: string }
+interface ApiNode { id: string; labels: string[]; tier: string; course: ApiCourse; position: { x: number; y: number }; term?: string; is_locked?: boolean; is_required?: boolean; choice_options?: string[] }
 interface ApiEdge { id: string; source: string; target: string }
 interface ApiGraph { goal: string; skills: string[]; nodes: ApiNode[]; edges: ApiEdge[] }
 
@@ -816,6 +820,9 @@ function toFlowNodes(apiNodes: ApiNode[]): Node<SkillNodeData>[] {
       courseUrl: n.course.url,
       courseReason: n.course.reason ?? '',
       courseUnits: n.course.units ?? 0.5,
+      isLocked: n.is_locked ?? false,
+      isRequired: n.is_required ?? false,
+      choiceOptions: n.choice_options ?? [],
     },
   }))
 }
@@ -1157,7 +1164,7 @@ export default function Graph() {
   )
 
   return (
-    <CourseProvider edges={edges} setNodes={setNodes} onCourseReplaced={(entry) => setCourseHistory((h) => [entry, ...h])}>
+    <CourseProvider edges={edges} setNodes={setNodes} onCourseReplaced={(entry) => setCourseHistory((h) => [entry, ...h])} mode={mode}>
       {/* Mobile: column layout (panels on top, graph below). Desktop: absolute overlays on full-screen graph */}
       <div className="relative w-screen h-dvh">
 
@@ -1256,7 +1263,7 @@ export default function Graph() {
             goal: navGoal ?? goal,
             desired_skills: desiredSkills,
             my_skills: mySkills,
-            nodes: nodes.map((n) => ({ skill: n.data.labels.join(', '), course_title: n.data.courseTitle })),
+            nodes: nodes.filter((n) => n.type === 'skill').map((n) => ({ skill: n.data.labels.join(', '), course_title: n.data.courseTitle, locked: n.data.isLocked, choice_options: n.data.choiceOptions })),
             mode,
           }}
           onAction={(action) => {
