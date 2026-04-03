@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback, useMemo, createContext, useContext } from 'react'
+import { toast } from 'sonner'
 import { useLocation } from 'react-router-dom'
 import {
   ReactFlow,
@@ -926,6 +927,7 @@ export default function Graph() {
   const [shakeNodeId, setShakeNodeId] = useState<string | null>(null)
   const regenAbortRef = useRef<AbortController | null>(null)
   const skillChangeCounter = useRef(0)
+  const dragOriginRef = useRef<{ nodeId: string; position: { x: number; y: number }; term: string } | null>(null)
 
   const ROW_GAP = 220
 
@@ -952,6 +954,7 @@ export default function Graph() {
 
   const handleNodeDragStart = useCallback((_: React.MouseEvent, draggedNode: Node<SkillNodeData>) => {
     if (!draggedNode.data.term) return
+    dragOriginRef.current = { nodeId: draggedNode.id, position: { ...draggedNode.position }, term: draggedNode.data.term as string }
     // Find the latest term among all prerequisites of this node
     const prereqIds = prereqMap[draggedNode.id] ?? []
     if (prereqIds.length === 0) { setDisabledTerms(new Set()); return }
@@ -978,41 +981,50 @@ export default function Graph() {
 
     setDisabledTerms(new Set())
 
+    const groupNodes = nodes.filter((n) => n.type === 'termGroup')
+    const courseNodes = nodes.filter((n) => n.type === 'skill')
+
+    // Find which term box the node's center landed in
+    const cx = draggedNode.position.x + NODE_W / 2
+    const cy = draggedNode.position.y + NODE_H / 2
+    let targetTerm = draggedNode.data.term as string
+    for (const tg of groupNodes) {
+      const w = Number((tg.style as Record<string, unknown>)?.width ?? 0)
+      const h = Number((tg.style as Record<string, unknown>)?.height ?? 0)
+      if (cx >= tg.position.x && cx <= tg.position.x + w &&
+          cy >= tg.position.y && cy <= tg.position.y + h) {
+        targetTerm = tg.data.term as string
+        break
+      }
+    }
+
+    const oldTerm = draggedNode.data.term as string
+
+    // Enforce prerequisite ordering: course must be in a later term than all prereqs
+    if (targetTerm !== oldTerm) {
+      const prereqIds = prereqMap[draggedNode.id] ?? []
+      const targetTermIdx = TERM_ORDER.indexOf(targetTerm)
+      const conflictingPrereqs = prereqIds
+        .map((pid) => courseNodes.find((n) => n.id === pid))
+        .filter((n): n is Node<SkillNodeData> => !!n?.data.term && TERM_ORDER.indexOf(n.data.term as string) >= targetTermIdx)
+      if (conflictingPrereqs.length > 0) {
+        const names = conflictingPrereqs.map((n) => n.data.courseTitle).join(', ')
+        toast.error(`Complete ${names} first`, { duration: 3000 })
+        setShakeNodeId(draggedNode.id)
+        setTimeout(() => setShakeNodeId(null), 500)
+        const origin = dragOriginRef.current
+        if (origin && origin.nodeId === draggedNode.id) {
+          setNodes((prev) => prev.map((n) =>
+            n.id === draggedNode.id ? { ...n, position: origin.position } : n
+          ))
+        }
+        return
+      }
+    }
+
     setNodes((prev) => {
       const groupNodes = prev.filter((n) => n.type === 'termGroup')
       const courseNodes = prev.filter((n) => n.type === 'skill')
-
-      // Find which term box the node's center landed in
-      const cx = draggedNode.position.x + NODE_W / 2
-      const cy = draggedNode.position.y + NODE_H / 2
-      let targetTerm = draggedNode.data.term as string
-      for (const tg of groupNodes) {
-        const w = Number((tg.style as Record<string, unknown>)?.width ?? 0)
-        const h = Number((tg.style as Record<string, unknown>)?.height ?? 0)
-        if (cx >= tg.position.x && cx <= tg.position.x + w &&
-            cy >= tg.position.y && cy <= tg.position.y + h) {
-          targetTerm = tg.data.term as string
-          break
-        }
-      }
-
-      const oldTerm = draggedNode.data.term as string
-
-      // Enforce prerequisite ordering: course must be in a later term than all prereqs
-      if (targetTerm !== oldTerm) {
-        const prereqIds = prereqMap[draggedNode.id] ?? []
-        const targetTermIdx = TERM_ORDER.indexOf(targetTerm)
-        const violated = prereqIds.some((pid) => {
-          const prereqNode = courseNodes.find((n) => n.id === pid)
-          if (!prereqNode?.data.term) return false
-          return TERM_ORDER.indexOf(prereqNode.data.term as string) >= targetTermIdx
-        })
-        if (violated) {
-          setShakeNodeId(draggedNode.id)
-          setTimeout(() => setShakeNodeId(null), 500)
-          return prev
-        }
-      }
 
       // Enforce 3.25 credit cap when moving to a different term
       if (targetTerm !== oldTerm) {
@@ -1072,7 +1084,7 @@ export default function Graph() {
 
       return [...updatedGroupNodes, ...updatedCourseNodes]
     })
-  }, [prereqMap])
+  }, [prereqMap, nodes])
 
   const fetchAcademicGraph = useCallback(() => {
     regenAbortRef.current?.abort()
