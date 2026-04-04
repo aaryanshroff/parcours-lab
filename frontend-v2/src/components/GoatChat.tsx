@@ -2,15 +2,24 @@ import { useState, useRef, useEffect } from 'react'
 import { Send, X, Loader2 } from 'lucide-react'
 import goatImg from '../assets/mountain-goat.png'
 
+interface SearchResult {
+  code: string
+  title: string
+  url: string
+}
+
 interface Message {
   role: 'user' | 'assistant'
   content: string
+  searchResults?: { courseCode: string; results: SearchResult[] }
 }
 
 interface ChatAction {
   type: string
   skill_name?: string
   course?: { title: string; url: string; reason?: string }
+  course_code?: string
+  results?: SearchResult[]
 }
 
 interface ChatContext {
@@ -60,13 +69,20 @@ export default function GoatChat({ context, onAction }: GoatChatProps) {
         body: JSON.stringify({ messages: next, context }),
       })
       const data = await res.json()
-      setMessages((prev) => [...prev, { role: 'assistant', content: data.message }])
 
+      // Separate search_results from other actions
+      let searchResults: Message['searchResults'] = undefined
       if (data.actions) {
         for (const action of data.actions as ChatAction[]) {
-          onAction(action)
+          if (action.type === 'search_results' && action.results) {
+            searchResults = { courseCode: action.course_code ?? '', results: action.results }
+          } else {
+            onAction(action)
+          }
         }
       }
+
+      setMessages((prev) => [...prev, { role: 'assistant', content: data.message, searchResults }])
     } catch {
       setMessages((prev) => [...prev, { role: 'assistant', content: 'Something went wrong. Try again.' }])
     } finally {
@@ -101,16 +117,42 @@ export default function GoatChat({ context, onAction }: GoatChatProps) {
           {/* Messages */}
           <div className="flex-1 overflow-y-auto px-3 py-2 space-y-2">
             {messages.map((msg, i) => (
-              <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div
-                  className={`max-w-[85%] rounded-lg px-3 py-1.5 text-sm leading-snug ${
-                    msg.role === 'user'
-                      ? 'bg-blue-900 text-white'
-                      : 'bg-stone-100 text-stone-800'
-                  }`}
-                >
-                  {msg.content}
+              <div key={i}>
+                <div className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div
+                    className={`max-w-[85%] rounded-lg px-3 py-1.5 text-sm leading-snug ${
+                      msg.role === 'user'
+                        ? 'bg-blue-900 text-white'
+                        : 'bg-stone-100 text-stone-800'
+                    }`}
+                  >
+                    {msg.content}
+                  </div>
                 </div>
+                {msg.searchResults && (
+                  <div className="mt-1.5 space-y-0.5">
+                    {msg.searchResults.results.map((r) => (
+                      <button
+                        key={r.code}
+                        onClick={() => {
+                          onAction({
+                            type: 'replace_course',
+                            skill_name: msg.searchResults!.courseCode,
+                            course: { title: `${r.code}: ${r.title}`, url: r.url },
+                          })
+                          setMessages((prev) => [
+                            ...prev,
+                            { role: 'assistant', content: `Replaced with ${r.code}: ${r.title}` },
+                          ])
+                        }}
+                        className="w-full text-left px-3 py-1.5 text-sm rounded-md border border-stone-200 bg-white hover:bg-blue-50 hover:border-blue-300 transition-colors duration-150 cursor-pointer"
+                      >
+                        <span className="font-semibold text-blue-900">{r.code}</span>
+                        <span className="text-stone-600"> — {r.title}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
             {loading && (

@@ -381,6 +381,27 @@ CHAT_TOOLS = [
             },
         },
     },
+    {
+        "type": "function",
+        "function": {
+            "name": "search_courses",
+            "description": (
+                "Search for alternative courses to replace a course in the student's plan. "
+                "Returns 3-4 options for the student to choose from in the chat. "
+                "Use this BEFORE replace_course so the student can pick which course they want."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "course_code": {
+                        "type": "string",
+                        "description": "The course code to find replacements for (e.g. 'CS 350')",
+                    },
+                },
+                "required": ["course_code"],
+            },
+        },
+    },
 ]
 
 
@@ -486,6 +507,83 @@ def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None
             {"type": "replace_course", "skill_name": skill, "course": course},
         )
 
+    if name == "search_courses":
+        from uwaterloo import list_courses_by_subject, get_course_prereqs
+        from openai import OpenAI
+
+        course_code = args.get("course_code", "")
+        ctx = context or {}
+
+        subject_match = _re.match(r"^([A-Z]{2,})", course_code.strip().upper())
+        subject = subject_match.group(1) if subject_match else ""
+        if not subject:
+            return ("No valid subject found in course code.", {})
+
+        norm_current = course_code.replace(" ", "").upper()
+        candidates = [
+            c for c in list_courses_by_subject(subject)
+            if c["code"].replace(" ", "").upper() != norm_current
+        ]
+
+        # Build set of course codes already in the plan (excluding the one being replaced)
+        plan_codes: set[str] = set()
+        for node in ctx.get("nodes", []):
+            node_skill = node.get("skill", "") if isinstance(node, dict) else ""
+            for part in node_skill.split(","):
+                c = part.strip().replace(" ", "").upper()
+                if c and c != norm_current:
+                    plan_codes.add(c)
+
+        # Filter candidates to those whose prereqs are satisfied by the plan
+        prereq_filtered = []
+        for candidate in candidates:
+            prereq_data = get_course_prereqs(candidate["code"])
+            if prereq_data is None:
+                prereq_filtered.append(candidate)
+                continue
+            prereqs = prereq_data.get("prereqs", [])
+            if all(p.replace(" ", "").upper() in plan_codes for p in prereqs):
+                prereq_filtered.append(candidate)
+
+        if prereq_filtered:
+            candidates = prereq_filtered
+
+        if not candidates:
+            return ("No alternative courses found in the same subject.", {})
+
+        # Use LLM to pick top 3-4 from the filtered list
+        goal = ctx.get("goal", "")
+        course_list = "\n".join(f"- {c['code']}: {c['title']}" for c in candidates[:40])
+        prompt = f'The user is studying at University of Waterloo{" towards: " + goal if goal else ""}.\n'
+        prompt += f'They want alternatives to "{course_code}".\n'
+        prompt += f"\nPick the 3-4 best alternatives from this list:\n{course_list}\n\n"
+        prompt += 'Return a JSON array only: [{"code": "<code>", "title": "<title>"}]'
+
+        client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key)
+        resp = client.chat.completions.create(
+            model="openai/gpt-4.1-mini",
+            messages=[
+                {"role": "system", "content": "You recommend University of Waterloo courses. Reply with valid JSON only, no markdown."},
+                {"role": "user", "content": prompt},
+            ],
+        )
+        picks = _json.loads(resp.choices[0].message.content)
+
+        results = []
+        for p in picks[:4]:
+            code = p.get("code", "")
+            results.append({
+                "code": code,
+                "title": p.get("title", code),
+                "url": f"https://uwflow.com/course/{code.replace(' ', '').lower()}",
+            })
+
+        result_text = "Found alternatives: " + ", ".join(r["code"] for r in results)
+        return (
+            result_text,
+            {"type": "search_results", "course_code": course_code, "results": results},
+        )
+
     if name in ("add_my_skill", "remove_my_skill", "add_desired_skill", "remove_desired_skill"):
         skill = args.get("skill_name", "")
         return (
@@ -514,7 +612,8 @@ def chat():
             "You help students understand their course plan, suggest study strategies, "
             "and answer questions about the courses in their plan. "
             "You can modify the user's course plan using tools. "
-            "When replacing a course, use the replace_course tool with the course code (e.g. 'CS 135') as skill_name. "
+            "When the user wants to replace a course, ALWAYS use search_courses FIRST to present options. "
+            "Do NOT use replace_course directly — let the student pick from the search results. "
             "Keep responses concise and friendly. "
             "If the user's message is not about course planning, academics, or university life, "
             "respond ONLY with: \"I'm here to help with your course plan. "
@@ -538,7 +637,7 @@ def chat():
     actions = []
 
     academic_mode = context.get("mode") == "academics"
-    tools = [t for t in CHAT_TOOLS if t["function"]["name"] == "replace_course"] if academic_mode else CHAT_TOOLS
+    tools = [t for t in CHAT_TOOLS if t["function"]["name"] in ("replace_course", "search_courses")] if academic_mode else CHAT_TOOLS
 
     # Tool calling loop (max 5 iterations)
     for _ in range(5):
