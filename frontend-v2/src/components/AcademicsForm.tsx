@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { toast } from 'sonner'
 import { useNavigate } from 'react-router-dom'
 import { ArrowRight, Search, Loader2, X, ChevronRight, Plus, CheckCircle2, BookOpen, GitFork, Puzzle } from 'lucide-react'
 
@@ -67,11 +68,17 @@ export default function AcademicsForm() {
       majorAbortRef.current = controller
 
       fetch(`/api/uwaterloo/programs?q=${encodeURIComponent(trimmed)}&type=Major`, {
-        signal: controller.signal,
+        signal: AbortSignal.any([controller.signal, AbortSignal.timeout(10_000)]),
       })
-        .then((r) => r.json())
+        .then((r) => {
+          if (!r.ok) throw new Error(`Server error (${r.status})`)
+          return r.json()
+        })
         .then((data) => setMajorResults(data.programs ?? []))
-        .catch((e) => { if (e.name !== 'AbortError') console.error(e) })
+        .catch((e) => {
+          if (e.name === 'AbortError') return
+          toast.error(e.name === 'TimeoutError' ? 'Search timed out' : `Search failed: ${e.message}`)
+        })
         .finally(() => setSearchingMajor(false))
     }, 300)
 
@@ -94,22 +101,33 @@ export default function AcademicsForm() {
     const controller = new AbortController()
 
     // Fetch detail and specializations in parallel
+    const combined = AbortSignal.any([controller.signal, AbortSignal.timeout(15_000)])
+
     const detailFetch = fetch(
       `/api/uwaterloo/programs/${encodeURIComponent(selectedMajor.pid)}/requirements`,
-      { signal: controller.signal },
-    ).then((r) => r.json())
+      { signal: combined },
+    ).then((r) => {
+      if (!r.ok) throw new Error(`Server error (${r.status})`)
+      return r.json()
+    })
 
     const specsFetch = fetch(
       `/api/uwaterloo/programs?type=Specialization&fieldOfStudy=${encodeURIComponent(selectedMajor.fieldOfStudy)}`,
-      { signal: controller.signal },
-    ).then((r) => r.json())
+      { signal: combined },
+    ).then((r) => {
+      if (!r.ok) throw new Error(`Server error (${r.status})`)
+      return r.json()
+    })
 
     Promise.all([detailFetch, specsFetch])
       .then(([detail, specs]) => {
         setMajorDetail(detail)
         setAvailableSpecs(specs.programs ?? [])
       })
-      .catch((e) => { if (e.name !== 'AbortError') console.error(e) })
+      .catch((e) => {
+        if (e.name === 'AbortError') return
+        toast.error(e.name === 'TimeoutError' ? 'Loading program timed out' : `Failed to load program: ${e.message}`)
+      })
       .finally(() => setLoadingMajorDetail(false))
 
     return () => controller.abort()
@@ -131,11 +149,17 @@ export default function AcademicsForm() {
       minorAbortRef.current = controller
 
       fetch(`/api/uwaterloo/programs?q=${encodeURIComponent(trimmed)}&type=Minor`, {
-        signal: controller.signal,
+        signal: AbortSignal.any([controller.signal, AbortSignal.timeout(10_000)]),
       })
-        .then((r) => r.json())
+        .then((r) => {
+          if (!r.ok) throw new Error(`Server error (${r.status})`)
+          return r.json()
+        })
         .then((data) => setMinorResults(data.programs ?? []))
-        .catch((e) => { if (e.name !== 'AbortError') console.error(e) })
+        .catch((e) => {
+          if (e.name === 'AbortError') return
+          toast.error(e.name === 'TimeoutError' ? 'Search timed out' : `Search failed: ${e.message}`)
+        })
         .finally(() => setSearchingMinor(false))
     }, 300)
 

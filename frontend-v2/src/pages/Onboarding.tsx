@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { toast } from 'sonner'
 import { useNavigate } from 'react-router-dom'
 import { ArrowRight, Upload, Link, Loader2, X, Plus, ChevronDown } from 'lucide-react'
 import goatImg from '../assets/mountain-goat.png'
@@ -51,14 +52,20 @@ export default function Onboarding() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ goal: trimmed }),
-        signal: controller.signal,
+        signal: AbortSignal.any([controller.signal, AbortSignal.timeout(15_000)]),
       })
-        .then((r) => r.json())
+        .then((r) => {
+          if (!r.ok) throw new Error(`Server error (${r.status})`)
+          return r.json()
+        })
         .then((data) => {
           setGoalExistingSkills(data.existing ?? [])
           setGoalDesiredSkills(data.desired ?? [])
         })
-        .catch((e) => { if (e.name !== 'AbortError') throw e })
+        .catch((e) => {
+          if (e.name === 'AbortError') return
+          toast.error(e.name === 'TimeoutError' ? 'Goal parsing timed out' : `Failed to parse goal: ${e.message}`)
+        })
         .finally(() => setGoalParsing(false))
     }, 800)
 
@@ -87,11 +94,17 @@ export default function Onboarding() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: trimmed }),
-        signal: controller.signal,
+        signal: AbortSignal.any([controller.signal, AbortSignal.timeout(15_000)]),
       })
-        .then((r) => r.json())
+        .then((r) => {
+          if (!r.ok) throw new Error(`Server error (${r.status})`)
+          return r.json()
+        })
         .then((data) => setJobSkills(data.skills ?? []))
-        .catch((e) => { if (e.name !== 'AbortError') throw e })
+        .catch((e) => {
+          if (e.name === 'AbortError') return
+          toast.error(e.name === 'TimeoutError' ? 'Job parsing timed out' : `Failed to parse job: ${e.message}`)
+        })
         .finally(() => setJobParsing(false))
     }, 800)
 

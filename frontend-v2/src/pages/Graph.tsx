@@ -145,7 +145,12 @@ function CourseProvider({ children, edges, setNodes, onCourseReplaced }: { child
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ skill, current_course: currentCourse, reason }),
+        signal: AbortSignal.timeout(30_000),
       })
+      if (!res.ok) {
+        const d = await res.json().catch(() => ({}))
+        throw new Error(d.error || `Server error (${res.status})`)
+      }
       const data = await res.json()
       onCourseReplaced?.({ skill, oldCourse: currentCourse, newCourse: data.course.title })
       setNodes((nds) =>
@@ -156,8 +161,10 @@ function CourseProvider({ children, edges, setNodes, onCourseReplaced }: { child
         ),
       )
       setStore((s) => ({ ...s, [nodeId]: { status: 'pending' } }))
-    } catch {
+    } catch (e: unknown) {
       setStore((s) => ({ ...s, [nodeId]: { status: 'replacing' } }))
+      const msg = e instanceof Error ? e.message : 'Unknown error'
+      toast.error(e instanceof Error && e.name === 'TimeoutError' ? 'Replace timed out — try again' : `Failed to replace course: ${msg}`)
     }
   }, [setNodes])
 
@@ -430,15 +437,21 @@ function DesiredSkillsPanel({ skills, onSkillsChange, loading }: { skills: strin
       const controller = new AbortController()
       abortRef.current = controller
 
-      fetch(`/api/esco/search?q=${encodeURIComponent(trimmed)}`, { signal: controller.signal })
-        .then((r) => r.json())
+      fetch(`/api/esco/search?q=${encodeURIComponent(trimmed)}`, { signal: AbortSignal.any([controller.signal, AbortSignal.timeout(10_000)]) })
+        .then((r) => {
+          if (!r.ok) throw new Error(`Server error (${r.status})`)
+          return r.json()
+        })
         .then((data) => {
           const titles: string[] = (data.results ?? [])
             .map((r: { title: string }) => r.title)
             .filter((t: string) => !skills.includes(t))
           setSuggestions(titles)
         })
-        .catch((e) => { if (e.name !== 'AbortError') throw e })
+        .catch((e) => {
+          if (e.name === 'AbortError') return
+          toast.error(e.name === 'TimeoutError' ? 'Search timed out' : `Skill search failed: ${e.message}`)
+        })
         .finally(() => setSearching(false))
     }, 300)
 
@@ -613,15 +626,21 @@ function MySkillsPanel({ skills, onSkillsChange, loading }: { skills: string[]; 
       const controller = new AbortController()
       abortRef.current = controller
 
-      fetch(`/api/esco/search?q=${encodeURIComponent(trimmed)}`, { signal: controller.signal })
-        .then((r) => r.json())
+      fetch(`/api/esco/search?q=${encodeURIComponent(trimmed)}`, { signal: AbortSignal.any([controller.signal, AbortSignal.timeout(10_000)]) })
+        .then((r) => {
+          if (!r.ok) throw new Error(`Server error (${r.status})`)
+          return r.json()
+        })
         .then((data) => {
           const titles: string[] = (data.results ?? [])
             .map((r: { title: string }) => r.title)
             .filter((t: string) => !skills.includes(t))
           setSuggestions(titles)
         })
-        .catch((e) => { if (e.name !== 'AbortError') throw e })
+        .catch((e) => {
+          if (e.name === 'AbortError') return
+          toast.error(e.name === 'TimeoutError' ? 'Search timed out' : `Skill search failed: ${e.message}`)
+        })
         .finally(() => setSearching(false))
     }, 300)
 
@@ -968,11 +987,8 @@ export default function Graph() {
   }, [edges])
 
   const displayEdges = useMemo(() => {
-    console.log('[DEBUG displayEdges]', { mode, hoveredNodeId, edgeCount: edges.length })
     if (mode !== 'academics') return edges
     if (!hoveredNodeId) return edges.map((e) => ({ ...e, hidden: true }))
-    const visible = edges.filter((e) => e.source === hoveredNodeId || e.target === hoveredNodeId)
-    console.log('[DEBUG displayEdges] hovering', hoveredNodeId, 'visible edges:', visible.length)
     return edges.map((e) => ({
       ...e,
       hidden: e.source !== hoveredNodeId && e.target !== hoveredNodeId,
@@ -1147,6 +1163,9 @@ export default function Graph() {
     setNodes([])
     setEdges([])
 
+    const timeout = AbortSignal.timeout(60_000)
+    const combined = AbortSignal.any([controller.signal, timeout])
+
     fetch('/api/graph/academics', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -1157,21 +1176,20 @@ export default function Graph() {
         goal: navGoal ?? '',
         major_title: major?.title ?? '',
       }),
-      signal: controller.signal,
+      signal: combined,
     })
-      .then((r) => r.json())
+      .then((r) => {
+        if (!r.ok) return r.json().then((d) => { throw new Error(d.error || `Server error (${r.status})`) })
+        return r.json()
+      })
       .then((data: ApiGraph) => {
-        console.log('[DEBUG] API response:', { nodeCount: data.nodes.length, edgeCount: data.edges.length, edges: data.edges })
         const courseNodes = toFlowNodes(data.nodes)
         const termByNode: Record<string, string> = {}
         courseNodes.forEach((n) => { termByNode[n.id] = n.data.term as string })
-        console.log('[DEBUG] termByNode:', termByNode)
-        const crossTermEdges = data.edges.filter((e) => termByNode[e.source] !== termByNode[e.target])
-        console.log('[DEBUG] cross-term edges after filter:', crossTermEdges.length, crossTermEdges)
-        const sameTermEdges = data.edges.filter((e) => termByNode[e.source] === termByNode[e.target])
-        console.log('[DEBUG] same-term edges (filtered OUT):', sameTermEdges.length, sameTermEdges)
-        const flowEdges = toFlowEdges(crossTermEdges, 'academicEdge')
-        console.log('[DEBUG] flowEdges:', flowEdges.length)
+        const flowEdges = toFlowEdges(
+          data.edges.filter((e) => termByNode[e.source] !== termByNode[e.target]),
+          'academicEdge',
+        )
         setNodes(addTermGroups(courseNodes))
         setEdges(flowEdges)
         setGoal(data.goal)
@@ -1180,6 +1198,7 @@ export default function Graph() {
       .catch((e) => {
         if (e.name === 'AbortError') return
         setLoading(false)
+        toast.error(e.name === 'TimeoutError' ? 'Request timed out — try again' : `Failed to build graph: ${e.message}`)
       })
   }, [navGoal, requirementGroups, specializations, minors])
 
@@ -1191,6 +1210,9 @@ export default function Graph() {
     setNodes([])
     setEdges([])
 
+    const timeout = AbortSignal.timeout(60_000)
+    const combined = AbortSignal.any([controller.signal, timeout])
+
     fetch('/api/graph', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -1200,9 +1222,12 @@ export default function Graph() {
         desired_skills: desired,
         job_url: jobUrl ?? '',
       }),
-      signal: controller.signal,
+      signal: combined,
     })
-      .then((r) => r.json())
+      .then((r) => {
+        if (!r.ok) return r.json().then((d) => { throw new Error(d.error || `Server error (${r.status})`) })
+        return r.json()
+      })
       .then((data: ApiGraph) => {
         const flowEdges = toFlowEdges(data.edges)
         setNodes(layoutGraph(toFlowNodes(data.nodes), flowEdges))
@@ -1213,6 +1238,7 @@ export default function Graph() {
       .catch((e) => {
         if (e.name === 'AbortError') return
         setLoading(false)
+        toast.error(e.name === 'TimeoutError' ? 'Request timed out — try again' : `Failed to build graph: ${e.message}`)
       })
   }, [navGoal, jobUrl])
 

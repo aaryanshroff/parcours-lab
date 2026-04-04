@@ -13,6 +13,10 @@ from uwaterloo import (
     list_courses_excluding_subjects,
 )
 
+logger = logging.getLogger("academic_graph")
+logger.addHandler(logging.StreamHandler())
+logger.setLevel(logging.INFO)
+
 COL_GAP = 440   # horizontal gap between term columns
 ROW_GAP = 220   # vertical gap between courses within a column
 TERM_ORDER = ["1A", "1B", "2A", "2B", "3A", "3B", "4A", "4B"]
@@ -59,7 +63,8 @@ def _is_accessible(code: str, program_subjects: set[str]) -> bool:
         return True
     try:
         data = get_course_prereqs(code)
-    except Exception:
+    except Exception as e:
+        logger.warning("_is_accessible: get_course_prereqs(%s) failed: %s", code, e)
         return True
     if not data:
         return True
@@ -118,7 +123,6 @@ def generate_academic_graph(
 ) -> GraphResponse:
     """Build a course DAG: deterministic for required courses, LLM for elective picks."""
 
-    logger = logging.getLogger("academic_graph")
     # ── 1. Merge requirement groups from major, specializations, and minors ──
     all_groups = list(requirement_groups)
 
@@ -163,28 +167,11 @@ def generate_academic_graph(
     # ── 3. Fetch prereqs for required courses, build edges within the set ──
     prereq_map: dict[str, list[str]] = {}
 
-    print(f"[DEBUG] required_codes={required_codes}", flush=True)
     for code in required_codes:
-        raw_prereqs = _fetch_in_program_prereqs(code, required_codes)
-        if raw_prereqs:
-            print(f"[DEBUG]   {code} -> {raw_prereqs}", flush=True)
-        prereq_map[code] = raw_prereqs
-
-    # Also test one course manually
-    if required_codes:
-        sample = next(iter(required_codes))
-        try:
-            from uwaterloo import get_course_prereqs
-            raw = get_course_prereqs(sample)
-            print(f"[DEBUG] get_course_prereqs({sample!r}) = {raw}", flush=True)
-        except Exception as e:
-            print(f"[DEBUG] get_course_prereqs({sample!r}) FAILED: {e}", flush=True)
-
-    print(f"[DEBUG] prereq_map after required courses: { {k: v for k, v in prereq_map.items() if v} }", flush=True)
+        prereq_map[code] = _fetch_in_program_prereqs(code, required_codes)
 
     # ── 4. Pick electives via LLM (or default) ──
     program_subjects = _program_subjects_from_title(major_title)
-    print(f"[DEBUG] major_title={major_title!r} program_subjects={program_subjects}", flush=True)
 
     elective_codes: set[str] = set()
     elective_reasons: dict[str, str] = {}
@@ -213,9 +200,7 @@ def generate_academic_graph(
     for code in elective_codes:
         prereq_map[code] = _fetch_in_program_prereqs(code, all_known)
 
-    print(f"[DEBUG] prereq_map after electives (before reduction): { {k: v for k, v in prereq_map.items() if v} }", flush=True)
     prereq_map = _transitive_reduction(prereq_map)
-    print(f"[DEBUG] prereq_map after transitive reduction: { {k: v for k, v in prereq_map.items() if v} }", flush=True)
 
     # ── 5. Assign terms via LLM, then enforce prereq ordering deterministically ──
     all_codes = required_codes | elective_codes
@@ -356,7 +341,8 @@ def _fetch_in_program_prereqs(code: str, known_codes: set[str]) -> list[str]:
     """Fetch prereqs for a course, returning only those in known_codes."""
     try:
         result = get_course_prereqs(code)
-    except Exception:
+    except Exception as e:
+        logger.warning("_fetch_in_program_prereqs(%s) failed: %s", code, e)
         return []
     if not result or not result.get("prereqs"):
         return []
@@ -416,7 +402,8 @@ def _assign_terms(
         try:
             raw_data = get_course_prereqs(code)
             raw_text = (raw_data.get("raw", "") if raw_data else "").strip()
-        except Exception:
+        except Exception as e:
+            logger.warning("_assign_terms: get_course_prereqs(%s) failed: %s", code, e)
             raw_text = ""
         line = f"- {code} ({title}): in-plan prereqs [{prereq_str}]"
         if raw_text:
@@ -497,7 +484,8 @@ def _enforce_prereq_ordering(
     def _external_min_idx(code: str) -> int:
         try:
             prereq_data = get_course_prereqs(code)
-        except Exception:
+        except Exception as e:
+            logger.warning("_external_min_idx(%s) failed: %s", code, e)
             return 0
         if not prereq_data:
             return 0

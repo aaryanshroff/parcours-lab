@@ -1,210 +1,119 @@
 {
-  "PHIL204J": {
-    "code": "PHIL204J",
-    "raw": "",
-    "prereqs": [],
-    "coreqs": [],
-    "antireqs": []
-  },
-  "PHIL230J": {
-    "code": "PHIL230J",
-    "raw": "",
-    "prereqs": [],
-    "coreqs": [],
-    "antireqs": []
-  },
-  "PHIL305J": {
-    "code": "PHIL305J",
-    "raw": "Prereq: Level at least 2A",
-    "prereqs": [],
-    "coreqs": [],
-    "antireqs": []
-  },
-  "PHIL382": {
-    "code": "PHIL382",
-    "raw": "Prereq: 0.50 unit in PHIL",
-    "prereqs": [],
-    "coreqs": [],
-    "antireqs": []
-  },
-  "PHIL384": {
-    "code": "PHIL384",
-    "raw": "Prereq: 0.50 unit in PHIL",
-    "prereqs": [],
-    "coreqs": [],
-    "antireqs": []
-  },
-  "PHIL450J": {
-    "code": "PHIL450J",
-    "raw": "Prereq: Level at least 3A",
-    "prereqs": [],
-    "coreqs": [],
-    "antireqs": []
-  },
-  "PHIL451J": {
-    "code": "PHIL451J",
-    "raw": "Prereq: 0.5 units in PHIL; Level at least 3A",
-    "prereqs": [],
-    "coreqs": [],
-    "antireqs": []
-  },
-  "RCS228": {
-    "code": "RCS228",
-    "raw": "Antireq: JS 131/RCS 130",
-    "prereqs": [],
-    "coreqs": [],
-    "antireqs": [
-      "JS 131",
-      "RCS 130"
-    ]
-  },
-  "RCS253": {
-    "code": "RCS253",
-    "raw": "Antireq: RCS 152",
-    "prereqs": [],
-    "coreqs": [],
-    "antireqs": [
-      "RCS 152"
-    ]
-  },
-  "RCS342": {
-    "code": "RCS342",
-    "raw": "Prereq: Level at least 2A",
-    "prereqs": [],
-    "coreqs": [],
-    "antireqs": []
-  },
-  "CHE499": {
-    "code": "CHE499",
-    "raw": "Prereq: One of CHE 398 or 399 or 498",
+  "CS467": {
+    "code": "CS467",
+    "raw": "Prereq: MATH 235 or 245 with grade at least 80%; Level at least 3A",
     "prereqs": [
-      "CHE 398",
-      "CHE 399",
-      "CHE 498"
+      "MATH 235",
+      "MATH 245"
     ],
     "coreqs": [],
     "antireqs": []
   },
-  "CHE500": {
-    "code": "CHE500",
-    "raw": "Prereq: Level at least 3B Chemical Engineering",
-    "prereqs": [],
-    "coreqs": [],
-    "antireqs": []
-  },
-  "CHE520": {
-    "code": "CHE520",
-    "raw": "Prereq: Level 4B Chemical Engineering",
-    "prereqs": [],
-    "coreqs": [],
-    "antireqs": []
-  },
-  "CHE565": {
-    "code": "CHE565",
-    "raw": "Prereq: Level at least 3A Engineering",
-    "prereqs": [],
-    "coreqs": [],
-    "antireqs": []
-  },
-  "EARTH456": {
-    "code": "EARTH456",
-    "raw": "Prereq: (EARTH 458; MATH 106 or MATH 114; MATH 128) or Environmental, Geological, or Chemical Engineering students; Not open to students in the Faculty of Mathematics",
+  "CS480": {
+    "code": "CS480",
+    "raw": "Prereq: CS 341 and (STAT 206 or 231 or 241); Computer Science and BMath (Data Science) students only. Antireq: MSE/MSCI 446",
     "prereqs": [
-      "EARTH 458",
-      "MATH 106",
-      "MATH 114",
-      "MATH 128"
-    ],
-    "coreqs": [],
-    "antireqs": []
-  },
-  "ME362": {
-    "code": "ME362",
-    "raw": "Prereq: ME 351; Level at least 3B Mechanical Engineering or 4A Mechatronics Engineering",
-    "prereqs": [
-      "ME 351"
-    ],
-    "coreqs": [],
-    "antireqs": []
-  },
-  "MSE332": {
-    "code": "MSE332",
-    "raw": "Prereq: One of BME 411, CHE 521, CIVE 332, CO 250, ENVE 320, 335, MSCI 232, 331, SYDE 411. Antireq: CO 327",
-    "prereqs": [
-      "BME 411",
-      "CHE 521",
-      "CIVE 332",
-      "CO 250",
-      "ENVE 320",
-      "ENVE 335",
-      "MSCI 232",
-      "MSCI 331",
-      "SYDE 411"
-    ],
-    "coreqs": [],
-    "antireqs": [
-      "CO 327"
-    ]
-  },
-  "MSE431": {
-    "code": "MSE431",
-    "raw": "Prereq:(One of BME411,CHE521,CIVE332,CO250,ENVE335,MSE232,MSE331,SYDE411) and (One of AE224,BME213,CHE220,CIVE224,ECE203, ECE306,ENVE224,MSE251,252,ME202,MTE201,NE215,STAT206,211,231,241,SYDE212); Not open to Math students except SE. Antireq: STAT333",
-    "prereqs": [
-      "BME 411",
-      "CHE 521",
-      "CIVE 332",
-      "CO 250",
-      "ENVE 335",
-      "MSE 232",
-      "MSE 331",
-      "SYDE 411",
-      "AE 224",
-      "BME 213",
-      "CHE 220",
-      "CIVE 224",
-      "ECE 203",
-      "ECE 306",
-      "ENVE 224",
-      "MSE 251",
-      "MSE 252",
-      "ME 202",
-      "MTE 201",
-      "NE 215",
+      "CS 341",
       "STAT 206",
-      "STAT 211",
       "STAT 231",
-      "STAT 241",
-      "SYDE 212"
+      "STAT 241"
     ],
     "coreqs": [],
     "antireqs": [
-      "STAT 333"
+      "MSCI 446"
     ]
   },
-  "MSE432": {
-    "code": "MSE432",
-    "raw": "Prereq: (One of AE 224, BME 213, CHE 220, CIVE 224, ECE 203, 306, ECON 221, ENVE 224, ME 202, MTE 201, NE 215, STAT 206, 211, 231, 241, SYDE 212); Not open to Management Engineering students. Antireq: MSE 334",
+  "CS486": {
+    "code": "CS486",
+    "raw": "Prereq: CS 341; Computer Science and BMath (Data Science) students only. Coreq: STAT 206 or 231 or 241. Antireq: SYDE 522",
     "prereqs": [
-      "AE 224",
-      "BME 213",
-      "CHE 220",
-      "CIVE 224",
-      "ECE 203",
-      "ECE 306",
-      "ECON 221",
-      "ENVE 224",
-      "ME 202",
-      "MTE 201",
-      "NE 215",
+      "CS 341"
+    ],
+    "coreqs": [
       "STAT 206",
-      "STAT 211",
       "STAT 231",
-      "STAT 241",
-      "SYDE 212"
+      "STAT 241"
+    ],
+    "antireqs": [
+      "SYDE 522"
+    ]
+  },
+  "CS485": {
+    "code": "CS485",
+    "raw": "Prereq: CS 341 and (STAT 206 or 230 or 240); Honours Computer Science, Honours Data Science (BCS, BMath), BCFM, BSE students only",
+    "prereqs": [
+      "CS 341",
+      "STAT 206",
+      "STAT 230",
+      "STAT 240"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS452": {
+    "code": "CS452",
+    "raw": "Prereq: CS 350 or SE 350; Honours Computer Science, Honours Data Science (BCS), BCFM, BSE students only",
+    "prereqs": [
+      "CS 350",
+      "SE 350"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS484": {
+    "code": "CS484",
+    "raw": "Prereq: (One of AMATH 242/CS 371, CS 370, MATH 235, MATH 245) and (One of STAT 206, STAT 230 or 240); Honours Computer Science, Honours Data Science (BCS, BMath), BCFM, BSE students only",
+    "prereqs": [
+      "AMATH 242",
+      "CS 371",
+      "CS 370",
+      "MATH 235",
+      "MATH 245",
+      "STAT 206",
+      "STAT 230",
+      "STAT 240"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS482": {
+    "code": "CS482",
+    "raw": "Prereq: CS 341 and (STAT 206 with at least 70% or STAT 231 with at least 60% or STAT 241)",
+    "prereqs": [
+      "CS 341",
+      "STAT 206",
+      "STAT 231",
+      "STAT 241"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS476": {
+    "code": "CS476",
+    "raw": "Prereq: (AMATH 242/CS 371 or CS 370) and (STAT 206 with at least 60% or STAT 231 or STAT 241)",
+    "prereqs": [
+      "AMATH 242",
+      "CS 371",
+      "CS 370",
+      "STAT 206",
+      "STAT 231",
+      "STAT 241"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS449": {
+    "code": "CS449",
+    "raw": "Prereq: CS 240/240E, 241CS/241E; Level at least 3B; Honours Computer Science, Honours Data Science (BCS), BCFM, BSE students only. Antireq: SYDE 348/548",
+    "prereqs": [
+      "CS 240",
+      "CS 240E",
+      "CS 241E"
     ],
     "coreqs": [],
     "antireqs": [
-      "MSE 334"
+      "SYDE 348",
+      "SYDE 548"
     ]
   }
 }

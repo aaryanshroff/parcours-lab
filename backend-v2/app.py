@@ -1,4 +1,5 @@
 import os
+import traceback
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from flask_cors import CORS
@@ -7,6 +8,12 @@ load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
+
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    app.logger.error("Unhandled exception: %s\n%s", e, traceback.format_exc())
+    return jsonify({"error": str(e)}), 500
 
 
 @app.route("/api/health")
@@ -121,15 +128,6 @@ def graph_academics():
         len(elective_nodes),
         ",".join(terms),
     )
-    # DEBUG: dump prereq info to file
-    import json
-    debug_info = {
-        "edge_count": len(result.edges),
-        "edges": [{"id": e.id, "source": e.source, "target": e.target} for e in result.edges],
-        "node_ids": [n.id for n in result.nodes],
-    }
-    with open("/tmp/parcours_debug.json", "w") as f:
-        json.dump(debug_info, f, indent=2)
     return jsonify(result.model_dump())
 
 

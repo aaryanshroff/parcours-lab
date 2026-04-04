@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react'
+import { toast } from 'sonner'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Download, Sparkles, Loader2, ExternalLink, BookOpen, Check } from 'lucide-react'
 
@@ -168,15 +169,20 @@ export default function Summary() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ goal, mode, program, nodes: courses }),
-      signal: controller.signal,
+      signal: AbortSignal.any([controller.signal, AbortSignal.timeout(30_000)]),
     })
-      .then((r) => r.json())
+      .then((r) => {
+        if (!r.ok) return r.json().then((d) => { throw new Error(d.error || `Server error (${r.status})`) })
+        return r.json()
+      })
       .then((data) => {
         setNarrative(data.summary ?? 'No summary returned.')
         setNarrativeLoading(false)
       })
       .catch((e) => {
-        if (e.name !== 'AbortError') setNarrativeLoading(false)
+        if (e.name === 'AbortError') return
+        setNarrativeLoading(false)
+        toast.error(e.name === 'TimeoutError' ? 'Summary timed out — try again' : `Failed to generate summary: ${e.message}`)
       })
   }
 
