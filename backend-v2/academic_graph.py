@@ -16,6 +16,84 @@ from uwaterloo import (
 COL_GAP = 440   # horizontal gap between term columns
 ROW_GAP = 220   # vertical gap between courses within a column
 TERM_ORDER = ["1A", "1B", "2A", "2B", "3A", "3B", "4A", "4B"]
+
+# Maps lowercase substrings of a program title to its primary subject code(s).
+# Used to derive enrollment-restriction subjects from the major title sent by the frontend.
+_PROGRAM_SUBJECTS: dict[str, set[str]] = {
+    "computer science": {"CS"},
+    "software engineering": {"SE"},
+    "electrical engineering": {"ECE"},
+    "computer engineering": {"ECE"},
+    "mechanical engineering": {"ME"},
+    "civil engineering": {"CE"},
+    "systems design engineering": {"SYDE"},
+    "mathematics": {"MATH"},
+    "applied mathematics": {"AMATH"},
+    "pure mathematics": {"PMATH"},
+    "statistics": {"STAT"},
+    "actuarial science": {"ACTSC"},
+    "combinatorics and optimization": {"CO"},
+    "data science": {"CS", "STAT"},
+    "accounting": {"AFM"},
+    "finance": {"FARM"},
+    "economics": {"ECON"},
+    "management engineering": {"MSCI"},
+}
+
+
+def _program_subjects_from_title(major_title: str) -> set[str]:
+    """Return the primary subject code(s) for a program title."""
+    lower = major_title.lower()
+    subjects: set[str] = set()
+    # Longest match first so "combinatorics and optimization" beats "mathematics"
+    for key in sorted(_PROGRAM_SUBJECTS, key=len, reverse=True):
+        if key in lower:
+            subjects |= _PROGRAM_SUBJECTS[key]
+            break   # one match is enough; the title names one program
+    return subjects
+
+
+def _is_accessible(code: str, program_subjects: set[str]) -> bool:
+    """Return False if the UW enrollment restriction excludes this program."""
+    if not program_subjects:
+        return True
+    try:
+        data = get_course_prereqs(code)
+    except Exception:
+        return True
+    if not data:
+        return True
+    raw = (data.get("raw", "") or "").lower()
+    if not raw:
+        return True
+
+    def _subjects_in(phrase: str) -> set[str]:
+        found: set[str] = set()
+        for name, subjs in _PROGRAM_SUBJECTS.items():
+            if name in phrase:
+                found |= subjs
+        # also catch bare codes like "CS", "MATH" that appear directly in the text
+        for m in re.finditer(r"\b([A-Z]{2,6})\b", phrase.upper()):
+            found.add(m.group(1))
+        return found
+
+    # DENY: "not open to X students" / "not open to students in X programs"
+    for m in re.finditer(r"not open to (?:students in )?([^.;\n]+?)\s*(?:students?|programs?)", raw):
+        if _subjects_in(m.group(1)) & program_subjects:
+            return False
+
+    # ALLOW-only: "X students only" / "for X students only" / "restricted to X students"
+    for pattern in [
+        r"(?:for\s+)?([^.;\n]+?)\s*students? only",
+        r"restricted to ([^.;\n]+?)\s*students?",
+        r"open to ([^.;\n]+?)\s*students? only",
+    ]:
+        for m in re.finditer(pattern, raw):
+            allowed = _subjects_in(m.group(1))
+            if allowed and not (allowed & program_subjects):
+                return False
+
+    return True
 TERM_TO_TIER = {
     "1A": "foundation", "1B": "foundation",
     "2A": "core", "2B": "core",
@@ -36,6 +114,7 @@ def generate_academic_graph(
     goal: str,
     api_key: str,
     model: str = "google/gemini-2.5-flash",
+    major_title: str = "",
 ) -> GraphResponse:
     """Build a course DAG: deterministic for required courses, LLM for elective picks."""
 
@@ -84,19 +163,38 @@ def generate_academic_graph(
     # ── 3. Fetch prereqs for required courses, build edges within the set ──
     prereq_map: dict[str, list[str]] = {}
 
+    print(f"[DEBUG] required_codes={required_codes}", flush=True)
     for code in required_codes:
-        prereq_map[code] = _fetch_in_program_prereqs(code, required_codes)
+        raw_prereqs = _fetch_in_program_prereqs(code, required_codes)
+        if raw_prereqs:
+            print(f"[DEBUG]   {code} -> {raw_prereqs}", flush=True)
+        prereq_map[code] = raw_prereqs
+
+    # Also test one course manually
+    if required_codes:
+        sample = next(iter(required_codes))
+        try:
+            from uwaterloo import get_course_prereqs
+            raw = get_course_prereqs(sample)
+            print(f"[DEBUG] get_course_prereqs({sample!r}) = {raw}", flush=True)
+        except Exception as e:
+            print(f"[DEBUG] get_course_prereqs({sample!r}) FAILED: {e}", flush=True)
+
+    print(f"[DEBUG] prereq_map after required courses: { {k: v for k, v in prereq_map.items() if v} }", flush=True)
 
     # ── 4. Pick electives via LLM (or default) ──
+    program_subjects = _program_subjects_from_title(major_title)
+    print(f"[DEBUG] major_title={major_title!r} program_subjects={program_subjects}", flush=True)
+
     elective_codes: set[str] = set()
     elective_reasons: dict[str, str] = {}
 
     if choice_groups:
         if goal.strip():
-            picks = _pick_electives(choice_groups, goal, api_key, model)
+            picks = _pick_electives(choice_groups, goal, api_key, model, program_subjects)
             picks = _fill_picks_with_defaults(choice_groups, picks)
         else:
-            picks = _pick_defaults(choice_groups)
+            picks = _pick_defaults(choice_groups, program_subjects)
     for code, reason in picks.items():
         nc = _normalize_code(code)
         elective_codes.add(nc)
@@ -115,13 +213,17 @@ def generate_academic_graph(
     for code in elective_codes:
         prereq_map[code] = _fetch_in_program_prereqs(code, all_known)
 
+    print(f"[DEBUG] prereq_map after electives (before reduction): { {k: v for k, v in prereq_map.items() if v} }", flush=True)
     prereq_map = _transitive_reduction(prereq_map)
+    print(f"[DEBUG] prereq_map after transitive reduction: { {k: v for k, v in prereq_map.items() if v} }", flush=True)
 
     # ── 5. Assign terms via LLM, then enforce prereq ordering deterministically ──
     all_codes = required_codes | elective_codes
     term_assignments = _assign_terms(
         all_codes, prereq_map, course_info, api_key, model
     )
+    term_assignments = _enforce_prereq_ordering(term_assignments, prereq_map, all_codes)
+    term_assignments = _enforce_credit_cap(term_assignments, course_info)
     term_assignments = _enforce_prereq_ordering(term_assignments, prereq_map, all_codes)
 
     # ── 6. Layout: term-based columns (left-to-right) ──
@@ -335,7 +437,10 @@ def _assign_terms(
                     "- If a course has a 'UW requirement' field, respect the prerequisite level "
                     "even if those prereqs are not in this plan (e.g. a course requiring a 200-level "
                     "course should not be placed in 1A/1B)\n"
-                    "- Keep total credits per term at or below 3.25 (most courses are 0.5 credits; check the units field if provided)\n"
+                    "- HARD LIMIT: Total credits per term MUST NOT exceed 3.25. "
+                    "Most courses are 0.5 credits each. Before finalizing each term, explicitly sum "
+                    "the credits of every course assigned to it. If the sum exceeds 3.25, move the "
+                    "excess course(s) to the next term. Double-check your arithmetic.\n"
                     "- Follow typical UWaterloo course sequencing conventions\n"
                     "- MATH 1xx and CS 1xx courses go in 1A/1B\n"
                     "- Only assign to study terms: 1A, 1B, 2A, 2B, 3A, 3B, 4A, 4B\n\n"
@@ -428,8 +533,48 @@ def _enforce_prereq_ordering(
     return result
 
 
-def _pick_defaults(choice_groups: list[dict]) -> dict[str, str]:
-    """No goal provided — just pick the first N from each group."""
+def _enforce_credit_cap(
+    term_assignments: dict[str, str],
+    course_info: dict[str, dict],
+    max_credits: float = 3.25,
+) -> dict[str, str]:
+    """Bump courses to later terms until no term exceeds max_credits.
+
+    Bumps the highest course-number first, since advanced courses are most
+    likely to fit naturally in a later term.
+    """
+    result = dict(term_assignments)
+
+    for _ in range(len(TERM_ORDER)):
+        changed = False
+        for term in TERM_ORDER:
+            courses_in_term = [c for c, t in result.items() if t == term]
+            total = sum(float(course_info.get(c, {}).get("units", 0.5)) for c in courses_in_term)
+            if total <= max_credits:
+                continue
+            # Sort descending by course number so we bump the highest-level course first
+            courses_in_term.sort(
+                key=lambda c: int(m.group()) if (m := re.search(r"\d+", c)) else 0,
+                reverse=True,
+            )
+            term_idx = TERM_ORDER.index(term)
+            if term_idx + 1 >= len(TERM_ORDER):
+                continue  # already in last term, nowhere to bump
+            for c in courses_in_term:
+                credits = float(course_info.get(c, {}).get("units", 0.5))
+                result[c] = TERM_ORDER[term_idx + 1]
+                total -= credits
+                changed = True
+                if total <= max_credits:
+                    break
+        if not changed:
+            break
+
+    return result
+
+
+def _pick_defaults(choice_groups: list[dict], program_subjects: set[str] | None = None) -> dict[str, str]:
+    """No goal provided — just pick the first N accessible courses from each group."""
     picks: dict[str, str] = {}
     for group in choice_groups:
         if not group.get("courses"):
@@ -437,7 +582,11 @@ def _pick_defaults(choice_groups: list[dict]) -> dict[str, str]:
             if expanded:
                 group["courses"] = expanded
         n = int(group["rule"])
-        for c in group.get("courses", [])[:n]:
+        accessible = [
+            c for c in group.get("courses", [])
+            if _is_accessible(c["code"], program_subjects or set())
+        ]
+        for c in accessible[:n]:
             picks[c["code"]] = "Default selection"
     return picks
 
@@ -447,6 +596,7 @@ def _pick_electives(
     goal: str,
     api_key: str,
     model: str,
+    program_subjects: set[str] | None = None,
 ) -> dict[str, str]:
     """LLM picks N courses from each choice group based on the student's goal."""
     client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key)
@@ -457,7 +607,11 @@ def _pick_electives(
         expanded = _expand_elective_group(group)
         if expanded:
             group["courses"] = expanded
-        trimmed = _downselect_elective_options(group.get("courses", []), goal)
+        accessible = [
+            c for c in group.get("courses", [])
+            if _is_accessible(c["code"], program_subjects or set())
+        ]
+        trimmed = _downselect_elective_options(accessible, goal)
         options = [f"{c['code']} — {c.get('title', c['code'])}" for c in trimmed]
         if not options:
             continue

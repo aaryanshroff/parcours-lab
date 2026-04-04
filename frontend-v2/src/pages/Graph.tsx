@@ -16,7 +16,7 @@ import {
   MarkerType,
   applyNodeChanges,
 } from '@xyflow/react'
-import { ExternalLink, Check, X, RefreshCw, ChevronDown, Loader2, Undo2, HelpCircle, FileText } from 'lucide-react'
+import { ExternalLink, Check, X, RefreshCw, ChevronDown, Loader2, Undo2, HelpCircle } from 'lucide-react'
 import Dagre from '@dagrejs/dagre'
 import GoatChat from '../components/GoatChat'
 
@@ -62,6 +62,7 @@ interface SkillNodeData {
   tier: Tier
   term?: string
   termCredits?: number
+  termNodeIds?: string[]
   [key: string]: unknown
 }
 
@@ -83,6 +84,8 @@ interface CourseContextValue {
   store: Record<string, CourseState>
   prerequisites: Record<string, string[]>
   accept: (nodeId: string) => void
+  acceptMany: (nodeIds: string[]) => void
+  unacceptMany: (nodeIds: string[]) => void
   startReplace: (nodeId: string) => void
   submitReplace: (nodeId: string, reason: string, skill: string, currentCourse: string) => void
   cancelReplace: (nodeId: string) => void
@@ -113,6 +116,22 @@ function CourseProvider({ children, edges, setNodes, onCourseReplaced }: { child
 
   const accept = useCallback((nodeId: string) => {
     setStore((s) => ({ ...s, [nodeId]: { status: 'accepted' } }))
+  }, [])
+
+  const acceptMany = useCallback((nodeIds: string[]) => {
+    setStore((s) => {
+      const updates: Record<string, CourseState> = {}
+      for (const id of nodeIds) updates[id] = { status: 'accepted' }
+      return { ...s, ...updates }
+    })
+  }, [])
+
+  const unacceptMany = useCallback((nodeIds: string[]) => {
+    setStore((s) => {
+      const copy = { ...s }
+      for (const id of nodeIds) delete copy[id]
+      return copy
+    })
   }, [])
 
   const startReplace = useCallback((nodeId: string) => {
@@ -151,7 +170,7 @@ function CourseProvider({ children, edges, setNodes, onCourseReplaced }: { child
   }, [])
 
   return (
-    <CourseContext.Provider value={{ store, prerequisites, accept, startReplace, submitReplace, cancelReplace }}>
+    <CourseContext.Provider value={{ store, prerequisites, accept, acceptMany, unacceptMany, startReplace, submitReplace, cancelReplace }}>
       {children}
     </CourseContext.Provider>
   )
@@ -169,7 +188,7 @@ function useCourse(nodeId: string) {
 
 function SkillNode({ id, data }: NodeProps<Node<SkillNodeData>>) {
   const config = tierConfig[data.tier]
-  const { state, locked, accept, startReplace, submitReplace, cancelReplace } = useCourse(id)
+  const { state, locked, startReplace, submitReplace, cancelReplace } = useCourse(id)
   const { shakeNodeId } = useContext(DragValidationContext)
   const [reason, setReason] = useState('')
 
@@ -229,16 +248,8 @@ function SkillNode({ id, data }: NodeProps<Node<SkillNodeData>>) {
         )}
       </div>
 
-      {!locked && state.status === 'pending' && (
+      {!data.term && !locked && state.status === 'pending' && (
         <div className="flex gap-1.5 mt-3 nodrag">
-          <button
-            onMouseDown={(e) => e.stopPropagation()}
-            onClick={() => accept(id)}
-            className="nopan inline-flex items-center gap-1 px-2 py-1 text-[11px] font-medium rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 cursor-pointer transition-colors duration-150"
-          >
-            <Check size={11} />
-            Mark as Complete
-          </button>
           <button
             onMouseDown={(e) => e.stopPropagation()}
             onClick={() => startReplace(id)}
@@ -250,14 +261,14 @@ function SkillNode({ id, data }: NodeProps<Node<SkillNodeData>>) {
         </div>
       )}
 
-      {!locked && isAccepted && (
+      {!data.term && !locked && isAccepted && (
         <div className="flex items-center gap-1 mt-3 text-[11px] font-medium text-emerald-600">
           <Check size={12} />
           Completed
         </div>
       )}
 
-      {!locked && isReplacing && (
+      {!data.term && !locked && isReplacing && (
         <div className="flex flex-col gap-1.5 mt-3 nodrag">
           <textarea
             className="nopan w-full border border-stone-300 rounded-lg px-2 py-1.5 text-xs text-stone-900 outline-none focus:border-blue-800 focus:ring-2 focus:ring-blue-900/15 resize-none transition-all duration-150"
@@ -285,7 +296,7 @@ function SkillNode({ id, data }: NodeProps<Node<SkillNodeData>>) {
         </div>
       )}
 
-      {!locked && state.status === 'loading' && (
+      {!data.term && !locked && state.status === 'loading' && (
         <div className="flex items-center gap-1.5 mt-3 text-[11px] font-medium text-stone-400">
           <Loader2 size={12} className="animate-spin" />
           Finding a new course…
@@ -303,21 +314,35 @@ function TermGroupNode({ data }: NodeProps<Node<SkillNodeData>>) {
   const over = credits > 3.25
   const { disabledTerms } = useContext(DragValidationContext)
   const disabled = disabledTerms.has(data.term as string)
+  const { store, acceptMany, unacceptMany } = useContext(CourseContext)
+  const termNodeIds = data.termNodeIds ?? []
+  const allComplete = termNodeIds.length > 0 && termNodeIds.every((id) => store[id]?.status === 'accepted')
+
   return (
     <div
-      className={`rounded-2xl border-2 border-dashed transition-colors duration-200 ${disabled ? 'border-red-300 bg-red-50/40' : 'border-stone-200 bg-stone-50/30'}`}
+      className={`rounded-2xl border-2 border-dashed transition-colors duration-200 ${allComplete ? 'border-emerald-300 bg-emerald-50/30' : disabled ? 'border-red-300 bg-red-50/40' : 'border-stone-200 bg-stone-50/30'}`}
       style={{ width: '100%', height: '100%', position: 'relative' }}
     >
       <div className="absolute inset-x-0 top-2 flex justify-center">
-        <span className={`px-3 py-0.5 rounded-full bg-white border text-[11px] font-bold uppercase tracking-wider shadow-sm flex items-center gap-1.5 ${disabled ? 'border-red-300 text-red-400' : over ? 'border-red-300 text-red-500' : 'border-stone-200 text-stone-400'}`}>
+        <span className={`px-3 py-0.5 rounded-full bg-white border text-[11px] font-bold uppercase tracking-wider shadow-sm flex items-center gap-1.5 ${allComplete ? 'border-emerald-300 text-emerald-600' : disabled ? 'border-red-300 text-red-400' : over ? 'border-red-300 text-red-500' : 'border-stone-200 text-stone-400'}`}>
           Term {data.term}
-          {disabled ? (
+          {allComplete ? (
+            <span className="font-normal normal-case tracking-normal text-emerald-500">completed</span>
+          ) : disabled ? (
             <span className="font-normal normal-case tracking-normal text-red-300">prereqs not met</span>
           ) : (
             <span className={`font-normal normal-case tracking-normal ${over ? 'text-red-400' : 'text-stone-300'}`}>
               {credits.toFixed(2)} cr{over ? ' ⚠ >3.25' : ''}
             </span>
           )}
+          <button
+            className={`nodrag nopan inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-medium rounded-full border transition-colors duration-150 cursor-pointer ${allComplete ? 'border-emerald-300 bg-emerald-50 text-emerald-600 hover:bg-white' : 'border-stone-200 bg-white text-stone-400 hover:border-emerald-300 hover:text-emerald-600'}`}
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={() => allComplete ? unacceptMany(termNodeIds) : acceptMany(termNodeIds)}
+          >
+            <Check size={9} />
+            {allComplete ? 'Undo' : 'Complete term'}
+          </button>
         </span>
       </div>
     </div>
@@ -869,7 +894,7 @@ function addTermGroups(courseNodes: Node<SkillNodeData>[]): Node<SkillNodeData>[
       id: `term-${term}`,
       type: 'termGroup',
       position: { x: minX, y: globalMinY - PAD_TOP },
-      data: { labels: [term], tier: 'foundation' as Tier, courseTitle: '', courseUrl: '', courseReason: '', courseUnits: 0, term, termCredits: members.reduce((s, n) => s + (n.data.courseUnits ?? 0.5), 0) },
+      data: { labels: [term], tier: 'foundation' as Tier, courseTitle: '', courseUrl: '', courseReason: '', courseUnits: 0, term, termCredits: members.reduce((s, n) => s + (n.data.courseUnits ?? 0.5), 0), termNodeIds: members.map((n) => n.id) },
       style: { width: maxX - minX, height: (globalMaxY - globalMinY) + PAD_TOP + PAD_BOTTOM },
       selectable: false,
       draggable: false,
@@ -943,8 +968,11 @@ export default function Graph() {
   }, [edges])
 
   const displayEdges = useMemo(() => {
+    console.log('[DEBUG displayEdges]', { mode, hoveredNodeId, edgeCount: edges.length })
     if (mode !== 'academics') return edges
     if (!hoveredNodeId) return edges.map((e) => ({ ...e, hidden: true }))
+    const visible = edges.filter((e) => e.source === hoveredNodeId || e.target === hoveredNodeId)
+    console.log('[DEBUG displayEdges] hovering', hoveredNodeId, 'visible edges:', visible.length)
     return edges.map((e) => ({
       ...e,
       hidden: e.source !== hoveredNodeId && e.target !== hoveredNodeId,
@@ -1127,18 +1155,23 @@ export default function Graph() {
         specialization_pids: (specializations ?? []).map((s) => s.pid),
         minor_pids: (minors ?? []).map((m) => m.pid),
         goal: navGoal ?? '',
+        major_title: major?.title ?? '',
       }),
       signal: controller.signal,
     })
       .then((r) => r.json())
       .then((data: ApiGraph) => {
+        console.log('[DEBUG] API response:', { nodeCount: data.nodes.length, edgeCount: data.edges.length, edges: data.edges })
         const courseNodes = toFlowNodes(data.nodes)
         const termByNode: Record<string, string> = {}
         courseNodes.forEach((n) => { termByNode[n.id] = n.data.term as string })
-        const flowEdges = toFlowEdges(
-          data.edges.filter((e) => termByNode[e.source] !== termByNode[e.target]),
-          'academicEdge',
-        )
+        console.log('[DEBUG] termByNode:', termByNode)
+        const crossTermEdges = data.edges.filter((e) => termByNode[e.source] !== termByNode[e.target])
+        console.log('[DEBUG] cross-term edges after filter:', crossTermEdges.length, crossTermEdges)
+        const sameTermEdges = data.edges.filter((e) => termByNode[e.source] === termByNode[e.target])
+        console.log('[DEBUG] same-term edges (filtered OUT):', sameTermEdges.length, sameTermEdges)
+        const flowEdges = toFlowEdges(crossTermEdges, 'academicEdge')
+        console.log('[DEBUG] flowEdges:', flowEdges.length)
         setNodes(addTermGroups(courseNodes))
         setEdges(flowEdges)
         setGoal(data.goal)
@@ -1260,6 +1293,30 @@ export default function Graph() {
                 setCourseHistory((h) => h.filter((_, i) => i !== index))
               }}
             />
+            <button
+              onClick={() => {
+                const courseNodes = nodes
+                  .filter((n) => n.type === 'skill')
+                  .map((n) => ({
+                    id: n.id,
+                    labels: n.data.labels,
+                    courseTitle: n.data.courseTitle,
+                    courseUrl: n.data.courseUrl,
+                    courseReason: n.data.courseReason,
+                    tier: n.data.tier,
+                    term: n.data.term,
+                  }))
+                navigate('/summary', {
+                  state: { goal: navGoal ?? goal, mode, program: mode === 'academics' ? major : undefined, courses: courseNodes },
+                })
+              }}
+              disabled={loading || nodes.filter((n) => n.type === 'skill').length === 0}
+              className="w-80 bg-white rounded-xl shadow-lg border border-stone-200 p-3 sm:p-4 hover:shadow-xl transition-shadow duration-200 flex items-center gap-1.5 cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
+              aria-label="View Summary"
+            >
+              <ExternalLink size={14} className="text-stone-400" />
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-stone-500">Download Summary</span>
+            </button>
           </div>
         </div>
 
@@ -1295,31 +1352,6 @@ export default function Graph() {
           </ReactFlow>
         </div>
 
-        {/* Summary FAB — bottom-left */}
-        <button
-          onClick={() => {
-            const courseNodes = nodes
-              .filter((n) => n.type === 'skill')
-              .map((n) => ({
-                id: n.id,
-                labels: n.data.labels,
-                courseTitle: n.data.courseTitle,
-                courseUrl: n.data.courseUrl,
-                courseReason: n.data.courseReason,
-                tier: n.data.tier,
-                term: n.data.term,
-              }))
-            navigate('/summary', {
-              state: { goal: navGoal ?? goal, mode, program: mode === 'academics' ? major : undefined, courses: courseNodes },
-            })
-          }}
-          disabled={loading || nodes.filter((n) => n.type === 'skill').length === 0}
-          className="fab-enter fixed bottom-8 left-6 z-20 h-11 pl-3.5 pr-4 rounded-full bg-stone-900 text-white shadow-md hover:shadow-lg hover:bg-stone-800 active:scale-[0.97] disabled:opacity-0 disabled:pointer-events-none cursor-pointer transition-all duration-200 flex items-center gap-2"
-          aria-label="View Summary"
-        >
-          <FileText size={16} />
-          <span className="text-[13px] font-medium">Summary</span>
-        </button>
 
         <GoatChat
           context={{

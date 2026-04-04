@@ -21,15 +21,20 @@ def _load_data() -> dict:
 
 def _load_course_cache() -> dict:
     if COURSE_CACHE_PATH.exists():
-        with COURSE_CACHE_PATH.open(encoding="utf-8") as f:
-            return json.load(f)
+        try:
+            with COURSE_CACHE_PATH.open(encoding="utf-8") as f:
+                return json.load(f)
+        except json.JSONDecodeError:
+            return {}
     return {}
 
 
 def _save_course_cache(cache: dict) -> None:
     COURSE_CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with COURSE_CACHE_PATH.open("w", encoding="utf-8") as f:
+    tmp = COURSE_CACHE_PATH.with_suffix(".tmp")
+    with tmp.open("w", encoding="utf-8") as f:
         json.dump(cache, f, indent=2)
+    tmp.replace(COURSE_CACHE_PATH)
 
 
 def _load_subject_cache() -> dict:

@@ -90,6 +90,7 @@ def graph_academics():
     specialization_pids = body.get("specialization_pids", [])
     minor_pids = body.get("minor_pids", [])
     goal = body.get("goal", "")
+    major_title = body.get("major_title", "")
 
     app.logger.info(
         "[academics] request groups=%d specs=%d minors=%d goal_len=%d",
@@ -106,7 +107,7 @@ def graph_academics():
 
     api_key = os.environ["OPENROUTER_API_KEY"]
     result = generate_academic_graph(
-        requirement_groups, specialization_pids, minor_pids, goal, api_key
+        requirement_groups, specialization_pids, minor_pids, goal, api_key, major_title=major_title
     )
     elective_nodes = [
         n for n in result.nodes
@@ -114,11 +115,21 @@ def graph_academics():
     ]
     terms = sorted({getattr(n, "term", "") for n in result.nodes if getattr(n, "term", "")})
     app.logger.info(
-        "[academics] result nodes=%d electives=%d terms=%s",
+        "[academics] result nodes=%d edges=%d electives=%d terms=%s",
         len(result.nodes),
+        len(result.edges),
         len(elective_nodes),
         ",".join(terms),
     )
+    # DEBUG: dump prereq info to file
+    import json
+    debug_info = {
+        "edge_count": len(result.edges),
+        "edges": [{"id": e.id, "source": e.source, "target": e.target} for e in result.edges],
+        "node_ids": [n.id for n in result.nodes],
+    }
+    with open("/tmp/parcours_debug.json", "w") as f:
+        json.dump(debug_info, f, indent=2)
     return jsonify(result.model_dump())
 
 
