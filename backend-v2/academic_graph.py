@@ -229,20 +229,7 @@ def generate_academic_graph(
 
     _lap("2. separate/dedupe/antireqs")
 
-    # ── 3. Fetch prereqs for required courses, build edges within the set ──
-    prereq_map: dict[str, list[str]] = {}
-
-    with ThreadPoolExecutor(max_workers=min(12, len(required_codes) or 1)) as pool:
-        fut_to_code = {
-            pool.submit(_fetch_in_program_prereqs, code, required_codes): code
-            for code in required_codes
-        }
-        for fut in as_completed(fut_to_code):
-            prereq_map[fut_to_code[fut]] = fut.result()
-
-    _lap("3. fetch prereqs (required, parallel)")
-
-    # ── 4. Pick electives via LLM (or default) ──
+    # ── 3. Pick electives via LLM (or default) ──
     program_subjects = _program_subjects_from_title(major_title)
 
     elective_codes: set[str] = set()
@@ -262,7 +249,7 @@ def generate_academic_graph(
         if nc not in course_info:
             course_info[nc] = {"code": code, "title": code, "units": 0.5}
 
-    # ── 4b. Drop electives that conflict with required or other elective antireqs ──
+    # ── 3b. Drop electives that conflict with required or other elective antireqs ──
     blocked_codes = set(required_antireqs) | required_codes
     safe_elective_codes: set[str] = set()
     for code in sorted(elective_codes):
@@ -284,20 +271,21 @@ def generate_academic_graph(
         "yes" if goal.strip() else "no",
     )
 
-    _lap("4. pick electives (LLM: %s)" % elective_model)
+    _lap("3. pick electives (LLM: %s)" % elective_model)
 
-    # Fetch prereqs for electives, linking back to required courses or other electives
+    # ── 4. Fetch prereqs for ALL courses in one pass ──
     all_known = required_codes | elective_codes
-    if elective_codes:
-        with ThreadPoolExecutor(max_workers=min(12, len(elective_codes))) as pool:
-            fut_to_code = {
-                pool.submit(_fetch_in_program_prereqs, code, all_known): code
-                for code in elective_codes
-            }
-            for fut in as_completed(fut_to_code):
-                prereq_map[fut_to_code[fut]] = fut.result()
+    prereq_map: dict[str, list[str]] = {}
 
-    _lap("4b. fetch prereqs (electives, parallel)")
+    with ThreadPoolExecutor(max_workers=min(12, len(all_known) or 1)) as pool:
+        fut_to_code = {
+            pool.submit(_fetch_in_program_prereqs, code, all_known): code
+            for code in all_known
+        }
+        for fut in as_completed(fut_to_code):
+            prereq_map[fut_to_code[fut]] = fut.result()
+
+    _lap("4. fetch prereqs (all courses, parallel)")
 
     prereq_map = _transitive_reduction(prereq_map)
 
@@ -723,11 +711,11 @@ def _balance_terms(
     course_info: dict[str, dict],
     max_credits: float = 2.5,
 ) -> dict[str, str]:
-    """Pull courses backward from heavy later terms into lighter earlier terms.
+    """Spread courses evenly across all 8 terms.
 
-    Iterates from the latest term backward.  For each course, finds the
-    lightest earlier term that can accept it without violating prerequisites,
-    successor ordering, or the credit cap.
+    Computes an ideal credits-per-term target (total / 8) and only moves a
+    course backward if the destination is below that target.  Still respects
+    prerequisite ordering, successor ordering, and the hard credit cap.
     """
     result = dict(term_assignments)
 
@@ -735,6 +723,12 @@ def _balance_terms(
     for code, prereqs in prereq_map.items():
         for p in prereqs:
             successor_map[p].append(code)
+
+    total_credits = sum(
+        float(course_info.get(c, {}).get("units", 0.5))
+        for c in result
+    )
+    ideal_per_term = total_credits / len(TERM_ORDER)
 
     def _term_credits(term: str) -> float:
         return sum(
@@ -775,7 +769,9 @@ def _balance_terms(
                 for candidate_idx in range(floor_idx, min(term_idx, ceiling_idx + 1)):
                     cand_term = TERM_ORDER[candidate_idx]
                     cand_credits = _term_credits(cand_term)
-                    if cand_credits + course_credits <= max_credits and cand_credits < best_credits:
+                    if (cand_credits + course_credits <= max_credits
+                            and cand_credits + course_credits <= ideal_per_term
+                            and cand_credits < best_credits):
                         best_credits = cand_credits
                         best_idx = candidate_idx
 
@@ -1138,21 +1134,29 @@ def _pick_electives(
     groups_desc = []
     group_courses: list[list[dict]] = []  # parallel list of course objects per group
 
-    # Pre-fetch UWFlow ratings for all candidate courses
-    all_candidate_codes: list[str] = []
+    # First pass: expand and trim candidate pools via LLM search
     for group in choice_groups:
-        for c in group.get("courses", []):
-            all_candidate_codes.append(c["code"])
-    uwflow_ratings = get_uwflow_ratings_bulk(all_candidate_codes)
-
-    for i, group in enumerate(choice_groups):
-        n = int(group["rule"])
         expanded = _expand_elective_group(group)
         if expanded:
             group["courses"] = expanded
         courses = group.get("courses", [])
-        trimmed = _downselect_elective_options(courses, goal)
+        trimmed = _llm_search_elective_candidates(
+            courses, goal, api_key, model,
+            major_title=major_title, desired_skills=desired_skills,
+        )
         group_courses.append(trimmed)
+
+    # Fetch UWFlow ratings only for the trimmed candidates (not thousands of breadth courses)
+    all_candidate_codes: list[str] = []
+    for trimmed in group_courses:
+        for c in trimmed:
+            all_candidate_codes.append(c["code"])
+    uwflow_ratings = get_uwflow_ratings_bulk(all_candidate_codes)
+
+    # Second pass: build group descriptions with ratings
+    for i, group in enumerate(choice_groups):
+        n = int(group["rule"])
+        trimmed = group_courses[i]
         options = []
         for c in trimmed:
             line = f"{c['code']} — {c.get('title', c['code'])}"
@@ -1419,29 +1423,96 @@ def _extract_ranges_from_text(text: str) -> list[dict]:
     return ranges
 
 
-def _downselect_elective_options(courses: list[dict], goal: str, limit: int = 80) -> list[dict]:
+def _llm_search_elective_candidates(
+    courses: list[dict],
+    goal: str,
+    api_key: str,
+    model: str,
+    major_title: str = "",
+    desired_skills: list[str] | None = None,
+    limit: int = 80,
+) -> list[dict]:
+    """Use the LLM to generate search queries, then search the full course catalog.
+
+    For small pools (<= limit), returns them directly. For large pools, asks the
+    LLM what course-title keywords to search for, runs those against the static
+    all_courses.json catalog, and intersects with the allowed pool.
+    """
     if len(courses) <= limit:
         return courses
 
-    tokens = set(re.findall(r"[a-zA-Z]{3,}", goal.lower()))
-    if not tokens:
+    if not goal.strip():
         return courses[:limit]
 
-    scored: list[tuple[int, int, dict]] = []
-    for idx, c in enumerate(courses):
-        title = str(c.get("title", "")).lower()
-        score = sum(1 for t in tokens if t in title)
-        scored.append((score, idx, c))
+    client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key)
 
-    scored.sort(key=lambda x: (x[0], -x[1]), reverse=True)
-    top = [c for score, _, c in scored if score > 0]
-    if len(top) >= limit:
-        return top[:limit]
+    skills_context = ""
+    if desired_skills:
+        skills_context = f"\nDesired skills: {', '.join(desired_skills)}"
 
-    # Only pad with non-matching courses if we don't have enough relevant ones.
-    # Use a much smaller limit for filler to avoid drowning the LLM with garbage.
-    if len(top) >= 20:
-        return top
-    remaining = [c for score, _, c in scored if score <= 0]
-    filler_limit = max(limit - len(top), 20)
-    return (top + remaining[:filler_limit])[:limit]
+    response = client.chat.completions.create(
+        model=model,
+        messages=[
+            {
+                "role": "system",
+                "content": (
+                    "You help find relevant university courses. Given a student's goal, program, "
+                    "and desired skills, generate 10-20 short search queries (1-3 words each) that "
+                    "would match course TITLES in a university catalog.\n\n"
+                    "Think broadly about what courses would be relevant. For example, for "
+                    "'bioinformatics' you might generate: bioinformatics, computational biology, "
+                    "genomics, molecular biology, genetics, biochemistry, proteomics, biostatistics, "
+                    "data science, machine learning, algorithms, statistics, cell biology.\n\n"
+                    "Return ONLY a valid JSON array of strings, no other text."
+                ),
+            },
+            {
+                "role": "user",
+                "content": (
+                    f"Goal: {goal}\n"
+                    + (f"Program: {major_title}\n" if major_title else "")
+                    + skills_context
+                ),
+            },
+        ],
+        temperature=0.3,
+    )
+
+    raw = response.choices[0].message.content or "[]"
+    raw = raw.strip()
+    if raw.startswith("```"):
+        raw = raw.split("\n", 1)[1] if "\n" in raw else raw[3:]
+        if raw.endswith("```"):
+            raw = raw[:-3]
+        raw = raw.strip()
+
+    try:
+        queries = json.loads(raw)
+    except json.JSONDecodeError:
+        logger.warning("[academics] failed to parse LLM search queries: %s", raw[:200])
+        return courses[:limit]
+
+    if not isinstance(queries, list) or not queries:
+        return courses[:limit]
+
+    logger.info("[academics] LLM generated %d search queries: %s", len(queries), queries)
+
+    catalog_matches = search_courses_by_title(queries)
+    logger.info("[academics] catalog search returned %d courses", len(catalog_matches))
+
+    # Intersect with the allowed elective pool
+    allowed_codes = {c.get("code", "").replace(" ", "").upper() for c in courses}
+    filtered = [
+        c for c in catalog_matches
+        if c.get("code", "").replace(" ", "").upper() in allowed_codes
+    ]
+
+    logger.info(
+        "[academics] after intersecting with allowed pool: %d courses (pool size=%d)",
+        len(filtered), len(allowed_codes),
+    )
+
+    if not filtered:
+        return catalog_matches[:limit]
+
+    return filtered[:limit]

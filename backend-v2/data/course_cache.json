@@ -5125,5 +5125,274 @@
       "MATH 235",
       "MATH 245"
     ]
+  },
+  "MSE251": {
+    "code": "MSE251",
+    "raw": "Prereq: Level at least 2A Management Engineering. Antireq: AE 224, BME 213, CHE 220, CIVE 224, ECE 203, 306, ECON 221, ENVE 224, ME 202, MTE 201, NE 215, STAT 231, SYDE 212",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "AE 224",
+      "BME 213",
+      "CHE 220",
+      "CIVE 224",
+      "ECE 203",
+      "ECE 306",
+      "ECON 221",
+      "ENVE 224",
+      "ME 202",
+      "MTE 201",
+      "NE 215",
+      "STAT 231",
+      "SYDE 212"
+    ]
+  },
+  "CIVE224": {
+    "code": "CIVE224",
+    "raw": "Prereq: MATH 116; Level at least 2A Civil Engineering. Antireq: CHE 220, ENVE 224, GEOE 224",
+    "prereqs": [
+      "MATH 116"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CHE 220",
+      "ENVE 224",
+      "GEOE 224"
+    ]
+  },
+  "SDS250R": {
+    "code": "SDS250R",
+    "raw": "Prereq: Level at least 2A; Not open to Math. Antireq: ARTS 280, ECON 221, ENVS 278, GBDA 205, KIN 232, LS/SOC 280, PSYCH 292, REC 371, SRF 230, STAT 202, 206, 211, 221, 231, 241",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "ARTS 280",
+      "ECON 221",
+      "ENVS 278",
+      "GBDA 205",
+      "KIN 232",
+      "SOC 280",
+      "PSYCH 292",
+      "REC 371",
+      "SRF 230",
+      "STAT 202",
+      "STAT 206",
+      "STAT 211",
+      "STAT 221",
+      "STAT 231",
+      "STAT 241"
+    ]
+  },
+  "ENVS278": {
+    "code": "ENVS278",
+    "raw": "Prereq: ENVS 178; Environment students only. Antireq: ARTS 280, ECON 221, SDS 250R, PSCI 314, PSYCH 292, REC 371,  SOC 280, STAT 202, 206, 211, 221, 231, 241",
+    "prereqs": [
+      "ENVS 178"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "ARTS 280",
+      "ECON 221",
+      "SDS 250R",
+      "PSCI 314",
+      "PSYCH 292",
+      "REC 371",
+      "SOC 280",
+      "STAT 202",
+      "STAT 206",
+      "STAT 211",
+      "STAT 221",
+      "STAT 231",
+      "STAT 241"
+    ]
+  },
+  "ENVE224": {
+    "code": "ENVE224",
+    "raw": "Prereq: MATH 116; Level at least 2B Environmental Engineering. Antireq: CHE 220, CIVE 224",
+    "prereqs": [
+      "MATH 116"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CHE 220",
+      "CIVE 224"
+    ]
+  },
+  "KIN217": {
+    "code": "KIN217",
+    "raw": "Prereq: CHEM 120 or 121; Kinesiology or Honours Science students only. Antireq: HLTH 217",
+    "prereqs": [
+      "CHEM 120",
+      "CHEM 121"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "HLTH 217"
+    ]
+  },
+  "ENVS178": {
+    "code": "ENVS178",
+    "raw": "Prereq: Not open to students in the Faculty of Mathematics",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ME202": {
+    "code": "ME202",
+    "raw": "Prereq: MATH 116; Level at least 2A Mechanical Engineering",
+    "prereqs": [
+      "MATH 116"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM233": {
+    "code": "CHEM233",
+    "raw": "Prereq: CHEM 264 or 262; Honours Biochemistry, Biology, Chemistry, Environmental Science or Medicinal Chemistry. Antireq: CHEM 237, CHEM 239, NE 224",
+    "prereqs": [
+      "CHEM 264",
+      "CHEM 262"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CHEM 237",
+      "CHEM 239",
+      "NE 224"
+    ]
+  },
+  "PHYS267": {
+    "code": "PHYS267",
+    "raw": "Prereq: PHYS 122; One of MATH 227, MATH 237, MATH 247; One of PHYS 236, CS 114, 116, 136, 146. Antireq: STAT 230, 231",
+    "prereqs": [
+      "PHYS 122",
+      "MATH 227",
+      "MATH 237",
+      "MATH 247",
+      "PHYS 236",
+      "CS 114",
+      "CS 116",
+      "CS 136",
+      "CS 146"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "STAT 230",
+      "STAT 231"
+    ]
+  },
+  "BIOL361": {
+    "code": "BIOL361",
+    "raw": "Prereq: One of STAT 202, ECON 221, ENVS 278. Antireq: PSYCH 391, STAT 332",
+    "prereqs": [
+      "STAT 202",
+      "ECON 221",
+      "ENVS 278"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "PSYCH 391",
+      "STAT 332"
+    ]
+  },
+  "BIOL239": {
+    "code": "BIOL239",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL266": {
+    "code": "BIOL266",
+    "raw": "Prereq: BIOL 130. Antireq: BIOL 366",
+    "prereqs": [
+      "BIOL 130"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "BIOL 366"
+    ]
+  },
+  "BIOL434": {
+    "code": "BIOL434",
+    "raw": "Prereq: BIOL 235 or 309; BIOL 308",
+    "prereqs": [
+      "BIOL 235",
+      "BIOL 309",
+      "BIOL 308"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL335L": {
+    "code": "BIOL335L",
+    "raw": "Prereq: BIOL 240L; BIOL 235 or BIOL 309",
+    "prereqs": [
+      "BIOL 240L",
+      "BIOL 235",
+      "BIOL 309"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL469": {
+    "code": "BIOL469",
+    "raw": "Prereq: BIOL 239; BIOL 266/366 or BIOL 365",
+    "prereqs": [
+      "BIOL 239",
+      "BIOL 266",
+      "BIOL 366",
+      "BIOL 365"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL235": {
+    "code": "BIOL235",
+    "raw": "Prereq: BIOL 130, 239. Antireq: BIOL 309",
+    "prereqs": [
+      "BIOL 130",
+      "BIOL 239"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "BIOL 309"
+    ]
+  },
+  "GEOG187": {
+    "code": "GEOG187",
+    "raw": "Prereq: Geomatics students only",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL130": {
+    "code": "BIOL130",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM430": {
+    "code": "CHEM430",
+    "raw": "Prereq: CHEM 331 or CHEM 333; Level at least 3A",
+    "prereqs": [
+      "CHEM 331",
+      "CHEM 333"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "SYDE334": {
+    "code": "SYDE334",
+    "raw": "Prereq: BME 213 or SYDE 212 (with minimum grade of 70%); Level at least 3A Biomedical Engineering or Level at least 3B Systems Design Engineering. Antireq: STAT 331, 371.",
+    "prereqs": [
+      "BME 213",
+      "SYDE 212"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "STAT 331",
+      "STAT 371"
+    ]
   }
 }
