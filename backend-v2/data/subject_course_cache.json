@@ -2023,5 +2023,797 @@
       "title": "Conservation Biology (WLU)",
       "units": null
     }
+  ],
+  "PHYS": [
+    {
+      "code": "PHYS 115",
+      "title": "Mechanics",
+      "units": null
+    },
+    {
+      "code": "PHYS 234",
+      "title": "Quantum Physics 1",
+      "units": null
+    },
+    {
+      "code": "PHYS 358",
+      "title": "Thermal Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 363",
+      "title": "Intermediate Classical Mechanics",
+      "units": null
+    },
+    {
+      "code": "PHYS 364",
+      "title": "Mathematical Physics 1",
+      "units": null
+    },
+    {
+      "code": "PHYS 365",
+      "title": "Mathematical Physics 2",
+      "units": null
+    },
+    {
+      "code": "PHYS 375",
+      "title": "Stars",
+      "units": null
+    },
+    {
+      "code": "PHYS 380",
+      "title": "Molecular and Cellular Biophysics",
+      "units": null
+    },
+    {
+      "code": "PHYS 434",
+      "title": "Quantum Physics 3",
+      "units": null
+    },
+    {
+      "code": "PHYS 444",
+      "title": "Introduction to Particle Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 475",
+      "title": "Cosmology",
+      "units": null
+    },
+    {
+      "code": "PHYS 111",
+      "title": "Physics 1",
+      "units": null
+    },
+    {
+      "code": "PHYS 359",
+      "title": "Statistical Mechanics",
+      "units": null
+    },
+    {
+      "code": "PHYS 121",
+      "title": "Mechanics",
+      "units": null
+    },
+    {
+      "code": "PHYS 275",
+      "title": "Planets",
+      "units": null
+    },
+    {
+      "code": "PHYS 334",
+      "title": "Quantum Physics 2",
+      "units": null
+    },
+    {
+      "code": "PHYS 391",
+      "title": "Electronics",
+      "units": null
+    },
+    {
+      "code": "PHYS 263",
+      "title": "Classical Mechanics and Special Relativity",
+      "units": null
+    },
+    {
+      "code": "PHYS 112",
+      "title": "Physics 2",
+      "units": null
+    },
+    {
+      "code": "PHYS 256",
+      "title": "Geometrical and Physical Optics",
+      "units": null
+    },
+    {
+      "code": "PHYS 476",
+      "title": "Introduction to General Relativity",
+      "units": null
+    },
+    {
+      "code": "PHYS 454",
+      "title": "Quantum Theory 2",
+      "units": null
+    },
+    {
+      "code": "PHYS 782",
+      "title": "Fundamentals of Astrophysics II: Observational Techniques and Data Analysis",
+      "units": null
+    },
+    {
+      "code": "PHYS 739",
+      "title": "Quantum Many Body Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 702",
+      "title": "Quantum Mechanics 2",
+      "units": null
+    },
+    {
+      "code": "PHYS 705",
+      "title": "Statistical Physics 2",
+      "units": null
+    },
+    {
+      "code": "PHYS 105",
+      "title": "Introduction to Physics for Health Care Professions",
+      "units": null
+    },
+    {
+      "code": "PHYS 395",
+      "title": "Biophysics of Therapeutic Methods",
+      "units": null
+    },
+    {
+      "code": "PHYS 175",
+      "title": "Introduction to the Universe",
+      "units": null
+    },
+    {
+      "code": "PHYS 474",
+      "title": "Galaxies",
+      "units": null
+    },
+    {
+      "code": "PHYS 383",
+      "title": "Medical Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 483",
+      "title": "Advanced Therapeutic Concepts in Oncology and Medical Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 342",
+      "title": "Electricity and Magnetism 2",
+      "units": null
+    },
+    {
+      "code": "PHYS 394",
+      "title": "Light-Matter Interactions",
+      "units": null
+    },
+    {
+      "code": "PHYS 442",
+      "title": "Electricity and Magnetism 3",
+      "units": null
+    },
+    {
+      "code": "PHYS 468",
+      "title": "Introduction to the Implementation of Quantum Information Processing",
+      "units": null
+    },
+    {
+      "code": "PHYS 449",
+      "title": "Machine Learning in Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 242",
+      "title": "Electricity and Magnetism 1",
+      "units": null
+    },
+    {
+      "code": "PHYS 233",
+      "title": "Introduction to Quantum Mechanics",
+      "units": null
+    },
+    {
+      "code": "PHYS 122",
+      "title": "Waves, Electricity and Magnetism",
+      "units": null
+    },
+    {
+      "code": "PHYS 396",
+      "title": "Biophysics of Imaging",
+      "units": null
+    },
+    {
+      "code": "PHYS 349",
+      "title": "Advanced Computational Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 225",
+      "title": "Modeling Biological Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 393",
+      "title": "Physical Optics",
+      "units": null
+    },
+    {
+      "code": "PHYS 267",
+      "title": "Probability, Statistics, and Data Analysis for Physics and Astronomy",
+      "units": null
+    },
+    {
+      "code": "PHYS 280",
+      "title": "Introduction to Biophysics",
+      "units": null
+    },
+    {
+      "code": "PHYS 484",
+      "title": "Quantum Theory 3: Quantum Information and Foundations",
+      "units": null
+    },
+    {
+      "code": "PHYS 703",
+      "title": "Introduction to Quantum Field Theory",
+      "units": null
+    },
+    {
+      "code": "PHYS 467",
+      "title": "Introduction to Quantum Information Processing",
+      "units": null
+    },
+    {
+      "code": "PHYS 437B",
+      "title": "Research Project (Continued)",
+      "units": null
+    },
+    {
+      "code": "PHYS 437A",
+      "title": "Research Project",
+      "units": null
+    },
+    {
+      "code": "PHYS 260A",
+      "title": "Intermediate Physics Laboratory 1",
+      "units": null
+    },
+    {
+      "code": "PHYS 260B",
+      "title": "Intermediate Physics Laboratory 2",
+      "units": null
+    },
+    {
+      "code": "PHYS 249",
+      "title": "Linear Algebra for Physics and Astronomy",
+      "units": null
+    },
+    {
+      "code": "PHYS 612",
+      "title": "Perimeter Scholars International Classical Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 490",
+      "title": "Special Topics in Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 460A",
+      "title": "Advanced Laboratory 1",
+      "units": null
+    },
+    {
+      "code": "PHYS 460B",
+      "title": "Advanced Laboratory 2",
+      "units": null
+    },
+    {
+      "code": "PHYS 160L",
+      "title": "Introductory Measurement Laboratory",
+      "units": null
+    },
+    {
+      "code": "PHYS 370L",
+      "title": "Astronomy Laboratory 1",
+      "units": null
+    },
+    {
+      "code": "PHYS 175L",
+      "title": "Introduction to the Universe Laboratory",
+      "units": null
+    },
+    {
+      "code": "PHYS 270L",
+      "title": "Astronomical Observations, Instrumentation, and Data Analysis Laboratory",
+      "units": null
+    },
+    {
+      "code": "PHYS 360A",
+      "title": "Modern Physics Laboratory 1",
+      "units": null
+    },
+    {
+      "code": "PHYS 360B",
+      "title": "Modern Physics Laboratory 2",
+      "units": null
+    },
+    {
+      "code": "PHYS 122L",
+      "title": "Waves, Electricity and Magnetism Laboratory",
+      "units": null
+    },
+    {
+      "code": "PHYS 112L",
+      "title": "Physics 2 Laboratory",
+      "units": null
+    },
+    {
+      "code": "PHYS 391L",
+      "title": "Electronics Laboratory",
+      "units": null
+    },
+    {
+      "code": "PHYS 121L",
+      "title": "Mechanics Laboratory",
+      "units": null
+    },
+    {
+      "code": "PHYS 111L",
+      "title": "Physics 1 Laboratory",
+      "units": null
+    },
+    {
+      "code": "PHYS 435",
+      "title": "Current Topics in Condensed Matter Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 124",
+      "title": "Modern Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 335",
+      "title": "Condensed Matter Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 769",
+      "title": "Special Topics in quantum Information Processing",
+      "units": null
+    },
+    {
+      "code": "PHYS 789",
+      "title": "Special Topics in Astrophysics",
+      "units": null
+    },
+    {
+      "code": "PHYS 757",
+      "title": "Special Topics in Biophysics",
+      "units": null
+    },
+    {
+      "code": "PHYS 791",
+      "title": "Special Topics in Gravitation and Cosmology",
+      "units": null
+    },
+    {
+      "code": "PHYS 738",
+      "title": "Special Topics in Condensed Matter and Materials Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 749",
+      "title": "Special Topics in Experimental Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 718",
+      "title": "Special Topics in Subatomic and Nuclear Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 777",
+      "title": "Special Topics in Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 650",
+      "title": "Perimeter Scholars International Explorations in Quantum Gravity",
+      "units": null
+    },
+    {
+      "code": "PHYS 625",
+      "title": "Perimeter Scholars International Supersymmetry",
+      "units": null
+    },
+    {
+      "code": "PHYS 649",
+      "title": "Perimeter Scholars International Explorations in Cosmology",
+      "units": null
+    },
+    {
+      "code": "PHYS 648",
+      "title": "Perimeter Scholars International Explorations in Complex Systems",
+      "units": null
+    },
+    {
+      "code": "PHYS 647",
+      "title": "Perimeter Scholars International Explorations in String Theory",
+      "units": null
+    },
+    {
+      "code": "PHYS 646",
+      "title": "Perimeter Scholars International Explorations in Particle Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 645",
+      "title": "Perimeter Scholars International Explorations in Foundations of Quantum Theory",
+      "units": null
+    },
+    {
+      "code": "PHYS 644",
+      "title": "Perimeter Scholars International Explorations in Quantum Gravity",
+      "units": null
+    },
+    {
+      "code": "PHYS 639",
+      "title": "Perimeter Scholars International Foundations of Quantum Theory",
+      "units": null
+    },
+    {
+      "code": "PHYS 638",
+      "title": "Perimeter Scholars International Quantum Gravity",
+      "units": null
+    },
+    {
+      "code": "PHYS 624",
+      "title": "Perimeter Scholars International Mathematical Physics Topics",
+      "units": null
+    },
+    {
+      "code": "PHYS 623",
+      "title": "Perimeter Scholars International String Theory",
+      "units": null
+    },
+    {
+      "code": "PHYS 622",
+      "title": "Perimeter Scholars International Standard Model",
+      "units": null
+    },
+    {
+      "code": "PHYS 621",
+      "title": "Perimeter Scholars International Cosmology",
+      "units": null
+    },
+    {
+      "code": "PHYS 642",
+      "title": "Perimeter Scholars International Explorations in Numerical Gravitational Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 636",
+      "title": "Perimeter Scholars International Gravitational Physics Review",
+      "units": null
+    },
+    {
+      "code": "PHYS 643",
+      "title": "Perimeter Scholars International Explorations in Condensed Matter Theory",
+      "units": null
+    },
+    {
+      "code": "PHYS 637",
+      "title": "Perimeter Scholars International Condensed Matter Theory",
+      "units": null
+    },
+    {
+      "code": "PHYS 641",
+      "title": "Perimeter Scholars International Explorations in Quantum Information",
+      "units": null
+    },
+    {
+      "code": "PHYS 635",
+      "title": "Perimeter Scholars International Quantum Information Review",
+      "units": null
+    },
+    {
+      "code": "PHYS 775",
+      "title": "Inter-Institution Exchange",
+      "units": null
+    },
+    {
+      "code": "PHYS 771",
+      "title": "Special Lecture and Reading Course",
+      "units": null
+    },
+    {
+      "code": "PHYS 788",
+      "title": "Special Topics in Astrophysics",
+      "units": null
+    },
+    {
+      "code": "PHYS 773",
+      "title": "Special Topics in Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 754",
+      "title": "Special Topics in Biophysics",
+      "units": null
+    },
+    {
+      "code": "PHYS 712",
+      "title": "Special Topics in Theoretical Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 733",
+      "title": "Special Topics in Theoretical Condensed Matter Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 763",
+      "title": "Independent Project in Quantum Technology",
+      "units": null
+    },
+    {
+      "code": "PHYS 760",
+      "title": "Laboratory on Control of Quantum Technology",
+      "units": null
+    },
+    {
+      "code": "PHYS 762",
+      "title": "Laboratory on Low Temperature Quantum Technology and Nanofabrication",
+      "units": null
+    },
+    {
+      "code": "PHYS 761",
+      "title": "Laboratory on Photonic Quantum Technology",
+      "units": null
+    },
+    {
+      "code": "PHYS 776",
+      "title": "Special Topics in Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 745",
+      "title": "Special Topics in Experimental Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 790",
+      "title": "Special Topics in Gravitation and Cosmology",
+      "units": null
+    },
+    {
+      "code": "PHYS 716",
+      "title": "Special Topics in Subatomic and Nuclear Physcis",
+      "units": null
+    },
+    {
+      "code": "PHYS 768",
+      "title": "Special Topics in Quantum Information Processing",
+      "units": null
+    },
+    {
+      "code": "PHYS 601",
+      "title": "Perimeter Scholars International Quantum Field Theory 1",
+      "units": null
+    },
+    {
+      "code": "PHYS 602",
+      "title": "Perimeter Scholars International Statistical Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 603",
+      "title": "Perimeter Scholars International Quantum Field Theory 2",
+      "units": null
+    },
+    {
+      "code": "PHYS 604",
+      "title": "Perimeter Scholars International Relativity",
+      "units": null
+    },
+    {
+      "code": "PHYS 605",
+      "title": "Perimeter Scholars International Quantum Theory",
+      "units": null
+    },
+    {
+      "code": "PHYS 606",
+      "title": "Perimeter Scholars International Information and Data Analysis",
+      "units": null
+    },
+    {
+      "code": "PHYS 607",
+      "title": "Perimeter Scholars International Dynamical Systems",
+      "units": null
+    },
+    {
+      "code": "PHYS 608",
+      "title": "Perimeter Scholars International Computation",
+      "units": null
+    },
+    {
+      "code": "PHYS 610",
+      "title": "Perimeter Scholars International Mathematics Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 611",
+      "title": "PSI Condensed Matter Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 609",
+      "title": "Perimeter Scholars International Conformal Field Theory",
+      "units": null
+    },
+    {
+      "code": "PHYS 161W",
+      "title": "Introduction to Mechanics for Life Sciences (WLU)",
+      "units": null
+    },
+    {
+      "code": "PHYS 351W",
+      "title": "Quantum Computing (WLU)",
+      "units": null
+    },
+    {
+      "code": "PHYS 767",
+      "title": "Quantum Information Processing",
+      "units": null
+    },
+    {
+      "code": "PHYS 786",
+      "title": "Introduction to General Relativity with Applications to Cosmology",
+      "units": null
+    },
+    {
+      "code": "PHYS 784",
+      "title": "Advanced techniques in General Relativity and Applications to Black Holes",
+      "units": null
+    },
+    {
+      "code": "PHYS 785",
+      "title": "Introduction to Quantum Field Theory for Cosmology",
+      "units": null
+    },
+    {
+      "code": "PHYS 701",
+      "title": "Quantum Mechanics 1",
+      "units": null
+    },
+    {
+      "code": "PHYS 752",
+      "title": "Molecular Biophysics",
+      "units": null
+    },
+    {
+      "code": "PHYS 704",
+      "title": "Statistical Physics 1",
+      "units": null
+    },
+    {
+      "code": "PHYS 708",
+      "title": "Applications of Group Theory",
+      "units": null
+    },
+    {
+      "code": "PHYS 717",
+      "title": "Intermediate and High Energy Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 731",
+      "title": "Solid State Physics 1",
+      "units": null
+    },
+    {
+      "code": "PHYS 732",
+      "title": "Solid State Physics 2",
+      "units": null
+    },
+    {
+      "code": "PHYS 713",
+      "title": "Molecular Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 709",
+      "title": "Green's Function Method",
+      "units": null
+    },
+    {
+      "code": "PHYS 710",
+      "title": "Atomic Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 715",
+      "title": "Nuclear Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 747",
+      "title": "Optical Electronics",
+      "units": null
+    },
+    {
+      "code": "PHYS 787",
+      "title": "Cosmology",
+      "units": null
+    },
+    {
+      "code": "PHYS 781",
+      "title": "Fundamentals of Astrophysics",
+      "units": null
+    },
+    {
+      "code": "PHYS 730",
+      "title": "Liquid State Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 737",
+      "title": "Special Topics in Surface Physics",
+      "units": null
+    },
+    {
+      "code": "PHYS 714",
+      "title": "Nonlinear Optics",
+      "units": null
+    },
+    {
+      "code": "PHYS 751",
+      "title": "Clinical Applications of Physics in Medicine",
+      "units": null
+    },
+    {
+      "code": "PHYS 706",
+      "title": "Electromagnetic Theory",
+      "units": null
+    },
+    {
+      "code": "PHYS 142W",
+      "title": "Thermodynamics & Waves (WLU)",
+      "units": null
+    },
+    {
+      "code": "PHYS 141W",
+      "title": "Mechanics for the Life Sciences (WLU)",
+      "units": null
+    },
+    {
+      "code": "PHYS 132W",
+      "title": "Thermodynamics & Waves (WLU)",
+      "units": null
+    },
+    {
+      "code": "PHYS 212W",
+      "title": "Electricity and Magnetism (WLU)",
+      "units": null
+    },
+    {
+      "code": "PHYS 152W",
+      "title": "Thermodynamics & Waves (WLU)",
+      "units": null
+    },
+    {
+      "code": "PHYS 237W",
+      "title": "Optics (WLU)",
+      "units": null
+    }
   ]
 }

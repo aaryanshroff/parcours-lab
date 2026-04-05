@@ -25903,5 +25903,126 @@
       "comment_count": 66,
       "profs": []
     }
+  },
+  "PHYS105": {
+    "fetched_at": 1775409223.100693,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PHYS437A": {
+    "fetched_at": 1775409223.26598,
+    "rating": {
+      "liked": 1.0,
+      "easy": 1.0,
+      "useful": 1.0,
+      "filled_count": 4,
+      "comment_count": 1,
+      "profs": []
+    }
+  },
+  "PHYS490": {
+    "fetched_at": 1775409223.4225438,
+    "rating": {
+      "liked": 1.0,
+      "easy": 0.75,
+      "useful": 0.75,
+      "filled_count": 4,
+      "comment_count": 1,
+      "profs": []
+    }
+  },
+  "PHYS161W": {
+    "fetched_at": 1775409223.553036,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PHYS351W": {
+    "fetched_at": 1775409223.697705,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PHYS142W": {
+    "fetched_at": 1775409223.829785,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PHYS141W": {
+    "fetched_at": 1775409223.979745,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PHYS132W": {
+    "fetched_at": 1775409224.108735,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PHYS212W": {
+    "fetched_at": 1775409224.254046,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PHYS152W": {
+    "fetched_at": 1775409224.391524,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PHYS237W": {
+    "fetched_at": 1775409224.538847,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
   }
 }

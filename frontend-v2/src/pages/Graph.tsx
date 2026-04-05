@@ -381,20 +381,35 @@ function TermGroupNode({ data }: NodeProps<Node<SkillNodeData>>) {
 
 const nodeTypes = { skill: SkillNode, termGroup: TermGroupNode }
 
-function AcademicEdge({ sourceX, sourceY, targetX, targetY, markerEnd, style, data }: EdgeProps) {
-  // 4-segment path routed through row & column gutters so neither the
-  // horizontal nor vertical leg can cross an intermediate node.
-  // ROW_GAP=220, NODE_H=160 → row gutter 60px tall; center 30px below source handle.
-  // COL_GAP=440, NODE_W=260 → col gutter 180px wide; center 220px left of target handle.
-  const gutterY = sourceY + 30
-  const gutterX = targetX - 220
+function AcademicEdge({ sourceX, sourceY, targetX, targetY, markerEnd, style }: EdgeProps) {
+  // 1. ADJACENT COLUMNS
+  // If distance between handles is < 400px, they are in adjacent columns.
+  // Draw a simple, clean Z-path straight down the middle of the vertical gutter.
+  if (targetX - sourceX < 400) {
+    const midX = (sourceX + targetX) / 2
+    const path = `M ${sourceX} ${sourceY} L ${midX} ${sourceY} L ${midX} ${targetY} L ${targetX} ${targetY}`
+    return <BaseEdge path={path} markerEnd={markerEnd} style={style} />
+  }
+
+  // 2. MULTI-COLUMN ROUTING
+  // If skipping columns, strictly route through the horizontal whitespace.
+  const GX = 90
+  const gx1 = sourceX + GX
+  const gx2 = targetX - GX
+
+  // Route exactly 16px above or below the target node's bounding box to stay in the gap
+  const GY = 96
+  const gy = targetY >= sourceY ? targetY - GY : targetY + GY
+
   const path = [
     `M ${sourceX} ${sourceY}`,
-    `L ${sourceX} ${gutterY}`,
-    `L ${gutterX} ${gutterY}`,
-    `L ${gutterX} ${targetY}`,
-    `L ${targetX} ${targetY}`,
+    `L ${gx1} ${sourceY}`,     // Right into the first vertical gap
+    `L ${gx1} ${gy}`,          // Up/Down into the horizontal whitespace row
+    `L ${gx2} ${gy}`,          // Across strictly inside the whitespace
+    `L ${gx2} ${targetY}`,     // Up/Down into the target's vertical gap
+    `L ${targetX} ${targetY}`, // Right into the target node handle
   ].join(' ')
+
   return <BaseEdge path={path} markerEnd={markerEnd} style={style} />
 }
 

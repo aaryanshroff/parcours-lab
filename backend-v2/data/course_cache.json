@@ -3259,5 +3259,1603 @@
     "prereqs": [],
     "coreqs": [],
     "antireqs": []
+  },
+  "PHYS 115": {
+    "code": "PHYS 115",
+    "raw": "Antireq: PHYS 111, 121; First year Engineering students only",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "PHYS 111",
+      "PHYS 121"
+    ]
+  },
+  "PHYS 234": {
+    "code": "PHYS 234",
+    "raw": "Prereq: PHYS 122; One of PHYS 249, MATH 114, 136; One of MATH 128, 138, 148. Coreq: One of MATH 228, AMATH 250, AMATH 251. Antireq: CHEM 356, NE 232, PHYS 233, ECE 405",
+    "prereqs": [
+      "PHYS 122",
+      "PHYS 249",
+      "MATH 114",
+      "MATH 136",
+      "MATH 128",
+      "MATH 138",
+      "MATH 148"
+    ],
+    "coreqs": [
+      "MATH 228",
+      "AMATH 250",
+      "AMATH 251"
+    ],
+    "antireqs": [
+      "CHEM 356",
+      "NE 232",
+      "PHYS 233",
+      "ECE 405"
+    ]
+  },
+  "PHYS 358": {
+    "code": "PHYS 358",
+    "raw": "Prereq: PHYS 112 or 122; One of MATH 227, 237, 247; One of MATH 228, AMATH 250, 251. Antireq: CHEM 254, ECE 403",
+    "prereqs": [
+      "PHYS 112",
+      "PHYS 122",
+      "MATH 227",
+      "MATH 237",
+      "MATH 247",
+      "MATH 228",
+      "AMATH 250",
+      "AMATH 251"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CHEM 254",
+      "ECE 403"
+    ]
+  },
+  "PHYS 363": {
+    "code": "PHYS 363",
+    "raw": "Prereq: One of PHYS 236, CS 114, 116, 136, 146; One of PHYS 263 or AMATH 271; One of MATH 227, 237, 247; One of MATH 228, AMATH 250, AMATH 251",
+    "prereqs": [
+      "PHYS 236",
+      "CS 114",
+      "CS 116",
+      "CS 136",
+      "CS 146",
+      "PHYS 263",
+      "AMATH 271",
+      "MATH 227",
+      "MATH 237",
+      "MATH 247",
+      "MATH 228",
+      "AMATH 250",
+      "AMATH 251"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 364": {
+    "code": "PHYS 364",
+    "raw": "Prereq: MATH 227; One of PHYS 236, CS 114, 116, 136, 146; One of MATH 228, AMATH 250, 251; Honours Physics, Chemical Physics, Physics and Astronomy, Life Physics or Materials and Nanosciences students only. Antireq: AMATH 353",
+    "prereqs": [
+      "MATH 227",
+      "PHYS 236",
+      "CS 114",
+      "CS 116",
+      "CS 136",
+      "CS 146",
+      "MATH 228",
+      "AMATH 250",
+      "AMATH 251"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "AMATH 353"
+    ]
+  },
+  "PHYS 365": {
+    "code": "PHYS 365",
+    "raw": "Prereq: MATH 227; One of MATH 228, AMATH 250, 251; Honours Physics, Chemical Physics, Physics and Astronomy, Life Physics and Materials and Nanosciences students only. Antireq: AMATH 332",
+    "prereqs": [
+      "MATH 227",
+      "MATH 228",
+      "AMATH 250",
+      "AMATH 251"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "AMATH 332"
+    ]
+  },
+  "PHYS 375": {
+    "code": "PHYS 375",
+    "raw": "Prereq: PHYS 112 or 122; One of PHYS  236, CS 114, 116, 136, 146; Two of PHYS 234, 242, 256, 275, 358, AMATH 271",
+    "prereqs": [
+      "PHYS 112",
+      "PHYS 122",
+      "PHYS 236",
+      "CS 114",
+      "CS 116",
+      "CS 136",
+      "CS 146",
+      "PHYS 234",
+      "PHYS 242",
+      "PHYS 256",
+      "PHYS 275",
+      "PHYS 358",
+      "AMATH 271"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 380": {
+    "code": "PHYS 380",
+    "raw": "Prereq: PHYS 112 or 122; CHEM 123 or 125",
+    "prereqs": [
+      "PHYS 112",
+      "PHYS 122",
+      "CHEM 123",
+      "CHEM 125"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 434": {
+    "code": "PHYS 434",
+    "raw": "Prereq: PHYS 334 or AMATH 373; PHYS 364 or (AMATH 351 and 353)",
+    "prereqs": [
+      "PHYS 334",
+      "AMATH 373",
+      "PHYS 364",
+      "AMATH 351",
+      "AMATH 353"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 444": {
+    "code": "PHYS 444",
+    "raw": "Prereq: PHYS 334 or AMATH 373; PHYS 363; (PHYS 364 and 365) or (AMATH 332, 351, 353)",
+    "prereqs": [
+      "PHYS 334",
+      "AMATH 373",
+      "PHYS 363",
+      "PHYS 364",
+      "PHYS 365",
+      "AMATH 332",
+      "AMATH 351",
+      "AMATH 353"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 475": {
+    "code": "PHYS 475",
+    "raw": "Prereq: One of AMATH 261, 271, PHYS 263; Level at least 4A in Mathematics or Science",
+    "prereqs": [
+      "AMATH 261",
+      "AMATH 271",
+      "PHYS 263"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 111": {
+    "code": "PHYS 111",
+    "raw": "Antireq: PHYS 115, 121",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "PHYS 115",
+      "PHYS 121"
+    ]
+  },
+  "PHYS 359": {
+    "code": "PHYS 359",
+    "raw": "Prereq: One of PHYS 236, CS 114, 116, 136, 146. One of PHYS 358, ECE 403, CHEM 254, ME 250; One of PHYS 233, 234, CHEM 356, Coreq: AMATH 373",
+    "prereqs": [
+      "PHYS 236",
+      "CS 114",
+      "CS 116",
+      "CS 136",
+      "CS 146",
+      "PHYS 358",
+      "ECE 403",
+      "CHEM 254",
+      "ME 250",
+      "PHYS 233",
+      "PHYS 234",
+      "CHEM 356"
+    ],
+    "coreqs": [
+      "AMATH 373"
+    ],
+    "antireqs": []
+  },
+  "PHYS 121": {
+    "code": "PHYS 121",
+    "raw": "Prereq: 4U Calculus & Vectors, 4U Advanced Functions, 4U Physics. Coreq: One of MATH 104, 127, 137, 147. Antireq: PHYS 111, 115, ECE 105",
+    "prereqs": [],
+    "coreqs": [
+      "MATH 104",
+      "MATH 127",
+      "MATH 137",
+      "MATH 147"
+    ],
+    "antireqs": [
+      "PHYS 111",
+      "PHYS 115",
+      "ECE 105"
+    ]
+  },
+  "PHYS 275": {
+    "code": "PHYS 275",
+    "raw": "Pereq: One of PHYS 111, 115, 121, ECE 105",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 334": {
+    "code": "PHYS 334",
+    "raw": "Prereq: PHYS 234 or CHEM 356; One of MATH 228, AMATH 250, 251; MATH 227 or 237 or 247. Antireq: AMATH 373",
+    "prereqs": [
+      "PHYS 234",
+      "CHEM 356",
+      "MATH 228",
+      "AMATH 250",
+      "AMATH 251",
+      "MATH 227",
+      "MATH 237",
+      "MATH 247"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "AMATH 373"
+    ]
+  },
+  "PHYS 391": {
+    "code": "PHYS 391",
+    "raw": "Prereq: One of PHYS 122 (winter 2019 or later), 224, 242. Coreq: PHYS 391L",
+    "prereqs": [
+      "PHYS 122",
+      "PHYS 224",
+      "PHYS 242"
+    ],
+    "coreqs": [
+      "PHYS 391L"
+    ],
+    "antireqs": []
+  },
+  "PHYS 263": {
+    "code": "PHYS 263",
+    "raw": "Prereq: PHYS 122; One of MATH 108, 128, 138, 148; One of MATH 228, AMATH 250, 251; Antireq: AMATH 261, 271",
+    "prereqs": [
+      "PHYS 122",
+      "MATH 108",
+      "MATH 128",
+      "MATH 138",
+      "MATH 148",
+      "MATH 228",
+      "AMATH 250",
+      "AMATH 251"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "AMATH 261",
+      "AMATH 271"
+    ]
+  },
+  "PHYS 112": {
+    "code": "PHYS 112",
+    "raw": "Prereq: PHYS 111 or 121; Antireq: PHYS 122, 125",
+    "prereqs": [
+      "PHYS 111",
+      "PHYS 121"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "PHYS 122",
+      "PHYS 125"
+    ]
+  },
+  "PHYS 256": {
+    "code": "PHYS 256",
+    "raw": "Prereq: PHYS 112 or 122; One of MATH 128, 138, 148. Antireq: ECE 404",
+    "prereqs": [
+      "PHYS 112",
+      "PHYS 122",
+      "MATH 128",
+      "MATH 138",
+      "MATH 148"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "ECE 404"
+    ]
+  },
+  "PHYS 476": {
+    "code": "PHYS 476",
+    "raw": "Prereq: One of AMATH 261, 271, PHYS 263; AMATH 231 or MATH 227; Level at least 4A in Mathematics or Science",
+    "prereqs": [
+      "AMATH 261",
+      "AMATH 271",
+      "PHYS 263",
+      "AMATH 231",
+      "MATH 227"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 454": {
+    "code": "PHYS 454",
+    "raw": "Prereq: AMATH 231, PMATH 343) or AMATH 373 or PHYS 334",
+    "prereqs": [
+      "AMATH 231",
+      "PMATH 343",
+      "AMATH 373",
+      "PHYS 334"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 782": {
+    "code": "PHYS 782",
+    "raw": "Antirequisite: PHYS 771 - Topic 108",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 739": {
+    "code": "PHYS 739",
+    "raw": "Prereq: PHYS 701, PHYS 704",
+    "prereqs": [
+      "PHYS 701",
+      "PHYS 704"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 702": {
+    "code": "PHYS 702",
+    "raw": "Prereq: PHYS 701 or consent of instructor",
+    "prereqs": [
+      "PHYS 701"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 705": {
+    "code": "PHYS 705",
+    "raw": "Prereq: PHYS 704 or consent of instructor",
+    "prereqs": [
+      "PHYS 704"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 105": {
+    "code": "PHYS 105",
+    "raw": "Antireq: PHYS 111, PHYS 112, PHYS 115, PHYS 121, PHYS 122. Not open to BASc or SE students",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "PHYS 111",
+      "PHYS 112",
+      "PHYS 115",
+      "PHYS 121",
+      "PHYS 122"
+    ]
+  },
+  "PHYS 395": {
+    "code": "PHYS 395",
+    "raw": "Prereq: One of PHYS 112, 122, 125, ECE 106; One of BIOL 130, 239, CHEM 123, 125, PHARM 141, PHYS 280/BIOL 280, PHYS 380; Level at least 3A Science, Mathematics or Engineering students",
+    "prereqs": [
+      "PHYS 112",
+      "PHYS 122",
+      "PHYS 125",
+      "ECE 106",
+      "BIOL 130",
+      "BIOL 239",
+      "CHEM 123",
+      "CHEM 125",
+      "PHARM 141",
+      "PHYS 280",
+      "BIOL 280",
+      "PHYS 380"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 175": {
+    "code": "PHYS 175",
+    "raw": "Prereq: One of PHYS 111,115,121; one of MATH 116, 117, 127, 137,147. Antireq: SCI 238",
+    "prereqs": [
+      "PHYS 111",
+      "PHYS 115",
+      "PHYS 121",
+      "MATH 116",
+      "MATH 117",
+      "MATH 127",
+      "MATH 137",
+      "MATH 147"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "SCI 238"
+    ]
+  },
+  "PHYS 474": {
+    "code": "PHYS 474",
+    "raw": "Prereq: One of AMATH 261, 271, PHYS 263; PHYS 375; Level at least 4A Mathematics or Science",
+    "prereqs": [
+      "AMATH 261",
+      "AMATH 271",
+      "PHYS 263",
+      "PHYS 375"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 383": {
+    "code": "PHYS 383",
+    "raw": "Prereq: PHYS 112 or 122; one of MATH 118, 119, 128, 138, 148; PHYS 280/BIOL 280",
+    "prereqs": [
+      "PHYS 112",
+      "PHYS 122",
+      "MATH 118",
+      "MATH 119",
+      "MATH 128",
+      "MATH 138",
+      "MATH 148",
+      "PHYS 280",
+      "BIOL 280"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 483": {
+    "code": "PHYS 483",
+    "raw": "Prereq: Level at least 4A Life Physics, Medical Physics Specialization",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 342": {
+    "code": "PHYS 342",
+    "raw": "Prereq: PHYS 242; One of MATH 228, AMATH 250, AMATH 251.",
+    "prereqs": [
+      "PHYS 242",
+      "MATH 228",
+      "AMATH 250",
+      "AMATH 251"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 394": {
+    "code": "PHYS 394",
+    "raw": "Prereq: PHYS 256 or ECE 404; PHYS 364 or AMATH 353",
+    "prereqs": [
+      "PHYS 256",
+      "ECE 404",
+      "PHYS 364",
+      "AMATH 353"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 442": {
+    "code": "PHYS 442",
+    "raw": "Prereq: PHYS 342; PHYS 364 or (AMATH 351 and AMATH 353)",
+    "prereqs": [
+      "PHYS 342",
+      "PHYS 364",
+      "AMATH 351",
+      "AMATH 353"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 468": {
+    "code": "PHYS 468",
+    "raw": "Prereq: CO 481/CS 467/PHYS 467 or PHYS 334",
+    "prereqs": [
+      "CO 481",
+      "CS 467",
+      "PHYS 467",
+      "PHYS 334"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 449": {
+    "code": "PHYS 449",
+    "raw": "Prereq: PHYS 236 or PHYS 349",
+    "prereqs": [
+      "PHYS 236",
+      "PHYS 349"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 242": {
+    "code": "PHYS 242",
+    "raw": "Prereq: One of PHYS 122; One of MATH 128, 138, 148; (MATH 227 or co-req: AMATH 231).",
+    "prereqs": [
+      "PHYS 122",
+      "MATH 128",
+      "MATH 138",
+      "MATH 148",
+      "MATH 227",
+      "AMATH 231"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 233": {
+    "code": "PHYS 233",
+    "raw": "Prereq: One of PHYS 112, 122, 125, ECE 106; One of MATH 118, 119, 128, 138, 148. Coreq: One of MATH 211, 213, 228, AMATH 250, 251 ECE 205. Antireq: CHEM 356, NE 232, PHYS 234, ECE 405",
+    "prereqs": [
+      "PHYS 112",
+      "PHYS 122",
+      "PHYS 125",
+      "ECE 106",
+      "MATH 118",
+      "MATH 119",
+      "MATH 128",
+      "MATH 138",
+      "MATH 148"
+    ],
+    "coreqs": [
+      "MATH 211",
+      "MATH 213",
+      "MATH 228",
+      "AMATH 250",
+      "AMATH 251",
+      "ECE 205"
+    ],
+    "antireqs": [
+      "CHEM 356",
+      "NE 232",
+      "PHYS 234",
+      "ECE 405"
+    ]
+  },
+  "PHYS 122": {
+    "code": "PHYS 122",
+    "raw": "Prereq: One of PHYS 111 (minimum grade 70%), 115, 121, ECE 105. Coreq: One of MATH 127, 137, 147. Antireq: PHYS 112, 125",
+    "prereqs": [
+      "PHYS 111",
+      "PHYS 115",
+      "PHYS 121",
+      "ECE 105"
+    ],
+    "coreqs": [
+      "MATH 127",
+      "MATH 137",
+      "MATH 147"
+    ],
+    "antireqs": [
+      "PHYS 112",
+      "PHYS 125"
+    ]
+  },
+  "PHYS 396": {
+    "code": "PHYS 396",
+    "raw": "Prereq: One of PHYS 112, 122, 125, ECE 106; One of MATH 128, 138, 148,(SYDE 111,112);One of PHYS 224, 233, 234, 242, 256, 280, 380, ECE 209, 370, 375, NE 232, 241, SYDE 283, AMATH 231, 373, CS 473, CHEM 209, 356; Level at least 3A SCI, MATH or ENG stdnts",
+    "prereqs": [
+      "PHYS 112",
+      "PHYS 122",
+      "PHYS 125",
+      "ECE 106",
+      "MATH 128",
+      "MATH 138",
+      "MATH 148",
+      "SYDE 111",
+      "SYDE 112",
+      "PHYS 224",
+      "PHYS 233",
+      "PHYS 234",
+      "PHYS 242",
+      "PHYS 256",
+      "PHYS 280",
+      "PHYS 380",
+      "ECE 209",
+      "ECE 370",
+      "ECE 375",
+      "NE 232",
+      "NE 241",
+      "SYDE 283",
+      "AMATH 231",
+      "AMATH 373",
+      "CS 473",
+      "CHEM 209",
+      "CHEM 356"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 349": {
+    "code": "PHYS 349",
+    "raw": "Prereq: PHYS 234, PHYS 242;  AMATH 271 or PHYS 263; One of PHYS 267, PHYS 236 or PHYS 249 (taken prior to fall 2025). Antireq: PHYS 239",
+    "prereqs": [
+      "PHYS 234",
+      "PHYS 242",
+      "AMATH 271",
+      "PHYS 263",
+      "PHYS 267",
+      "PHYS 236",
+      "PHYS 249"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "PHYS 239"
+    ]
+  },
+  "PHYS 225": {
+    "code": "PHYS 225",
+    "raw": "Prereq: One of PHYS 112, 122; One of MATH 116, 117, 127, 137, 147; One of CS 114, 116, 136, 146. Coreq: One of MATH 118, 119, 128, 138, 148",
+    "prereqs": [
+      "PHYS 112",
+      "PHYS 122",
+      "MATH 116",
+      "MATH 117",
+      "MATH 127",
+      "MATH 137",
+      "MATH 147",
+      "CS 114",
+      "CS 116",
+      "CS 136",
+      "CS 146"
+    ],
+    "coreqs": [
+      "MATH 118",
+      "MATH 119",
+      "MATH 128",
+      "MATH 138",
+      "MATH 148"
+    ],
+    "antireqs": []
+  },
+  "PHYS 393": {
+    "code": "PHYS 393",
+    "raw": "Prereq: PHYS 256 or ECE 404; One of PHYS 225, 364, AMATH 353",
+    "prereqs": [
+      "PHYS 256",
+      "ECE 404",
+      "PHYS 225",
+      "PHYS 364",
+      "AMATH 353"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 267": {
+    "code": "PHYS 267",
+    "raw": "Prereq: PHYS 122; One of MATH 227, MATH 237, MATH 247; One of PHYS 236, CS 114, 116, 136, 146. Antireq: STAT 230, 231",
+    "prereqs": [
+      "PHYS 122",
+      "MATH 227",
+      "MATH 237",
+      "MATH 247",
+      "PHYS 236",
+      "CS 114",
+      "CS 116",
+      "CS 136",
+      "CS 146"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "STAT 230",
+      "STAT 231"
+    ]
+  },
+  "PHYS 280": {
+    "code": "PHYS 280",
+    "raw": "Prereq: Level at least 2A Honours Science or Engineering plans",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 484": {
+    "code": "PHYS 484",
+    "raw": "Prereq: AMATH 473/PHYS 454; Level at least 4A Mathematics or Science students only",
+    "prereqs": [
+      "AMATH 473",
+      "PHYS 454"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 703": {
+    "code": "PHYS 703",
+    "raw": "Prereq: PHYS 701 or consent of instructor",
+    "prereqs": [
+      "PHYS 701"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 467": {
+    "code": "PHYS 467",
+    "raw": "Prereq: One of MATH 114, 115, 235, 245, PHYS 334; Level at least 3A",
+    "prereqs": [
+      "MATH 114",
+      "MATH 115",
+      "MATH 235",
+      "MATH 245",
+      "PHYS 334"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 437B": {
+    "code": "PHYS 437B",
+    "raw": "Prereq: PHYS 437A",
+    "prereqs": [
+      "PHYS 437A"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 437A": {
+    "code": "PHYS 437A",
+    "raw": "Prereq: Cumulative overall average of at least 70%; Level at least 4A Honours Physics, Chemical Physics, BSc Mathematical Physics, Physics and Astronomy, Materials and Nanosciences, Life Physics or Biological and Medical Physics students only",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 260A": {
+    "code": "PHYS 260A",
+    "raw": "Prereq: PHYS 122L; Honours Physics, Physics and Astronomy, Biological and Medical Physics, BSc Mathematical Physics, Materials and Nanosciences, or Biophysics Minor. Antireq: PHYS 232L, PHYS 256L",
+    "prereqs": [
+      "PHYS 122L"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "PHYS 232L",
+      "PHYS 256L"
+    ]
+  },
+  "PHYS 260B": {
+    "code": "PHYS 260B",
+    "raw": "Prereq: PHYS 260A. Antireq: PHYS 242L, PHYS 260L",
+    "prereqs": [
+      "PHYS 260A"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "PHYS 242L",
+      "PHYS 260L"
+    ]
+  },
+  "PHYS 249": {
+    "code": "PHYS 249",
+    "raw": "Prereq: One of CS 114, 116, 136, 146. Prereq: PHYS 112 or PHYS 122. Antireq: MATH 136",
+    "prereqs": [
+      "CS 114",
+      "CS 116",
+      "CS 136",
+      "CS 146"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "MATH 136"
+    ]
+  },
+  "PHYS 612": {
+    "code": "PHYS 612",
+    "raw": "Antireq: PHYS 776, topic 29 (Classical Physics)",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "PHYS 776"
+    ]
+  },
+  "PHYS 490": {
+    "code": "PHYS 490",
+    "raw": "Prereq: Mathematical Physics, Physics, and Physics and Astronomy students only",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 460A": {
+    "code": "PHYS 460A",
+    "raw": "Prereq: PHYS 360A",
+    "prereqs": [
+      "PHYS 360A"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 460B": {
+    "code": "PHYS 460B",
+    "raw": "Prereq: PHYS 460A",
+    "prereqs": [
+      "PHYS 460A"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 160L": {
+    "code": "PHYS 160L",
+    "raw": "Prereq: Honours Physics students only. Coreq: PHYS 122L. Antireq: PHYS 132L",
+    "prereqs": [],
+    "coreqs": [
+      "PHYS 122L"
+    ],
+    "antireqs": [
+      "PHYS 132L"
+    ]
+  },
+  "PHYS 370L": {
+    "code": "PHYS 370L",
+    "raw": "Prereq: PHYS 267, 270L",
+    "prereqs": [
+      "PHYS 267",
+      "PHYS 270L"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 175L": {
+    "code": "PHYS 175L",
+    "raw": "Prereq: Physics & Astronomy students. Coreq: PHYS 175",
+    "prereqs": [],
+    "coreqs": [
+      "PHYS 175"
+    ],
+    "antireqs": []
+  },
+  "PHYS 270L": {
+    "code": "PHYS 270L",
+    "raw": "Prereq: PHYS 256 or ECE 404",
+    "prereqs": [
+      "PHYS 256",
+      "ECE 404"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 360A": {
+    "code": "PHYS 360A",
+    "raw": "Prereq: One of MNS 201L, PHYS 260L, PHYS 270L; Honours Physics, Physics and Astronomy, Materials and Nanosciences or Mathematical Physics.",
+    "prereqs": [
+      "MNS 201L",
+      "PHYS 260L",
+      "PHYS 270L"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 360B": {
+    "code": "PHYS 360B",
+    "raw": "Prereq: PHYS 360A",
+    "prereqs": [
+      "PHYS 360A"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 122L": {
+    "code": "PHYS 122L",
+    "raw": "Coreq: PHYS 122. Antireq: PHYS 112L or 132L",
+    "prereqs": [],
+    "coreqs": [
+      "PHYS 122"
+    ],
+    "antireqs": [
+      "PHYS 112L",
+      "PHYS 132L"
+    ]
+  },
+  "PHYS 112L": {
+    "code": "PHYS 112L",
+    "raw": "Coreq: PHYS 112 Antireq: PHYS 122L or 132L",
+    "prereqs": [],
+    "coreqs": [
+      "PHYS 112"
+    ],
+    "antireqs": [
+      "PHYS 122L",
+      "PHYS 132L"
+    ]
+  },
+  "PHYS 391L": {
+    "code": "PHYS 391L",
+    "raw": "Coreq: PHYS 391",
+    "prereqs": [],
+    "coreqs": [
+      "PHYS 391"
+    ],
+    "antireqs": []
+  },
+  "PHYS 121L": {
+    "code": "PHYS 121L",
+    "raw": "Coreq: PHYS 121 Antireq: PHYS 111L or 131L",
+    "prereqs": [],
+    "coreqs": [
+      "PHYS 121"
+    ],
+    "antireqs": [
+      "PHYS 111L",
+      "PHYS 131L"
+    ]
+  },
+  "PHYS 111L": {
+    "code": "PHYS 111L",
+    "raw": "Coreq: PHYS 111 Antireq: PHYS 121L or 131L",
+    "prereqs": [],
+    "coreqs": [
+      "PHYS 111"
+    ],
+    "antireqs": [
+      "PHYS 121L",
+      "PHYS 131L"
+    ]
+  },
+  "PHYS 435": {
+    "code": "PHYS 435",
+    "raw": "Prereq: PHYS 335, 359; PHYS 334 or AMATH 373",
+    "prereqs": [
+      "PHYS 335",
+      "PHYS 359",
+      "PHYS 334",
+      "AMATH 373"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 124": {
+    "code": "PHYS 124",
+    "raw": "Prereq: One of PHYS 111 (minimum grade 70%), 115, 121, ECE 105. Coreq: One of PHYS 112, 122, 125, ECE 106",
+    "prereqs": [
+      "PHYS 111",
+      "PHYS 115",
+      "PHYS 121",
+      "ECE 105"
+    ],
+    "coreqs": [
+      "PHYS 112",
+      "PHYS 122",
+      "PHYS 125",
+      "ECE 106"
+    ],
+    "antireqs": []
+  },
+  "PHYS 335": {
+    "code": "PHYS 335",
+    "raw": "Prereq: PHYS 358; AMATH 231 or PHYS 364; CHEM 356 or PHYS 234. Level at least 3A Engineering, Mathematics or Science students",
+    "prereqs": [
+      "PHYS 358",
+      "AMATH 231",
+      "PHYS 364",
+      "CHEM 356",
+      "PHYS 234"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 769": {
+    "code": "PHYS 769",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 789": {
+    "code": "PHYS 789",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 757": {
+    "code": "PHYS 757",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 791": {
+    "code": "PHYS 791",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 738": {
+    "code": "PHYS 738",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 749": {
+    "code": "PHYS 749",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 718": {
+    "code": "PHYS 718",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 777": {
+    "code": "PHYS 777",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 650": {
+    "code": "PHYS 650",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 625": {
+    "code": "PHYS 625",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 649": {
+    "code": "PHYS 649",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 648": {
+    "code": "PHYS 648",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 647": {
+    "code": "PHYS 647",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 646": {
+    "code": "PHYS 646",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 645": {
+    "code": "PHYS 645",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 644": {
+    "code": "PHYS 644",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 639": {
+    "code": "PHYS 639",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 638": {
+    "code": "PHYS 638",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 624": {
+    "code": "PHYS 624",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 623": {
+    "code": "PHYS 623",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 622": {
+    "code": "PHYS 622",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 621": {
+    "code": "PHYS 621",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 642": {
+    "code": "PHYS 642",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 636": {
+    "code": "PHYS 636",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 643": {
+    "code": "PHYS 643",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 637": {
+    "code": "PHYS 637",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 641": {
+    "code": "PHYS 641",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 635": {
+    "code": "PHYS 635",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 775": {
+    "code": "PHYS 775",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 771": {
+    "code": "PHYS 771",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 788": {
+    "code": "PHYS 788",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 773": {
+    "code": "PHYS 773",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 754": {
+    "code": "PHYS 754",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 712": {
+    "code": "PHYS 712",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 733": {
+    "code": "PHYS 733",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 763": {
+    "code": "PHYS 763",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 760": {
+    "code": "PHYS 760",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 762": {
+    "code": "PHYS 762",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 761": {
+    "code": "PHYS 761",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 776": {
+    "code": "PHYS 776",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 745": {
+    "code": "PHYS 745",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 790": {
+    "code": "PHYS 790",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 716": {
+    "code": "PHYS 716",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 768": {
+    "code": "PHYS 768",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 601": {
+    "code": "PHYS 601",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 602": {
+    "code": "PHYS 602",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 603": {
+    "code": "PHYS 603",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 604": {
+    "code": "PHYS 604",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 605": {
+    "code": "PHYS 605",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 606": {
+    "code": "PHYS 606",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 607": {
+    "code": "PHYS 607",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 608": {
+    "code": "PHYS 608",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 610": {
+    "code": "PHYS 610",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 611": {
+    "code": "PHYS 611",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 609": {
+    "code": "PHYS 609",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 161W": {
+    "code": "PHYS 161W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 351W": {
+    "code": "PHYS 351W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 767": {
+    "code": "PHYS 767",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 786": {
+    "code": "PHYS 786",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 784": {
+    "code": "PHYS 784",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 785": {
+    "code": "PHYS 785",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 701": {
+    "code": "PHYS 701",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 752": {
+    "code": "PHYS 752",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 704": {
+    "code": "PHYS 704",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 708": {
+    "code": "PHYS 708",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 717": {
+    "code": "PHYS 717",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 731": {
+    "code": "PHYS 731",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 732": {
+    "code": "PHYS 732",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 713": {
+    "code": "PHYS 713",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 709": {
+    "code": "PHYS 709",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 710": {
+    "code": "PHYS 710",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 715": {
+    "code": "PHYS 715",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 747": {
+    "code": "PHYS 747",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 787": {
+    "code": "PHYS 787",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 781": {
+    "code": "PHYS 781",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 730": {
+    "code": "PHYS 730",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 737": {
+    "code": "PHYS 737",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 714": {
+    "code": "PHYS 714",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 751": {
+    "code": "PHYS 751",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 706": {
+    "code": "PHYS 706",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 142W": {
+    "code": "PHYS 142W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 141W": {
+    "code": "PHYS 141W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 132W": {
+    "code": "PHYS 132W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 212W": {
+    "code": "PHYS 212W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 152W": {
+    "code": "PHYS 152W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHYS 237W": {
+    "code": "PHYS 237W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "KIN121": {
+    "code": "KIN121",
+    "raw": "Prereq: PHYS 111; MATH 124 or MATH 127. Coreq: KIN 121L (for Kinesiology Majors only)",
+    "prereqs": [
+      "PHYS 111",
+      "MATH 124",
+      "MATH 127"
+    ],
+    "coreqs": [
+      "KIN 121L"
+    ],
+    "antireqs": []
+  },
+  "KIN100L": {
+    "code": "KIN100L",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
   }
 }
