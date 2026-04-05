@@ -1,4 +1,5 @@
 import json
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from urllib.parse import quote_plus
 
 import requests
@@ -206,16 +207,30 @@ def _build_graph_response(goal: str, raw: dict, existing_skills: list[str] | Non
             tier = "core"
         tier_groups[tier].append(node)
 
-    # Verify course URLs
-    for node in llm_nodes:
+    # Verify course URLs in parallel
+    def _check_url(node: dict) -> tuple[str, str | None]:
+        """Return (node_id, fallback_url_or_None)."""
         url = node.get("course_url", "")
-        if url:
-            try:
-                resp = requests.head(url, timeout=5, allow_redirects=True)
-                if resp.status_code >= 400:
-                    node["course_url"] = f"https://www.coursera.org/search?query={quote_plus(node.get('course_title', node['labels'][0]))}"
-            except (requests.RequestException, Exception):
-                node["course_url"] = f"https://www.coursera.org/search?query={quote_plus(node.get('course_title', node['labels'][0]))}"
+        if not url:
+            return node["id"], None
+        fallback = f"https://www.coursera.org/search?query={quote_plus(node.get('course_title', node['labels'][0]))}"
+        try:
+            resp = requests.head(url, timeout=5, allow_redirects=True)
+            if resp.status_code >= 400:
+                return node["id"], fallback
+        except (requests.RequestException, Exception):
+            return node["id"], fallback
+        return node["id"], None
+
+    nodes_with_urls = [n for n in llm_nodes if n.get("course_url")]
+    if nodes_with_urls:
+        with ThreadPoolExecutor(max_workers=min(10, len(nodes_with_urls))) as pool:
+            futures = {pool.submit(_check_url, n): n for n in nodes_with_urls}
+            for fut in as_completed(futures):
+                node_id, fallback = fut.result()
+                if fallback:
+                    node_by_id = next(n for n in llm_nodes if n["id"] == node_id)
+                    node_by_id["course_url"] = fallback
 
     # Compute positions: each tier is a row, nodes spread horizontally and centered
     positioned_nodes: list[SkillNode] = []

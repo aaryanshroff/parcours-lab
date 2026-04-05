@@ -1382,7 +1382,7 @@ export default function Graph() {
       if (code && n.data.term) termAssignments[code] = n.data.term as string
     }
 
-    toast.loading(`Finding a course for "${addedSkill}"…`, { id: `add-course-${addedSkill}` })
+    toast.loading(`Finding a course for "${addedSkill}"…`, { id: `add-course-${addedSkill}`, icon: <Loader2 size={14} className="text-blue-800 animate-spin" /> })
 
     fetch('/api/graph/academics/add-course', {
       method: 'POST',

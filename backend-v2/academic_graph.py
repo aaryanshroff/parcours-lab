@@ -1,6 +1,7 @@
 import json
 import logging
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from openai import OpenAI
 
@@ -217,8 +218,13 @@ def generate_academic_graph(
     # ── 3. Fetch prereqs for required courses, build edges within the set ──
     prereq_map: dict[str, list[str]] = {}
 
-    for code in required_codes:
-        prereq_map[code] = _fetch_in_program_prereqs(code, required_codes)
+    with ThreadPoolExecutor(max_workers=min(12, len(required_codes) or 1)) as pool:
+        fut_to_code = {
+            pool.submit(_fetch_in_program_prereqs, code, required_codes): code
+            for code in required_codes
+        }
+        for fut in as_completed(fut_to_code):
+            prereq_map[fut_to_code[fut]] = fut.result()
 
     # ── 4. Pick electives via LLM (or default) ──
     program_subjects = _program_subjects_from_title(major_title)
@@ -260,16 +266,34 @@ def generate_academic_graph(
 
     # Fetch prereqs for electives, linking back to required courses or other electives
     all_known = required_codes | elective_codes
-    for code in elective_codes:
-        prereq_map[code] = _fetch_in_program_prereqs(code, all_known)
+    if elective_codes:
+        with ThreadPoolExecutor(max_workers=min(12, len(elective_codes))) as pool:
+            fut_to_code = {
+                pool.submit(_fetch_in_program_prereqs, code, all_known): code
+                for code in elective_codes
+            }
+            for fut in as_completed(fut_to_code):
+                prereq_map[fut_to_code[fut]] = fut.result()
 
     prereq_map = _transitive_reduction(prereq_map)
 
-    # ── 5. Assign terms via LLM, then enforce prereq ordering deterministically ──
+    # ── 5. Assign terms, map ESCO skills, and fetch UWFlow ratings concurrently ──
     all_codes = required_codes | elective_codes
-    term_assignments = _assign_terms(
-        all_codes, prereq_map, course_info, api_key, model
-    )
+
+    with ThreadPoolExecutor(max_workers=3) as pool:
+        term_future = pool.submit(
+            _assign_terms, all_codes, prereq_map, course_info, api_key, model,
+        )
+        esco_future = pool.submit(
+            _map_courses_to_esco_skills, all_codes, course_info, goal, api_key, model, desired_skills, my_skills,
+        )
+        ratings_future = pool.submit(get_uwflow_ratings_bulk, list(all_codes))
+
+        term_assignments = term_future.result()
+        esco_map = esco_future.result()
+        all_ratings = ratings_future.result()
+
+    # Enforce prereq ordering deterministically (fast, CPU-only)
     term_assignments = _enforce_prereq_ordering(term_assignments, prereq_map, all_codes)
     term_assignments = _enforce_credit_cap(term_assignments, course_info)
     term_assignments = _enforce_prereq_ordering(term_assignments, prereq_map, all_codes)
@@ -281,7 +305,6 @@ def generate_academic_graph(
         by_term[term].append(code)
 
     # ── Sugiyama median sort: align connected courses vertically ──
-    # Build successor map (reverse of prereq_map)
     successor_map: dict[str, list[str]] = defaultdict(list)
     for code, prereqs in prereq_map.items():
         for prereq in prereqs:
@@ -322,12 +345,6 @@ def generate_academic_graph(
 
     nodes: list[SkillNode] = []
     edges: list[Edge] = []
-
-    # ── 7. Map courses to ESCO skills ──
-    esco_map = _map_courses_to_esco_skills(all_codes, course_info, goal, api_key, model, desired_skills, my_skills)
-
-    # Fetch UWFlow ratings for all courses (electives will already be cached from _pick_electives)
-    all_ratings = get_uwflow_ratings_bulk(list(all_codes))
 
     for col, term in enumerate(TERM_ORDER):
         group = by_term.get(term, [])

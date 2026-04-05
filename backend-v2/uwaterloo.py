@@ -467,10 +467,13 @@ def get_uwflow_ratings_bulk(codes: list[str]) -> dict[str, dict]:
 
     Saves the cache once at the end instead of after every fetch to avoid
     rapid file writes that conflict with Flask's auto-reloader.
+    Cache-miss fetches run concurrently via a thread pool.
     """
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+
     cache = _load_uwflow_rating_cache()
     results: dict[str, dict] = {}
-    dirty = False
+    to_fetch: list[tuple[str, str]] = []  # (original_code, normalized)
 
     for code in codes:
         normalized = code.replace(" ", "").upper()
@@ -484,16 +487,24 @@ def get_uwflow_ratings_bulk(codes: list[str]) -> dict[str, dict]:
                     results[normalized] = rating
                 continue
 
-        rating = _fetch_uwflow_rating_from_api(code)
-        cache[normalized] = {
-            "fetched_at": time.time(),
-            "rating": rating,
-        }
-        dirty = True
-        if rating:
-            results[normalized] = rating
+        to_fetch.append((code, normalized))
 
-    if dirty:
+    if to_fetch:
+        with ThreadPoolExecutor(max_workers=min(12, len(to_fetch))) as pool:
+            future_to_norm = {
+                pool.submit(_fetch_uwflow_rating_from_api, code): normalized
+                for code, normalized in to_fetch
+            }
+            for fut in as_completed(future_to_norm):
+                normalized = future_to_norm[fut]
+                rating = fut.result()
+                cache[normalized] = {
+                    "fetched_at": time.time(),
+                    "rating": rating,
+                }
+                if rating:
+                    results[normalized] = rating
+
         _save_uwflow_rating_cache(cache)
 
     return results
