@@ -25,7 +25,7 @@ def extract_text(file_storage) -> str:
     raise ValueError(f"Unsupported file type: {filename}")
 
 
-def extract_skills(resume_text: str, api_key: str, model: str = "google/gemini-2.5-flash") -> list[str]:
+def extract_skills(resume_text: str, api_key: str, model: str = "openai/gpt-4.1-mini") -> list[str]:
     """Send resume text to an LLM via OpenRouter and return a list of skills."""
     client = OpenAI(
         base_url="https://openrouter.ai/api/v1",
@@ -64,7 +64,7 @@ def _parse_json_array(raw: str) -> list[str]:
     return json.loads(raw)
 
 
-def extract_goal_skills(goal_text: str, api_key: str, model: str = "google/gemini-2.5-flash") -> dict[str, list[str]]:
+def extract_goal_skills(goal_text: str, api_key: str, model: str = "openai/gpt-4.1-mini") -> dict[str, list[str]]:
     """Extract existing and desired skills from a learning goal. Returns {"existing": [...], "desired": [...]}."""
     client = OpenAI(
         base_url="https://openrouter.ai/api/v1",
@@ -116,7 +116,7 @@ def _fetch_esco_candidates(skill: str, limit: int = 5) -> list[dict]:
     return [{"title": r["title"], "uri": r["uri"]} for r in results]
 
 
-def match_esco_skills(skills: list[str], api_key: str, model: str = "google/gemini-2.5-flash") -> list[dict]:
+def match_esco_skills(skills: list[str], api_key: str, model: str = "openai/gpt-4.1-mini") -> list[dict]:
     """Match a list of skill strings to ESCO skills using LLM to pick the best candidate."""
     # Fetch ESCO candidates for each skill
     candidates_per_skill: dict[str, list[dict]] = {}

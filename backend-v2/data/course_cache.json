@@ -5068,5 +5068,22 @@
     ],
     "coreqs": [],
     "antireqs": []
+  },
+  "PSYCH398": {
+    "code": "PSYCH398",
+    "raw": "Prereq: PSYCH 207 or 261; Level at least 3A Honours Psychology or Make-Up Psychology students; Psychology average at least 74%. Coreq: PSYCH 391. Antireq: PSYCH 390, 392, 394, 396; Psychology Research Intensive Specialization",
+    "prereqs": [
+      "PSYCH 207",
+      "PSYCH 261"
+    ],
+    "coreqs": [
+      "PSYCH 391"
+    ],
+    "antireqs": [
+      "PSYCH 390",
+      "PSYCH 392",
+      "PSYCH 394",
+      "PSYCH 396"
+    ]
   }
 }

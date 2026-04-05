@@ -240,7 +240,7 @@ def summary_generate():
         )
 
     response = client.chat.completions.create(
-        model="google/gemini-2.5-flash",
+        model="openai/gpt-4.1-mini",
         messages=[
             {"role": "system", "content": system_content},
             {"role": "user", "content": prompt},

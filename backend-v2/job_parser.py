@@ -46,7 +46,7 @@ def fetch_job_posting(url: str) -> str:
     return soup.get_text(separator="\n", strip=True)
 
 
-def extract_job_skills(posting_text: str, api_key: str, model: str = "google/gemini-2.5-flash") -> list[str]:
+def extract_job_skills(posting_text: str, api_key: str, model: str = "openai/gpt-4.1-mini") -> list[str]:
     """Extract skills from job posting text via LLM."""
     client = OpenAI(
         base_url="https://openrouter.ai/api/v1",

@@ -131,13 +131,17 @@ def generate_academic_graph(
     minor_pids: list[str],
     goal: str,
     api_key: str,
-    model: str = "google/gemini-2.5-flash",
-    elective_model: str = "google/gemini-2.5-pro",
+    model: str = "openai/gpt-4.1-mini",
+    elective_model: str = "openai/gpt-4.1-mini",
     major_title: str = "",
     desired_skills: list[str] | None = None,
     my_skills: list[str] | None = None,
 ) -> GraphResponse:
     """Build a course DAG: deterministic for required courses, LLM for elective picks."""
+    import time as _time
+    _t0 = _time.perf_counter()
+    def _lap(label: str) -> None:
+        logger.info("[academics][timing] %s — %.2fs elapsed", label, _time.perf_counter() - _t0)
 
     # ── 1. Merge requirement groups from major, specializations, and minors ──
     all_groups = list(requirement_groups)
@@ -146,6 +150,8 @@ def generate_academic_graph(
         prog = get_program(pid)
         if prog and prog.get("requirementGroups"):
             all_groups.extend(prog["requirementGroups"])
+
+    _lap("1. merge groups")
 
     # ── 2. Separate required vs choice groups, dedupe by code ──
     required_codes: set[str] = set()
@@ -215,6 +221,8 @@ def generate_academic_graph(
                 and _normalize_code(c["code"]) not in required_codes
             ]
 
+    _lap("2. separate/dedupe/antireqs")
+
     # ── 3. Fetch prereqs for required courses, build edges within the set ──
     prereq_map: dict[str, list[str]] = {}
 
@@ -225,6 +233,8 @@ def generate_academic_graph(
         }
         for fut in as_completed(fut_to_code):
             prereq_map[fut_to_code[fut]] = fut.result()
+
+    _lap("3. fetch prereqs (required, parallel)")
 
     # ── 4. Pick electives via LLM (or default) ──
     program_subjects = _program_subjects_from_title(major_title)
@@ -264,6 +274,8 @@ def generate_academic_graph(
         "yes" if goal.strip() else "no",
     )
 
+    _lap("4. pick electives (LLM: %s)" % elective_model)
+
     # Fetch prereqs for electives, linking back to required courses or other electives
     all_known = required_codes | elective_codes
     if elective_codes:
@@ -274,6 +286,8 @@ def generate_academic_graph(
             }
             for fut in as_completed(fut_to_code):
                 prereq_map[fut_to_code[fut]] = fut.result()
+
+    _lap("4b. fetch prereqs (electives, parallel)")
 
     prereq_map = _transitive_reduction(prereq_map)
 
@@ -293,10 +307,14 @@ def generate_academic_graph(
         esco_map = esco_future.result()
         all_ratings = ratings_future.result()
 
+    _lap("5. assign_terms + esco + ratings (parallel)")
+
     # Enforce prereq ordering deterministically (fast, CPU-only)
     term_assignments = _enforce_prereq_ordering(term_assignments, prereq_map, all_codes)
     term_assignments = _enforce_credit_cap(term_assignments, course_info)
     term_assignments = _enforce_prereq_ordering(term_assignments, prereq_map, all_codes)
+
+    _lap("5b. enforce ordering + credit cap")
 
     # ── 6. Layout: term-based columns (left-to-right) ──
     by_term: dict[str, list[str]] = defaultdict(list)
@@ -390,6 +408,8 @@ def generate_academic_graph(
                     source=prereq_id,
                     target=node_id,
                 ))
+
+    _lap("6. layout + build nodes")
 
     return GraphResponse(
         goal=goal or "Academic Plan",
@@ -777,7 +797,7 @@ def add_course_for_skill(
     goal: str,
     major_title: str,
     api_key: str,
-    model: str = "google/gemini-2.5-pro",
+    model: str = "openai/gpt-4.1-mini",
 ) -> dict:
     """Find one UW course that teaches the given ESCO skill and assign it to an appropriate term.
 

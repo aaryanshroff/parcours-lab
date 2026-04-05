@@ -92,6 +92,7 @@ type CourseState = {
 interface CourseContextValue {
   store: Record<string, CourseState>
   prerequisites: Record<string, string[]>
+  allTermNodeIds: Record<string, string[]>
   accept: (nodeId: string) => void
   acceptMany: (nodeIds: string[]) => void
   unacceptMany: (nodeIds: string[]) => void
@@ -112,7 +113,7 @@ const DragValidationContext = createContext<DragValidationContextValue>({ disabl
 
 const CourseContext = createContext<CourseContextValue>(null!)
 
-function CourseProvider({ children, edges, setNodes, onCourseReplaced, onTermCompleted }: { children: React.ReactNode; edges: Edge[]; setNodes: React.Dispatch<React.SetStateAction<Node<SkillNodeData>[]>>; onCourseReplaced?: (entry: HistoryEntry) => void; onTermCompleted?: (nodeIds: string[]) => void }) {
+function CourseProvider({ children, edges, setNodes, allTermNodeIds, onCourseReplaced, onTermCompleted }: { children: React.ReactNode; edges: Edge[]; setNodes: React.Dispatch<React.SetStateAction<Node<SkillNodeData>[]>>; allTermNodeIds: Record<string, string[]>; onCourseReplaced?: (entry: HistoryEntry) => void; onTermCompleted?: (nodeIds: string[]) => void }) {
   const [store, setStore] = useState<Record<string, CourseState>>({})
 
   const prerequisites = useMemo(() => {
@@ -187,7 +188,7 @@ function CourseProvider({ children, edges, setNodes, onCourseReplaced, onTermCom
   }, [])
 
   return (
-    <CourseContext.Provider value={{ store, prerequisites, accept, acceptMany, unacceptMany, startReplace, submitReplace, cancelReplace, onTermCompleted }}>
+    <CourseContext.Provider value={{ store, prerequisites, allTermNodeIds, accept, acceptMany, unacceptMany, startReplace, submitReplace, cancelReplace, onTermCompleted }}>
       {children}
     </CourseContext.Provider>
   )
@@ -355,9 +356,16 @@ function TermGroupNode({ data }: NodeProps<Node<SkillNodeData>>) {
   const over = credits > 3.25
   const { disabledTerms } = useContext(DragValidationContext)
   const disabled = disabledTerms.has(data.term as string)
-  const { store, acceptMany, unacceptMany, onTermCompleted } = useContext(CourseContext)
+  const { store, allTermNodeIds, acceptMany, unacceptMany, onTermCompleted } = useContext(CourseContext)
   const termNodeIds = data.termNodeIds ?? []
   const allComplete = termNodeIds.length > 0 && termNodeIds.every((id) => store[id]?.status === 'accepted')
+
+  const currentTerm = data.term as string
+  const termIdx = TERM_ORDER.indexOf(currentTerm)
+  const prevTerm = termIdx > 0 ? TERM_ORDER[termIdx - 1] : null
+  const prevTermNodeIds = prevTerm ? (allTermNodeIds[prevTerm] ?? []) : []
+  const prevTermComplete = !prevTerm || (prevTermNodeIds.length > 0 && prevTermNodeIds.every((id) => store[id]?.status === 'accepted'))
+  const canComplete = prevTermComplete && !allComplete
 
   return (
     <div
@@ -376,21 +384,29 @@ function TermGroupNode({ data }: NodeProps<Node<SkillNodeData>>) {
               {credits.toFixed(2)} cr{over ? ' ⚠ >3.25' : ''}
             </span>
           )}
-          <button
-            className={`nodrag nopan inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-medium rounded-full border transition-colors duration-150 cursor-pointer ${allComplete ? 'border-emerald-300 bg-emerald-50 text-emerald-600 hover:bg-white' : 'border-stone-200 bg-white text-stone-400 hover:border-emerald-300 hover:text-emerald-600'}`}
-            onMouseDown={(e) => e.stopPropagation()}
-            onClick={() => {
-              if (allComplete) {
-                unacceptMany(termNodeIds)
-              } else {
-                acceptMany(termNodeIds)
-                onTermCompleted?.(termNodeIds)
-              }
-            }}
-          >
-            <Check size={9} />
-            {allComplete ? 'Undo' : 'Complete term'}
-          </button>
+          <div className="relative group">
+            <button
+              className={`nodrag nopan inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-medium rounded-full border transition-colors duration-150 ${allComplete ? 'border-emerald-300 bg-emerald-50 text-emerald-600 hover:bg-white cursor-pointer' : canComplete ? 'border-stone-200 bg-white text-stone-400 hover:border-emerald-300 hover:text-emerald-600 cursor-pointer' : 'border-stone-100 bg-stone-50 text-stone-300 cursor-not-allowed'}`}
+              onMouseDown={(e) => e.stopPropagation()}
+              onClick={() => {
+                if (allComplete) {
+                  unacceptMany(termNodeIds)
+                } else if (canComplete) {
+                  acceptMany(termNodeIds)
+                  onTermCompleted?.(termNodeIds)
+                }
+              }}
+              disabled={!allComplete && !canComplete}
+            >
+              <Check size={9} />
+              {allComplete ? 'Undo' : 'Complete term'}
+            </button>
+            {!allComplete && !canComplete && prevTerm && (
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 w-36 px-2 py-1 text-[10px] leading-snug text-stone-500 bg-white border border-stone-200 rounded-lg shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-150 z-10 text-center">
+                Complete Term {prevTerm} first
+              </div>
+            )}
+          </div>
         </span>
       </div>
     </div>
@@ -1466,6 +1482,18 @@ export default function Graph() {
     [],
   )
 
+  const termNodeMap = useMemo(() => {
+    const map: Record<string, string[]> = {}
+    for (const n of nodes) {
+      if (n.type === 'skill' && n.data.term) {
+        const t = n.data.term as string
+        if (!map[t]) map[t] = []
+        map[t].push(n.id)
+      }
+    }
+    return map
+  }, [nodes])
+
   const dragValidation = useMemo(() => ({ disabledTerms, shakeNodeId }), [disabledTerms, shakeNodeId])
 
   return (
@@ -1473,6 +1501,7 @@ export default function Graph() {
     <CourseProvider
       edges={edges}
       setNodes={setNodes}
+      allTermNodeIds={termNodeMap}
       onCourseReplaced={(entry) => setCourseHistory((h) => [entry, ...h])}
       onTermCompleted={(nodeIds) => {
         const completedSkills = new Set(

@@ -17,11 +17,19 @@ def generate_learning_path(
     existing_skills: list[str],
     desired_skills: list[str],
     api_key: str,
-    model: str = "google/gemini-2.5-flash",
+    model: str = "openai/gpt-4.1-mini",
 ) -> GraphResponse:
     """Generate a learning path graph from goal and skills via LLM, then compute layout."""
+    import logging, time as _time
+    _logger = logging.getLogger("graph_generator")
+    t0 = _time.perf_counter()
+
     raw = _call_llm(goal, existing_skills, desired_skills, api_key, model)
-    return _build_graph_response(goal, raw, existing_skills)
+    _logger.info("[skill-tree][timing] LLM call — %.2fs", _time.perf_counter() - t0)
+
+    result = _build_graph_response(goal, raw, existing_skills)
+    _logger.info("[skill-tree][timing] build_graph_response — %.2fs total", _time.perf_counter() - t0)
+    return result
 
 
 def _call_llm(
@@ -208,6 +216,10 @@ def _build_graph_response(goal: str, raw: dict, existing_skills: list[str] | Non
         tier_groups[tier].append(node)
 
     # Verify course URLs in parallel
+    import logging, time as _time
+    _logger = logging.getLogger("graph_generator")
+    _url_t0 = _time.perf_counter()
+
     def _check_url(node: dict) -> tuple[str, str | None]:
         """Return (node_id, fallback_url_or_None)."""
         url = node.get("course_url", "")
@@ -231,6 +243,8 @@ def _build_graph_response(goal: str, raw: dict, existing_skills: list[str] | Non
                 if fallback:
                     node_by_id = next(n for n in llm_nodes if n["id"] == node_id)
                     node_by_id["course_url"] = fallback
+
+    _logger.info("[skill-tree][timing] URL verification (%d urls) — %.2fs", len(nodes_with_urls), _time.perf_counter() - _url_t0)
 
     # Compute positions: each tier is a row, nodes spread horizontally and centered
     positioned_nodes: list[SkillNode] = []
