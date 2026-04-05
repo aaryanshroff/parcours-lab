@@ -29,6 +29,7 @@ class SkillNode(BaseModel):
     position: Position
     term: str = ""
     esco_skills: list[str] = []
+    required: bool = False
 
 
 class Edge(BaseModel):

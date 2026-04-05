@@ -14,6 +14,7 @@ from uwaterloo import (
     list_courses_excluding_subjects,
     get_uwflow_ratings_bulk,
     format_uwflow_rating,
+    search_courses_by_title,
 )
 
 logger = logging.getLogger("academic_graph")
@@ -159,6 +160,7 @@ def generate_academic_graph(
     course_info: dict[str, dict] = {}  # normalized code -> {code, title, units}
     choice_groups: list[dict] = []
     seen_choice_groups: set[tuple] = set()
+    true_elective_pool: set[str] = set()
 
     for group in all_groups:
         rule = group.get("rule")
@@ -187,8 +189,12 @@ def generate_academic_graph(
                 if group_key not in seen_choice_groups:
                     seen_choice_groups.add(group_key)
                     choice_groups.append(group)
+            is_true_elective = bool(group.get("elective_type"))
             for c in courses:
-                course_info[_normalize_code(c["code"])] = c
+                nc = _normalize_code(c["code"])
+                course_info[nc] = c
+                if is_true_elective:
+                    true_elective_pool.add(nc)
 
     # ── 2b. Remove anti-requisite conflicts among required courses ──
     # First-added wins (major groups come before specialization/minor groups)
@@ -268,9 +274,13 @@ def generate_academic_graph(
     elective_codes = safe_elective_codes
     elective_reasons = {k: v for k, v in elective_reasons.items() if k in elective_codes}
 
+    true_elective_codes = {nc for nc in elective_codes if nc in true_elective_pool}
+
     logger.info(
-        "[academics] electives picked=%d (goal=%s)",
+        "[academics] electives picked=%d (true_elective=%d, required_choice=%d, goal=%s)",
         len(elective_codes),
+        len(true_elective_codes),
+        len(elective_codes) - len(true_elective_codes),
         "yes" if goal.strip() else "no",
     )
 
@@ -311,10 +321,11 @@ def generate_academic_graph(
 
     # Enforce prereq ordering deterministically (fast, CPU-only)
     term_assignments = _enforce_prereq_ordering(term_assignments, prereq_map, all_codes)
-    term_assignments = _enforce_credit_cap(term_assignments, course_info)
+    term_assignments = _enforce_credit_cap(term_assignments, course_info, prereq_map=prereq_map)
     term_assignments = _enforce_prereq_ordering(term_assignments, prereq_map, all_codes)
+    term_assignments = _balance_terms(term_assignments, prereq_map, course_info)
 
-    _lap("5b. enforce ordering + credit cap")
+    _lap("5b. enforce ordering + credit cap + balance")
 
     # ── 6. Layout: term-based columns (left-to-right) ──
     by_term: dict[str, list[str]] = defaultdict(list)
@@ -373,7 +384,7 @@ def generate_academic_graph(
         for row, code in enumerate(group):
             info = course_info.get(code, {})
             node_id = code.lower()
-            is_elective = code in elective_codes
+            is_true_elective = code in true_elective_codes
 
             uwflow = all_ratings.get(code)
             course_rating = None
@@ -393,12 +404,13 @@ def generate_academic_graph(
                 course=Course(
                     title=info.get("title", code),
                     url=f"https://uwflow.com/course/{code.lower()}",
-                    reason=elective_reasons.get(code, "Required course") if is_elective else "Required course",
+                    reason=elective_reasons.get(code, "Required course") if is_true_elective else "Required course",
                     units=float(info.get("units", 0.5)),
                     rating=course_rating,
                 ),
                 position=Position(x=col * COL_GAP, y=row * ROW_GAP),
                 esco_skills=esco_map.get(code, []),
+                required=not is_true_elective,
             ))
 
             for prereq in prereq_map.get(code, []):
@@ -542,9 +554,9 @@ def _assign_terms(
                     "- If a course has a 'UW requirement' field, respect the prerequisite level "
                     "even if those prereqs are not in this plan (e.g. a course requiring a 200-level "
                     "course should not be placed in 1A/1B)\n"
-                    "- HARD LIMIT: Total credits per term MUST NOT exceed 3.25. "
-                    "Most courses are 0.5 credits each. Before finalizing each term, explicitly sum "
-                    "the credits of every course assigned to it. If the sum exceeds 3.25, move the "
+                    "- HARD LIMIT: Total credits per term MUST NOT exceed 2.5. "
+                    "Most courses are 0.5 credits each (so 5 courses per term max). Before finalizing each term, explicitly sum "
+                    "the credits of every course assigned to it. If the sum exceeds 2.5, move the "
                     "excess course(s) to the next term. Double-check your arithmetic.\n"
                     "- Follow typical UWaterloo course sequencing conventions\n"
                     "- MATH 1xx and CS 1xx courses go in 1A/1B\n"
@@ -642,14 +654,33 @@ def _enforce_prereq_ordering(
 def _enforce_credit_cap(
     term_assignments: dict[str, str],
     course_info: dict[str, dict],
-    max_credits: float = 3.25,
+    max_credits: float = 2.5,
+    prereq_map: dict[str, list[str]] | None = None,
 ) -> dict[str, str]:
     """Bump courses to later terms until no term exceeds max_credits.
 
     Bumps the highest course-number first, since advanced courses are most
-    likely to fit naturally in a later term.
+    likely to fit naturally in a later term.  When bumping, searches forward
+    for the earliest term that has room *and* satisfies prerequisite ordering,
+    avoiding the cascade where every overflow piles into the next term.
     """
     result = dict(term_assignments)
+    prereq_map = prereq_map or {}
+
+    def _term_credits(term: str) -> float:
+        return sum(
+            float(course_info.get(c, {}).get("units", 0.5))
+            for c, t in result.items() if t == term
+        )
+
+    def _min_term_idx_for(code: str) -> int:
+        """Earliest term index this course can occupy (after all its prereqs)."""
+        min_idx = 0
+        for prereq in prereq_map.get(code, []):
+            prereq_term = result.get(prereq)
+            if prereq_term in TERM_ORDER:
+                min_idx = max(min_idx, TERM_ORDER.index(prereq_term) + 1)
+        return min_idx
 
     for _ in range(len(TERM_ORDER)):
         changed = False
@@ -658,23 +689,99 @@ def _enforce_credit_cap(
             total = sum(float(course_info.get(c, {}).get("units", 0.5)) for c in courses_in_term)
             if total <= max_credits:
                 continue
-            # Sort descending by course number so we bump the highest-level course first
             courses_in_term.sort(
                 key=lambda c: int(m.group()) if (m := re.search(r"\d+", c)) else 0,
                 reverse=True,
             )
             term_idx = TERM_ORDER.index(term)
             if term_idx + 1 >= len(TERM_ORDER):
-                continue  # already in last term, nowhere to bump
+                continue
             for c in courses_in_term:
                 credits = float(course_info.get(c, {}).get("units", 0.5))
-                result[c] = TERM_ORDER[term_idx + 1]
+                floor_idx = max(term_idx + 1, _min_term_idx_for(c))
+                dest_idx = None
+                for candidate_idx in range(floor_idx, len(TERM_ORDER)):
+                    if _term_credits(TERM_ORDER[candidate_idx]) + credits <= max_credits:
+                        dest_idx = candidate_idx
+                        break
+                if dest_idx is None:
+                    dest_idx = min(term_idx + 1, len(TERM_ORDER) - 1)
+                result[c] = TERM_ORDER[dest_idx]
                 total -= credits
                 changed = True
                 if total <= max_credits:
                     break
         if not changed:
             break
+
+    return result
+
+
+def _balance_terms(
+    term_assignments: dict[str, str],
+    prereq_map: dict[str, list[str]],
+    course_info: dict[str, dict],
+    max_credits: float = 2.5,
+) -> dict[str, str]:
+    """Pull courses backward from heavy later terms into lighter earlier terms.
+
+    Iterates from the latest term backward.  For each course, finds the
+    lightest earlier term that can accept it without violating prerequisites,
+    successor ordering, or the credit cap.
+    """
+    result = dict(term_assignments)
+
+    successor_map: dict[str, list[str]] = defaultdict(list)
+    for code, prereqs in prereq_map.items():
+        for p in prereqs:
+            successor_map[p].append(code)
+
+    def _term_credits(term: str) -> float:
+        return sum(
+            float(course_info.get(c, {}).get("units", 0.5))
+            for c, t in result.items() if t == term
+        )
+
+    changed = True
+    iterations = 0
+    while changed and iterations < len(TERM_ORDER) * 2:
+        changed = False
+        iterations += 1
+        for term_idx in range(len(TERM_ORDER) - 1, 0, -1):
+            term = TERM_ORDER[term_idx]
+            courses_in_term = [c for c, t in result.items() if t == term]
+            if not courses_in_term:
+                continue
+
+            for course in courses_in_term:
+                floor_idx = 0
+                for prereq in prereq_map.get(course, []):
+                    prereq_term = result.get(prereq)
+                    if prereq_term in TERM_ORDER:
+                        floor_idx = max(floor_idx, TERM_ORDER.index(prereq_term) + 1)
+
+                ceiling_idx = len(TERM_ORDER) - 1
+                for succ in successor_map.get(course, []):
+                    succ_term = result.get(succ)
+                    if succ_term in TERM_ORDER:
+                        ceiling_idx = min(ceiling_idx, TERM_ORDER.index(succ_term) - 1)
+
+                if floor_idx >= term_idx:
+                    continue
+
+                course_credits = float(course_info.get(course, {}).get("units", 0.5))
+                best_idx = None
+                best_credits = float("inf")
+                for candidate_idx in range(floor_idx, min(term_idx, ceiling_idx + 1)):
+                    cand_term = TERM_ORDER[candidate_idx]
+                    cand_credits = _term_credits(cand_term)
+                    if cand_credits + course_credits <= max_credits and cand_credits < best_credits:
+                        best_credits = cand_credits
+                        best_idx = candidate_idx
+
+                if best_idx is not None:
+                    result[course] = TERM_ORDER[best_idx]
+                    changed = True
 
     return result
 
@@ -765,7 +872,8 @@ _MATH_FACULTY_VARIANT_MAP: dict[str, str] = {
     "MATH128": "MATH138",  # Calculus 2 for Sciences → Honours
     "MATH227": "MATH237",  # Calc 3 for Sciences → Honours (if applicable)
     "MATH228": "MATH238",
-    "CS116":   "CS136",    # Intro CS for Sciences → CS for Math
+    "CS115":   "CS135",    # Intro CS 1 for non-majors → Designing Functional Programs
+    "CS116":   "CS136",    # Intro CS 2 for Sciences → CS for Math
 }
 
 
@@ -1082,6 +1190,9 @@ def _pick_electives(
                     "but prioritize goal alignment over raw ratings.\n"
                     "- If the student has specified desired skills, STRONGLY prefer courses that teach those skills. "
                     "Avoid courses that primarily teach skills the student already has.\n\n"
+                    "IMPORTANT: You MUST return EXACTLY N picks for EACH group — no fewer, no more. "
+                    "Every group must be fully filled. If you cannot find N perfectly aligned courses, "
+                    "still pick the best available options from that group.\n\n"
                     "Return ONLY valid JSON, no other text. Schema:\n"
                     '{"picks": [{"code": "COURSE_CODE", "reason": "One sentence why"}]}'
                 ),
@@ -1108,6 +1219,7 @@ def _pick_electives(
             raw = raw[:-3]
         raw = raw.strip()
 
+    logging.info("LLM elective raw response (len=%d): %s", len(raw), raw[:500])
     data = json.loads(raw)
     raw_picks = {p["code"]: p.get("reason", "") for p in data.get("picks", [])}
 
@@ -1122,6 +1234,28 @@ def _pick_electives(
                 if count < n:
                     picks[code] = reason
                     count += 1
+
+    # Fill under-filled groups from the downselected (goal-relevant) candidate list
+    picked_normalized = {_normalize_code(c) for c in picks}
+    for gi, group in enumerate(choice_groups):
+        n = int(group["rule"])
+        group_codes_set = {_normalize_code(c["code"]) for c in group.get("courses", [])}
+        count = sum(1 for c in picked_normalized if c in group_codes_set)
+        if count >= n:
+            continue
+        needed = n - count
+        logging.warning(
+            "LLM under-picked group %d (%s): got %d/%d, filling %d from downselected list",
+            gi + 1, group.get("description", "")[:60], count, n, needed,
+        )
+        for c in group_courses[gi]:
+            if needed <= 0:
+                break
+            nc = _normalize_code(c["code"])
+            if nc not in picked_normalized:
+                picks[c["code"]] = "Auto-filled from goal-relevant candidates"
+                picked_normalized.add(nc)
+                needed -= 1
 
     # Only check accessibility on the LLM's picks, not every candidate
     all_options = [c for group in group_courses for c in group]

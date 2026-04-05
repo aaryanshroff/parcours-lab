@@ -3412,5 +3412,809 @@
       "title": "Introduction to Nanomaterials (WLU)",
       "units": null
     }
+  ],
+  "MATH": [
+    {
+      "code": "MATH 145",
+      "title": "Algebra (Advanced Level)",
+      "units": null
+    },
+    {
+      "code": "MATH 147",
+      "title": "Calculus 1 (Advanced Level)",
+      "units": null
+    },
+    {
+      "code": "MATH 211",
+      "title": "Advanced Calculus 1 for Electrical and Computer Engineers",
+      "units": null
+    },
+    {
+      "code": "MATH 212",
+      "title": "Adv Calculus 2 for Electrical Engineers",
+      "units": null
+    },
+    {
+      "code": "MATH 115",
+      "title": "Linear Algebra for Engineering",
+      "units": null
+    },
+    {
+      "code": "MATH 116",
+      "title": "Calculus 1 for Engineering",
+      "units": null
+    },
+    {
+      "code": "MATH 117",
+      "title": "Calculus 1 for Engineering",
+      "units": null
+    },
+    {
+      "code": "MATH 118",
+      "title": "Calculus 2 for Engineering",
+      "units": null
+    },
+    {
+      "code": "MATH 119",
+      "title": "Calculus 2 for Engineering",
+      "units": null
+    },
+    {
+      "code": "MATH 138",
+      "title": "Calculus 2 for Honours Mathematics",
+      "units": null
+    },
+    {
+      "code": "MATH 135",
+      "title": "Algebra for Honours Mathematics",
+      "units": null
+    },
+    {
+      "code": "MATH 136",
+      "title": "Linear Algebra 1 for Honours Mathematics",
+      "units": null
+    },
+    {
+      "code": "MATH 103",
+      "title": "Introductory Algebra for Arts and Social Science",
+      "units": null
+    },
+    {
+      "code": "MATH 104",
+      "title": "Introductory Calculus for Arts and Social Science",
+      "units": null
+    },
+    {
+      "code": "MATH 106",
+      "title": "Applied Linear Algebra 1",
+      "units": null
+    },
+    {
+      "code": "MATH 225",
+      "title": "Applied Linear Algebra 2",
+      "units": null
+    },
+    {
+      "code": "MATH 127",
+      "title": "Calculus 1 for the Sciences",
+      "units": null
+    },
+    {
+      "code": "MATH 128",
+      "title": "Calculus 2 for the Sciences",
+      "units": null
+    },
+    {
+      "code": "MATH 146",
+      "title": "Linear Algebra 1 (Advanced Level)",
+      "units": null
+    },
+    {
+      "code": "MATH 148",
+      "title": "Calculus 2 (Advanced Level)",
+      "units": null
+    },
+    {
+      "code": "MATH 217",
+      "title": "Calculus 3 for Chemical Engineering",
+      "units": null
+    },
+    {
+      "code": "MATH 218",
+      "title": "Differential Equations for Engineers",
+      "units": null
+    },
+    {
+      "code": "MATH 227",
+      "title": "Calculus 3 for Honours Physics",
+      "units": null
+    },
+    {
+      "code": "MATH 228",
+      "title": "Differential Equations for Physics and Chemistry",
+      "units": null
+    },
+    {
+      "code": "MATH 235",
+      "title": "Linear Algebra 2 for Honours Mathematics",
+      "units": null
+    },
+    {
+      "code": "MATH 237",
+      "title": "Calculus 3 for Honours Mathematics",
+      "units": null
+    },
+    {
+      "code": "MATH 239",
+      "title": "Introduction to Combinatorics",
+      "units": null
+    },
+    {
+      "code": "MATH 245",
+      "title": "Linear Algebra 2 (Advanced Level)",
+      "units": null
+    },
+    {
+      "code": "MATH 247",
+      "title": "Calculus 3 (Advanced Level)",
+      "units": null
+    },
+    {
+      "code": "MATH 249",
+      "title": "Introduction to Combinatorics (Advanced Level)",
+      "units": null
+    },
+    {
+      "code": "MATH 137",
+      "title": "Calculus 1 for Honours Mathematics",
+      "units": null
+    },
+    {
+      "code": "MATH 647",
+      "title": "Foundations of Calculus I",
+      "units": null
+    },
+    {
+      "code": "MATH 648",
+      "title": "Foundations of Calculus II",
+      "units": null
+    },
+    {
+      "code": "MATH 680",
+      "title": "History of Mathematics",
+      "units": null
+    },
+    {
+      "code": "MATH 681",
+      "title": "Problem Solving and Mathematical Discovery",
+      "units": null
+    },
+    {
+      "code": "MATH 630",
+      "title": "Foundations of Probability",
+      "units": null
+    },
+    {
+      "code": "MATH 636",
+      "title": "Linear Algebra for Teachers",
+      "units": null
+    },
+    {
+      "code": "MATH 643",
+      "title": "Theory of Computation",
+      "units": null
+    },
+    {
+      "code": "MATH 642",
+      "title": "Introduction to Computer Science: A Mathematical Perspective",
+      "units": null
+    },
+    {
+      "code": "MATH 661",
+      "title": "Problem Solving and Proof in Geometry",
+      "units": null
+    },
+    {
+      "code": "MATH 640",
+      "title": "Number Theory for Teachers",
+      "units": null
+    },
+    {
+      "code": "MATH 683",
+      "title": "History of Mathematics II: Early Modern Period",
+      "units": null
+    },
+    {
+      "code": "MATH 650",
+      "title": "Mathematical Modeling with Differential Equations",
+      "units": null
+    },
+    {
+      "code": "MATH 631",
+      "title": "Statistics for Teachers",
+      "units": null
+    },
+    {
+      "code": "MATH 682",
+      "title": "History of Mathematics I: Antiquity",
+      "units": null
+    },
+    {
+      "code": "MATH 685",
+      "title": "Math and Peace for Teachers",
+      "units": null
+    },
+    {
+      "code": "MATH 229",
+      "title": "Introduction to Combinatorics (Non-Specialist Level)",
+      "units": null
+    },
+    {
+      "code": "MATH 114",
+      "title": "Linear Algebra for Science",
+      "units": null
+    },
+    {
+      "code": "MATH 207",
+      "title": "Calculus 3 (Non-Specialist Level)",
+      "units": null
+    },
+    {
+      "code": "MATH 124",
+      "title": "Calculus and Vector Algebra for Kinesiology",
+      "units": null
+    },
+    {
+      "code": "MATH 215",
+      "title": "Linear Algebra for Engineering",
+      "units": null
+    },
+    {
+      "code": "MATH 213",
+      "title": "Signals, Systems, and Differential Equations",
+      "units": null
+    },
+    {
+      "code": "MATH 674",
+      "title": "Special Topics in Mathematical Connections",
+      "units": null
+    },
+    {
+      "code": "MATH 900",
+      "title": "University Mathematics Teaching Techniques",
+      "units": null
+    },
+    {
+      "code": "MATH 690",
+      "title": "Workshop for Teachers of Mathematics",
+      "units": null
+    },
+    {
+      "code": "MATH 641",
+      "title": "Algorithm Design and Analysis",
+      "units": null
+    },
+    {
+      "code": "MATH 692",
+      "title": "Reading, Writing and Discovering Proofs",
+      "units": null
+    },
+    {
+      "code": "MATH 600",
+      "title": "Introduction to Mathematical Software for Teachers",
+      "units": null
+    },
+    {
+      "code": "MATH 698",
+      "title": "Reading Course in Mathematics for Teachers",
+      "units": null
+    },
+    {
+      "code": "MATH 700",
+      "title": "Math for Teachers - OVGS Transfer Course",
+      "units": null
+    },
+    {
+      "code": "MATH 110W",
+      "title": "Introduction to Differential and Integral Calculus",
+      "units": null
+    },
+    {
+      "code": "MATH 699",
+      "title": "Master of Mathematics for Teachers Capstone",
+      "units": null
+    },
+    {
+      "code": "MATH 199",
+      "title": "Mathematical Discovery and Invention",
+      "units": null
+    },
+    {
+      "code": "MATH 129W",
+      "title": "Introductory Calculus for Business and Social Sciences (WLU)",
+      "units": null
+    },
+    {
+      "code": "MATH 122W",
+      "title": "Introductory Linear Algebra (WLU)",
+      "units": null
+    },
+    {
+      "code": "MATH 101W",
+      "title": "Calculus 1 for the Natural Sciences (WLU)",
+      "units": null
+    },
+    {
+      "code": "MATH 170W",
+      "title": "Introduction to Mathematics for Finance (WLU)",
+      "units": null
+    },
+    {
+      "code": "MATH 304W",
+      "title": "Introduction to Complex Analysis (WLU)",
+      "units": null
+    },
+    {
+      "code": "MATH 305W",
+      "title": "Differential Equations II",
+      "units": null
+    },
+    {
+      "code": "MATH 103W",
+      "title": "Calculus 1 (WLU)",
+      "units": null
+    },
+    {
+      "code": "MATH 121W",
+      "title": "Introduction to Mathematical Proofs (WLU)",
+      "units": null
+    },
+    {
+      "code": "MATH 475W",
+      "title": "Ring And Field Theory (WLU)",
+      "units": null
+    },
+    {
+      "code": "MATH 235W",
+      "title": "Introduction to Game Theory (WLU)",
+      "units": null
+    },
+    {
+      "code": "MATH 201W",
+      "title": "Multivariable Calculus (WLU)",
+      "units": null
+    },
+    {
+      "code": "MATH 104W",
+      "title": "Calculus ll (WLU)",
+      "units": null
+    },
+    {
+      "code": "MATH 455W",
+      "title": "Partial Differential Equations (WLU)",
+      "units": null
+    }
+  ],
+  "STAT": [
+    {
+      "code": "STAT 231",
+      "title": "Statistics",
+      "units": null
+    },
+    {
+      "code": "STAT 240",
+      "title": "Probability (Advanced Level)",
+      "units": null
+    },
+    {
+      "code": "STAT 241",
+      "title": "Statistics (Advanced Level)",
+      "units": null
+    },
+    {
+      "code": "STAT 321",
+      "title": "Regression and Forecasting (Non-Specialist Level)",
+      "units": null
+    },
+    {
+      "code": "STAT 322",
+      "title": "Sampling and Experimental Design (Non-Specialist Level)",
+      "units": null
+    },
+    {
+      "code": "STAT 330",
+      "title": "Mathematical Statistics",
+      "units": null
+    },
+    {
+      "code": "STAT 331",
+      "title": "Applied Linear Models",
+      "units": null
+    },
+    {
+      "code": "STAT 332",
+      "title": "Sampling and Experimental Design",
+      "units": null
+    },
+    {
+      "code": "STAT 333",
+      "title": "Stochastic Processes 1",
+      "units": null
+    },
+    {
+      "code": "STAT 430",
+      "title": "Experimental Design",
+      "units": null
+    },
+    {
+      "code": "STAT 431",
+      "title": "Generalized Linear Models and their Applications",
+      "units": null
+    },
+    {
+      "code": "STAT 433",
+      "title": "Stochastic Processes 2",
+      "units": null
+    },
+    {
+      "code": "STAT 440",
+      "title": "Computational Inference",
+      "units": null
+    },
+    {
+      "code": "STAT 441",
+      "title": "Statistical Learning - Classification",
+      "units": null
+    },
+    {
+      "code": "STAT 443",
+      "title": "Forecasting",
+      "units": null
+    },
+    {
+      "code": "STAT 450",
+      "title": "Estimation and Hypothesis Testing",
+      "units": null
+    },
+    {
+      "code": "STAT 454",
+      "title": "Sampling Theory and Practice",
+      "units": null
+    },
+    {
+      "code": "STAT 464",
+      "title": "Topics in Probability Theory",
+      "units": null
+    },
+    {
+      "code": "STAT 202",
+      "title": "Introductory Statistics for Scientists",
+      "units": null
+    },
+    {
+      "code": "STAT 211",
+      "title": "Introductory Statistics and Sampling for Accounting",
+      "units": null
+    },
+    {
+      "code": "STAT 220",
+      "title": "Probability (Non-Specialist Level)",
+      "units": null
+    },
+    {
+      "code": "STAT 221",
+      "title": "Statistics (Non-Specialist Level)",
+      "units": null
+    },
+    {
+      "code": "STAT 230",
+      "title": "Probability",
+      "units": null
+    },
+    {
+      "code": "STAT 466",
+      "title": "Topics in Statistics 1",
+      "units": null
+    },
+    {
+      "code": "STAT 316",
+      "title": "Introduction to Statistical Problem Solving",
+      "units": null
+    },
+    {
+      "code": "STAT 340",
+      "title": "Stochastic Simulation Methods",
+      "units": null
+    },
+    {
+      "code": "STAT 631",
+      "title": "Introduction to Statistical Methods in Health Informatics",
+      "units": null
+    },
+    {
+      "code": "STAT 435",
+      "title": "Statistical Methods for Process Improvements",
+      "units": null
+    },
+    {
+      "code": "STAT 854",
+      "title": "Sampling Theory and Practice",
+      "units": null
+    },
+    {
+      "code": "STAT 850",
+      "title": "Estimation and Hypothesis Testing",
+      "units": null
+    },
+    {
+      "code": "STAT 902",
+      "title": "Theory of Probability 2",
+      "units": null
+    },
+    {
+      "code": "STAT 835",
+      "title": "Statistical Methods for Process Improvement",
+      "units": null
+    },
+    {
+      "code": "STAT 836",
+      "title": "Introduction to the Analysis of Spatial Data in Health Research",
+      "units": null
+    },
+    {
+      "code": "STAT 833",
+      "title": "Stochastic Processes 2",
+      "units": null
+    },
+    {
+      "code": "STAT 841",
+      "title": "Statistical Learning - Classification",
+      "units": null
+    },
+    {
+      "code": "STAT 830",
+      "title": "Experimental Design",
+      "units": null
+    },
+    {
+      "code": "STAT 831",
+      "title": "Generalized Linear Models and Applications",
+      "units": null
+    },
+    {
+      "code": "STAT 845",
+      "title": "Statistical Concepts for Data Science",
+      "units": null
+    },
+    {
+      "code": "STAT 840",
+      "title": "Computational Inference",
+      "units": null
+    },
+    {
+      "code": "STAT 900",
+      "title": "PhD Research Skills",
+      "units": null
+    },
+    {
+      "code": "STAT 438",
+      "title": "Advanced Methods in Biostatistics",
+      "units": null
+    },
+    {
+      "code": "STAT 337",
+      "title": "Introduction to Biostatistics",
+      "units": null
+    },
+    {
+      "code": "STAT 437",
+      "title": "Statistical Methods for Life History Analysis",
+      "units": null
+    },
+    {
+      "code": "STAT 436",
+      "title": "Introduction to the Analysis of Spatial Data in Health Research",
+      "units": null
+    },
+    {
+      "code": "STAT 334",
+      "title": "Probability Models for Business and Accounting",
+      "units": null
+    },
+    {
+      "code": "STAT 341",
+      "title": "Computational Statistics and Data Analysis",
+      "units": null
+    },
+    {
+      "code": "STAT 442",
+      "title": "Data Visualization",
+      "units": null
+    },
+    {
+      "code": "STAT 444",
+      "title": "Statistical Learning - Advanced Regression",
+      "units": null
+    },
+    {
+      "code": "STAT 371",
+      "title": "Applied Linear Models and Process Improvement for Business",
+      "units": null
+    },
+    {
+      "code": "STAT 372",
+      "title": "Survey Sampling and Experimental Design Techniques for Business",
+      "units": null
+    },
+    {
+      "code": "STAT 373",
+      "title": "Regression and Forecasting Methods in Finance",
+      "units": null
+    },
+    {
+      "code": "STAT 206",
+      "title": "Statistics for Software Engineering",
+      "units": null
+    },
+    {
+      "code": "STAT 844",
+      "title": "Statistical Learning - Advanced Regression",
+      "units": null
+    },
+    {
+      "code": "STAT 842",
+      "title": "Data Visualization",
+      "units": null
+    },
+    {
+      "code": "STAT 374",
+      "title": "Quantitative Foundations for Finance",
+      "units": null
+    },
+    {
+      "code": "STAT 870",
+      "title": "Short Course in Statistics",
+      "units": null
+    },
+    {
+      "code": "STAT 469",
+      "title": "Readings in Statistics 2",
+      "units": null
+    },
+    {
+      "code": "STAT 468",
+      "title": "Readings in Statistics 1",
+      "units": null
+    },
+    {
+      "code": "STAT 690",
+      "title": "Literature and Research Studies",
+      "units": null
+    },
+    {
+      "code": "STAT 890",
+      "title": "Topics in Statistics",
+      "units": null
+    },
+    {
+      "code": "STAT 891",
+      "title": "Topics in Probability",
+      "units": null
+    },
+    {
+      "code": "STAT 946",
+      "title": "Topics in Probability and Statistics",
+      "units": null
+    },
+    {
+      "code": "STAT 947",
+      "title": "Topics in Biostatistics",
+      "units": null
+    },
+    {
+      "code": "STAT 362W",
+      "title": "Regression Analysis (WLU)",
+      "units": null
+    },
+    {
+      "code": "STAT 473W",
+      "title": "Financial Data Analysis (WLU)",
+      "units": null
+    },
+    {
+      "code": "STAT 974",
+      "title": "Financial Econometrics",
+      "units": null
+    },
+    {
+      "code": "STAT 814",
+      "title": "Systematic Review and Meta-Analysis",
+      "units": null
+    },
+    {
+      "code": "STAT 467",
+      "title": "Topics in Statistics 2",
+      "units": null
+    },
+    {
+      "code": "STAT 935",
+      "title": "Analysis of Survival Data",
+      "units": null
+    },
+    {
+      "code": "STAT 938",
+      "title": "Statistical Consulting",
+      "units": null
+    },
+    {
+      "code": "STAT 906",
+      "title": "Computer Intensive Methods for Stochastic Models in Finance",
+      "units": null
+    },
+    {
+      "code": "STAT 929",
+      "title": "Time Series 1",
+      "units": null
+    },
+    {
+      "code": "STAT 930",
+      "title": "Time Series 2",
+      "units": null
+    },
+    {
+      "code": "STAT 847",
+      "title": "Exploratory Data Analysis",
+      "units": null
+    },
+    {
+      "code": "STAT 931",
+      "title": "Causal Inference and Epidemiological Studies",
+      "units": null
+    },
+    {
+      "code": "STAT 936",
+      "title": "Analysis of Longitudinal Data",
+      "units": null
+    },
+    {
+      "code": "STAT 940",
+      "title": "Deep Learning",
+      "units": null
+    },
+    {
+      "code": "STAT 903",
+      "title": "High-Dimensional Probability",
+      "units": null
+    },
+    {
+      "code": "STAT 901",
+      "title": "Theory of Probability 1",
+      "units": null
+    },
+    {
+      "code": "STAT 910",
+      "title": "Bayesian Statistics",
+      "units": null
+    },
+    {
+      "code": "STAT 908",
+      "title": "Statistical Inference",
+      "units": null
+    },
+    {
+      "code": "STAT 923",
+      "title": "Multivariate Analysis",
+      "units": null
+    },
+    {
+      "code": "STAT 932",
+      "title": "Classification and Prediction in High Dimensional Analysis in Health Research",
+      "units": null
+    },
+    {
+      "code": "STAT 231W",
+      "title": "Statistics for Life & Health Science (WLU)",
+      "units": null
+    }
   ]
 }

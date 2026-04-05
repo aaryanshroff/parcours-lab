@@ -69,6 +69,7 @@ interface SkillNodeData {
   courseUnits: number
   courseRating?: CourseRating | null
   tier: Tier
+  required?: boolean
   term?: string
   termCredits?: number
   termNodeIds?: string[]
@@ -218,7 +219,7 @@ function SkillNode({ id, data }: NodeProps<Node<SkillNodeData>>) {
   return (
     <div
       className={`rounded-xl border-2 ${borderClass} transition-all duration-200 ${isShaking ? 'shake-reject bg-red-50' : locked ? 'bg-stone-100' : 'bg-white hover:-translate-y-0.5'}`}
-      style={{ width: NODE_W, padding: '14px 16px' }}
+      style={{ width: NODE_W, padding: data.term ? '8px 16px 14px' : '14px 16px' }}
     >
       <Handle type="target" position={data.term ? Position.Left : Position.Top} style={{ opacity: 0 }} />
 
@@ -226,6 +227,11 @@ function SkillNode({ id, data }: NodeProps<Node<SkillNodeData>>) {
       {!data.term && (
         <span className={`block text-[10px] font-semibold uppercase tracking-wide ${config.text} mb-1`}>
           {config.label}
+        </span>
+      )}
+      {data.term && (
+        <span className={`inline-block px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider rounded mb-0.5 ${data.required ? 'bg-amber-100 text-amber-700' : 'bg-sky-50 text-sky-500'}`}>
+          {data.required ? 'Required' : 'Elective'}
         </span>
       )}
 
@@ -353,7 +359,7 @@ function SkillNode({ id, data }: NodeProps<Node<SkillNodeData>>) {
 
 function TermGroupNode({ data }: NodeProps<Node<SkillNodeData>>) {
   const credits = data.termCredits ?? 0
-  const over = credits > 3.25
+  const over = credits > 2.5
   const { disabledTerms } = useContext(DragValidationContext)
   const disabled = disabledTerms.has(data.term as string)
   const { store, allTermNodeIds, acceptMany, unacceptMany, onTermCompleted } = useContext(CourseContext)
@@ -381,7 +387,7 @@ function TermGroupNode({ data }: NodeProps<Node<SkillNodeData>>) {
             <span className="font-normal normal-case tracking-normal text-red-300">prereqs not met</span>
           ) : (
             <span className={`font-normal normal-case tracking-normal ${over ? 'text-red-400' : 'text-stone-300'}`}>
-              {credits.toFixed(2)} cr{over ? ' ⚠ >3.25' : ''}
+              {credits.toFixed(2)} cr{over ? ' ⚠ >2.5' : ''}
             </span>
           )}
           <div className="relative group">
@@ -956,7 +962,7 @@ function CourseHistoryPanel({ history, onRestore }: { history: HistoryEntry[]; o
 /* ─── API types ─── */
 
 interface ApiCourse { title: string; url: string; reason: string; units?: number; rating?: CourseRating | null }
-interface ApiNode { id: string; labels: string[]; tier: string; course: ApiCourse; position: { x: number; y: number }; term?: string; esco_skills?: string[] }
+interface ApiNode { id: string; labels: string[]; tier: string; course: ApiCourse; position: { x: number; y: number }; term?: string; esco_skills?: string[]; required?: boolean }
 interface ApiEdge { id: string; source: string; target: string }
 interface ApiGraph { goal: string; skills: string[]; nodes: ApiNode[]; edges: ApiEdge[] }
 
@@ -975,6 +981,7 @@ function toFlowNodes(apiNodes: ApiNode[]): Node<SkillNodeData>[] {
       courseReason: n.course.reason ?? '',
       courseUnits: n.course.units ?? 0.5,
       courseRating: n.course.rating ?? null,
+      required: n.required ?? false,
     },
   }))
 }
@@ -1198,12 +1205,12 @@ export default function Graph() {
       const groupNodes = prev.filter((n) => n.type === 'termGroup')
       const courseNodes = prev.filter((n) => n.type === 'skill')
 
-      // Enforce 3.25 credit cap when moving to a different term
+      // Enforce 2.5 credit cap when moving to a different term
       if (targetTerm !== oldTerm) {
         const targetCredits = courseNodes
           .filter((n) => n.data.term === targetTerm)
           .reduce((s, n) => s + (n.data.courseUnits ?? 0.5), 0)
-        if (targetCredits + (draggedNode.data.courseUnits ?? 0.5) > 3.25) return prev
+        if (targetCredits + (draggedNode.data.courseUnits ?? 0.5) > 2.5) return prev
       }
 
       // Snap X to the term column (use existing nodes in that term, or fall back to group node)
@@ -1398,7 +1405,7 @@ export default function Graph() {
       if (code && n.data.term) termAssignments[code] = n.data.term as string
     }
 
-    toast.loading(`Finding a course for "${addedSkill}"…`, { id: `add-course-${addedSkill}`, icon: <Loader2 size={14} className="text-blue-800 animate-spin" /> })
+    toast(`Finding a course for "${addedSkill}"…`, { id: `add-course-${addedSkill}`, duration: Infinity, icon: <Loader2 size={14} className="text-blue-800 animate-spin" /> })
 
     fetch('/api/graph/academics/add-course', {
       method: 'POST',

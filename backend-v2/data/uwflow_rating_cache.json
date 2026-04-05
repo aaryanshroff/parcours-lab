@@ -26167,5 +26167,555 @@
       "comment_count": 0,
       "profs": []
     }
+  },
+  "MATH218": {
+    "fetched_at": 1775415067.87067,
+    "rating": {
+      "liked": 0.75,
+      "easy": 0.34615384615384615,
+      "useful": 0.8846153846153846,
+      "filled_count": 20,
+      "comment_count": 2,
+      "profs": []
+    }
+  },
+  "MATH227": {
+    "fetched_at": 1775415067.873368,
+    "rating": {
+      "liked": 0.6239316239316239,
+      "easy": 0.5421686746987951,
+      "useful": 0.6144578313253012,
+      "filled_count": 117,
+      "comment_count": 25,
+      "profs": []
+    }
+  },
+  "MATH211": {
+    "fetched_at": 1775415067.892707,
+    "rating": {
+      "liked": 0.44,
+      "easy": 0.4761904761904762,
+      "useful": 0.7142857142857143,
+      "filled_count": 25,
+      "comment_count": 3,
+      "profs": []
+    }
+  },
+  "MATH235": {
+    "fetched_at": 1775415067.903342,
+    "rating": {
+      "liked": 0.6825095057034221,
+      "easy": 0.4427899686520376,
+      "useful": 0.7916666666666666,
+      "filled_count": 526,
+      "comment_count": 126,
+      "profs": []
+    }
+  },
+  "MATH245": {
+    "fetched_at": 1775415067.904452,
+    "rating": {
+      "liked": 0.875,
+      "easy": 0.4,
+      "useful": 0.8954545454545455,
+      "filled_count": 88,
+      "comment_count": 28,
+      "profs": []
+    }
+  },
+  "MATH217": {
+    "fetched_at": 1775415067.911274,
+    "rating": {
+      "liked": 0.6538461538461539,
+      "easy": 0.19642857142857142,
+      "useful": 0.75,
+      "filled_count": 26,
+      "comment_count": 3,
+      "profs": []
+    }
+  },
+  "MATH104": {
+    "fetched_at": 1775415067.926281,
+    "rating": {
+      "liked": 0.5849056603773585,
+      "easy": 0.5681818181818181,
+      "useful": 0.7954545454545454,
+      "filled_count": 53,
+      "comment_count": 13,
+      "profs": []
+    }
+  },
+  "MATH103": {
+    "fetched_at": 1775415067.9262831,
+    "rating": {
+      "liked": 0.5384615384615384,
+      "easy": 0.7767857142857143,
+      "useful": 0.4444444444444445,
+      "filled_count": 39,
+      "comment_count": 12,
+      "profs": []
+    }
+  },
+  "MATH212": {
+    "fetched_at": 1775415067.9465501,
+    "rating": {
+      "liked": 0.8333333333333334,
+      "easy": 1.0,
+      "useful": 0.8,
+      "filled_count": 6,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH237": {
+    "fetched_at": 1775415067.94961,
+    "rating": {
+      "liked": 0.8149405772495756,
+      "easy": 0.5514084507042254,
+      "useful": 0.8596368715083799,
+      "filled_count": 589,
+      "comment_count": 112,
+      "profs": []
+    }
+  },
+  "MATH225": {
+    "fetched_at": 1775415067.9496121,
+    "rating": {
+      "liked": 0.7727272727272727,
+      "easy": 0.828125,
+      "useful": 0.875,
+      "filled_count": 22,
+      "comment_count": 8,
+      "profs": []
+    }
+  },
+  "MATH228": {
+    "fetched_at": 1775415067.9599948,
+    "rating": {
+      "liked": 0.5504587155963303,
+      "easy": 0.5340909090909091,
+      "useful": 0.753731343283582,
+      "filled_count": 109,
+      "comment_count": 33,
+      "profs": []
+    }
+  },
+  "MATH648": {
+    "fetched_at": 1775415068.020006,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH680": {
+    "fetched_at": 1775415068.036772,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH647": {
+    "fetched_at": 1775415068.0394418,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH681": {
+    "fetched_at": 1775415068.0575879,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH630": {
+    "fetched_at": 1775415068.0645099,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH636": {
+    "fetched_at": 1775415068.081841,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH643": {
+    "fetched_at": 1775415068.0861828,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH642": {
+    "fetched_at": 1775415068.095197,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH640": {
+    "fetched_at": 1775415068.10168,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH683": {
+    "fetched_at": 1775415068.103729,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH247": {
+    "fetched_at": 1775415068.112341,
+    "rating": {
+      "liked": 0.9438202247191011,
+      "easy": 0.4025423728813559,
+      "useful": 0.9385245901639344,
+      "filled_count": 89,
+      "comment_count": 29,
+      "profs": []
+    }
+  },
+  "MATH661": {
+    "fetched_at": 1775415068.1130838,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH650": {
+    "fetched_at": 1775415068.1625001,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH682": {
+    "fetched_at": 1775415068.184436,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH631": {
+    "fetched_at": 1775415068.188991,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH207": {
+    "fetched_at": 1775415068.2105742,
+    "rating": {
+      "liked": 0.9166666666666666,
+      "easy": 0.8333333333333334,
+      "useful": 0.9166666666666666,
+      "filled_count": 12,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH685": {
+    "fetched_at": 1775415068.2128482,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH215": {
+    "fetched_at": 1775415068.224446,
+    "rating": {
+      "liked": 0.7884615384615384,
+      "easy": 0.8571428571428571,
+      "useful": 0.8350515463917526,
+      "filled_count": 104,
+      "comment_count": 9,
+      "profs": []
+    }
+  },
+  "MATH124": {
+    "fetched_at": 1775415068.226563,
+    "rating": {
+      "liked": 0.5421686746987951,
+      "easy": 0.7602040816326531,
+      "useful": 0.640625,
+      "filled_count": 83,
+      "comment_count": 18,
+      "profs": []
+    }
+  },
+  "MATH213": {
+    "fetched_at": 1775415068.247648,
+    "rating": {
+      "liked": 0.4934210526315789,
+      "easy": 0.34210526315789475,
+      "useful": 0.5391304347826087,
+      "filled_count": 152,
+      "comment_count": 28,
+      "profs": []
+    }
+  },
+  "MATH674": {
+    "fetched_at": 1775415068.258707,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH900": {
+    "fetched_at": 1775415068.263863,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH641": {
+    "fetched_at": 1775415068.266072,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH690": {
+    "fetched_at": 1775415068.272109,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH692": {
+    "fetched_at": 1775415068.306995,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH600": {
+    "fetched_at": 1775415068.315256,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH698": {
+    "fetched_at": 1775415068.3452759,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH699": {
+    "fetched_at": 1775415068.359139,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH700": {
+    "fetched_at": 1775415068.369456,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH110W": {
+    "fetched_at": 1775415068.373279,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH199": {
+    "fetched_at": 1775415068.379324,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH129W": {
+    "fetched_at": 1775415068.391476,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH101W": {
+    "fetched_at": 1775415068.401376,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH304W": {
+    "fetched_at": 1775415068.408163,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH122W": {
+    "fetched_at": 1775415068.4139478,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH170W": {
+    "fetched_at": 1775415068.4164639,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH103W": {
+    "fetched_at": 1775415068.4587579,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH305W": {
+    "fetched_at": 1775415068.468504,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
   }
 }

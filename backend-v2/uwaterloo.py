@@ -10,6 +10,7 @@ DATA_PATH = Path(__file__).resolve().parent / "data" / "programs.json"
 COURSE_CACHE_PATH = Path(__file__).resolve().parent / "data" / "course_cache.json"
 SUBJECT_CACHE_PATH = Path(__file__).resolve().parent / "data" / "subject_course_cache.json"
 UWFLOW_RATING_CACHE_PATH = Path(__file__).resolve().parent / "data" / "uwflow_rating_cache.json"
+ALL_COURSES_PATH = Path(__file__).resolve().parent / "data" / "all_courses.json"
 
 UWFLOW_GRAPHQL_URL = "https://uwflow.com/graphql"
 UWFLOW_RATING_TTL_SECONDS = 7 * 24 * 60 * 60  # 7 days
@@ -336,6 +337,51 @@ def list_courses_excluding_subjects(exclude_subjects: set[str]) -> list[dict]:
 def _extract_subject(code: str) -> str:
     m = re.match(r"^([A-Z]{2,})", code.strip().upper())
     return m.group(1) if m else ""
+
+
+# ── Full catalog search ──────────────────────────────────────────────────────
+
+_all_courses_mem: list[dict] | None = None
+
+
+def _load_all_courses() -> list[dict]:
+    global _all_courses_mem
+    if _all_courses_mem is not None:
+        return _all_courses_mem
+    if ALL_COURSES_PATH.exists():
+        try:
+            with ALL_COURSES_PATH.open(encoding="utf-8") as f:
+                _all_courses_mem = json.load(f)
+                return _all_courses_mem
+        except json.JSONDecodeError:
+            pass
+    _all_courses_mem = []
+    return _all_courses_mem
+
+
+def search_courses_by_title(queries: list[str]) -> list[dict]:
+    """Search the full course catalog for courses whose titles match any query.
+
+    Each query is matched as a case-insensitive substring against the title.
+    Returns a deduplicated list of matching courses.
+    """
+    catalog = _load_all_courses()
+    if not catalog or not queries:
+        return []
+
+    lower_queries = [q.lower() for q in queries if q.strip()]
+    seen: set[str] = set()
+    results: list[dict] = []
+    for course in catalog:
+        title_lower = course.get("title", "").lower()
+        code = course.get("code", "")
+        normalized = code.replace(" ", "").upper()
+        if normalized in seen:
+            continue
+        if any(q in title_lower for q in lower_queries):
+            seen.add(normalized)
+            results.append(course)
+    return results
 
 
 # ── UWFlow ratings ────────────────────────────────────────────────────────────

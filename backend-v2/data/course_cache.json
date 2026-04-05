@@ -5085,5 +5085,45 @@
       "PSYCH 394",
       "PSYCH 396"
     ]
+  },
+  "ANTH290": {
+    "code": "ANTH290",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH221": {
+    "code": "ANTH221",
+    "raw": "Antireq: ARTS 290 (LEC 001) taken fall 2014, ANTH 400 (SEM 001) taken fall 2016",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "ARTS 290",
+      "LEC 001",
+      "ANTH 400",
+      "SEM 001"
+    ]
+  },
+  "ANTH241": {
+    "code": "ANTH241",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MATH225": {
+    "code": "MATH225",
+    "raw": "Prereq: MATH 106 or 136 or 146. Antireq: MATH 235, 245",
+    "prereqs": [
+      "MATH 106",
+      "MATH 136",
+      "MATH 146"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "MATH 235",
+      "MATH 245"
+    ]
   }
 }
