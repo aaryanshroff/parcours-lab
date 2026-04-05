@@ -98,6 +98,8 @@ def graph_academics():
     minor_pids = body.get("minor_pids", [])
     goal = body.get("goal", "")
     major_title = body.get("major_title", "")
+    desired_skills = body.get("desired_skills", [])
+    my_skills = body.get("my_skills", [])
 
     app.logger.info(
         "[academics] request groups=%d specs=%d minors=%d goal_len=%d",
@@ -114,7 +116,8 @@ def graph_academics():
 
     api_key = os.environ["OPENROUTER_API_KEY"]
     result = generate_academic_graph(
-        requirement_groups, specialization_pids, minor_pids, goal, api_key, major_title=major_title
+        requirement_groups, specialization_pids, minor_pids, goal, api_key,
+        major_title=major_title, desired_skills=desired_skills or None, my_skills=my_skills or None,
     )
     elective_nodes = [
         n for n in result.nodes
@@ -129,6 +132,31 @@ def graph_academics():
         ",".join(terms),
     )
     return jsonify(result.model_dump())
+
+
+@app.route("/api/graph/academics/add-course", methods=["POST"])
+def graph_academics_add_course():
+    from academic_graph import add_course_for_skill
+
+    body = request.get_json() or {}
+    skill = body.get("skill", "")
+    existing_codes = body.get("existing_codes", [])
+    term_assignments = body.get("term_assignments", {})
+    goal = body.get("goal", "")
+    major_title = body.get("major_title", "")
+
+    if not skill.strip():
+        return jsonify({"error": "No skill provided"}), 400
+
+    api_key = os.environ["OPENROUTER_API_KEY"]
+    result = add_course_for_skill(
+        skill, existing_codes, term_assignments, goal, major_title, api_key,
+    )
+
+    if "error" in result:
+        return jsonify(result), 404
+
+    return jsonify(result)
 
 
 @app.route("/api/summary/generate", methods=["POST"])
@@ -746,7 +774,10 @@ def chat():
             + (f" with a goal of: {goal_str}." if goal_str else ".") +
             " You help students understand their course plan, suggest study strategies, "
             "and answer questions about the courses in their plan. "
-            "You can modify the user's course plan using tools.\n\n"
+            "You can modify the user's course plan and their skill lists using tools.\n\n"
+            "The student has ESCO skills they want to develop (desired skills) and skills they already have (my skills). "
+            "You can add/remove skills from either list using the add_my_skill, remove_my_skill, add_desired_skill, "
+            "and remove_desired_skill tools. Changing skills will regenerate the course plan to better align with them.\n\n"
             "IMPORTANT — when the user wants to replace a course:\n"
             "1. If they haven't explained WHY they want to replace it, ASK them first "
             "(e.g. 'What are you looking for instead?' or 'Is there a specific area you'd rather explore?'). "
@@ -778,8 +809,7 @@ def chat():
     api_messages = [{"role": "system", "content": system_content}, *messages]
     actions = []
 
-    academic_mode = context.get("mode") == "academics"
-    tools = [t for t in CHAT_TOOLS if t["function"]["name"] in ("replace_course", "search_courses")] if academic_mode else CHAT_TOOLS
+    tools = CHAT_TOOLS
 
     # Tool calling loop (max 5 iterations)
     for _ in range(5):

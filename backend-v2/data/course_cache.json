@@ -4857,5 +4857,216 @@
     "prereqs": [],
     "coreqs": [],
     "antireqs": []
+  },
+  "KIN407": {
+    "code": "KIN407",
+    "raw": "Prereq: KIN 308/408; Level at least 3A",
+    "prereqs": [
+      "KIN 308",
+      "KIN 408"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL355": {
+    "code": "BIOL355",
+    "raw": "Prereq: BIOL 273",
+    "prereqs": [
+      "BIOL 273"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL365": {
+    "code": "BIOL365",
+    "raw": "Prereq: BIOL 239; One of BIOL 266, CHEM 140, CS 116, CS 136",
+    "prereqs": [
+      "BIOL 239",
+      "BIOL 266",
+      "CHEM 140",
+      "CS 116",
+      "CS 136"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "KIN343": {
+    "code": "KIN343",
+    "raw": "Prereq: KIN 146 or BIOL 373; one of CHEM 233, CHEM 237, HLTH 217, KIN 217",
+    "prereqs": [
+      "KIN 146",
+      "BIOL 373",
+      "CHEM 233",
+      "CHEM 237",
+      "HLTH 217",
+      "KIN 217"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "HLTH310": {
+    "code": "HLTH310",
+    "raw": "Prereq: BIOL 273; Level at least 3A",
+    "prereqs": [
+      "BIOL 273"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL465": {
+    "code": "BIOL465",
+    "raw": "Prereq: BIOL 266/366 or BIOL 365; CHEM 233 or CHEM 237 or BCS Bioinformatics Specialization or BMath (CS) Bioinformatics Specialization",
+    "prereqs": [
+      "BIOL 266",
+      "BIOL 366",
+      "BIOL 365",
+      "CHEM 233",
+      "CHEM 237"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "HLTH204": {
+    "code": "HLTH204",
+    "raw": "Prereq: Level at least 2A School of Public Health Sciences students",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHIL226": {
+    "code": "PHIL226",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH292": {
+    "code": "PSYCH292",
+    "raw": "Prereq: PSYCH 291; Psychology majors; 1 of MATH 103 or 4U Math. Antireq: ARTS 280, ECON 221, ENVS 278, HLTH 204, KIN 222, 232, PSCI 214/314, REC 371, SDS 250R, SRF 230, SOC/LS 280, STAT 202, 204, 206, 211, 221, 231, 241, SWREN 250R",
+    "prereqs": [
+      "PSYCH 291",
+      "MATH 103"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "ARTS 280",
+      "ECON 221",
+      "ENVS 278",
+      "HLTH 204",
+      "KIN 222",
+      "KIN 232",
+      "PSCI 214",
+      "PSCI 314",
+      "REC 371",
+      "SDS 250R",
+      "SRF 230",
+      "LS 280",
+      "STAT 202",
+      "STAT 204",
+      "STAT 206",
+      "STAT 211",
+      "STAT 221",
+      "STAT 231",
+      "STAT 241",
+      "SWREN 250R"
+    ]
+  },
+  "KIN232": {
+    "code": "KIN232",
+    "raw": "Prereq: KIN 104",
+    "prereqs": [
+      "KIN 104"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "HLTH451": {
+    "code": "HLTH451",
+    "raw": "Prereq: HLTH 335 or STAT 316; Level at least 4A Health Sciences, Health Studies, Bachelor of Public Health or Health Informatics Option students",
+    "prereqs": [
+      "HLTH 335",
+      "STAT 316"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "HLTH245": {
+    "code": "HLTH245",
+    "raw": "Prereq: Level at least 1B",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "SOC248": {
+    "code": "SOC248",
+    "raw": "Prereq: SOC 101/101R",
+    "prereqs": [
+      "SOC 101",
+      "SOC 101R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "KIN406": {
+    "code": "KIN406",
+    "raw": "Prereq: BIOL 130 or BME 285; Level at least 3A",
+    "prereqs": [
+      "BIOL 130",
+      "BME 285"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ECON101": {
+    "code": "ECON101",
+    "raw": "Prereq: Not open to Management Engineering students. Antireq: ECON 100/COMM 103",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "ECON 100",
+      "COMM 103"
+    ]
+  },
+  "PSYCH218": {
+    "code": "PSYCH218",
+    "raw": "Prereq: PSYCH 101/101R; Level at least 2A",
+    "prereqs": [
+      "PSYCH 101",
+      "PSYCH 101R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ECON102": {
+    "code": "ECON102",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "KIN359": {
+    "code": "KIN359",
+    "raw": "Prereq: KIN 255 or PSYCH 306. Antireq: PSYCH 307, KIN 456",
+    "prereqs": [
+      "KIN 255",
+      "PSYCH 306"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "PSYCH 307",
+      "KIN 456"
+    ]
+  },
+  "PHYS380": {
+    "code": "PHYS380",
+    "raw": "Prereq: PHYS 112 or 122; CHEM 123 or 125",
+    "prereqs": [
+      "PHYS 112",
+      "PHYS 122",
+      "CHEM 123",
+      "CHEM 125"
+    ],
+    "coreqs": [],
+    "antireqs": []
   }
 }

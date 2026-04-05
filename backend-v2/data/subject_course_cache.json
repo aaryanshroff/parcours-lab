@@ -2815,5 +2815,602 @@
       "title": "Optics (WLU)",
       "units": null
     }
+  ],
+  "CHEM": [
+    {
+      "code": "CHEM 121",
+      "title": "Physical and Chemical Properties of Matter",
+      "units": null
+    },
+    {
+      "code": "CHEM 264",
+      "title": "Organic Chemistry 1",
+      "units": null
+    },
+    {
+      "code": "CHEM 262",
+      "title": "Organic Chemistry for Engineering",
+      "units": null
+    },
+    {
+      "code": "CHEM 267",
+      "title": "Basic Organic Chemistry 2",
+      "units": null
+    },
+    {
+      "code": "CHEM 212",
+      "title": "Structure and Bonding",
+      "units": null
+    },
+    {
+      "code": "CHEM 404",
+      "title": "Physicochemical Aspects of Natural Waters",
+      "units": null
+    },
+    {
+      "code": "CHEM 120",
+      "title": "General Chemistry 1",
+      "units": null
+    },
+    {
+      "code": "CHEM 123",
+      "title": "General Chemistry 2",
+      "units": null
+    },
+    {
+      "code": "CHEM 125",
+      "title": "Chemical Reactions, Equilibria and Kinetics",
+      "units": null
+    },
+    {
+      "code": "CHEM 220",
+      "title": "Intro Analytical Chemistry",
+      "units": null
+    },
+    {
+      "code": "CHEM 221",
+      "title": "Multi-Component Analysis",
+      "units": null
+    },
+    {
+      "code": "CHEM 233",
+      "title": "Fundamentals of Biochemistry",
+      "units": null
+    },
+    {
+      "code": "CHEM 237",
+      "title": "Introductory Biochemistry",
+      "units": null
+    },
+    {
+      "code": "CHEM 254",
+      "title": "Introductory Chemical Thermodynamics",
+      "units": null
+    },
+    {
+      "code": "CHEM 356",
+      "title": "Introductory Quantum Mechanics",
+      "units": null
+    },
+    {
+      "code": "CHEM 265",
+      "title": "Organic Chemistry 2",
+      "units": null
+    },
+    {
+      "code": "CHEM 266",
+      "title": "Basic Organic Chemistry 1",
+      "units": null
+    },
+    {
+      "code": "CHEM 310",
+      "title": "Transition Element Compounds and Inorganic Materials",
+      "units": null
+    },
+    {
+      "code": "CHEM 313",
+      "title": "Main Group and Solid State Chemistry",
+      "units": null
+    },
+    {
+      "code": "CHEM 323",
+      "title": "Analytical Instrumentation",
+      "units": null
+    },
+    {
+      "code": "CHEM 333",
+      "title": "Metabolism 1",
+      "units": null
+    },
+    {
+      "code": "CHEM 350",
+      "title": "Chemical Kinetics and Statistical Mechanics",
+      "units": null
+    },
+    {
+      "code": "CHEM 357",
+      "title": "Physical Biochemistry",
+      "units": null
+    },
+    {
+      "code": "CHEM 360",
+      "title": "Organic Chemistry 3",
+      "units": null
+    },
+    {
+      "code": "CHEM 363",
+      "title": "Organic Process Chemistry",
+      "units": null
+    },
+    {
+      "code": "CHEM 432",
+      "title": "Metabolism 2",
+      "units": null
+    },
+    {
+      "code": "CHEM 433",
+      "title": "Advanced Biochemistry",
+      "units": null
+    },
+    {
+      "code": "CHEM 464",
+      "title": "Spectroscopy in Organic Chemistry",
+      "units": null
+    },
+    {
+      "code": "CHEM 370",
+      "title": "Introduction to Polymer Science",
+      "units": null
+    },
+    {
+      "code": "CHEM 765",
+      "title": "Strategies in Organic Synthesis",
+      "units": null
+    },
+    {
+      "code": "CHEM 772",
+      "title": "Polymerization and Polymer Reactions",
+      "units": null
+    },
+    {
+      "code": "CHEM 771",
+      "title": "Physical Properties of Polymers",
+      "units": null
+    },
+    {
+      "code": "CHEM 140",
+      "title": "Introduction to Scientific Calculations",
+      "units": null
+    },
+    {
+      "code": "CHEM 209",
+      "title": "Introductory Spectroscopy and Structure",
+      "units": null
+    },
+    {
+      "code": "CHEM 240",
+      "title": "Mathematical Methods for Chemistry",
+      "units": null
+    },
+    {
+      "code": "CHEM 331",
+      "title": "Fundamentals of Metabolism 1",
+      "units": null
+    },
+    {
+      "code": "CHEM 381",
+      "title": "Bioorganic Chemistry",
+      "units": null
+    },
+    {
+      "code": "CHEM 481",
+      "title": "Rational Design of Potential Drug Candidates",
+      "units": null
+    },
+    {
+      "code": "CHEM 383",
+      "title": "Medicinal Chemistry",
+      "units": null
+    },
+    {
+      "code": "CHEM 350L",
+      "title": "Physical Chemistry Laboratory 2",
+      "units": null
+    },
+    {
+      "code": "CHEM 224L",
+      "title": "Analytical Instrumentation Laboratory",
+      "units": null
+    },
+    {
+      "code": "CHEM 360L",
+      "title": "Senior Organic Chemistry Laboratory",
+      "units": null
+    },
+    {
+      "code": "CHEM 494B",
+      "title": "Research Project",
+      "units": null
+    },
+    {
+      "code": "CHEM 494A",
+      "title": "Research Project",
+      "units": null
+    },
+    {
+      "code": "CHEM 200",
+      "title": "Introduction to Laboratory Techniques",
+      "units": null
+    },
+    {
+      "code": "CHEM 340",
+      "title": "Introductory Computational Chemistry",
+      "units": null
+    },
+    {
+      "code": "CHEM 382L",
+      "title": "Advanced Organic Synthesis Laboratory",
+      "units": null
+    },
+    {
+      "code": "CHEM 335L",
+      "title": "Advanced Biochemistry Laboratory",
+      "units": null
+    },
+    {
+      "code": "CHEM 310L",
+      "title": "Inorganic Chemistry Laboratory 2",
+      "units": null
+    },
+    {
+      "code": "CHEM 430",
+      "title": "Special Topics in Biochemistry",
+      "units": null
+    },
+    {
+      "code": "CHEM 400",
+      "title": "Special Topics in Chemistry",
+      "units": null
+    },
+    {
+      "code": "CHEM 497",
+      "title": "Advanced Research Project",
+      "units": null
+    },
+    {
+      "code": "CHEM 495",
+      "title": "Advanced Research Project",
+      "units": null
+    },
+    {
+      "code": "CHEM 496",
+      "title": "Advanced Research Project",
+      "units": null
+    },
+    {
+      "code": "CHEM 392B",
+      "title": "Research Project 2",
+      "units": null
+    },
+    {
+      "code": "CHEM 313L",
+      "title": "Inorganic Chemistry Laboratory 1",
+      "units": null
+    },
+    {
+      "code": "CHEM 233L",
+      "title": "Fundamentals of Biochemistry Laboratory",
+      "units": null
+    },
+    {
+      "code": "CHEM 267L",
+      "title": "Organic Chemistry Laboratory",
+      "units": null
+    },
+    {
+      "code": "CHEM 266L",
+      "title": "Organic Chemistry Laboratory",
+      "units": null
+    },
+    {
+      "code": "CHEM 237L",
+      "title": "Introductory Biochemistry Laboratory",
+      "units": null
+    },
+    {
+      "code": "CHEM 250L",
+      "title": "Physical Chemistry Laboratory 1",
+      "units": null
+    },
+    {
+      "code": "CHEM 265L",
+      "title": "Organic Chemistry Laboratory 1",
+      "units": null
+    },
+    {
+      "code": "CHEM 120L",
+      "title": "General Chemistry Laboratory 1",
+      "units": null
+    },
+    {
+      "code": "CHEM 123L",
+      "title": "General Chemistry Laboratory 2",
+      "units": null
+    },
+    {
+      "code": "CHEM 220L",
+      "title": "Quantitative Chemical Analysis Laboratory",
+      "units": null
+    },
+    {
+      "code": "CHEM 125L",
+      "title": "Chemical Reaction Laboratory 2",
+      "units": null
+    },
+    {
+      "code": "CHEM 121L",
+      "title": "Chemical Reaction Laboratory 1",
+      "units": null
+    },
+    {
+      "code": "CHEM 262L",
+      "title": "Organic Chemistry Laboratory for Engineering Students",
+      "units": null
+    },
+    {
+      "code": "CHEM 392A",
+      "title": "Research Project 1",
+      "units": null
+    },
+    {
+      "code": "CHEM 794",
+      "title": "Master's Seminar",
+      "units": null
+    },
+    {
+      "code": "CHEM 784",
+      "title": "Foundations of Literature Review",
+      "units": null
+    },
+    {
+      "code": "CHEM 121W",
+      "title": "Introduction to Chemical Kinetics & Equilibrium (WLU)",
+      "units": null
+    },
+    {
+      "code": "CHEM 773",
+      "title": "Selected Topics in Polymer Chemistry",
+      "units": null
+    },
+    {
+      "code": "CHEM 720",
+      "title": "Selected Topics in Analytical Chemistry",
+      "units": null
+    },
+    {
+      "code": "CHEM 726",
+      "title": "Topics in Analytical Spectroscopy",
+      "units": null
+    },
+    {
+      "code": "CHEM 760",
+      "title": "Selected Topics in Organic Chemistry",
+      "units": null
+    },
+    {
+      "code": "CHEM 740",
+      "title": "Selected Topics in Theoretical Chemistry",
+      "units": null
+    },
+    {
+      "code": "CHEM 731",
+      "title": "Selected Topics in Biochemistry",
+      "units": null
+    },
+    {
+      "code": "CHEM 750",
+      "title": "Selected Topics in Physical Chemistry",
+      "units": null
+    },
+    {
+      "code": "CHEM 710",
+      "title": "Selected Topics in Inorganic Chemistry",
+      "units": null
+    },
+    {
+      "code": "CHEM 480W",
+      "title": "Special Topics in Chemistry (WLU)",
+      "units": null
+    },
+    {
+      "code": "CHEM 350W",
+      "title": "Biochemistry I: Bioenergetics and Catabolic Pathways (WLU)",
+      "units": null
+    },
+    {
+      "code": "CHEM 730",
+      "title": "Proteins and Nucleic Acids",
+      "units": null
+    },
+    {
+      "code": "CHEM 756",
+      "title": "Spectroscopy",
+      "units": null
+    },
+    {
+      "code": "CHEM 764",
+      "title": "Synthetic Organic Reactions",
+      "units": null
+    },
+    {
+      "code": "CHEM 736",
+      "title": "Regulations in Biological Systems",
+      "units": null
+    },
+    {
+      "code": "CHEM 755",
+      "title": "Kinetics - Dynamics",
+      "units": null
+    },
+    {
+      "code": "CHEM 715",
+      "title": "Structure & Bonding in Inorganic Chemistry",
+      "units": null
+    },
+    {
+      "code": "CHEM 718",
+      "title": "Advanced Organometallic Chemistry",
+      "units": null
+    },
+    {
+      "code": "CHEM 728",
+      "title": "Electroanalytical Chemistry",
+      "units": null
+    },
+    {
+      "code": "CHEM 769",
+      "title": "Physical Organic Chemistry",
+      "units": null
+    },
+    {
+      "code": "CHEM 737",
+      "title": "Enzymes",
+      "units": null
+    },
+    {
+      "code": "CHEM 738",
+      "title": "Cell Membranes and Cell Surfaces",
+      "units": null
+    },
+    {
+      "code": "CHEM 745",
+      "title": "Statistical Mechanics",
+      "units": null
+    },
+    {
+      "code": "CHEM 746",
+      "title": "Quantum Chemistry",
+      "units": null
+    },
+    {
+      "code": "CHEM 712",
+      "title": "X-Ray Crystallography",
+      "units": null
+    },
+    {
+      "code": "CHEM 713",
+      "title": "Chemistry of Inorganic Solid State Materials",
+      "units": null
+    },
+    {
+      "code": "CHEM 717",
+      "title": "Advanced Transition Metal Chemistry",
+      "units": null
+    },
+    {
+      "code": "CHEM 724",
+      "title": "Chemical Instrumentation",
+      "units": null
+    },
+    {
+      "code": "CHEM 727",
+      "title": "Separations",
+      "units": null
+    },
+    {
+      "code": "CHEM 729",
+      "title": "Surface Analysis",
+      "units": null
+    },
+    {
+      "code": "CHEM 766",
+      "title": "Organic Spectroscopy",
+      "units": null
+    },
+    {
+      "code": "CHEM 770",
+      "title": "Principles of Polymer Science",
+      "units": null
+    },
+    {
+      "code": "CHEM 250W",
+      "title": "Introductory Biochemistry (WLU)",
+      "units": null
+    },
+    {
+      "code": "CHEM 302W",
+      "title": "Intermediate Organic Chemistry (WLU)",
+      "units": null
+    },
+    {
+      "code": "CHEM 203W",
+      "title": "Organic Chemistry II: Structure and Functional Group Chemistry (WLU)",
+      "units": null
+    },
+    {
+      "code": "CHEM 233W",
+      "title": "Environment Atmospheric Chemistry (WLU)",
+      "units": null
+    },
+    {
+      "code": "CHEM 212W",
+      "title": "Physical Chemistry (WLU)",
+      "units": null
+    },
+    {
+      "code": "CHEM 204W",
+      "title": "Introduction to Organic Chemistry I (WLU)",
+      "units": null
+    },
+    {
+      "code": "CHEM 419W",
+      "title": "Prin. of Biochem. Toxicology (WLU)",
+      "units": null
+    },
+    {
+      "code": "CHEM 205W",
+      "title": "Introduction to Organic Chemistry II (WLU)",
+      "units": null
+    },
+    {
+      "code": "CHEM 234W",
+      "title": "Environmental Aquatic (WLU)",
+      "units": null
+    },
+    {
+      "code": "CHEM 226W",
+      "title": "Inorganic Chemistry II (WLU)",
+      "units": null
+    },
+    {
+      "code": "CHEM 202W",
+      "title": "Organic Chem 1: Fundamentals (WLU)",
+      "units": null
+    },
+    {
+      "code": "CHEM 120W",
+      "title": "Introductory Chemistry(WLU)",
+      "units": null
+    },
+    {
+      "code": "CHEM 111W",
+      "title": "Fundamentals of Chemistry II (WLU)",
+      "units": null
+    },
+    {
+      "code": "CHEM 301W",
+      "title": "Organic Chemistry III: Synthetic Methods (WLU)",
+      "units": null
+    },
+    {
+      "code": "CHEM 354W",
+      "title": "Biochemistry II (WLU)",
+      "units": null
+    },
+    {
+      "code": "CHEM 440W",
+      "title": "Introduction to Nanomaterials (WLU)",
+      "units": null
+    }
   ]
 }

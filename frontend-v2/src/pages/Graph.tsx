@@ -62,6 +62,7 @@ interface CourseRating {
 
 interface SkillNodeData {
   labels: string[]
+  escoSkills: string[]
   courseTitle: string
   courseUrl: string
   courseReason: string
@@ -97,6 +98,7 @@ interface CourseContextValue {
   startReplace: (nodeId: string) => void
   submitReplace: (nodeId: string, reason: string, skill: string, currentCourse: string) => void
   cancelReplace: (nodeId: string) => void
+  onTermCompleted?: (nodeIds: string[]) => void
 }
 
 /* ─── Drag validation context ─── */
@@ -110,7 +112,7 @@ const DragValidationContext = createContext<DragValidationContextValue>({ disabl
 
 const CourseContext = createContext<CourseContextValue>(null!)
 
-function CourseProvider({ children, edges, setNodes, onCourseReplaced }: { children: React.ReactNode; edges: Edge[]; setNodes: React.Dispatch<React.SetStateAction<Node<SkillNodeData>[]>>; onCourseReplaced?: (entry: HistoryEntry) => void }) {
+function CourseProvider({ children, edges, setNodes, onCourseReplaced, onTermCompleted }: { children: React.ReactNode; edges: Edge[]; setNodes: React.Dispatch<React.SetStateAction<Node<SkillNodeData>[]>>; onCourseReplaced?: (entry: HistoryEntry) => void; onTermCompleted?: (nodeIds: string[]) => void }) {
   const [store, setStore] = useState<Record<string, CourseState>>({})
 
   const prerequisites = useMemo(() => {
@@ -185,7 +187,7 @@ function CourseProvider({ children, edges, setNodes, onCourseReplaced }: { child
   }, [])
 
   return (
-    <CourseContext.Provider value={{ store, prerequisites, accept, acceptMany, unacceptMany, startReplace, submitReplace, cancelReplace }}>
+    <CourseContext.Provider value={{ store, prerequisites, accept, acceptMany, unacceptMany, startReplace, submitReplace, cancelReplace, onTermCompleted }}>
       {children}
     </CourseContext.Provider>
   )
@@ -245,13 +247,22 @@ function SkillNode({ id, data }: NodeProps<Node<SkillNodeData>>) {
       <div className="flex items-center gap-1.5">
         <div>
           <span className="block text-[9px] font-medium uppercase tracking-wider text-stone-400 mb-0.5">
-            {data.labels.length > 1 ? 'Skills' : 'Skill'}
+            {data.term ? (data.labels.length > 1 ? 'Courses' : 'Course') : (data.labels.length > 1 ? 'Skills' : 'Skill')}
           </span>
           <div className="flex flex-wrap gap-1">
             {data.labels.map((skill) => (
               <span key={skill} className="text-xs text-stone-400">{skill}</span>
             ))}
           </div>
+          {data.escoSkills.length > 0 && (
+            <div className="flex flex-wrap gap-1 mt-1">
+              {data.escoSkills.map((skill) => (
+                <span key={skill} className="inline-block px-1.5 py-0.5 text-[10px] font-medium rounded-full bg-violet-50 text-violet-600 border border-violet-200">
+                  {skill}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
         {data.courseReason && (
           <div className="relative group shrink-0 self-end mb-0.5">
@@ -344,7 +355,7 @@ function TermGroupNode({ data }: NodeProps<Node<SkillNodeData>>) {
   const over = credits > 3.25
   const { disabledTerms } = useContext(DragValidationContext)
   const disabled = disabledTerms.has(data.term as string)
-  const { store, acceptMany, unacceptMany } = useContext(CourseContext)
+  const { store, acceptMany, unacceptMany, onTermCompleted } = useContext(CourseContext)
   const termNodeIds = data.termNodeIds ?? []
   const allComplete = termNodeIds.length > 0 && termNodeIds.every((id) => store[id]?.status === 'accepted')
 
@@ -368,7 +379,14 @@ function TermGroupNode({ data }: NodeProps<Node<SkillNodeData>>) {
           <button
             className={`nodrag nopan inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-medium rounded-full border transition-colors duration-150 cursor-pointer ${allComplete ? 'border-emerald-300 bg-emerald-50 text-emerald-600 hover:bg-white' : 'border-stone-200 bg-white text-stone-400 hover:border-emerald-300 hover:text-emerald-600'}`}
             onMouseDown={(e) => e.stopPropagation()}
-            onClick={() => allComplete ? unacceptMany(termNodeIds) : acceptMany(termNodeIds)}
+            onClick={() => {
+              if (allComplete) {
+                unacceptMany(termNodeIds)
+              } else {
+                acceptMany(termNodeIds)
+                onTermCompleted?.(termNodeIds)
+              }
+            }}
           >
             <Check size={9} />
             {allComplete ? 'Undo' : 'Complete term'}
@@ -455,11 +473,14 @@ function GoalPanel({ goal, program }: { goal: string; program?: { title: string;
   )
 }
 
+const SKILL_COLLAPSE_THRESHOLD = 5
+
 /* ─── Desired Skills Panel ─── */
 
 function DesiredSkillsPanel({ skills, onSkillsChange, loading }: { skills: string[]; onSkillsChange: (skills: string[]) => void; loading?: boolean }) {
   const [collapsed, setCollapsed] = useState(false)
   const [overflowVisible, setOverflowVisible] = useState(true)
+  const [showAllSkills, setShowAllSkills] = useState(false)
   const [query, setQuery] = useState('')
   const [open, setOpen] = useState(false)
   const [suggestions, setSuggestions] = useState<string[]>([])
@@ -569,7 +590,7 @@ function DesiredSkillsPanel({ skills, onSkillsChange, loading }: { skills: strin
             </div>
           ) : <div className={`pt-3 ${loading ? 'opacity-50 pointer-events-none' : ''}`}>
             <div className="flex flex-wrap gap-1.5 mb-3">
-              {skills.map((skill) => (
+              {(skills.length > SKILL_COLLAPSE_THRESHOLD && !showAllSkills ? skills.slice(0, SKILL_COLLAPSE_THRESHOLD) : skills).map((skill) => (
                 <span
                   key={skill}
                   className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full bg-stone-100 text-stone-700 transition-colors duration-150"
@@ -584,6 +605,14 @@ function DesiredSkillsPanel({ skills, onSkillsChange, loading }: { skills: strin
                   </button>
                 </span>
               ))}
+              {skills.length > SKILL_COLLAPSE_THRESHOLD && (
+                <button
+                  onClick={() => setShowAllSkills((v) => !v)}
+                  className="px-2.5 py-1 text-xs font-medium rounded-full bg-stone-50 text-stone-400 hover:text-stone-600 hover:bg-stone-100 cursor-pointer transition-colors duration-150"
+                >
+                  {showAllSkills ? 'See less' : `+${skills.length - SKILL_COLLAPSE_THRESHOLD} more`}
+                </button>
+              )}
             </div>
 
             <div className="relative">
@@ -649,6 +678,7 @@ function DesiredSkillsPanel({ skills, onSkillsChange, loading }: { skills: strin
 function MySkillsPanel({ skills, onSkillsChange, loading }: { skills: string[]; onSkillsChange: (skills: string[]) => void; loading?: boolean }) {
   const [collapsed, setCollapsed] = useState(false)
   const [overflowVisible, setOverflowVisible] = useState(true)
+  const [showAllSkills, setShowAllSkills] = useState(false)
   const [query, setQuery] = useState('')
   const [open, setOpen] = useState(false)
   const [suggestions, setSuggestions] = useState<string[]>([])
@@ -759,7 +789,7 @@ function MySkillsPanel({ skills, onSkillsChange, loading }: { skills: string[]; 
           ) : <div className={`pt-3 ${loading ? 'opacity-50 pointer-events-none' : ''}`}>
             {skills.length > 0 ? (
               <div className="flex flex-wrap gap-1.5 mb-3">
-                {skills.map((skill) => (
+                {(skills.length > SKILL_COLLAPSE_THRESHOLD && !showAllSkills ? skills.slice(0, SKILL_COLLAPSE_THRESHOLD) : skills).map((skill) => (
                   <span
                     key={skill}
                     className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full bg-blue-50 text-blue-900 transition-colors duration-150"
@@ -774,6 +804,14 @@ function MySkillsPanel({ skills, onSkillsChange, loading }: { skills: string[]; 
                     </button>
                   </span>
                 ))}
+                {skills.length > SKILL_COLLAPSE_THRESHOLD && (
+                  <button
+                    onClick={() => setShowAllSkills((v) => !v)}
+                    className="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-50/50 text-blue-400 hover:text-blue-600 hover:bg-blue-100 cursor-pointer transition-colors duration-150"
+                  >
+                    {showAllSkills ? 'See less' : `+${skills.length - SKILL_COLLAPSE_THRESHOLD} more`}
+                  </button>
+                )}
               </div>
             ) : (
               <p className="text-sm text-stone-400 mb-3">No existing skills detected.</p>
@@ -902,7 +940,7 @@ function CourseHistoryPanel({ history, onRestore }: { history: HistoryEntry[]; o
 /* ─── API types ─── */
 
 interface ApiCourse { title: string; url: string; reason: string; units?: number; rating?: CourseRating | null }
-interface ApiNode { id: string; labels: string[]; tier: string; course: ApiCourse; position: { x: number; y: number }; term?: string }
+interface ApiNode { id: string; labels: string[]; tier: string; course: ApiCourse; position: { x: number; y: number }; term?: string; esco_skills?: string[] }
 interface ApiEdge { id: string; source: string; target: string }
 interface ApiGraph { goal: string; skills: string[]; nodes: ApiNode[]; edges: ApiEdge[] }
 
@@ -913,6 +951,7 @@ function toFlowNodes(apiNodes: ApiNode[]): Node<SkillNodeData>[] {
     position: n.position,
     data: {
       labels: n.labels,
+      escoSkills: n.esco_skills ?? [],
       tier: n.tier as Tier,
       term: n.term,
       courseTitle: n.course.title,
@@ -958,7 +997,7 @@ function addTermGroups(courseNodes: Node<SkillNodeData>[]): Node<SkillNodeData>[
       id: `term-${term}`,
       type: 'termGroup',
       position: { x: minX, y: globalMinY - PAD_TOP },
-      data: { labels: [term], tier: 'foundation' as Tier, courseTitle: '', courseUrl: '', courseReason: '', courseUnits: 0, term, termCredits: members.reduce((s, n) => s + (n.data.courseUnits ?? 0.5), 0), termNodeIds: members.map((n) => n.id) },
+      data: { labels: [term], escoSkills: [], tier: 'foundation' as Tier, courseTitle: '', courseUrl: '', courseReason: '', courseUnits: 0, term, termCredits: members.reduce((s, n) => s + (n.data.courseUnits ?? 0.5), 0), termNodeIds: members.map((n) => n.id) },
       style: { width: maxX - minX, height: (globalMaxY - globalMinY) + PAD_TOP + PAD_BOTTOM },
       selectable: false,
       draggable: false,
@@ -1200,7 +1239,7 @@ export default function Graph() {
     }, 200)
   }, [prereqMap, nodes])
 
-  const fetchAcademicGraph = useCallback(() => {
+  const fetchAcademicGraph = useCallback((desired?: string[], existing?: string[]) => {
     regenAbortRef.current?.abort()
     const controller = new AbortController()
     regenAbortRef.current = controller
@@ -1219,7 +1258,9 @@ export default function Graph() {
         specialization_pids: (specializations ?? []).map((s) => s.pid),
         minor_pids: (minors ?? []).map((m) => m.pid),
         goal: navGoal ?? '',
-        major_title: major?.title ?? '',
+        major_title: major ? `${major.title} (${major.faculty})` : '',
+        desired_skills: desired ?? desiredSkills,
+        my_skills: existing ?? mySkills,
       }),
       signal: combined,
     })
@@ -1238,6 +1279,13 @@ export default function Graph() {
         setNodes(addTermGroups(courseNodes))
         setEdges(flowEdges)
         setGoal(data.goal)
+
+        // Auto-populate desired skills from course ESCO skills (deduped)
+        const allEsco = new Set(courseNodes.flatMap((n) => n.data.escoSkills))
+        setDesiredSkills((prev) => {
+          const merged = new Set([...allEsco, ...prev])
+          return Array.from(merged)
+        })
       })
       .then(() => setLoading(false))
       .catch((e) => {
@@ -1245,7 +1293,7 @@ export default function Graph() {
         setLoading(false)
         toast.error(e.name === 'TimeoutError' ? 'Request timed out — try again' : `Failed to build graph: ${e.message}`)
       })
-  }, [navGoal, requirementGroups, specializations, minors])
+  }, [navGoal, requirementGroups, specializations, minors, desiredSkills, mySkills])
 
   const fetchGraph = useCallback((existing: string[], desired: string[]) => {
     regenAbortRef.current?.abort()
@@ -1300,15 +1348,103 @@ export default function Graph() {
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleDesiredSkillsChange = useCallback((newSkills: string[]) => {
+    const prevSkills = desiredSkills
     setDesiredSkills(newSkills)
-    skillChangeCounter.current += 1
-    const snapshot = skillChangeCounter.current
-    setTimeout(() => {
-      if (skillChangeCounter.current === snapshot) {
-        fetchGraph(mySkills, newSkills)
-      }
-    }, 0)
-  }, [fetchGraph, mySkills])
+
+    if (mode !== 'academics') {
+      skillChangeCounter.current += 1
+      const snapshot = skillChangeCounter.current
+      setTimeout(() => {
+        if (skillChangeCounter.current === snapshot) fetchGraph(mySkills, newSkills)
+      }, 0)
+      return
+    }
+
+    // Academic mode: find which skill was added (if any)
+    const added = newSkills.filter((s) => !prevSkills.includes(s))
+    if (added.length === 0) return // removal only — just update the list
+
+    const addedSkill = added[0]
+
+    // Check if any existing course already covers this skill
+    const courseNodes = nodes.filter((n) => n.type === 'skill')
+    const match = courseNodes.find((n) => n.data.escoSkills.includes(addedSkill))
+    if (match) {
+      toast.info(`"${addedSkill}" is already taught in ${match.data.courseTitle}`)
+      return
+    }
+
+    // No existing course covers it — call backend to find one
+    const existingCodes = courseNodes.map((n) => n.data.labels[0]?.replace(/\s/g, '').toUpperCase()).filter(Boolean)
+    const termAssignments: Record<string, string> = {}
+    for (const n of courseNodes) {
+      const code = n.data.labels[0]?.replace(/\s/g, '').toUpperCase()
+      if (code && n.data.term) termAssignments[code] = n.data.term as string
+    }
+
+    toast.loading(`Finding a course for "${addedSkill}"…`, { id: `add-course-${addedSkill}` })
+
+    fetch('/api/graph/academics/add-course', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        skill: addedSkill,
+        existing_codes: existingCodes,
+        term_assignments: termAssignments,
+        goal: navGoal ?? goal,
+        major_title: major ? `${major.title} (${major.faculty})` : '',
+      }),
+      signal: AbortSignal.timeout(60_000),
+    })
+      .then((r) => {
+        if (!r.ok) return r.json().then((d) => { throw new Error(d.error || `Server error (${r.status})`) })
+        return r.json()
+      })
+      .then((data: { node: ApiNode; edge_sources: string[]; term: string }) => {
+        const newNode = toFlowNodes([data.node])[0]
+
+        setNodes((prev) => {
+          const withoutGroups = prev.filter((n) => n.type !== 'termGroup')
+          const withNew = [...withoutGroups, newNode]
+          return addTermGroups(withNew)
+        })
+
+        // Add edges from prereqs
+        if (data.edge_sources.length > 0) {
+          setEdges((prev) => {
+            const newEdges = data.edge_sources
+              .filter((src) => {
+                const srcTerm = courseNodes.find((n) => n.id === src.toLowerCase())?.data.term
+                return srcTerm !== data.term
+              })
+              .map((src) => ({
+                id: `e-${src.toLowerCase()}-${newNode.id}`,
+                source: src.toLowerCase(),
+                target: newNode.id,
+                style: { stroke: '#d6d3d1', strokeWidth: 1.5 },
+                type: 'academicEdge' as const,
+                markerEnd: { type: MarkerType.ArrowClosed, color: '#d6d3d1', width: 14, height: 14 },
+              }))
+            return [...prev, ...newEdges]
+          })
+        }
+
+        // Add the course's ESCO skills to desired skills (deduped)
+        const nodeSkills = newNode.data.escoSkills
+        if (nodeSkills.length > 0) {
+          setDesiredSkills((prev) => {
+            const merged = new Set([...prev, ...nodeSkills])
+            return Array.from(merged)
+          })
+        }
+
+        const code = data.node.labels?.[0] ?? data.node.course.title
+        toast.success(`Added ${code} to Term ${data.term} for "${addedSkill}"`, { id: `add-course-${addedSkill}` })
+      })
+      .catch((e) => {
+        toast.error(e.message || `Couldn't find a course for "${addedSkill}"`, { id: `add-course-${addedSkill}` })
+      })
+  }, [mode, desiredSkills, nodes, fetchGraph, mySkills, navGoal, goal, major])
 
   const handleMySkillsChange = useCallback((newSkills: string[]) => {
     setMySkills(newSkills)
@@ -1316,10 +1452,14 @@ export default function Graph() {
     const snapshot = skillChangeCounter.current
     setTimeout(() => {
       if (skillChangeCounter.current === snapshot) {
-        fetchGraph(newSkills, desiredSkills)
+        if (mode === 'academics') {
+          fetchAcademicGraph(desiredSkills, newSkills)
+        } else {
+          fetchGraph(newSkills, desiredSkills)
+        }
       }
     }, 0)
-  }, [fetchGraph, desiredSkills])
+  }, [mode, fetchGraph, fetchAcademicGraph, desiredSkills])
 
   const onNodesChange: OnNodesChange<Node<SkillNodeData>> = useCallback(
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
@@ -1330,7 +1470,23 @@ export default function Graph() {
 
   return (
     <DragValidationContext.Provider value={dragValidation}>
-    <CourseProvider edges={edges} setNodes={setNodes} onCourseReplaced={(entry) => setCourseHistory((h) => [entry, ...h])}>
+    <CourseProvider
+      edges={edges}
+      setNodes={setNodes}
+      onCourseReplaced={(entry) => setCourseHistory((h) => [entry, ...h])}
+      onTermCompleted={(nodeIds) => {
+        const completedSkills = new Set(
+          nodes
+            .filter((n) => nodeIds.includes(n.id) && n.type === 'skill')
+            .flatMap((n) => n.data.escoSkills ?? [])
+        )
+        if (completedSkills.size === 0) return
+        const newDesired = desiredSkills.filter((s) => !completedSkills.has(s))
+        const newMy = [...mySkills, ...Array.from(completedSkills).filter((s) => !mySkills.includes(s))]
+        setDesiredSkills(newDesired)
+        setMySkills(newMy)
+      }}
+    >
       {/* Mobile: column layout (panels on top, graph below). Desktop: absolute overlays on full-screen graph */}
       <div className="relative w-screen h-dvh">
 
@@ -1341,12 +1497,8 @@ export default function Graph() {
             {mode === 'academics' && (
               <GoalPanel goal={navGoal ?? goal} />
             )}
-            {mode !== 'academics' && (
-              <>
-                <DesiredSkillsPanel skills={desiredSkills} onSkillsChange={handleDesiredSkillsChange} loading={loading} />
-                <MySkillsPanel skills={mySkills} onSkillsChange={handleMySkillsChange} loading={loading} />
-              </>
-            )}
+            <DesiredSkillsPanel skills={desiredSkills} onSkillsChange={handleDesiredSkillsChange} loading={loading} />
+            <MySkillsPanel skills={mySkills} onSkillsChange={handleMySkillsChange} loading={loading} />
           </div>
 
           <div className="hidden pointer-events-auto sm:flex sm:flex-col sm:gap-3 sm:absolute sm:top-5 sm:right-5">
@@ -1451,16 +1603,16 @@ export default function Graph() {
                 }
                 break
               case 'add_my_skill':
-                if (action.skill_name && mode !== 'academics') handleMySkillsChange([...mySkills, action.skill_name])
+                if (action.skill_name) handleMySkillsChange([...mySkills, action.skill_name])
                 break
               case 'remove_my_skill':
-                if (action.skill_name && mode !== 'academics') handleMySkillsChange(mySkills.filter((s) => s !== action.skill_name))
+                if (action.skill_name) handleMySkillsChange(mySkills.filter((s) => s !== action.skill_name))
                 break
               case 'add_desired_skill':
-                if (action.skill_name && mode !== 'academics') handleDesiredSkillsChange([...desiredSkills, action.skill_name])
+                if (action.skill_name) handleDesiredSkillsChange([...desiredSkills, action.skill_name])
                 break
               case 'remove_desired_skill':
-                if (action.skill_name && mode !== 'academics') handleDesiredSkillsChange(desiredSkills.filter((s) => s !== action.skill_name))
+                if (action.skill_name) handleDesiredSkillsChange(desiredSkills.filter((s) => s !== action.skill_name))
                 break
             }
           }}

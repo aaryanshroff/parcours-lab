@@ -131,6 +131,7 @@ def generate_academic_graph(
     goal: str,
     api_key: str,
     model: str = "google/gemini-2.5-flash",
+    elective_model: str = "google/gemini-2.5-pro",
     major_title: str = "",
     desired_skills: list[str] | None = None,
     my_skills: list[str] | None = None,
@@ -226,8 +227,9 @@ def generate_academic_graph(
     elective_reasons: dict[str, str] = {}
 
     if choice_groups:
+        _filter_variant_preferences(choice_groups, major_title)
         if goal.strip():
-            picks = _pick_electives(choice_groups, goal, api_key, model, program_subjects, major_title, desired_skills=desired_skills, my_skills=my_skills)
+            picks = _pick_electives(choice_groups, goal, api_key, elective_model, program_subjects, major_title, desired_skills=desired_skills, my_skills=my_skills)
             picks = _fill_picks_with_defaults(choice_groups, picks)
         else:
             picks = _pick_defaults(choice_groups, program_subjects)
@@ -717,6 +719,230 @@ def _map_courses_to_esco_skills(
 
     logger.info("[academics] ESCO mapped %d/%d courses", len(result), len(codes))
     return result
+
+
+# Course codes where "for the Sciences" variants should be removed for Faculty of Math students.
+# Maps the non-honours code to its honours replacement so we only remove when the replacement exists.
+_MATH_FACULTY_VARIANT_MAP: dict[str, str] = {
+    "MATH127": "MATH137",  # Calculus 1 for Sciences → Honours
+    "MATH128": "MATH138",  # Calculus 2 for Sciences → Honours
+    "MATH227": "MATH237",  # Calc 3 for Sciences → Honours (if applicable)
+    "MATH228": "MATH238",
+    "CS116":   "CS136",    # Intro CS for Sciences → CS for Math
+}
+
+
+def _filter_variant_preferences(choice_groups: list[dict], major_title: str) -> None:
+    """Remove non-honours course variants from choice groups when the student's program
+    implies they should take the honours version. Mutates groups in place."""
+    lower = major_title.lower()
+    is_math_faculty = "math" in lower or "computer science" in lower or "statistics" in lower
+
+    if not is_math_faculty:
+        return
+
+    for group in choice_groups:
+        courses = group.get("courses")
+        if not courses:
+            continue
+        codes_in_group = {_normalize_code(c["code"]) for c in courses}
+        group["courses"] = [
+            c for c in courses
+            if _normalize_code(c["code"]) not in _MATH_FACULTY_VARIANT_MAP
+            or _MATH_FACULTY_VARIANT_MAP[_normalize_code(c["code"])] not in codes_in_group
+        ]
+
+
+def add_course_for_skill(
+    skill: str,
+    existing_codes: list[str],
+    term_assignments: dict[str, str],
+    goal: str,
+    major_title: str,
+    api_key: str,
+    model: str = "google/gemini-2.5-pro",
+) -> dict:
+    """Find one UW course that teaches the given ESCO skill and assign it to an appropriate term.
+
+    Returns {"node": SkillNode, "edge_sources": [prereq_ids]} or {"error": "..."}.
+    """
+    client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key)
+    existing_set = {_normalize_code(c) for c in existing_codes}
+    program_subjects = _program_subjects_from_title(major_title)
+
+    # Gather anti-reqs of existing courses so we don't suggest conflicts
+    blocked: set[str] = set(existing_set)
+    for code in existing_set:
+        blocked |= _get_antireqs(code)
+
+    # Infer candidate subjects from the skill + program
+    resp_subj = client.chat.completions.create(
+        model=model,
+        messages=[
+            {"role": "system", "content": (
+                "Given a skill and a university program, return the 2-4 UWaterloo subject codes "
+                "(e.g. CS, MATH, STAT, PSYCH, ECON) most likely to offer courses teaching that skill. "
+                "Return ONLY a JSON array of uppercase subject codes, no other text."
+            )},
+            {"role": "user", "content": f"Skill: {skill}\nProgram: {major_title}"},
+        ],
+        temperature=0.1,
+    )
+    raw_subj = resp_subj.choices[0].message.content or "[]"
+    raw_subj = raw_subj.strip()
+    if raw_subj.startswith("```"):
+        raw_subj = raw_subj.split("\n", 1)[1] if "\n" in raw_subj else raw_subj[3:]
+        if raw_subj.endswith("```"):
+            raw_subj = raw_subj[:-3]
+        raw_subj = raw_subj.strip()
+    try:
+        subjects = json.loads(raw_subj)
+    except json.JSONDecodeError:
+        subjects = []
+
+    # Collect candidate courses from those subjects
+    candidates: list[dict] = []
+    for subj in subjects[:4]:
+        for c in list_courses_by_subject(subj):
+            nc = _normalize_code(c["code"])
+            if nc not in blocked and _is_accessible(c["code"], program_subjects):
+                candidates.append(c)
+
+    if not candidates:
+        return {"error": f"No available courses found for \"{skill}\""}
+
+    # Fetch ratings for candidates
+    uwflow_ratings = get_uwflow_ratings_bulk([c["code"] for c in candidates[:50]])
+
+    course_lines = []
+    for c in candidates[:50]:
+        line = f"- {c['code']}: {c['title']}"
+        rating_str = format_uwflow_rating(uwflow_ratings.get(c['code'].replace(' ', '').upper()))
+        if rating_str:
+            line += f" {rating_str}"
+        course_lines.append(line)
+
+    resp_pick = client.chat.completions.create(
+        model=model,
+        messages=[
+            {"role": "system", "content": (
+                "Pick ONE course from the list that best teaches the given ESCO skill for this student. "
+                "The course must genuinely teach this skill, not just be tangentially related. "
+                "Prefer well-rated courses. Return ONLY valid JSON: "
+                '{"code": "<COURSE CODE>", "title": "<title>", "reason": "<one sentence>"}'
+            )},
+            {"role": "user", "content": (
+                f"Skill to learn: {skill}\n"
+                f"Program: {major_title}\n"
+                + (f"Goal: {goal}\n" if goal else "")
+                + "\nCourses:\n" + "\n".join(course_lines)
+            )},
+        ],
+        temperature=0.2,
+    )
+    raw_pick = resp_pick.choices[0].message.content or "{}"
+    raw_pick = raw_pick.strip()
+    if raw_pick.startswith("```"):
+        raw_pick = raw_pick.split("\n", 1)[1] if "\n" in raw_pick else raw_pick[3:]
+        if raw_pick.endswith("```"):
+            raw_pick = raw_pick[:-3]
+        raw_pick = raw_pick.strip()
+
+    try:
+        picked = json.loads(raw_pick)
+    except json.JSONDecodeError:
+        return {"error": f"Failed to pick a course for \"{skill}\""}
+
+    code = picked.get("code", "")
+    nc = _normalize_code(code)
+    if not nc:
+        return {"error": f"Failed to pick a course for \"{skill}\""}
+
+    title = picked.get("title", code)
+    reason = picked.get("reason", "")
+
+    # Determine term: must be after all in-plan prereqs
+    prereqs = _fetch_in_program_prereqs(nc, existing_set | {nc})
+    min_term_idx = 0
+    for p in prereqs:
+        p_term = term_assignments.get(p)
+        if p_term in TERM_ORDER:
+            min_term_idx = max(min_term_idx, TERM_ORDER.index(p_term) + 1)
+
+    # Also respect external prereq levels
+    try:
+        prereq_data = get_course_prereqs(nc)
+    except Exception:
+        prereq_data = None
+    if prereq_data:
+        for p in prereq_data.get("prereqs", []):
+            if _normalize_code(p) in existing_set:
+                continue
+            m = re.search(r"(\d{3})", p)
+            if m:
+                level = min(int(m.group(1)) // 100, 4)
+                level_min = {1: 1, 2: 2, 3: 4, 4: 6}.get(level, 0)  # map to TERM_ORDER index
+                min_term_idx = max(min_term_idx, level_min)
+
+    # Find a term that has room (≤3.25 credits)
+    from uwaterloo import _load_course_cache
+    course_cache = _load_course_cache()
+    course_units = float(course_cache.get(nc, {}).get("units", 0.5) if course_cache.get(nc) else 0.5)
+
+    assigned_term = None
+    for idx in range(min_term_idx, len(TERM_ORDER)):
+        term = TERM_ORDER[idx]
+        term_credits = sum(
+            float(course_cache.get(c, {}).get("units", 0.5) if course_cache.get(c) else 0.5)
+            for c, t in term_assignments.items() if t == term
+        )
+        if term_credits + course_units <= 3.25:
+            assigned_term = term
+            break
+
+    if not assigned_term:
+        assigned_term = TERM_ORDER[-1]
+
+    tier = TERM_TO_TIER.get(assigned_term, "core")
+
+    # Position: place below existing courses in the term column
+    term_col = TERM_ORDER.index(assigned_term)
+    term_count = sum(1 for t in term_assignments.values() if t == assigned_term)
+
+    uwflow = uwflow_ratings.get(nc) or get_uwflow_ratings_bulk([nc]).get(nc)
+    course_rating = None
+    if uwflow:
+        course_rating = CourseRating(
+            liked=uwflow.get("liked"),
+            easy=uwflow.get("easy"),
+            useful=uwflow.get("useful"),
+            filled_count=uwflow.get("filled_count"),
+        )
+
+    # Map ESCO skills for this course
+    esco_map = _map_courses_to_esco_skills({nc}, {nc: {"code": code, "title": title}}, goal, api_key, model)
+
+    node = SkillNode(
+        id=nc.lower(),
+        labels=[code],
+        tier=tier,
+        term=assigned_term,
+        course=Course(
+            title=title,
+            url=f"https://uwflow.com/course/{nc.lower()}",
+            reason=reason,
+            units=course_units,
+            rating=course_rating,
+        ),
+        position=Position(x=term_col * 440, y=term_count * 220),
+        esco_skills=esco_map.get(nc, [skill]),
+    )
+
+    return {
+        "node": node.model_dump(),
+        "edge_sources": prereqs,
+        "term": assigned_term,
+    }
 
 
 def _pick_defaults(choice_groups: list[dict], program_subjects: set[str] | None = None) -> dict[str, str]:

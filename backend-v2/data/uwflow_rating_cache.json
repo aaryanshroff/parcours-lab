@@ -26024,5 +26024,148 @@
       "comment_count": 0,
       "profs": []
     }
+  },
+  "PHYS391": {
+    "fetched_at": 1775413041.711647,
+    "rating": {
+      "liked": 0.5,
+      "easy": 0.3333333333333333,
+      "useful": 0.4166666666666667,
+      "filled_count": 4,
+      "comment_count": 2,
+      "profs": []
+    }
+  },
+  "PHYS782": {
+    "fetched_at": 1775413041.87318,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PHYS739": {
+    "fetched_at": 1775413042.132087,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PHYS702": {
+    "fetched_at": 1775413042.3043132,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PHYS705": {
+    "fetched_at": 1775413042.459947,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PHYS383": {
+    "fetched_at": 1775413042.60461,
+    "rating": {
+      "liked": 0.8,
+      "easy": 0.875,
+      "useful": 1.0,
+      "filled_count": 5,
+      "comment_count": 3,
+      "profs": []
+    }
+  },
+  "PHYS394": {
+    "fetched_at": 1775413042.7694578,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PHYS449": {
+    "fetched_at": 1775413042.910474,
+    "rating": {
+      "liked": 0.25,
+      "easy": 0.041666666666666664,
+      "useful": 0.7083333333333334,
+      "filled_count": 8,
+      "comment_count": 6,
+      "profs": []
+    }
+  },
+  "PHYS225": {
+    "fetched_at": 1775413043.1369119,
+    "rating": {
+      "liked": 0.39285714285714285,
+      "easy": 0.675,
+      "useful": 0.1875,
+      "filled_count": 28,
+      "comment_count": 10,
+      "profs": []
+    }
+  },
+  "PHYS393": {
+    "fetched_at": 1775413043.296476,
+    "rating": {
+      "liked": 1.0,
+      "easy": 0.5833333333333334,
+      "useful": 0.9166666666666666,
+      "filled_count": 5,
+      "comment_count": 3,
+      "profs": []
+    }
+  },
+  "PHYS703": {
+    "fetched_at": 1775413043.4860108,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PHYS437B": {
+    "fetched_at": 1775413043.682061,
+    "rating": {
+      "liked": 1.0,
+      "easy": null,
+      "useful": null,
+      "filled_count": 3,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PHYS612": {
+    "fetched_at": 1775413043.828928,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
   }
 }
