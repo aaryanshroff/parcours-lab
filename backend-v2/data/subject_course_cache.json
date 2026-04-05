@@ -1261,5 +1261,767 @@
       "title": "Directed Studies (WLU)",
       "units": null
     }
+  ],
+  "BIOL": [
+    {
+      "code": "BIOL 490A",
+      "title": "Biology Field Course 1",
+      "units": null
+    },
+    {
+      "code": "BIOL 490B",
+      "title": "Biology Field Course 2",
+      "units": null
+    },
+    {
+      "code": "BIOL 490C",
+      "title": "Biology Field Course 3",
+      "units": null
+    },
+    {
+      "code": "BIOL 490D",
+      "title": "Biology Field Course 4",
+      "units": null
+    },
+    {
+      "code": "BIOL 370",
+      "title": "Comparative Animal Physiology: Environmental Aspects",
+      "units": null
+    },
+    {
+      "code": "BIOL 431",
+      "title": "Bacterial Molecular Genetics",
+      "units": null
+    },
+    {
+      "code": "BIOL 331",
+      "title": "Advanced Cell Biology",
+      "units": null
+    },
+    {
+      "code": "BIOL 361",
+      "title": "Biostatistics and Experimental Design",
+      "units": null
+    },
+    {
+      "code": "BIOL 365",
+      "title": "Methods in Bioinformatics",
+      "units": null
+    },
+    {
+      "code": "BIOL 373",
+      "title": "Principles of Human Physiology 2",
+      "units": null
+    },
+    {
+      "code": "BIOL 220",
+      "title": "Introduction to Plant Structure and Function",
+      "units": null
+    },
+    {
+      "code": "BIOL 450",
+      "title": "Marine Biology",
+      "units": null
+    },
+    {
+      "code": "BIOL 442",
+      "title": "Virology",
+      "units": null
+    },
+    {
+      "code": "BIOL 342",
+      "title": "Molecular Biotechnology 1",
+      "units": null
+    },
+    {
+      "code": "BIOL 354",
+      "title": "Environmental Toxicology",
+      "units": null
+    },
+    {
+      "code": "BIOL 371",
+      "title": "Comparative Animal Physiology: Evolutionary Themes",
+      "units": null
+    },
+    {
+      "code": "BIOL 403",
+      "title": "Developmental Biology and Embryology",
+      "units": null
+    },
+    {
+      "code": "BIOL 447",
+      "title": "Environmental Microbiology",
+      "units": null
+    },
+    {
+      "code": "BIOL 448",
+      "title": "Microbial Physiology and Biochemistry",
+      "units": null
+    },
+    {
+      "code": "BIOL 351",
+      "title": "Aquatic Ecology",
+      "units": null
+    },
+    {
+      "code": "BIOL 455",
+      "title": "Ecological Risk Assessment and Management",
+      "units": null
+    },
+    {
+      "code": "BIOL 456",
+      "title": "Population Biology",
+      "units": null
+    },
+    {
+      "code": "BIOL 457",
+      "title": "Analysis of Communities",
+      "units": null
+    },
+    {
+      "code": "BIOL 359",
+      "title": "Evolution 1: Mechanisms",
+      "units": null
+    },
+    {
+      "code": "BIOL 461",
+      "title": "Advanced Biostatistics",
+      "units": null
+    },
+    {
+      "code": "BIOL 473",
+      "title": "Mammalian Reproduction",
+      "units": null
+    },
+    {
+      "code": "BIOL 432",
+      "title": "Molecular Biotechnology 2",
+      "units": null
+    },
+    {
+      "code": "BIOL 433",
+      "title": "Plant Biotechnology",
+      "units": null
+    },
+    {
+      "code": "BIOL 439",
+      "title": "Environmental and Natural Products Biochemistry",
+      "units": null
+    },
+    {
+      "code": "BIOL 441",
+      "title": "Advances in Immunology",
+      "units": null
+    },
+    {
+      "code": "BIOL 443",
+      "title": "Fermentation Biotechnology",
+      "units": null
+    },
+    {
+      "code": "BIOL 444",
+      "title": "Bacterial Pathogenesis",
+      "units": null
+    },
+    {
+      "code": "BIOL 345",
+      "title": "Microorganisms in Foods",
+      "units": null
+    },
+    {
+      "code": "BIOL 346",
+      "title": "Microbial Ecology and Diversity",
+      "units": null
+    },
+    {
+      "code": "BIOL 201",
+      "title": "Human Anatomy",
+      "units": null
+    },
+    {
+      "code": "BIOL 110",
+      "title": "Biodiversity, Biomes, and Evolution",
+      "units": null
+    },
+    {
+      "code": "BIOL 241",
+      "title": "Introduction to Applied Microbiology",
+      "units": null
+    },
+    {
+      "code": "BIOL 150",
+      "title": "Organismal and Evolutionary Ecology",
+      "units": null
+    },
+    {
+      "code": "BIOL 273",
+      "title": "Principles of Human Physiology 1",
+      "units": null
+    },
+    {
+      "code": "BIOL 302",
+      "title": "Functional Histology",
+      "units": null
+    },
+    {
+      "code": "BIOL 310",
+      "title": "Invertebrate Zoology",
+      "units": null
+    },
+    {
+      "code": "BIOL 323",
+      "title": "Plant Physiology",
+      "units": null
+    },
+    {
+      "code": "BIOL 434",
+      "title": "Human Molecular Genetics",
+      "units": null
+    },
+    {
+      "code": "BIOL 360",
+      "title": "Evolution 2: Fossil Record",
+      "units": null
+    },
+    {
+      "code": "BIOL 631",
+      "title": "Statistical Methods in Ecology",
+      "units": null
+    },
+    {
+      "code": "BIOL 472",
+      "title": "Cell Biology of Human Disease",
+      "units": null
+    },
+    {
+      "code": "BIOL 231",
+      "title": "Cell Biology",
+      "units": null
+    },
+    {
+      "code": "BIOL 235",
+      "title": "Foundations of Molecular Biology",
+      "units": null
+    },
+    {
+      "code": "BIOL 414",
+      "title": "Parasitology",
+      "units": null
+    },
+    {
+      "code": "BIOL 484",
+      "title": "Advanced Eukaryotic Genetics",
+      "units": null
+    },
+    {
+      "code": "BIOL 479",
+      "title": "Population Genetics and Evolution",
+      "units": null
+    },
+    {
+      "code": "BIOL 266",
+      "title": "Introduction to Computational Biology",
+      "units": null
+    },
+    {
+      "code": "BIOL 475",
+      "title": "Current Topics in Microbiology",
+      "units": null
+    },
+    {
+      "code": "BIOL 483",
+      "title": "Animal Cell Biotechnology",
+      "units": null
+    },
+    {
+      "code": "BIOL 449",
+      "title": "Public Health Microbiology",
+      "units": null
+    },
+    {
+      "code": "BIOL 476",
+      "title": "Systems Neuroscience: From Neurons to Behaviour",
+      "units": null
+    },
+    {
+      "code": "BIOL 308",
+      "title": "Principles of Molecular Biology",
+      "units": null
+    },
+    {
+      "code": "BIOL 350",
+      "title": "Ecosystem Ecology",
+      "units": null
+    },
+    {
+      "code": "BIOL 376",
+      "title": "Cellular Neurophysiology",
+      "units": null
+    },
+    {
+      "code": "BIOL 465",
+      "title": "Structural Bioinformatics",
+      "units": null
+    },
+    {
+      "code": "BIOL 469",
+      "title": "Genomics",
+      "units": null
+    },
+    {
+      "code": "BIOL 341",
+      "title": "Fundamentals of Immunology",
+      "units": null
+    },
+    {
+      "code": "BIOL 485",
+      "title": "Conservation Biology",
+      "units": null
+    },
+    {
+      "code": "BIOL 489",
+      "title": "Arctic Ecology",
+      "units": null
+    },
+    {
+      "code": "BIOL 458",
+      "title": "Quantitative Ecology",
+      "units": null
+    },
+    {
+      "code": "BIOL 251",
+      "title": "Fundamentals of Ecology",
+      "units": null
+    },
+    {
+      "code": "BIOL 451",
+      "title": "Advanced Ecology and Evolution",
+      "units": null
+    },
+    {
+      "code": "BIOL 312",
+      "title": "The Natural History of Aquatic Organisms",
+      "units": null
+    },
+    {
+      "code": "BIOL 280",
+      "title": "Introduction to Biophysics",
+      "units": null
+    },
+    {
+      "code": "BIOL 355",
+      "title": "Biology of Human Aging",
+      "units": null
+    },
+    {
+      "code": "BIOL 352",
+      "title": "Populations and Communities",
+      "units": null
+    },
+    {
+      "code": "BIOL 382",
+      "title": "Computational Modelling of Cellular Systems",
+      "units": null
+    },
+    {
+      "code": "BIOL 462",
+      "title": "Applied Wetland Science",
+      "units": null
+    },
+    {
+      "code": "BIOL 487",
+      "title": "Computational Neuroscience",
+      "units": null
+    },
+    {
+      "code": "BIOL 383",
+      "title": "Tropical Ecosystems",
+      "units": null
+    },
+    {
+      "code": "BIOL 624",
+      "title": "Analytical Biogeosciences",
+      "units": null
+    },
+    {
+      "code": "BIOL 477L",
+      "title": "Techniques in Animal Physiology",
+      "units": null
+    },
+    {
+      "code": "BIOL 470",
+      "title": "Methods of Aquatic Ecology",
+      "units": null
+    },
+    {
+      "code": "BIOL 335L",
+      "title": "Molecular Biology Techniques",
+      "units": null
+    },
+    {
+      "code": "BIOL 499A",
+      "title": "Senior Honours Project",
+      "units": null
+    },
+    {
+      "code": "BIOL 499B",
+      "title": "Senior Honours Project",
+      "units": null
+    },
+    {
+      "code": "BIOL 348L",
+      "title": "Laboratory Methods in Microbiology",
+      "units": null
+    },
+    {
+      "code": "BIOL 349",
+      "title": "Synthetic Biology Project Design",
+      "units": null
+    },
+    {
+      "code": "BIOL 498A",
+      "title": "Short Biology Field Course 1",
+      "units": null
+    },
+    {
+      "code": "BIOL 498B",
+      "title": "Short Biology Field Course 2",
+      "units": null
+    },
+    {
+      "code": "BIOL 240L",
+      "title": "Microbiology Laboratory",
+      "units": null
+    },
+    {
+      "code": "BIOL 130L",
+      "title": "Cell Biology Laboratory",
+      "units": null
+    },
+    {
+      "code": "BIOL 373L",
+      "title": "Human Physiology Laboratory",
+      "units": null
+    },
+    {
+      "code": "BIOL 452",
+      "title": "Quantitative Fisheries Biology",
+      "units": null
+    },
+    {
+      "code": "BIOL 303",
+      "title": "Introductory Developmental Biology and Embryology",
+      "units": null
+    },
+    {
+      "code": "BIOL 499W",
+      "title": "Thesis (WLU)",
+      "units": null
+    },
+    {
+      "code": "BIOL 651",
+      "title": "Hydroecology for Freshwater Ecosystem Management",
+      "units": null
+    },
+    {
+      "code": "BIOL 692",
+      "title": "Writing Scientific Papers in Ecology and Evolution",
+      "units": null
+    },
+    {
+      "code": "BIOL 633",
+      "title": "Advanced Community Ecology",
+      "units": null
+    },
+    {
+      "code": "BIOL 690",
+      "title": "Scientific Communication",
+      "units": null
+    },
+    {
+      "code": "BIOL 652",
+      "title": "Advanced Ecology",
+      "units": null
+    },
+    {
+      "code": "BIOL 702",
+      "title": "Advances in Computational Biology",
+      "units": null
+    },
+    {
+      "code": "BIOL 703",
+      "title": "Advances in Ecology and Evolution",
+      "units": null
+    },
+    {
+      "code": "BIOL 704",
+      "title": "Advances in Microbiology",
+      "units": null
+    },
+    {
+      "code": "BIOL 701",
+      "title": "Advances in Biochemical and Biomedical Sciences",
+      "units": null
+    },
+    {
+      "code": "BIOL 705",
+      "title": "Advances in Physiology and Cell Biology",
+      "units": null
+    },
+    {
+      "code": "BIOL 681A",
+      "title": "Plant Biogeography",
+      "units": null
+    },
+    {
+      "code": "BIOL 680",
+      "title": "Specialized Studies of Selected Research Procedures, Strategies or Topics",
+      "units": null
+    },
+    {
+      "code": "BIOL 681",
+      "title": "Specialized Studies of Selected Research Procedures, Strategies or Topics",
+      "units": null
+    },
+    {
+      "code": "BIOL 496W",
+      "title": "Special Topics in Advanced Biology (WLU)",
+      "units": null
+    },
+    {
+      "code": "BIOL 396W",
+      "title": "Special Topics in Biology (WLU)",
+      "units": null
+    },
+    {
+      "code": "BIOL 622",
+      "title": "Selected Topics in Plant Physiology",
+      "units": null
+    },
+    {
+      "code": "BIOL 617",
+      "title": "Advanced Topics in Environmental Toxicology",
+      "units": null
+    },
+    {
+      "code": "BIOL 488W",
+      "title": "Invertebrate Biodiversity and Conservation (WLU)",
+      "units": null
+    },
+    {
+      "code": "BIOL 393W",
+      "title": "Biostatistics (WLU)",
+      "units": null
+    },
+    {
+      "code": "BIOL 484W",
+      "title": "Fundamentals of Parasitology (WLU)",
+      "units": null
+    },
+    {
+      "code": "BIOL 358W",
+      "title": "Animals: Form and Function (WLU)",
+      "units": null
+    },
+    {
+      "code": "BIOL 341W",
+      "title": "Lab Methods: Cell & Molecular (WLU)",
+      "units": null
+    },
+    {
+      "code": "BIOL 441W",
+      "title": "Adv Molecular Biotechnology (WLU)",
+      "units": null
+    },
+    {
+      "code": "BIOL 206W",
+      "title": "Ecology (WLU)",
+      "units": null
+    },
+    {
+      "code": "BIOL 349W",
+      "title": "Embryology (WLU)",
+      "units": null
+    },
+    {
+      "code": "BIOL 459W",
+      "title": "Endocrinology (WLU)",
+      "units": null
+    },
+    {
+      "code": "BIOL 369W",
+      "title": "Plant Physiology (WLU)",
+      "units": null
+    },
+    {
+      "code": "BIOL 476W",
+      "title": "Microbial Disease (WLU)",
+      "units": null
+    },
+    {
+      "code": "BIOL 330W",
+      "title": "Fundamentals of Histology (WLU)",
+      "units": null
+    },
+    {
+      "code": "BIOL 646",
+      "title": "Paleolimnology",
+      "units": null
+    },
+    {
+      "code": "BIOL 239",
+      "title": "Genetics",
+      "units": null
+    },
+    {
+      "code": "BIOL 130",
+      "title": "Introductory Cell Biology",
+      "units": null
+    },
+    {
+      "code": "BIOL 240",
+      "title": "Fundamentals of Microbiology",
+      "units": null
+    },
+    {
+      "code": "BIOL 165",
+      "title": "Diversity of Life",
+      "units": null
+    },
+    {
+      "code": "BIOL 325",
+      "title": "Flowering Plants",
+      "units": null
+    },
+    {
+      "code": "BIOL 225",
+      "title": "Plants and Civilization",
+      "units": null
+    },
+    {
+      "code": "BIOL 211",
+      "title": "Introductory Vertebrate Zoology",
+      "units": null
+    },
+    {
+      "code": "BIOL 602",
+      "title": "Fisheries Biology",
+      "units": null
+    },
+    {
+      "code": "BIOL 605",
+      "title": "Environmental Animal Physiology",
+      "units": null
+    },
+    {
+      "code": "BIOL 645",
+      "title": "Recent  Advances in Microbial Ecology",
+      "units": null
+    },
+    {
+      "code": "BIOL 636",
+      "title": "Advanced Immunology",
+      "units": null
+    },
+    {
+      "code": "BIOL 608",
+      "title": "Advanced Bacterial Genetics",
+      "units": null
+    },
+    {
+      "code": "BIOL 650",
+      "title": "Bio-Molecular Tools",
+      "units": null
+    },
+    {
+      "code": "BIOL 606",
+      "title": "Advanced Aquatic Ecology",
+      "units": null
+    },
+    {
+      "code": "BIOL 610",
+      "title": "Advanced Topics in Evolution and Diversity",
+      "units": null
+    },
+    {
+      "code": "BIOL 614",
+      "title": "Applied Bioinformatics and Genomics",
+      "units": null
+    },
+    {
+      "code": "BIOL 629",
+      "title": "Cell Growth and Differentiation",
+      "units": null
+    },
+    {
+      "code": "BIOL 618",
+      "title": "Advanced Microbial Physiology",
+      "units": null
+    },
+    {
+      "code": "BIOL 678",
+      "title": "Current Topics in Neurophysiology",
+      "units": null
+    },
+    {
+      "code": "BIOL 470W",
+      "title": "Biomedical Virology (WLU)",
+      "units": null
+    },
+    {
+      "code": "BIOL 111W",
+      "title": "Biological Diversity and Evolution (WLU)",
+      "units": null
+    },
+    {
+      "code": "BIOL 407W",
+      "title": "Animal Communication (WLU)",
+      "units": null
+    },
+    {
+      "code": "BIOL 416W",
+      "title": "Pathophysiology",
+      "units": null
+    },
+    {
+      "code": "BIOL 308W",
+      "title": "Animal Behaviour (WLU)",
+      "units": null
+    },
+    {
+      "code": "BIOL 110W",
+      "title": "Unifying Life Processes (WLU)",
+      "units": null
+    },
+    {
+      "code": "BIOL 464W",
+      "title": "Plants and People (WLU)",
+      "units": null
+    },
+    {
+      "code": "BIOL 463W",
+      "title": "Environmental Stress Biology of Plants (WLU)",
+      "units": null
+    },
+    {
+      "code": "BIOL 468W",
+      "title": "Plant Biodiversity and Conservation (WLU)",
+      "units": null
+    },
+    {
+      "code": "BIOL 405W",
+      "title": "Community Ecology (WLU)",
+      "units": null
+    },
+    {
+      "code": "BIOL 276W",
+      "title": "Life on Earth: Microbes (WLU)",
+      "units": null
+    },
+    {
+      "code": "BIOL 409W",
+      "title": "Conservation Biology (WLU)",
+      "units": null
+    }
   ]
 }

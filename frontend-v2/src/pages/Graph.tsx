@@ -16,7 +16,7 @@ import {
   MarkerType,
   applyNodeChanges,
 } from '@xyflow/react'
-import { ExternalLink, Check, X, RefreshCw, ChevronDown, Loader2, Undo2, HelpCircle } from 'lucide-react'
+import { ExternalLink, Check, X, RefreshCw, ChevronDown, Loader2, Undo2, HelpCircle, ThumbsUp, Star } from 'lucide-react'
 import Dagre from '@dagrejs/dagre'
 import GoatChat from '../components/GoatChat'
 
@@ -53,12 +53,20 @@ function layoutGraph(nodes: Node<SkillNodeData>[], edges: Edge[]): Node<SkillNod
 type Tier = 'foundation' | 'core' | 'advanced' | 'specialization'
 type CourseStatus = 'pending' | 'accepted' | 'replacing' | 'loading' | 'replaced'
 
+interface CourseRating {
+  liked: number | null
+  easy: number | null
+  useful: number | null
+  filled_count: number | null
+}
+
 interface SkillNodeData {
   labels: string[]
   courseTitle: string
   courseUrl: string
   courseReason: string
   courseUnits: number
+  courseRating?: CourseRating | null
   tier: Tier
   term?: string
   termCredits?: number
@@ -255,6 +263,21 @@ function SkillNode({ id, data }: NodeProps<Node<SkillNodeData>>) {
         )}
       </div>
 
+      {data.courseRating && data.courseRating.liked != null && (
+        <div className="flex items-center gap-2.5 mt-2 text-[10px] text-stone-400">
+          <span className="inline-flex items-center gap-0.5">
+            <ThumbsUp size={10} />
+            {Math.round(data.courseRating.liked * 100)}%
+          </span>
+          {data.courseRating.useful != null && (
+            <span className="inline-flex items-center gap-0.5">
+              <Star size={10} />
+              {Math.round(data.courseRating.useful * 100)}% useful
+            </span>
+          )}
+        </div>
+      )}
+
       {!data.term && !locked && state.status === 'pending' && (
         <div className="flex gap-1.5 mt-3 nodrag">
           <button
@@ -359,11 +382,17 @@ function TermGroupNode({ data }: NodeProps<Node<SkillNodeData>>) {
 const nodeTypes = { skill: SkillNode, termGroup: TermGroupNode }
 
 function AcademicEdge({ sourceX, sourceY, targetX, targetY, markerEnd, style, data }: EdgeProps) {
-  const midX = (sourceX + targetX) / 2
+  // 4-segment path routed through row & column gutters so neither the
+  // horizontal nor vertical leg can cross an intermediate node.
+  // ROW_GAP=220, NODE_H=160 → row gutter 60px tall; center 30px below source handle.
+  // COL_GAP=440, NODE_W=260 → col gutter 180px wide; center 220px left of target handle.
+  const gutterY = sourceY + 30
+  const gutterX = targetX - 220
   const path = [
     `M ${sourceX} ${sourceY}`,
-    `L ${midX} ${sourceY}`,
-    `L ${midX} ${targetY}`,
+    `L ${sourceX} ${gutterY}`,
+    `L ${gutterX} ${gutterY}`,
+    `L ${gutterX} ${targetY}`,
     `L ${targetX} ${targetY}`,
   ].join(' ')
   return <BaseEdge path={path} markerEnd={markerEnd} style={style} />
@@ -857,7 +886,7 @@ function CourseHistoryPanel({ history, onRestore }: { history: HistoryEntry[]; o
 
 /* ─── API types ─── */
 
-interface ApiCourse { title: string; url: string; reason: string; units?: number }
+interface ApiCourse { title: string; url: string; reason: string; units?: number; rating?: CourseRating | null }
 interface ApiNode { id: string; labels: string[]; tier: string; course: ApiCourse; position: { x: number; y: number }; term?: string }
 interface ApiEdge { id: string; source: string; target: string }
 interface ApiGraph { goal: string; skills: string[]; nodes: ApiNode[]; edges: ApiEdge[] }
@@ -875,6 +904,7 @@ function toFlowNodes(apiNodes: ApiNode[]): Node<SkillNodeData>[] {
       courseUrl: n.course.url,
       courseReason: n.course.reason ?? '',
       courseUnits: n.course.units ?? 0.5,
+      courseRating: n.course.rating ?? null,
     },
   }))
 }
@@ -1384,8 +1414,9 @@ export default function Graph() {
             goal: navGoal ?? goal,
             desired_skills: desiredSkills,
             my_skills: mySkills,
-            nodes: nodes.map((n) => ({ skill: n.data.labels.join(', '), course_title: n.data.courseTitle })),
+            nodes: nodes.map((n) => ({ skill: n.data.labels.join(', '), course_title: n.data.courseTitle, term: n.data.term as string | undefined })),
             mode,
+            program: mode === 'academics' ? major : undefined,
           }}
           onAction={(action) => {
             switch (action.type) {

@@ -6,11 +6,19 @@ class Position(BaseModel):
     y: float
 
 
+class CourseRating(BaseModel):
+    liked: float | None = None
+    easy: float | None = None
+    useful: float | None = None
+    filled_count: int | None = None
+
+
 class Course(BaseModel):
     title: str
     url: str
     reason: str = ""
     units: float = 0.5
+    rating: CourseRating | None = None
 
 
 class SkillNode(BaseModel):
@@ -20,6 +28,7 @@ class SkillNode(BaseModel):
     course: Course
     position: Position
     term: str = ""
+    esco_skills: list[str] = []
 
 
 class Edge(BaseModel):

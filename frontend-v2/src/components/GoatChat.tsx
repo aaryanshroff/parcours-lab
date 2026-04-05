@@ -26,8 +26,9 @@ interface ChatContext {
   goal: string
   desired_skills: string[]
   my_skills: string[]
-  nodes: { skill: string; course_title: string }[]
+  nodes: { skill: string; course_title: string; term?: string }[]
   mode?: string
+  program?: { title: string; faculty: string }
 }
 
 interface GoatChatProps {

@@ -594,5 +594,2670 @@
       "CS 231",
       "ECE 406"
     ]
+  },
+  "CS350": {
+    "code": "CS350",
+    "raw": "Prereq: CS 240/240E, 241/241E, 246/246E, (CS 251/251E or ECE 222); Honours Computer Science, Honours Data Science (BCS), BCFM, BSE students only. Antireq: ECE 254, 350, MTE 241, SE 350",
+    "prereqs": [
+      "CS 240",
+      "CS 240E",
+      "CS 241",
+      "CS 241E",
+      "CS 246",
+      "CS 246E",
+      "CS 251",
+      "CS 251E",
+      "ECE 222"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "ECE 254",
+      "ECE 350",
+      "MTE 241",
+      "SE 350"
+    ]
+  },
+  "CS136L": {
+    "code": "CS136L",
+    "raw": "Prereq: One of CS 145, at least 90% in CS 115, at least 70% in CS 116, at least 60% in CS 135. Coreq: CS 136 or CS 146",
+    "prereqs": [
+      "CS 145",
+      "CS 115",
+      "CS 116",
+      "CS 135"
+    ],
+    "coreqs": [
+      "CS 136",
+      "CS 146"
+    ],
+    "antireqs": []
+  },
+  "CS145": {
+    "code": "CS145",
+    "raw": "Antireq: CS 115, 135, 137, 138",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "CS 115",
+      "CS 135",
+      "CS 137",
+      "CS 138"
+    ]
+  },
+  "CS115": {
+    "code": "CS115",
+    "raw": "Antireq: BME 121, CS 135, 137, 138, 145, CHE 121, CIVE 121, ECE 150, GENE 121/MTE 121, ME 101, NE 111, MSE 121, PHYS 139, SYDE 121",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "BME 121",
+      "CS 135",
+      "CS 137",
+      "CS 138",
+      "CS 145",
+      "CHE 121",
+      "CIVE 121",
+      "ECE 150",
+      "GENE 121",
+      "MTE 121",
+      "ME 101",
+      "NE 111",
+      "MSE 121",
+      "PHYS 139",
+      "SYDE 121"
+    ]
+  },
+  "ECE457C": {
+    "code": "ECE457C",
+    "raw": "Prereq: One of BME 213, ECE 203, MTE 201, STAT 206, STAT 230, STAT 240, SYDE 212. Antireq: ECE 493, Probablistic Reasoning and Reinforcement Learning",
+    "prereqs": [
+      "BME 213",
+      "ECE 203",
+      "MTE 201",
+      "STAT 206",
+      "STAT 230",
+      "STAT 240",
+      "SYDE 212"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "ECE 493"
+    ]
+  },
+  "STAT440": {
+    "code": "STAT440",
+    "raw": "Prereq: STAT 330, STAT 341",
+    "prereqs": [
+      "STAT 330",
+      "STAT 341"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHIL356": {
+    "code": "PHIL356",
+    "raw": "Prereq: PHIL/PSYCH 256",
+    "prereqs": [
+      "PSYCH 256"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "COGSCI300": {
+    "code": "COGSCI300",
+    "raw": "Prereq: PHIL/PSYCH 256",
+    "prereqs": [
+      "PSYCH 256"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS136": {
+    "code": "CS136",
+    "raw": "Prereq: One of CS 145, at least 90% in CS 115, at least 70% in CS 116, at least 60% in CS 135. Coreq: CS 136L. Antireq: CS 137, 138, 146, PHYS 239",
+    "prereqs": [
+      "CS 145",
+      "CS 115",
+      "CS 116",
+      "CS 135"
+    ],
+    "coreqs": [
+      "CS 136L"
+    ],
+    "antireqs": [
+      "CS 137",
+      "CS 138",
+      "CS 146",
+      "PHYS 239"
+    ]
+  },
+  "AFM101": {
+    "code": "AFM101",
+    "raw": "Prereq: Not open to students in AFM, Mathematics/CPA, Biotechnology/CPA, CFM, Arts and Business, Environment and Business, Science and Business, or Human Resources Management. Antireq: AFM 123/ARBUS 102, AFM 191, BUS 127W/227W, MSCI 262",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "AFM 123",
+      "ARBUS 102",
+      "AFM 191",
+      "BUS 127W",
+      "BUS 227W",
+      "MSCI 262"
+    ]
+  },
+  "MSE546": {
+    "code": "MSE546",
+    "raw": "Prereq: MSE 332; One of CS 480, ECE 457B, MSE 446, SYDE 522",
+    "prereqs": [
+      "MSE 332",
+      "CS 480",
+      "ECE 457B",
+      "MSE 446",
+      "SYDE 522"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "GEOG484": {
+    "code": "GEOG484",
+    "raw": "Prereq: GEOG 316, GEOG 371. Antireq: CS 480",
+    "prereqs": [
+      "GEOG 316",
+      "GEOG 371"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CS 480"
+    ]
+  },
+  "SYDE577": {
+    "code": "SYDE577",
+    "raw": "Prereq: Level at least 3A BASc/BSE students. Antireq: SYDE 599, Topic 4",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "SYDE 599"
+    ]
+  },
+  "ME321": {
+    "code": "ME321",
+    "raw": "Prereq: (ME 201 or MTE 202) and (ME 212 or SYDE 182); Level at least 3A Mechanical Engineering or Mechatronics Engineering",
+    "prereqs": [
+      "ME 201",
+      "MTE 202",
+      "ME 212",
+      "SYDE 182"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MSE446": {
+    "code": "MSE446",
+    "raw": "Prereq: Lev at least 3A;One of BME 122,CS 240/240E,ECE 250,MSE 240,MTE 140,SYDE 223,MSCI 240;One of AE 224,BME 213,CHE 220,CIVE 224,ECE 307, ENVE 224,ME 202,MSE 253,MTE 201,NE 215,STAT 206,231,241,SYDE 212,MSCI 252,MSCI 253.Anti:CS 480,ECE 457B,SYDE 522",
+    "prereqs": [
+      "BME 122",
+      "CS 240",
+      "CS 240E",
+      "ECE 250",
+      "MSE 240",
+      "MTE 140",
+      "SYDE 223",
+      "MSCI 240",
+      "AE 224",
+      "BME 213",
+      "CHE 220",
+      "CIVE 224",
+      "ECE 307",
+      "ENVE 224",
+      "ME 202",
+      "MSE 253",
+      "MTE 201",
+      "NE 215",
+      "STAT 206",
+      "STAT 231",
+      "STAT 241",
+      "SYDE 212",
+      "MSCI 252",
+      "MSCI 253",
+      "CS 480",
+      "ECE 457B",
+      "SYDE 522"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS499T": {
+    "code": "CS499T",
+    "raw": "Prereq: Honours Computer Science, Honours Data Science (BCS), BCFM, BSE students only",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ECON424": {
+    "code": "ECON424",
+    "raw": "Prereq: One of ECON 323, STAT 221, STAT 231, STAT 241; Honours students or Economics majors",
+    "prereqs": [
+      "ECON 323",
+      "STAT 221",
+      "STAT 231",
+      "STAT 241"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS135": {
+    "code": "CS135",
+    "raw": "Antireq: AE 121, BME 121, CS 115, 137, 138, 145, CIVE 121, ECE 150, ME 101, MSE 121, PHYS 236, SYDE 121",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "AE 121",
+      "BME 121",
+      "CS 115",
+      "CS 137",
+      "CS 138",
+      "CS 145",
+      "CIVE 121",
+      "ECE 150",
+      "ME 101",
+      "MSE 121",
+      "PHYS 236",
+      "SYDE 121"
+    ]
+  },
+  "KIN357": {
+    "code": "KIN357",
+    "raw": "Prereq: KIN 255 or PSYCH 261",
+    "prereqs": [
+      "KIN 255",
+      "PSYCH 261"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "INTEG120": {
+    "code": "INTEG120",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CLAS221": {
+    "code": "CLAS221",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH201": {
+    "code": "ANTH201",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH204": {
+    "code": "ANTH204",
+    "raw": "Antireq: ANTH 260",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "ANTH 260"
+    ]
+  },
+  "MTHEL131": {
+    "code": "MTHEL131",
+    "raw": "Prereq: 4U Calculus and Vectors",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ANTH202": {
+    "code": "ANTH202",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CO487": {
+    "code": "CO487",
+    "raw": "Prereq: One of CS 116, 136, 138, 146; MATH 135 or 145; One of STAT 206, 220, 230, 240; Level at least 3A",
+    "prereqs": [
+      "CS 116",
+      "CS 136",
+      "CS 138",
+      "CS 146",
+      "MATH 135",
+      "MATH 145",
+      "STAT 206",
+      "STAT 220",
+      "STAT 230",
+      "STAT 240"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH312": {
+    "code": "PSYCH312",
+    "raw": "Prereq: One of PSYCH 207, 211, 212/212R, 213R; Level at least 2B",
+    "prereqs": [
+      "PSYCH 207",
+      "PSYCH 211",
+      "PSYCH 212",
+      "PSYCH 212R",
+      "PSYCH 213R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS234": {
+    "code": "CS234",
+    "raw": "Prereq: One of CS 116, 136, 138, 146 or (CS 114 with at least 60%; CS 115 or CS 135). Not open to Honours Computer Science, Data Science (BCS, BMath), BCFM, BSE students. Antireq: BME 122, CS 240/240E, ECE 250, MSE 240, MTE 140, SYDE 223",
+    "prereqs": [
+      "CS 116",
+      "CS 136",
+      "CS 138",
+      "CS 146",
+      "CS 114",
+      "CS 115",
+      "CS 135"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "BME 122",
+      "CS 240",
+      "CS 240E",
+      "ECE 250",
+      "MSE 240",
+      "MTE 140",
+      "SYDE 223"
+    ]
+  },
+  "CS231": {
+    "code": "CS231",
+    "raw": "Prereq: One of CS 116, 136, 138, 146 or (CS 114 with at least 60%; CS 115 or CS 135); Not open to Honours Computer Science, Data Science (BCS, BMath), BCFM, BSE students. Antireq: BME 122, CS 341, ECE 250, MSE 240, MTE 140, SYDE 223",
+    "prereqs": [
+      "CS 116",
+      "CS 136",
+      "CS 138",
+      "CS 146",
+      "CS 114",
+      "CS 115",
+      "CS 135"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "BME 122",
+      "CS 341",
+      "ECE 250",
+      "MSE 240",
+      "MTE 140",
+      "SYDE 223"
+    ]
+  },
+  "CS492": {
+    "code": "CS492",
+    "raw": "Prereq: CS 240/240E; Honours Computer Science, Honours Data Science (BCS), BCFM, BSE students only",
+    "prereqs": [
+      "CS 240",
+      "CS 240E"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS200": {
+    "code": "CS200",
+    "raw": "Prereq: Not open to Honours Computer Science, Honours Data Science (BCS, BMath), BCFM, BSE students",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS330": {
+    "code": "CS330",
+    "raw": "Prereq: One of CS 106, 116, 136, 138, 146, or (CS 114 with at least 60% and (one of CS 115, CS 135, CS 145); Level at least 2B; Not open to Computer Science students. Antireq: AFM 241, BUS 415W, 486W, CS 480/490, MSCI 441",
+    "prereqs": [
+      "CS 106",
+      "CS 116",
+      "CS 136",
+      "CS 138",
+      "CS 146",
+      "CS 114",
+      "CS 115",
+      "CS 135",
+      "CS 145"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "AFM 241",
+      "BUS 415W",
+      "BUS 486W",
+      "CS 480",
+      "CS 490",
+      "MSCI 441"
+    ]
+  },
+  "CS490": {
+    "code": "CS490",
+    "raw": "Prereq: CS 350 or SE 350; Honours Computer Science, Honours Data Science (BCS), BCFM, BSE students only. Antireq: BUS 415W, 486W",
+    "prereqs": [
+      "CS 350",
+      "SE 350"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "BUS 415W",
+      "BUS 486W"
+    ]
+  },
+  "CS348": {
+    "code": "CS348",
+    "raw": "Prereq: Honours Computer Science, Honours Data Science (BCS, BMath), BCFM, BSE students only. Coreq: CS 240/240E. Antireq: CS 338, ECE 356, 456, MSCI 346",
+    "prereqs": [],
+    "coreqs": [
+      "CS 240",
+      "CS 240E"
+    ],
+    "antireqs": [
+      "CS 338",
+      "ECE 356",
+      "ECE 456",
+      "MSCI 346"
+    ]
+  },
+  "CS476": {
+    "code": "CS476",
+    "raw": "Prereq: (AMATH 242/CS 371 or CS 370) and (STAT 206 with at least 60% or STAT 231 or STAT 241)",
+    "prereqs": [
+      "AMATH 242",
+      "CS 371",
+      "CS 370",
+      "STAT 206",
+      "STAT 231",
+      "STAT 241"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS338": {
+    "code": "CS338",
+    "raw": "Prereq: One of CS 230, 231, 234, 246/246E, 330; or (AFM 341 and (CS 116 or CS 136 or CS 146)); Antireq: CS 348, 448, MSCI 346; Not open to Honours Computer Science, Honours Data Science (BCS), BCFM, BSE",
+    "prereqs": [
+      "CS 230",
+      "CS 231",
+      "CS 234",
+      "CS 246",
+      "CS 246E",
+      "CS 330",
+      "AFM 341",
+      "CS 116",
+      "CS 136",
+      "CS 146"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CS 348",
+      "CS 448",
+      "MSCI 346"
+    ]
+  },
+  "CS430": {
+    "code": "CS430",
+    "raw": "Prereq: CS 330; Level at least 3A; Antireq: CS 446/ECE 452, SE 464; Not open to Honours Computer Science, Honours Data Science (BCS), BCFM, BSE",
+    "prereqs": [
+      "CS 330"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CS 446",
+      "ECE 452",
+      "SE 464"
+    ]
+  },
+  "CS116": {
+    "code": "CS116",
+    "raw": "Prereq: CS 115 or 135 or 145. Antireq: CS 114, 136, 137, 138, 146, PHYS 236, 239, MSE 240, NE 111",
+    "prereqs": [
+      "CS 115",
+      "CS 135",
+      "CS 145"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CS 114",
+      "CS 136",
+      "CS 137",
+      "CS 138",
+      "CS 146",
+      "PHYS 236",
+      "PHYS 239",
+      "MSE 240",
+      "NE 111"
+    ]
+  },
+  "CS370": {
+    "code": "CS370",
+    "raw": "Prereq: (One of MATH 118, 119, 128, 138, 148), (one of MATH 106, 114, 115, 136, 146), (one of CS 231, 234, 241/241E, 246/246E). Antireq: AMATH 242/CS 371, CHE 121, CIVE 121, CS 335, ECE 204, MTE 204",
+    "prereqs": [
+      "MATH 118",
+      "MATH 119",
+      "MATH 128",
+      "MATH 138",
+      "MATH 148",
+      "MATH 106",
+      "MATH 114",
+      "MATH 115",
+      "MATH 136",
+      "MATH 146",
+      "CS 231",
+      "CS 234",
+      "CS 241",
+      "CS 241E",
+      "CS 246",
+      "CS 246E"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "AMATH 242",
+      "CS 371",
+      "CHE 121",
+      "CIVE 121",
+      "CS 335",
+      "ECE 204",
+      "MTE 204"
+    ]
+  },
+  "CS230": {
+    "code": "CS230",
+    "raw": "Prereq: One of CS 116, 136, 138, 146 or (CS 114 with at least 60%; CS 115 or CS 135); Not open to Honours Computer Science, Honours Data Science (BCS, BMATH), BCFM, BSE students. Antireq: BME 292/393, CS 241/241E, 251/251E, SYDE 192",
+    "prereqs": [
+      "CS 116",
+      "CS 136",
+      "CS 138",
+      "CS 146",
+      "CS 114",
+      "CS 115",
+      "CS 135"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "BME 292",
+      "BME 393",
+      "CS 241",
+      "CS 241E",
+      "CS 251",
+      "CS 251E",
+      "SYDE 192"
+    ]
+  },
+  "CS349": {
+    "code": "CS349",
+    "raw": "Prereq: CS 241/CS 241E and (one of MATH 115, 136, 146); Honours Computer Science, Honours Data Science (BCS), BCFM, BSE students only",
+    "prereqs": [
+      "CS 241",
+      "CS 241E",
+      "MATH 115",
+      "MATH 136",
+      "MATH 146"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS449": {
+    "code": "CS449",
+    "raw": "Prereq: CS 240/240E, 241CS/241E; Level at least 3B; Honours Computer Science, Honours Data Science (BCS), BCFM, BSE students only. Antireq: SYDE 348/548",
+    "prereqs": [
+      "CS 240",
+      "CS 240E",
+      "CS 241E"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "SYDE 348",
+      "SYDE 548"
+    ]
+  },
+  "CS462": {
+    "code": "CS462",
+    "raw": "Prereq: CS 360 or 365; Honours Computer Science, Honours Data Science (BCS), BCFM, BSE students only",
+    "prereqs": [
+      "CS 360",
+      "CS 365"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS466": {
+    "code": "CS466",
+    "raw": "Prereq: CS 341; Honours Computer Science, Honours Data Science (BCS), BCFM, BSE students only",
+    "prereqs": [
+      "CS 341"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS487": {
+    "code": "CS487",
+    "raw": "Prereq: CS 231 or 234 or 240/240E; Honours Mathematics only",
+    "prereqs": [
+      "CS 231",
+      "CS 234",
+      "CS 240",
+      "CS 240E"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS360": {
+    "code": "CS360",
+    "raw": "Prereq: CS 240/240E, 241/CS 241E and (MATH 239 or 249); Honours Computer Science, Honours Data Science (BCS), BCFM, BSE students only. Antireq: CS 365",
+    "prereqs": [
+      "CS 240",
+      "CS 240E",
+      "CS 241",
+      "CS 241E",
+      "MATH 239",
+      "MATH 249"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CS 365"
+    ]
+  },
+  "CS365": {
+    "code": "CS365",
+    "raw": "Prereq: CS 240/240E, 241/CS 241E and (MATH 239 or 249); Honours Computer Science, Honours Data Science (BCS), BCFM, BSE students only. Antireq: CS 360",
+    "prereqs": [
+      "CS 240",
+      "CS 240E",
+      "CS 241",
+      "CS 241E",
+      "MATH 239",
+      "MATH 249"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CS 360"
+    ]
+  },
+  "CS488": {
+    "code": "CS488",
+    "raw": "Prereq: CS 341 and (CS 350 or SE 350) and (CS 370 or 371); Honours Computer Science, Honours Data Science (BCS), BCFM, BSE students only",
+    "prereqs": [
+      "CS 341",
+      "CS 350",
+      "SE 350",
+      "CS 370",
+      "CS 371"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS383": {
+    "code": "CS383",
+    "raw": "Prereq: CS 240/CS 240E; FINE 228 or FINE 247",
+    "prereqs": [
+      "CS 240",
+      "CS 240E",
+      "FINE 228",
+      "FINE 247"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS431": {
+    "code": "CS431",
+    "raw": "Prereq: (CS 231 or 234 or 341) and (CS 251/251E or 330); Antireq: CS 451; Not open to Honours Computer Science, Honours Data Science (BCS), BCFM, BSE",
+    "prereqs": [
+      "CS 231",
+      "CS 234",
+      "CS 341",
+      "CS 251",
+      "CS 251E",
+      "CS 330"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CS 451"
+    ]
+  },
+  "CS451": {
+    "code": "CS451",
+    "raw": "Prereq: CS 341, 348 and (CS 350 or SE 350); Honours Computer Science, Honours Data Science (BCS, BMath), BCFM, BSE students only",
+    "prereqs": [
+      "CS 341",
+      "CS 348",
+      "CS 350",
+      "SE 350"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS247": {
+    "code": "CS247",
+    "raw": "Prereq: CS 241/CS 241E; Software Engineering students only. Antireq: CS 246/246E, MSE 342, SYDE 322",
+    "prereqs": [
+      "CS 241",
+      "CS 241E"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CS 246",
+      "CS 246E",
+      "MSE 342",
+      "SYDE 322"
+    ]
+  },
+  "CS114": {
+    "code": "CS114",
+    "raw": "Prereq: Not open to Faculty of Math students. Antireq: CS 116, 135, 136, 137, 138, 145, 146, BME 121, CHE 120, CIVE 121, ECE 150, GENE 121/MTE 121, ME 101, MSE 121, NE 111, PHYS 236, SYDE 121",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "CS 116",
+      "CS 135",
+      "CS 136",
+      "CS 137",
+      "CS 138",
+      "CS 145",
+      "CS 146",
+      "BME 121",
+      "CHE 120",
+      "CIVE 121",
+      "ECE 150",
+      "GENE 121",
+      "MTE 121",
+      "ME 101",
+      "MSE 121",
+      "NE 111",
+      "PHYS 236",
+      "SYDE 121"
+    ]
+  },
+  "CS399": {
+    "code": "CS399",
+    "raw": "Prereq: CS 240/240E and (CS 246/246E or 247); Honours Computer Science, Honours Data Science (BCS), BCFM, BSE students only",
+    "prereqs": [
+      "CS 240",
+      "CS 240E",
+      "CS 246",
+      "CS 246E",
+      "CS 247"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS499R": {
+    "code": "CS499R",
+    "raw": "Prereq: Level at least 3B; Honours Computer Science, Honours Data Science (BCS), BCFM, BSE students only",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS448": {
+    "code": "CS448",
+    "raw": "Prereq: CS 348 and (CS 350 or SE 350); Honours Computer Science, Honours Data Science (BCS), BCFM, BSE students only",
+    "prereqs": [
+      "CS 348",
+      "CS 350",
+      "SE 350"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS454": {
+    "code": "CS454",
+    "raw": "Prereq: CS 350 or SE 350; Honours Computer Science, Honours Data Science (BCS), BCFM, BSE students only.",
+    "prereqs": [
+      "CS 350",
+      "SE 350"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS105": {
+    "code": "CS105",
+    "raw": "Prereq: Not open to Mathematics students. Antireq: BME 121, CS 115, 135, 137, 145, CHE 121, CIVE 121, ECE 150, MTE 121/GENE 121, NE 111, MSE 121, PHYS 236, SYDE 121",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "BME 121",
+      "CS 115",
+      "CS 135",
+      "CS 137",
+      "CS 145",
+      "CHE 121",
+      "CIVE 121",
+      "ECE 150",
+      "MTE 121",
+      "GENE 121",
+      "NE 111",
+      "MSE 121",
+      "PHYS 236",
+      "SYDE 121"
+    ]
+  },
+  "CS106": {
+    "code": "CS106",
+    "raw": "Prereq: CS 105; Not open to Mathematics students. Antireq: BME 121, CS 115, 135, 137, 145, CHE 121, CIVE 121, ECE 150, MTE 121/GENE 121, NE 111, MSE 121, SYDE 121",
+    "prereqs": [
+      "CS 105"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "BME 121",
+      "CS 115",
+      "CS 135",
+      "CS 137",
+      "CS 145",
+      "CHE 121",
+      "CIVE 121",
+      "ECE 150",
+      "MTE 121",
+      "GENE 121",
+      "NE 111",
+      "MSE 121",
+      "SYDE 121"
+    ]
+  },
+  "CS100": {
+    "code": "CS100",
+    "raw": "Prereq: Not open to Mathematics,Biomedical,Chemical,Civil,Computer & Electrical,Environmental,Geological,Management,Mechanical,Mechatronics,Nanotechnology & Systems Design Eng students. Antireq: All second,third or fourth year CS courses or equivalents",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS450": {
+    "code": "CS450",
+    "raw": "Prereq: (CS 245/245E or SE 212) and (CS 350 or SE 350); Honours Computer Science, Honours Data Science (BCS), BCFM, BSE students only. Antireq: ECE 320, ECE 429",
+    "prereqs": [
+      "CS 245",
+      "CS 245E",
+      "SE 212",
+      "CS 350",
+      "SE 350"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "ECE 320",
+      "ECE 429"
+    ]
+  },
+  "CS456": {
+    "code": "CS456",
+    "raw": "Prereq: CS 350 or SE 350; Computer Science students only. Antireq: CS 436, ECE 358, ECE 416",
+    "prereqs": [
+      "CS 350",
+      "SE 350"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CS 436",
+      "ECE 358",
+      "ECE 416"
+    ]
+  },
+  "CS457": {
+    "code": "CS457",
+    "raw": "Prereq: (CS 246/246E or 247) and (one of STAT 206, 231, 241); Honours Computer Science, Honours Data Science (BCS), BCFM, BSE students only",
+    "prereqs": [
+      "CS 246",
+      "CS 246E",
+      "CS 247",
+      "STAT 206",
+      "STAT 231",
+      "STAT 241"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS335": {
+    "code": "CS335",
+    "raw": "Prereq:(One of CS 116, 136, 138, 146)or(CS 114 with at least 60%; CS 115 or CS 135);One of MATH 106 with at least 70%, MATH 136 or 146;MATH 237 or 247;One of STAT 206, 231, 241;Not open to Computer Science students.Antireq:AMATH 242/CS 371,CS 370,MTE 204",
+    "prereqs": [
+      "CS 116",
+      "CS 136",
+      "CS 138",
+      "CS 146",
+      "CS 114",
+      "CS 115",
+      "CS 135",
+      "MATH 106",
+      "MATH 136",
+      "MATH 146",
+      "MATH 237",
+      "MATH 247",
+      "STAT 206",
+      "STAT 231",
+      "STAT 241"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "AMATH 242",
+      "CS 371",
+      "CS 370",
+      "MTE 204"
+    ]
+  },
+  "CS445": {
+    "code": "CS445",
+    "raw": "Prereq: CS 341 or CS 350; Honours Computer Science, Honours Data Science (BCS), BCFM, BSE students only. Antireq: SE 463",
+    "prereqs": [
+      "CS 341",
+      "CS 350"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "SE 463"
+    ]
+  },
+  "CS446": {
+    "code": "CS446",
+    "raw": "Prereq: CS 350; Honours Computer Science, Honours Data Science (BCS), BCFM, BSE students only. Antireq: CS 430, SE 464",
+    "prereqs": [
+      "CS 350"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CS 430",
+      "SE 464"
+    ]
+  },
+  "CS447": {
+    "code": "CS447",
+    "raw": "Prereq: CS 350; Honours Computer Science, Honours Data Science (BCS), BCFM, BSE students only. Antireq: SE 465",
+    "prereqs": [
+      "CS 350"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "SE 465"
+    ]
+  },
+  "CS453": {
+    "code": "CS453",
+    "raw": "Prereq: CS 350 or SE 350; Honours Computer Science, Honours Data Science (BCS), BCFM, BSE students only. Antireq: CS 489, Topic 26",
+    "prereqs": [
+      "CS 350",
+      "SE 350"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CS 489"
+    ]
+  },
+  "CS459": {
+    "code": "CS459",
+    "raw": "Prereq: MATH 135 or MATH 145; CS 350 or SE 350. Honours Computer Science, Honours Data Science (BCS), BCFM, BSE students only. Coreq: CS 454 or CS 456. Antireq: CS 489, Topic 24",
+    "prereqs": [
+      "MATH 135",
+      "MATH 145",
+      "CS 350",
+      "SE 350"
+    ],
+    "coreqs": [
+      "CS 454",
+      "CS 456"
+    ],
+    "antireqs": [
+      "CS 489"
+    ]
+  },
+  "CS436": {
+    "code": "CS436",
+    "raw": "Prereq: One of CS 230, 241/241E, 246/246E, 251/251E; Not open to Computer Science students. Antireq: CS 454, 456, ECE 454",
+    "prereqs": [
+      "CS 230",
+      "CS 241",
+      "CS 241E",
+      "CS 246",
+      "CS 246E",
+      "CS 251",
+      "CS 251E"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CS 454",
+      "CS 456",
+      "ECE 454"
+    ]
+  },
+  "CS343": {
+    "code": "CS343",
+    "raw": "Prereq: CS 350 or SE 350; Honours Computer Science, Honours Data Science (BCS), BCFM, BSE students only",
+    "prereqs": [
+      "CS 350",
+      "SE 350"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS346": {
+    "code": "CS346",
+    "raw": "Prereq: CS 246/246E or CS 247. Honours Computer Science, Honours Data Science (BCS), BCFM, BSE students only",
+    "prereqs": [
+      "CS 246",
+      "CS 246E",
+      "CS 247"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS442": {
+    "code": "CS442",
+    "raw": "Prereq: CS 241 or 241E; One of CS 245, CS 245E, SE 212; One of CS 246, CS 246E, CS 247; Honours Business & CS, Honours Computer Science, Honours Data Science, Honours Computing and Financial Management or Software Engineering students",
+    "prereqs": [
+      "CS 241",
+      "CS 241E",
+      "CS 245",
+      "CS 245E",
+      "SE 212",
+      "CS 246",
+      "CS 246E",
+      "CS 247"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CS444": {
+    "code": "CS444",
+    "raw": "Prereq: CS 350 or SE 350; Honours Computer Science, Honours Data Science (BCS), BCFM, BSE students only",
+    "prereqs": [
+      "CS 350",
+      "SE 350"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHIL210J": {
+    "code": "PHIL210J",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL201": {
+    "code": "BIOL201",
+    "raw": "Prereq: BIOL 130. Antireq: BIOL 301",
+    "prereqs": [
+      "BIOL 130"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "BIOL 301"
+    ]
+  },
+  "KIN100": {
+    "code": "KIN100",
+    "raw": "Coreq: KIN 100L",
+    "prereqs": [],
+    "coreqs": [
+      "KIN 100L"
+    ],
+    "antireqs": []
+  },
+  "FINE247": {
+    "code": "FINE247",
+    "raw": "Prereq: FINE 100; Fine Arts Health and Safety Milestone; Fine Arts Woodshop Workshop Milestone",
+    "prereqs": [
+      "FINE 100"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL273": {
+    "code": "BIOL273",
+    "raw": "Prereq: BIOL 130",
+    "prereqs": [
+      "BIOL 130"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ENGL119": {
+    "code": "ENGL119",
+    "raw": "Prereq: Honours Mathematics students",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MSE343": {
+    "code": "MSE343",
+    "raw": "Prereq: One of BME 121, CS 137, ECE 150, MTE 121, SYDE 121; Level at least 3A BASc or BSE or Level at least 3B Management Engineering. Antireq: CS 449",
+    "prereqs": [
+      "BME 121",
+      "CS 137",
+      "ECE 150",
+      "MTE 121",
+      "SYDE 121"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CS 449"
+    ]
+  },
+  "SYDE162": {
+    "code": "SYDE162",
+    "raw": "Prereq: 1B Systems Design Engineering. Antireq: BME 162",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "BME 162"
+    ]
+  },
+  "PSYCH307": {
+    "code": "PSYCH307",
+    "raw": "Prereq: One of PSYCH 207, 261, KIN 356; Level at least 2B",
+    "prereqs": [
+      "PSYCH 207",
+      "PSYCH 261",
+      "KIN 356"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "GBDA414": {
+    "code": "GBDA414",
+    "raw": "Prereq: Level at least 4A Global Business and Digital Arts students",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 490A": {
+    "code": "BIOL 490A",
+    "raw": "Prereq: BIOL 110, 120/220; One of BIOL 150, 251, ENVS 200; STAT 202 or ENVS 278",
+    "prereqs": [
+      "BIOL 110",
+      "BIOL 120",
+      "BIOL 220",
+      "BIOL 150",
+      "BIOL 251",
+      "ENVS 200",
+      "STAT 202",
+      "ENVS 278"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 490B": {
+    "code": "BIOL 490B",
+    "raw": "Prereq: BIOL 110, 120/220; One of BIOL 150, 251, ENVS 200; STAT 202 or ENVS 278",
+    "prereqs": [
+      "BIOL 110",
+      "BIOL 120",
+      "BIOL 220",
+      "BIOL 150",
+      "BIOL 251",
+      "ENVS 200",
+      "STAT 202",
+      "ENVS 278"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 490C": {
+    "code": "BIOL 490C",
+    "raw": "Prereq: BIOL 110, 120/220; One of BIOL 150, 251, ENVS 200; STAT 202 or ENVS 278",
+    "prereqs": [
+      "BIOL 110",
+      "BIOL 120",
+      "BIOL 220",
+      "BIOL 150",
+      "BIOL 251",
+      "ENVS 200",
+      "STAT 202",
+      "ENVS 278"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 490D": {
+    "code": "BIOL 490D",
+    "raw": "Prereq: BIOL 110, 120/220; One of BIOL 150, 251, ENVS 200; STAT 202 or ENVS 278",
+    "prereqs": [
+      "BIOL 110",
+      "BIOL 120",
+      "BIOL 220",
+      "BIOL 150",
+      "BIOL 251",
+      "ENVS 200",
+      "STAT 202",
+      "ENVS 278"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 370": {
+    "code": "BIOL 370",
+    "raw": "Prereq: BIOL 110 or 211; BIOL 273 or BIOL 310",
+    "prereqs": [
+      "BIOL 110",
+      "BIOL 211",
+      "BIOL 273",
+      "BIOL 310"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 431": {
+    "code": "BIOL 431",
+    "raw": "Prereq: BIOL 240, 240L, 308; BIOL 235 or 309",
+    "prereqs": [
+      "BIOL 240",
+      "BIOL 240L",
+      "BIOL 308",
+      "BIOL 235",
+      "BIOL 309"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 331": {
+    "code": "BIOL 331",
+    "raw": "Prereq: One of BIOL 235, 308 or 309; CHEM 233 or 237 or Prereq: (BIOL 235, 308, or 309) and Coreq: CHEM 233 or CHEM 237 for Science and Business/Biotechnology Specialization or Honours Biotechnology/Economics or CS Honours Bioinformatics",
+    "prereqs": [
+      "BIOL 235",
+      "BIOL 308",
+      "BIOL 309",
+      "CHEM 233",
+      "CHEM 237"
+    ],
+    "coreqs": [
+      "CHEM 233",
+      "CHEM 237"
+    ],
+    "antireqs": []
+  },
+  "BIOL 361": {
+    "code": "BIOL 361",
+    "raw": "Prereq: One of STAT 202, ECON 221, ENVS 278. Antireq: PSYCH 391, STAT 332",
+    "prereqs": [
+      "STAT 202",
+      "ECON 221",
+      "ENVS 278"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "PSYCH 391",
+      "STAT 332"
+    ]
+  },
+  "BIOL 365": {
+    "code": "BIOL 365",
+    "raw": "Prereq: BIOL 239; One of BIOL 266, CHEM 140, CS 116, CS 136",
+    "prereqs": [
+      "BIOL 239",
+      "BIOL 266",
+      "CHEM 140",
+      "CS 116",
+      "CS 136"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 373": {
+    "code": "BIOL 373",
+    "raw": "Prereq: BIOL 273",
+    "prereqs": [
+      "BIOL 273"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 220": {
+    "code": "BIOL 220",
+    "raw": "Antireq: BIOL 120",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "BIOL 120"
+    ]
+  },
+  "BIOL 450": {
+    "code": "BIOL 450",
+    "raw": "Prereq: BIOL 359; BIOL 150 or 251",
+    "prereqs": [
+      "BIOL 359",
+      "BIOL 150",
+      "BIOL 251"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 442": {
+    "code": "BIOL 442",
+    "raw": "Prereq: BIOL 241, BIOL 308",
+    "prereqs": [
+      "BIOL 241",
+      "BIOL 308"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 342": {
+    "code": "BIOL 342",
+    "raw": "Prereq: BIOL 240; BIOL 235 or 309",
+    "prereqs": [
+      "BIOL 240",
+      "BIOL 235",
+      "BIOL 309"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 354": {
+    "code": "BIOL 354",
+    "raw": "Prereq: One of any 100-or 200-level BIOL; One of CHE 102, CHEM 120, 121",
+    "prereqs": [
+      "CHE 102",
+      "CHEM 120",
+      "CHEM 121"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 371": {
+    "code": "BIOL 371",
+    "raw": "Prereq: BIOL 110 or 211; BIOL 273",
+    "prereqs": [
+      "BIOL 110",
+      "BIOL 211",
+      "BIOL 273"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 403": {
+    "code": "BIOL 403",
+    "raw": "Prereq: BIOL 273, 308; Antireq: BIOL 303",
+    "prereqs": [
+      "BIOL 273",
+      "BIOL 308"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "BIOL 303"
+    ]
+  },
+  "BIOL 447": {
+    "code": "BIOL 447",
+    "raw": "Prereq: BIOL 140/240, 140L/240L, 241",
+    "prereqs": [
+      "BIOL 140",
+      "BIOL 240",
+      "BIOL 140L",
+      "BIOL 240L",
+      "BIOL 241"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 448": {
+    "code": "BIOL 448",
+    "raw": "Prereq: BIOL 140/240, 140/240L, 241, 308",
+    "prereqs": [
+      "BIOL 140",
+      "BIOL 240",
+      "BIOL 140",
+      "BIOL 240L",
+      "BIOL 241",
+      "BIOL 308"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 351": {
+    "code": "BIOL 351",
+    "raw": "Prereq: One of BIOL 110, 120/220, 165; One of BIOL 150, 251, ENVS 200 or Level at least 3A Environmental Sciences",
+    "prereqs": [
+      "BIOL 110",
+      "BIOL 120",
+      "BIOL 220",
+      "BIOL 165",
+      "BIOL 150",
+      "BIOL 251",
+      "ENVS 200"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 455": {
+    "code": "BIOL 455",
+    "raw": "Prereq: BIOL 150 or 251; BIOL 354, STAT 202",
+    "prereqs": [
+      "BIOL 150",
+      "BIOL 251",
+      "BIOL 354",
+      "STAT 202"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 456": {
+    "code": "BIOL 456",
+    "raw": "Prereq: BIOL 350; One of STAT 202, ECON 221, ENVS 278",
+    "prereqs": [
+      "BIOL 350",
+      "STAT 202",
+      "ECON 221",
+      "ENVS 278"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 457": {
+    "code": "BIOL 457",
+    "raw": "Prereq: One of BIOL 150, 251, ENVS 200; One of STAT 202, ECON 221, ENVS 278",
+    "prereqs": [
+      "BIOL 150",
+      "BIOL 251",
+      "ENVS 200",
+      "STAT 202",
+      "ECON 221",
+      "ENVS 278"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 359": {
+    "code": "BIOL 359",
+    "raw": "Prereq: BIOL 139/239 or Level at least 3A Environment and Resource students",
+    "prereqs": [
+      "BIOL 139",
+      "BIOL 239"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 461": {
+    "code": "BIOL 461",
+    "raw": "Prereq: BIOL 361; Antireq: Not open to students in the Faculty of Mathematics",
+    "prereqs": [
+      "BIOL 361"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 473": {
+    "code": "BIOL 473",
+    "raw": "Prereq: BIOL 130L, 373",
+    "prereqs": [
+      "BIOL 130L",
+      "BIOL 373"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 432": {
+    "code": "BIOL 432",
+    "raw": "Prereq: BIOL 342",
+    "prereqs": [
+      "BIOL 342"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 433": {
+    "code": "BIOL 433",
+    "raw": "Prereq: BIOL 120/220, 130, 239; Level at least 3A",
+    "prereqs": [
+      "BIOL 120",
+      "BIOL 220",
+      "BIOL 130",
+      "BIOL 239"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 439": {
+    "code": "BIOL 439",
+    "raw": "Prereq: CHEM 233 or 237; CHEM 264 or 266",
+    "prereqs": [
+      "CHEM 233",
+      "CHEM 237",
+      "CHEM 264",
+      "CHEM 266"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 441": {
+    "code": "BIOL 441",
+    "raw": "Prereq: BIOL 308, 341",
+    "prereqs": [
+      "BIOL 308",
+      "BIOL 341"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 443": {
+    "code": "BIOL 443",
+    "raw": "Prereq: BIOL 140/240, 140L/240L, 241",
+    "prereqs": [
+      "BIOL 140",
+      "BIOL 240",
+      "BIOL 140L",
+      "BIOL 240L",
+      "BIOL 241"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 444": {
+    "code": "BIOL 444",
+    "raw": "Prereq: BIOL 140/240, 140L/240L, 241, 341",
+    "prereqs": [
+      "BIOL 140",
+      "BIOL 240",
+      "BIOL 140L",
+      "BIOL 240L",
+      "BIOL 241",
+      "BIOL 341"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 345": {
+    "code": "BIOL 345",
+    "raw": "Prereq: BIOL 240, 240L, 241 or Level at least 3A Biochemistry major",
+    "prereqs": [
+      "BIOL 240",
+      "BIOL 240L",
+      "BIOL 241"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 346": {
+    "code": "BIOL 346",
+    "raw": "Prereq: BIOL 140/240, 140L/240L, 241",
+    "prereqs": [
+      "BIOL 140",
+      "BIOL 240",
+      "BIOL 140L",
+      "BIOL 240L",
+      "BIOL 241"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 110": {
+    "code": "BIOL 110",
+    "raw": "Prereq: Not open to Faculty of Environment students",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 241": {
+    "code": "BIOL 241",
+    "raw": "Prereq: BIOL 140/240 and 140/240L",
+    "prereqs": [
+      "BIOL 140",
+      "BIOL 240",
+      "BIOL 140",
+      "BIOL 240L"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 150": {
+    "code": "BIOL 150",
+    "raw": "Antireq: BIOL 251",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "BIOL 251"
+    ]
+  },
+  "BIOL 302": {
+    "code": "BIOL 302",
+    "raw": "Prereq: BIOL 130, 273",
+    "prereqs": [
+      "BIOL 130",
+      "BIOL 273"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 310": {
+    "code": "BIOL 310",
+    "raw": "Prereq: BIOL 110 or 165",
+    "prereqs": [
+      "BIOL 110",
+      "BIOL 165"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 323": {
+    "code": "BIOL 323",
+    "raw": "Prereq: BIOL 120/220, 130",
+    "prereqs": [
+      "BIOL 120",
+      "BIOL 220",
+      "BIOL 130"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 434": {
+    "code": "BIOL 434",
+    "raw": "Prereq: BIOL 235 or 309; BIOL 308",
+    "prereqs": [
+      "BIOL 235",
+      "BIOL 309",
+      "BIOL 308"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 360": {
+    "code": "BIOL 360",
+    "raw": "Prereq: One of EARTH 121, CIVE/ENVE/GEOE 153, BIOL 359",
+    "prereqs": [
+      "EARTH 121",
+      "GEOE 153",
+      "BIOL 359"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 631": {
+    "code": "BIOL 631",
+    "raw": "Antireq: GEOG 616/PLAN 616",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "GEOG 616",
+      "PLAN 616"
+    ]
+  },
+  "BIOL 472": {
+    "code": "BIOL 472",
+    "raw": "Prereq: BIOL 273, 331",
+    "prereqs": [
+      "BIOL 273",
+      "BIOL 331"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 231": {
+    "code": "BIOL 231",
+    "raw": "Prereq: BIOL 130",
+    "prereqs": [
+      "BIOL 130"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 235": {
+    "code": "BIOL 235",
+    "raw": "Prereq: BIOL 130, 239. Antireq: BIOL 309",
+    "prereqs": [
+      "BIOL 130",
+      "BIOL 239"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "BIOL 309"
+    ]
+  },
+  "BIOL 414": {
+    "code": "BIOL 414",
+    "raw": "Prereq: BIOL 359; BIOL 110 or BIOL 241",
+    "prereqs": [
+      "BIOL 359",
+      "BIOL 110",
+      "BIOL 241"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 484": {
+    "code": "BIOL 484",
+    "raw": "Prereq: BIOL 130, 139/239, 308",
+    "prereqs": [
+      "BIOL 130",
+      "BIOL 139",
+      "BIOL 239",
+      "BIOL 308"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 479": {
+    "code": "BIOL 479",
+    "raw": "Prereq: BIOL 139/239, 359",
+    "prereqs": [
+      "BIOL 139",
+      "BIOL 239",
+      "BIOL 359"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 266": {
+    "code": "BIOL 266",
+    "raw": "Prereq: BIOL 130. Antireq: BIOL 366",
+    "prereqs": [
+      "BIOL 130"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "BIOL 366"
+    ]
+  },
+  "BIOL 475": {
+    "code": "BIOL 475",
+    "raw": "Prereq: BIOL 241; Level at least 4A",
+    "prereqs": [
+      "BIOL 241"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 483": {
+    "code": "BIOL 483",
+    "raw": "Prereq: BIOL 342",
+    "prereqs": [
+      "BIOL 342"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 449": {
+    "code": "BIOL 449",
+    "raw": "Prereq: BIOL 241",
+    "prereqs": [
+      "BIOL 241"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 476": {
+    "code": "BIOL 476",
+    "raw": "Prereq: One of BIOL 273, BME 284, PSYCH 261, SYDE 384/584. Antireq: BIOL 377",
+    "prereqs": [
+      "BIOL 273",
+      "BME 284",
+      "PSYCH 261",
+      "SYDE 384",
+      "SYDE 584"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "BIOL 377"
+    ]
+  },
+  "BIOL 308": {
+    "code": "BIOL 308",
+    "raw": "Prereq: BIOL 130, 139/239",
+    "prereqs": [
+      "BIOL 130",
+      "BIOL 139",
+      "BIOL 239"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 350": {
+    "code": "BIOL 350",
+    "raw": "Prereq: (One of BIOL 150, 251, ENVS 200) or Level at least 3A Environmental Sciences majors",
+    "prereqs": [
+      "BIOL 150",
+      "BIOL 251",
+      "ENVS 200"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 376": {
+    "code": "BIOL 376",
+    "raw": "Prereq: One of BIOL 273, BME 284, PSYCH 261, SYDE 384/584",
+    "prereqs": [
+      "BIOL 273",
+      "BME 284",
+      "PSYCH 261",
+      "SYDE 384",
+      "SYDE 584"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 465": {
+    "code": "BIOL 465",
+    "raw": "Prereq: BIOL 266/366 or BIOL 365; CHEM 233 or CHEM 237 or BCS Bioinformatics Specialization or BMath (CS) Bioinformatics Specialization",
+    "prereqs": [
+      "BIOL 266",
+      "BIOL 366",
+      "BIOL 365",
+      "CHEM 233",
+      "CHEM 237"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 469": {
+    "code": "BIOL 469",
+    "raw": "Prereq: BIOL 239; BIOL 266/366 or BIOL 365",
+    "prereqs": [
+      "BIOL 239",
+      "BIOL 266",
+      "BIOL 366",
+      "BIOL 365"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 341": {
+    "code": "BIOL 341",
+    "raw": "Prereq: BIOL 240, 240L; BIOL 241 or Level at least 3A Biochemistry major",
+    "prereqs": [
+      "BIOL 240",
+      "BIOL 240L",
+      "BIOL 241"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 485": {
+    "code": "BIOL 485",
+    "raw": "Prereq: BIOL 150 or 251; BIOL 359",
+    "prereqs": [
+      "BIOL 150",
+      "BIOL 251",
+      "BIOL 359"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 489": {
+    "code": "BIOL 489",
+    "raw": "Prereq: One of BIOL 150, 251, ENVS 200; Level at least 3B",
+    "prereqs": [
+      "BIOL 150",
+      "BIOL 251",
+      "ENVS 200"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 458": {
+    "code": "BIOL 458",
+    "raw": "Prereq: One of BIOL 150, 251, ENVS 200; One of STAT 202, ECON 221, ENVS 278",
+    "prereqs": [
+      "BIOL 150",
+      "BIOL 251",
+      "ENVS 200",
+      "STAT 202",
+      "ECON 221",
+      "ENVS 278"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 251": {
+    "code": "BIOL 251",
+    "raw": "Prereq: BIOL 110 or 2A Faculty of Environment students. Antireq: BIOL 150",
+    "prereqs": [
+      "BIOL 110"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "BIOL 150"
+    ]
+  },
+  "BIOL 451": {
+    "code": "BIOL 451",
+    "raw": "Prereq: BIOL 150 or 251; BIOL 359, 361",
+    "prereqs": [
+      "BIOL 150",
+      "BIOL 251",
+      "BIOL 359",
+      "BIOL 361"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 312": {
+    "code": "BIOL 312",
+    "raw": "Prereq: BIOL 110 or 165; BIOL150 or 251",
+    "prereqs": [
+      "BIOL 110",
+      "BIOL 165",
+      "BIOL 150",
+      "BIOL 251"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 280": {
+    "code": "BIOL 280",
+    "raw": "Prereq: Level at least 2A Honours Science or Engineering plans",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 355": {
+    "code": "BIOL 355",
+    "raw": "Prereq: BIOL 273",
+    "prereqs": [
+      "BIOL 273"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 352": {
+    "code": "BIOL 352",
+    "raw": "Prereq: BIOL 150, BIOL 251. Antireq: BIOL 456",
+    "prereqs": [
+      "BIOL 150",
+      "BIOL 251"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "BIOL 456"
+    ]
+  },
+  "BIOL 382": {
+    "code": "BIOL 382",
+    "raw": "Prereq: One of MATH 118, 119, 128, 138, 148, SYDE 112; Level at least 3A Honours",
+    "prereqs": [
+      "MATH 118",
+      "MATH 119",
+      "MATH 128",
+      "MATH 138",
+      "MATH 148",
+      "SYDE 112"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 462": {
+    "code": "BIOL 462",
+    "raw": "Prereq: One of EARTH 221, 322, 358, BIOL 350, 351, ENVE 375, 376. Antireq: GEOG 405",
+    "prereqs": [
+      "EARTH 221",
+      "EARTH 322",
+      "EARTH 358",
+      "BIOL 350",
+      "BIOL 351",
+      "ENVE 375",
+      "ENVE 376"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "GEOG 405"
+    ]
+  },
+  "BIOL 487": {
+    "code": "BIOL 487",
+    "raw": "Prereq: One of CS 115,135, 200; 200-level STAT course; Level at least 3B within the Faculty of Science",
+    "prereqs": [
+      "CS 115",
+      "CS 135",
+      "CS 200",
+      "CS 200"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 383": {
+    "code": "BIOL 383",
+    "raw": "Prereq: One of BIOL 150, 251, ENVS 200, ERS 218",
+    "prereqs": [
+      "BIOL 150",
+      "BIOL 251",
+      "ENVS 200",
+      "ERS 218"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 624": {
+    "code": "BIOL 624",
+    "raw": "Prereq: EARTH 321",
+    "prereqs": [
+      "EARTH 321"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 477L": {
+    "code": "BIOL 477L",
+    "raw": "Coreq: BIOL 370, 371",
+    "prereqs": [],
+    "coreqs": [
+      "BIOL 370",
+      "BIOL 371"
+    ],
+    "antireqs": []
+  },
+  "BIOL 470": {
+    "code": "BIOL 470",
+    "raw": "Prereq: BIOL 350 or 351",
+    "prereqs": [
+      "BIOL 350",
+      "BIOL 351"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 335L": {
+    "code": "BIOL 335L",
+    "raw": "Prereq: BIOL 240L; BIOL 235 or BIOL 309",
+    "prereqs": [
+      "BIOL 240L",
+      "BIOL 235",
+      "BIOL 309"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 499A": {
+    "code": "BIOL 499A",
+    "raw": "Prereq: Cumulative Major Average at least 73%; Honours Biology, Biochemistry, Biomedical Sciences, Environmental Science - Ecology Specialization, Life Physics - Biophysics Specialization only.",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 499B": {
+    "code": "BIOL 499B",
+    "raw": "Prereq: Cumulative Major Average at least 73%; Honours Biology, Biochemistry, Biomedical Sciences, Environmental Science - Ecology Specialization, Life Physics - Biophysics Specialization only.",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 348L": {
+    "code": "BIOL 348L",
+    "raw": "Prereq: BIOL 140/240, 140L/240L, 241",
+    "prereqs": [
+      "BIOL 140",
+      "BIOL 240",
+      "BIOL 140L",
+      "BIOL 240L",
+      "BIOL 241"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 349": {
+    "code": "BIOL 349",
+    "raw": "Prereq: Level at least 3A",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 498A": {
+    "code": "BIOL 498A",
+    "raw": "Prereq: BIOL 110, 120/220; One of BIOL 150, 251, ENVS 200; STAT 202 or ENVS 278",
+    "prereqs": [
+      "BIOL 110",
+      "BIOL 120",
+      "BIOL 220",
+      "BIOL 150",
+      "BIOL 251",
+      "ENVS 200",
+      "STAT 202",
+      "ENVS 278"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 498B": {
+    "code": "BIOL 498B",
+    "raw": "Prereq: BIOL 110, 120/220; One of BIOL 150, 251, ENVS 200; STAT 202 or ENVS 278",
+    "prereqs": [
+      "BIOL 110",
+      "BIOL 120",
+      "BIOL 220",
+      "BIOL 150",
+      "BIOL 251",
+      "ENVS 200",
+      "STAT 202",
+      "ENVS 278"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 240L": {
+    "code": "BIOL 240L",
+    "raw": "Coreq: BIOL 140/240",
+    "prereqs": [],
+    "coreqs": [
+      "BIOL 140",
+      "BIOL 240"
+    ],
+    "antireqs": []
+  },
+  "BIOL 130L": {
+    "code": "BIOL 130L",
+    "raw": "Coreq: BIOL 130. Antireq: BIOL 230",
+    "prereqs": [],
+    "coreqs": [
+      "BIOL 130"
+    ],
+    "antireqs": [
+      "BIOL 230"
+    ]
+  },
+  "BIOL 373L": {
+    "code": "BIOL 373L",
+    "raw": "Coreq: BIOL 373. Antireq: BIOL 273L",
+    "prereqs": [],
+    "coreqs": [
+      "BIOL 373"
+    ],
+    "antireqs": [
+      "BIOL 273L"
+    ]
+  },
+  "BIOL 452": {
+    "code": "BIOL 452",
+    "raw": "Prereq: BIOL 150 or 251; STAT 202",
+    "prereqs": [
+      "BIOL 150",
+      "BIOL 251",
+      "STAT 202"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 303": {
+    "code": "BIOL 303",
+    "raw": "Prereq: BIOL 130, 139/239",
+    "prereqs": [
+      "BIOL 130",
+      "BIOL 139",
+      "BIOL 239"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 499W": {
+    "code": "BIOL 499W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 651": {
+    "code": "BIOL 651",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 692": {
+    "code": "BIOL 692",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 633": {
+    "code": "BIOL 633",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 690": {
+    "code": "BIOL 690",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 652": {
+    "code": "BIOL 652",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 702": {
+    "code": "BIOL 702",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 703": {
+    "code": "BIOL 703",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 704": {
+    "code": "BIOL 704",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 701": {
+    "code": "BIOL 701",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 705": {
+    "code": "BIOL 705",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 681A": {
+    "code": "BIOL 681A",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 680": {
+    "code": "BIOL 680",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 681": {
+    "code": "BIOL 681",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 496W": {
+    "code": "BIOL 496W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 396W": {
+    "code": "BIOL 396W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 622": {
+    "code": "BIOL 622",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 617": {
+    "code": "BIOL 617",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 488W": {
+    "code": "BIOL 488W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 393W": {
+    "code": "BIOL 393W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 484W": {
+    "code": "BIOL 484W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 358W": {
+    "code": "BIOL 358W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 341W": {
+    "code": "BIOL 341W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 441W": {
+    "code": "BIOL 441W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 206W": {
+    "code": "BIOL 206W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 349W": {
+    "code": "BIOL 349W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 459W": {
+    "code": "BIOL 459W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 369W": {
+    "code": "BIOL 369W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 476W": {
+    "code": "BIOL 476W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 330W": {
+    "code": "BIOL 330W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 646": {
+    "code": "BIOL 646",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 239": {
+    "code": "BIOL 239",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 130": {
+    "code": "BIOL 130",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 240": {
+    "code": "BIOL 240",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 165": {
+    "code": "BIOL 165",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 325": {
+    "code": "BIOL 325",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 225": {
+    "code": "BIOL 225",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 211": {
+    "code": "BIOL 211",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 602": {
+    "code": "BIOL 602",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 605": {
+    "code": "BIOL 605",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 645": {
+    "code": "BIOL 645",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 636": {
+    "code": "BIOL 636",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 608": {
+    "code": "BIOL 608",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 650": {
+    "code": "BIOL 650",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 606": {
+    "code": "BIOL 606",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 610": {
+    "code": "BIOL 610",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 614": {
+    "code": "BIOL 614",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 629": {
+    "code": "BIOL 629",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 618": {
+    "code": "BIOL 618",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 678": {
+    "code": "BIOL 678",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 470W": {
+    "code": "BIOL 470W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 111W": {
+    "code": "BIOL 111W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 407W": {
+    "code": "BIOL 407W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 416W": {
+    "code": "BIOL 416W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 308W": {
+    "code": "BIOL 308W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 110W": {
+    "code": "BIOL 110W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 464W": {
+    "code": "BIOL 464W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 463W": {
+    "code": "BIOL 463W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 468W": {
+    "code": "BIOL 468W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 405W": {
+    "code": "BIOL 405W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 276W": {
+    "code": "BIOL 276W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL 409W": {
+    "code": "BIOL 409W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "GEOG306": {
+    "code": "GEOG306",
+    "raw": "Prereq: Level at least 2A",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PHIL328": {
+    "code": "PHIL328",
+    "raw": "Prereq: Level at least 2A",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "AVIA310": {
+    "code": "AVIA310",
+    "raw": "Prereq: AVIA 100; Level at least 2A",
+    "prereqs": [
+      "AVIA 100"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "HHUM101": {
+    "code": "HHUM101",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "HRTS101": {
+    "code": "HRTS101",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "LS352": {
+    "code": "LS352",
+    "raw": "Prereq: Level at least 2A",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "HIST321": {
+    "code": "HIST321",
+    "raw": "Prereq: Level at least 2A",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
   }
 }

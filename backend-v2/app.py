@@ -388,7 +388,9 @@ CHAT_TOOLS = [
             "description": (
                 "Search for alternative courses to replace a course in the student's plan. "
                 "Returns 3-4 options for the student to choose from in the chat. "
-                "Use this BEFORE replace_course so the student can pick which course they want."
+                "Use this BEFORE replace_course so the student can pick which course they want. "
+                "You can search a DIFFERENT subject than the course being replaced — "
+                "e.g. if replacing a BIOL course for an HCI-focused student, search PSYCH or CS instead."
             ),
             "parameters": {
                 "type": "object",
@@ -396,6 +398,10 @@ CHAT_TOOLS = [
                     "course_code": {
                         "type": "string",
                         "description": "The course code to find replacements for (e.g. 'CS 350')",
+                    },
+                    "subject": {
+                        "type": "string",
+                        "description": "Subject to search in, if different from the course's subject (e.g. 'PSYCH', 'SYDE'). Omit to search the same subject.",
                     },
                 },
                 "required": ["course_code"],
@@ -428,41 +434,88 @@ def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None
             candidates = []
             if subject:
                 norm_current = skill.replace(" ", "").upper()
+                # Exclude all courses already in the graph
+                existing_codes_rc: set[str] = set()
+                for node in ctx.get("nodes", []):
+                    if not isinstance(node, dict):
+                        continue
+                    for part in node.get("skill", "").split(","):
+                        c = part.strip().replace(" ", "").upper()
+                        if c:
+                            existing_codes_rc.add(c)
                 candidates = [
                     c for c in list_courses_by_subject(subject)
-                    if c["code"].replace(" ", "").upper() != norm_current
+                    if c["code"].replace(" ", "").upper() not in existing_codes_rc
                 ]
 
             if candidates:
-                # Build set of course codes in the user's plan (excluding the one being replaced)
-                plan_codes: set[str] = set()
-                for node in ctx.get("nodes", []):
-                    node_skill = node.get("skill", "") if isinstance(node, dict) else ""
-                    for part in node_skill.split(","):
-                        c = part.strip().replace(" ", "").upper()
-                        if c and c != norm_current:
-                            plan_codes.add(c)
+                TERM_ORDER_RC = ["1A", "1B", "2A", "2B", "3A", "3B", "4A", "4B"]
 
-                # Filter candidates to those whose prereqs are all satisfied by the plan
+                # Find the term of the course being replaced
+                target_term = None
+                for node in ctx.get("nodes", []):
+                    if not isinstance(node, dict):
+                        continue
+                    node_skill = node.get("skill", "")
+                    for part in node_skill.split(","):
+                        if part.strip().replace(" ", "").upper() == norm_current:
+                            target_term = node.get("term")
+                            break
+                    if target_term:
+                        break
+                target_term_idx = TERM_ORDER_RC.index(target_term) if target_term in TERM_ORDER_RC else len(TERM_ORDER_RC) - 1
+
+                # Build set of course codes completed BEFORE the target term
+                prior_codes: set[str] = set()
+                for node in ctx.get("nodes", []):
+                    if not isinstance(node, dict):
+                        continue
+                    node_term = node.get("term")
+                    if node_term not in TERM_ORDER_RC:
+                        continue
+                    if TERM_ORDER_RC.index(node_term) < target_term_idx:
+                        node_skill = node.get("skill", "")
+                        for part in node_skill.split(","):
+                            c = part.strip().replace(" ", "").upper()
+                            if c:
+                                prior_codes.add(c)
+
+                # Filter candidates: prereqs must be satisfied by courses in earlier terms
                 prereq_filtered = []
                 for candidate in candidates:
                     prereq_data = get_course_prereqs(candidate["code"])
                     if prereq_data is None:
-                        prereq_filtered.append(candidate)
                         continue
                     prereqs = prereq_data.get("prereqs", [])
-                    if all(p.replace(" ", "").upper() in plan_codes for p in prereqs):
+                    if not prereqs or all(p.replace(" ", "").upper() in prior_codes for p in prereqs):
                         prereq_filtered.append(candidate)
 
-                if prereq_filtered:
-                    candidates = prereq_filtered
+                # Filter by course level: cap max and set a floor
+                max_catalog = (target_term_idx + 1) * 100 + 99
+                min_catalog = max(100, (target_term_idx // 2) * 100)
+                level_filtered = [
+                    c for c in prereq_filtered
+                    if (m := _re.search(r"(\d{3})", c["code"])) and min_catalog <= int(m.group(1)) <= max_catalog
+                ]
+                candidates = level_filtered if level_filtered else prereq_filtered
                 goal = ctx.get("goal", "")
+                program = ctx.get("program")
+                program_str = f"{program['title']} ({program['faculty']})" if program else None
                 course_list = "\n".join(f"- {c['code']}: {c['title']}" for c in candidates[:40])
-                prompt = f'The user is studying at University of Waterloo{" towards: " + goal if goal else ""}.\n'
+                prompt = f"The user is studying"
+                if program_str:
+                    prompt += f" {program_str}"
+                prompt += " at University of Waterloo"
+                if goal:
+                    prompt += f" with a goal of: {goal}"
+                prompt += ".\n"
                 prompt += f'They want to replace the course "{skill}" ({current_course or "current course"}).'
                 if reason:
                     prompt += f'\nReason: "{reason}"'
-                prompt += f"\n\nChoose ONE replacement from this list:\n{course_list}\n\nReturn JSON only: {{\"code\": \"<course code>\", \"title\": \"<course title>\", \"reason\": \"<one sentence why it's a good fit>\"}}"
+                prompt += (
+                    f"\n\nChoose ONE replacement from this list that best aligns with the student's goal and program:\n{course_list}\n\n"
+                    "Return JSON only: {\"code\": \"<course code>\", \"title\": \"<course title>\", \"reason\": \"<one sentence why it's a good fit>\"}"
+                )
 
                 resp = client.chat.completions.create(
                     model="openai/gpt-4.1-mini",
@@ -508,56 +561,129 @@ def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None
         )
 
     if name == "search_courses":
-        from uwaterloo import list_courses_by_subject, get_course_prereqs
+        from uwaterloo import list_courses_by_subject, _load_course_cache, get_course_prereqs, get_uwflow_ratings_bulk, format_uwflow_rating
         from openai import OpenAI
 
+        TERM_ORDER = ["1A", "1B", "2A", "2B", "3A", "3B", "4A", "4B"]
+
         course_code = args.get("course_code", "")
+        subject_override = args.get("subject", "").strip().upper()
         ctx = context or {}
 
         subject_match = _re.match(r"^([A-Z]{2,})", course_code.strip().upper())
-        subject = subject_match.group(1) if subject_match else ""
+        subject = subject_override if subject_override else (subject_match.group(1) if subject_match else "")
         if not subject:
             return ("No valid subject found in course code.", {})
 
         norm_current = course_code.replace(" ", "").upper()
+        # Exclude all courses already in the graph
+        existing_codes: set[str] = set()
+        for node in ctx.get("nodes", []):
+            if not isinstance(node, dict):
+                continue
+            for part in node.get("skill", "").split(","):
+                c = part.strip().replace(" ", "").upper()
+                if c:
+                    existing_codes.add(c)
         candidates = [
             c for c in list_courses_by_subject(subject)
-            if c["code"].replace(" ", "").upper() != norm_current
+            if c["code"].replace(" ", "").upper() not in existing_codes
         ]
 
-        # Build set of course codes already in the plan (excluding the one being replaced)
-        plan_codes: set[str] = set()
+        # Find the term of the course being replaced
+        target_term = None
         for node in ctx.get("nodes", []):
-            node_skill = node.get("skill", "") if isinstance(node, dict) else ""
+            if not isinstance(node, dict):
+                continue
+            node_skill = node.get("skill", "")
             for part in node_skill.split(","):
-                c = part.strip().replace(" ", "").upper()
-                if c and c != norm_current:
-                    plan_codes.add(c)
+                if part.strip().replace(" ", "").upper() == norm_current:
+                    target_term = node.get("term")
+                    break
+            if target_term:
+                break
+        target_term_idx = TERM_ORDER.index(target_term) if target_term in TERM_ORDER else len(TERM_ORDER) - 1
 
-        # Filter candidates to those whose prereqs are satisfied by the plan
+        # Build set of course codes completed BEFORE the target term
+        prior_codes: set[str] = set()
+        for node in ctx.get("nodes", []):
+            if not isinstance(node, dict):
+                continue
+            node_term = node.get("term")
+            if node_term not in TERM_ORDER:
+                continue
+            if TERM_ORDER.index(node_term) < target_term_idx:
+                node_skill = node.get("skill", "")
+                for part in node_skill.split(","):
+                    c = part.strip().replace(" ", "").upper()
+                    if c:
+                        prior_codes.add(c)
+
+        # Filter candidates: prereqs must be satisfiable by courses in earlier terms
+        prereq_cache = _load_course_cache()
         prereq_filtered = []
         for candidate in candidates:
-            prereq_data = get_course_prereqs(candidate["code"])
-            if prereq_data is None:
-                prereq_filtered.append(candidate)
+            code = candidate["code"]
+            cached = prereq_cache.get(code)
+            if cached is None:
+                # Not in cache — fetch from API so we don't suggest blind
+                cached = get_course_prereqs(code)
+            if cached is None:
+                # Course doesn't exist in API either — skip it
                 continue
-            prereqs = prereq_data.get("prereqs", [])
-            if all(p.replace(" ", "").upper() in plan_codes for p in prereqs):
+            prereqs = cached.get("prereqs", [])
+            if not prereqs or all(p.replace(" ", "").upper() in prior_codes for p in prereqs):
                 prereq_filtered.append(candidate)
 
-        if prereq_filtered:
-            candidates = prereq_filtered
+        # Filter by course level: cap max and set a floor
+        max_catalog = (target_term_idx + 1) * 100 + 99  # 1A→199, 1B→299, …
+        min_catalog = max(100, (target_term_idx // 2) * 100)  # 3A+→200, 4A+→300
+        level_filtered = []
+        for c in prereq_filtered:
+            m = _re.search(r"(\d{3})", c["code"])
+            if m:
+                num = int(m.group(1))
+                if min_catalog <= num <= max_catalog:
+                    level_filtered.append(c)
+
+        candidates = level_filtered if level_filtered else prereq_filtered
 
         if not candidates:
             return ("No alternative courses found in the same subject.", {})
 
         # Use LLM to pick top 3-4 from the filtered list
         goal = ctx.get("goal", "")
-        course_list = "\n".join(f"- {c['code']}: {c['title']}" for c in candidates[:40])
-        prompt = f'The user is studying at University of Waterloo{" towards: " + goal if goal else ""}.\n'
+
+        # Fetch UWFlow ratings for candidates
+        uwflow_ratings = get_uwflow_ratings_bulk([c["code"] for c in candidates[:40]])
+        course_lines = []
+        for c in candidates[:40]:
+            line = f"- {c['code']}: {c['title']}"
+            rating_str = format_uwflow_rating(uwflow_ratings.get(c['code'].replace(' ', '').upper()))
+            if rating_str:
+                line += f" {rating_str}"
+            course_lines.append(line)
+        course_list = "\n".join(course_lines)
+
+        program = ctx.get("program")
+        program_str = f"{program['title']} ({program['faculty']})" if program else None
+
+        prompt = f"The user is studying"
+        if program_str:
+            prompt += f" {program_str}"
+        prompt += " at University of Waterloo"
+        if goal:
+            prompt += f" with a goal of: {goal}"
+        prompt += ".\n"
         prompt += f'They want alternatives to "{course_code}".\n'
         prompt += f"\nPick the 3-4 best alternatives from this list:\n{course_list}\n\n"
-        prompt += 'Return a JSON array only: [{"code": "<code>", "title": "<title>"}]'
+        prompt += (
+            "IMPORTANT: Prioritize courses that are most relevant to the student's GOAL and PROGRAM. "
+            "A good replacement connects to what the student is trying to achieve, not just the same subject area. "
+            "Consider UWFlow ratings when available — prefer well-liked and useful courses, "
+            "but goal-relevance is the top priority.\n"
+            'Return a JSON array only: [{"code": "<code>", "title": "<title>"}]'
+        )
 
         client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key)
         resp = client.chat.completions.create(
@@ -572,11 +698,15 @@ def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None
         results = []
         for p in picks[:4]:
             code = p.get("code", "")
-            results.append({
+            result_entry = {
                 "code": code,
                 "title": p.get("title", code),
                 "url": f"https://uwflow.com/course/{code.replace(' ', '').lower()}",
-            })
+            }
+            rating = uwflow_ratings.get(code.replace(" ", "").upper())
+            if rating:
+                result_entry["rating"] = rating
+            results.append(result_entry)
 
         result_text = "Found alternatives: " + ", ".join(r["code"] for r in results)
         return (
@@ -607,13 +737,25 @@ def chat():
     client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key)
 
     if context.get("mode") == "academics":
+        program = context.get("program")
+        program_str = f"{program['title']} ({program['faculty']})" if program else "unknown program"
+        goal_str = context.get("goal", "")
         system_content = (
             "You are a helpful academic advisor embedded in a University of Waterloo course planner. "
-            "You help students understand their course plan, suggest study strategies, "
+            f"The student is in {program_str}"
+            + (f" with a goal of: {goal_str}." if goal_str else ".") +
+            " You help students understand their course plan, suggest study strategies, "
             "and answer questions about the courses in their plan. "
-            "You can modify the user's course plan using tools. "
-            "When the user wants to replace a course, ALWAYS use search_courses FIRST to present options. "
-            "Do NOT use replace_course directly — let the student pick from the search results. "
+            "You can modify the user's course plan using tools.\n\n"
+            "IMPORTANT — when the user wants to replace a course:\n"
+            "1. If they haven't explained WHY they want to replace it, ASK them first "
+            "(e.g. 'What are you looking for instead?' or 'Is there a specific area you'd rather explore?'). "
+            "Do NOT call any tools until you understand what they want.\n"
+            "2. Once you understand their reason, use search_courses to present options. "
+            "Replacements should be relevant to the student's GOAL and PROGRAM, not just the same subject. "
+            "For example, if a CS/HCI student wants to replace a biology course, suggest courses from ANY subject "
+            "that align with their goal (e.g. PSYCH, CS, SYDE courses related to HCI) rather than other biology courses.\n"
+            "3. Do NOT use replace_course directly — let the student pick from the search results.\n\n"
             "Keep responses concise and friendly. "
             "If the user's message is not about course planning, academics, or university life, "
             "respond ONLY with: \"I'm here to help with your course plan. "

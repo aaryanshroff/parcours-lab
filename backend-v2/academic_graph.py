@@ -4,13 +4,15 @@ from collections import defaultdict
 
 from openai import OpenAI
 
-from models import GraphResponse, SkillNode, Edge, Course, Position
+from models import GraphResponse, SkillNode, Edge, Course, CourseRating, Position
 import re
 from uwaterloo import (
     get_course_prereqs,
     get_program,
     list_courses_by_subject,
     list_courses_excluding_subjects,
+    get_uwflow_ratings_bulk,
+    format_uwflow_rating,
 )
 
 logger = logging.getLogger("academic_graph")
@@ -58,14 +60,15 @@ def _program_subjects_from_title(major_title: str) -> set[str]:
 
 
 def _is_accessible(code: str, program_subjects: set[str]) -> bool:
-    """Return False if the UW enrollment restriction excludes this program."""
+    """Return False if the UW enrollment restriction excludes this program.
+
+    Uses only the local prereq cache to avoid hammering the UW API.
+    If a course isn't cached, assume it's accessible.
+    """
     if not program_subjects:
         return True
-    try:
-        data = get_course_prereqs(code)
-    except Exception as e:
-        logger.warning("_is_accessible: get_course_prereqs(%s) failed: %s", code, e)
-        return True
+    from uwaterloo import _load_course_cache
+    data = _load_course_cache().get(code)
     if not data:
         return True
     raw = (data.get("raw", "") or "").lower()
@@ -112,6 +115,15 @@ def _normalize_code(code: str) -> str:
     return code.replace(" ", "").upper()
 
 
+def _get_antireqs(code: str) -> set[str]:
+    """Return normalized anti-requisite codes for a course from the cache."""
+    from uwaterloo import _load_course_cache
+    data = _load_course_cache().get(code)
+    if not data:
+        return set()
+    return {_normalize_code(a) for a in data.get("antireqs", [])}
+
+
 def generate_academic_graph(
     requirement_groups: list[dict],
     specialization_pids: list[str],
@@ -120,6 +132,8 @@ def generate_academic_graph(
     api_key: str,
     model: str = "google/gemini-2.5-flash",
     major_title: str = "",
+    desired_skills: list[str] | None = None,
+    my_skills: list[str] | None = None,
 ) -> GraphResponse:
     """Build a course DAG: deterministic for required courses, LLM for elective picks."""
 
@@ -133,8 +147,10 @@ def generate_academic_graph(
 
     # ── 2. Separate required vs choice groups, dedupe by code ──
     required_codes: set[str] = set()
+    required_order: list[str] = []  # insertion order for antireq dedup
     course_info: dict[str, dict] = {}  # normalized code -> {code, title, units}
     choice_groups: list[dict] = []
+    seen_choice_groups: set[tuple] = set()
 
     for group in all_groups:
         rule = group.get("rule")
@@ -143,6 +159,8 @@ def generate_academic_graph(
         if rule == "all":
             for c in courses:
                 nc = _normalize_code(c["code"])
+                if nc not in required_codes:
+                    required_order.append(nc)
                 required_codes.add(nc)
                 course_info[nc] = c
         elif rule != "unknown":
@@ -153,9 +171,28 @@ def generate_academic_graph(
                     courses = expanded
                     group = {**group, "courses": expanded}
             if courses or group.get("elective_type"):
-                choice_groups.append(group)
+                # Deduplicate: skip if an identical group (same rule + same course codes) already exists
+                group_key = (
+                    str(rule),
+                    frozenset(_normalize_code(c["code"]) for c in courses),
+                )
+                if group_key not in seen_choice_groups:
+                    seen_choice_groups.add(group_key)
+                    choice_groups.append(group)
             for c in courses:
                 course_info[_normalize_code(c["code"])] = c
+
+    # ── 2b. Remove anti-requisite conflicts among required courses ──
+    # First-added wins (major groups come before specialization/minor groups)
+    blocked: set[str] = set()
+    kept_required: set[str] = set()
+    for code in required_order:
+        if code in blocked:
+            logger.info("[academics] dropping required %s (antireq of another required course)", code)
+            continue
+        kept_required.add(code)
+        blocked |= _get_antireqs(code)
+    required_codes = kept_required
 
     logger.info(
         "[academics] groups=%d required=%d choice_groups=%d",
@@ -163,6 +200,18 @@ def generate_academic_graph(
         len(required_codes),
         len(choice_groups),
     )
+
+    # ── 2c. Filter choice groups: remove antireqs of required courses ──
+    required_antireqs: set[str] = set()
+    for code in required_codes:
+        required_antireqs |= _get_antireqs(code)
+    for group in choice_groups:
+        if group.get("courses"):
+            group["courses"] = [
+                c for c in group["courses"]
+                if _normalize_code(c["code"]) not in required_antireqs
+                and _normalize_code(c["code"]) not in required_codes
+            ]
 
     # ── 3. Fetch prereqs for required courses, build edges within the set ──
     prereq_map: dict[str, list[str]] = {}
@@ -178,7 +227,7 @@ def generate_academic_graph(
 
     if choice_groups:
         if goal.strip():
-            picks = _pick_electives(choice_groups, goal, api_key, model, program_subjects)
+            picks = _pick_electives(choice_groups, goal, api_key, model, program_subjects, major_title, desired_skills=desired_skills, my_skills=my_skills)
             picks = _fill_picks_with_defaults(choice_groups, picks)
         else:
             picks = _pick_defaults(choice_groups, program_subjects)
@@ -188,6 +237,18 @@ def generate_academic_graph(
         elective_reasons[nc] = reason
         if nc not in course_info:
             course_info[nc] = {"code": code, "title": code, "units": 0.5}
+
+    # ── 4b. Drop electives that conflict with required or other elective antireqs ──
+    blocked_codes = set(required_antireqs) | required_codes
+    safe_elective_codes: set[str] = set()
+    for code in sorted(elective_codes):
+        if code in blocked_codes:
+            logger.info("[academics] dropping elective %s (antireq conflict)", code)
+            continue
+        safe_elective_codes.add(code)
+        blocked_codes |= _get_antireqs(code)
+    elective_codes = safe_elective_codes
+    elective_reasons = {k: v for k, v in elective_reasons.items() if k in elective_codes}
 
     logger.info(
         "[academics] electives picked=%d (goal=%s)",
@@ -260,6 +321,12 @@ def generate_academic_graph(
     nodes: list[SkillNode] = []
     edges: list[Edge] = []
 
+    # ── 7. Map courses to ESCO skills ──
+    esco_map = _map_courses_to_esco_skills(all_codes, course_info, goal, api_key, model, desired_skills, my_skills)
+
+    # Fetch UWFlow ratings for all courses (electives will already be cached from _pick_electives)
+    all_ratings = get_uwflow_ratings_bulk(list(all_codes))
+
     for col, term in enumerate(TERM_ORDER):
         group = by_term.get(term, [])
         if not group:
@@ -271,6 +338,16 @@ def generate_academic_graph(
             node_id = code.lower()
             is_elective = code in elective_codes
 
+            uwflow = all_ratings.get(code)
+            course_rating = None
+            if uwflow:
+                course_rating = CourseRating(
+                    liked=uwflow.get("liked"),
+                    easy=uwflow.get("easy"),
+                    useful=uwflow.get("useful"),
+                    filled_count=uwflow.get("filled_count"),
+                )
+
             nodes.append(SkillNode(
                 id=node_id,
                 labels=[info.get("code", code)],
@@ -281,8 +358,10 @@ def generate_academic_graph(
                     url=f"https://uwflow.com/course/{code.lower()}",
                     reason=elective_reasons.get(code, "Required course") if is_elective else "Required course",
                     units=float(info.get("units", 0.5)),
+                    rating=course_rating,
                 ),
                 position=Position(x=col * COL_GAP, y=row * ROW_GAP),
+                esco_skills=esco_map.get(code, []),
             ))
 
             for prereq in prereq_map.get(code, []):
@@ -561,8 +640,87 @@ def _enforce_credit_cap(
     return result
 
 
+def _map_courses_to_esco_skills(
+    codes: set[str],
+    course_info: dict[str, dict],
+    goal: str,
+    api_key: str,
+    model: str,
+    desired_skills: list[str] | None = None,
+    my_skills: list[str] | None = None,
+) -> dict[str, list[str]]:
+    """Use LLM to assign 1-3 ESCO skill labels to each course."""
+    if not codes:
+        return {}
+
+    client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key)
+
+    course_lines = []
+    for code in sorted(codes):
+        info = course_info.get(code, {})
+        title = info.get("title", code)
+        course_lines.append(f"- {code}: {title}")
+
+    skills_context = ""
+    if desired_skills:
+        skills_context += f"\nDesired skills: {', '.join(desired_skills)}"
+    if my_skills:
+        skills_context += f"\nExisting skills: {', '.join(my_skills)}"
+
+    response = client.chat.completions.create(
+        model=model,
+        messages=[
+            {
+                "role": "system",
+                "content": (
+                    "You map university courses to ESCO (European Skills, Competences, Qualifications and Occupations) skill labels. "
+                    "For each course, assign 1-3 concise ESCO-style skill labels that the course teaches. "
+                    "Use standard ESCO skill terminology (e.g. 'Python programming', 'data analysis', "
+                    "'algorithm design', 'linear algebra', 'technical writing'). Keep labels short (1-4 words).\n\n"
+                    "If the student has desired skills, prefer mapping courses to those skill labels where applicable. "
+                    "Do NOT invent skills unrelated to the course content.\n\n"
+                    "Return ONLY valid JSON, no other text. Schema:\n"
+                    '{"mappings": {"COURSE_CODE": ["skill1", "skill2"]}}'
+                ),
+            },
+            {
+                "role": "user",
+                "content": (
+                    (f"Goal: {goal}\n" if goal else "")
+                    + skills_context
+                    + "\n\nCourses:\n" + "\n".join(course_lines)
+                ),
+            },
+        ],
+        temperature=0.2,
+    )
+
+    raw = response.choices[0].message.content or "{}"
+    raw = raw.strip()
+    if raw.startswith("```"):
+        raw = raw.split("\n", 1)[1] if "\n" in raw else raw[3:]
+        if raw.endswith("```"):
+            raw = raw[:-3]
+        raw = raw.strip()
+
+    try:
+        data = json.loads(raw)
+    except json.JSONDecodeError:
+        logger.warning("[academics] failed to parse ESCO mapping response: %s", raw[:200])
+        return {}
+
+    result: dict[str, list[str]] = {}
+    for code, skills in data.get("mappings", {}).items():
+        nc = _normalize_code(code)
+        if nc in codes and isinstance(skills, list):
+            result[nc] = [s for s in skills[:3] if isinstance(s, str)]
+
+    logger.info("[academics] ESCO mapped %d/%d courses", len(result), len(codes))
+    return result
+
+
 def _pick_defaults(choice_groups: list[dict], program_subjects: set[str] | None = None) -> dict[str, str]:
-    """No goal provided — just pick the first N accessible courses from each group."""
+    """No goal provided — just pick the first N courses from each group."""
     picks: dict[str, str] = {}
     for group in choice_groups:
         if not group.get("courses"):
@@ -570,11 +728,24 @@ def _pick_defaults(choice_groups: list[dict], program_subjects: set[str] | None 
             if expanded:
                 group["courses"] = expanded
         n = int(group["rule"])
-        accessible = [
-            c for c in group.get("courses", [])
-            if _is_accessible(c["code"], program_subjects or set())
-        ]
-        for c in accessible[:n]:
+        courses = group.get("courses", [])
+        # Pick first N, then swap out any inaccessible ones
+        selected = courses[:n]
+        remaining = courses[n:]
+        final = []
+        for c in selected:
+            if _is_accessible(c["code"], program_subjects or set()):
+                final.append(c)
+            else:
+                # Find next accessible replacement from remaining
+                replacement = None
+                while remaining:
+                    candidate = remaining.pop(0)
+                    if _is_accessible(candidate["code"], program_subjects or set()):
+                        replacement = candidate
+                        break
+                final.append(replacement if replacement else c)
+        for c in final:
             picks[c["code"]] = "Default selection"
     return picks
 
@@ -585,22 +756,39 @@ def _pick_electives(
     api_key: str,
     model: str,
     program_subjects: set[str] | None = None,
+    major_title: str = "",
+    desired_skills: list[str] | None = None,
+    my_skills: list[str] | None = None,
 ) -> dict[str, str]:
-    """LLM picks N courses from each choice group based on the student's goal."""
+    """LLM picks N courses from each choice group based on the student's goal and desired skills."""
     client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key)
 
+    # Build group descriptions for LLM — no accessibility filtering here
     groups_desc = []
+    group_courses: list[list[dict]] = []  # parallel list of course objects per group
+
+    # Pre-fetch UWFlow ratings for all candidate courses
+    all_candidate_codes: list[str] = []
+    for group in choice_groups:
+        for c in group.get("courses", []):
+            all_candidate_codes.append(c["code"])
+    uwflow_ratings = get_uwflow_ratings_bulk(all_candidate_codes)
+
     for i, group in enumerate(choice_groups):
         n = int(group["rule"])
         expanded = _expand_elective_group(group)
         if expanded:
             group["courses"] = expanded
-        accessible = [
-            c for c in group.get("courses", [])
-            if _is_accessible(c["code"], program_subjects or set())
-        ]
-        trimmed = _downselect_elective_options(accessible, goal)
-        options = [f"{c['code']} — {c.get('title', c['code'])}" for c in trimmed]
+        courses = group.get("courses", [])
+        trimmed = _downselect_elective_options(courses, goal)
+        group_courses.append(trimmed)
+        options = []
+        for c in trimmed:
+            line = f"{c['code']} — {c.get('title', c['code'])}"
+            rating_str = format_uwflow_rating(uwflow_ratings.get(c['code'].replace(' ', '').upper()))
+            if rating_str:
+                line += f" {rating_str}"
+            options.append(line)
         if not options:
             continue
         header = f"Group {i + 1} (pick {n})"
@@ -619,14 +807,31 @@ def _pick_electives(
                 "content": (
                     "You help students pick elective courses based on their interests. "
                     "Given choice groups (each requiring you to pick N courses from the options), "
-                    "select the courses that best align with the student's goal.\n\n"
+                    "select the courses that best align with the student's program and goal.\n\n"
+                    "Rules:\n"
+                    "- When a group offers regular vs honours/advanced variants, pick the one matching the program level "
+                    "(e.g. Honours programs get Honours-level courses like MATH 137, not MATH 127).\n"
+                    "- For breadth/free elective groups, pick courses that complement the student's program and goal. "
+                    "Do NOT pick courses from unrelated professional fields (e.g. no accounting, actuarial, nursing, etc. for a CS student). "
+                    "Prefer courses that build transferable skills relevant to the goal.\n"
+                    "- Some courses include UWFlow student ratings (liked %, useful %, easy %, review count). "
+                    "Use these as a signal — prefer courses that are well-liked and useful, "
+                    "but prioritize goal alignment over raw ratings.\n"
+                    "- If the student has specified desired skills, STRONGLY prefer courses that teach those skills. "
+                    "Avoid courses that primarily teach skills the student already has.\n\n"
                     "Return ONLY valid JSON, no other text. Schema:\n"
                     '{"picks": [{"code": "COURSE_CODE", "reason": "One sentence why"}]}'
                 ),
             },
             {
                 "role": "user",
-                "content": f"Goal: {goal}\n\n" + "\n".join(groups_desc),
+                "content": (
+                    (f"Program: {major_title}\n" if major_title else "")
+                    + f"Goal: {goal}\n"
+                    + (f"Desired skills to develop: {', '.join(desired_skills)}\n" if desired_skills else "")
+                    + (f"Skills already acquired: {', '.join(my_skills)}\n" if my_skills else "")
+                    + "\n" + "\n".join(groups_desc)
+                ),
             },
         ],
         temperature=0.3,
@@ -641,7 +846,37 @@ def _pick_electives(
         raw = raw.strip()
 
     data = json.loads(raw)
-    return {p["code"]: p.get("reason", "") for p in data.get("picks", [])}
+    raw_picks = {p["code"]: p.get("reason", "") for p in data.get("picks", [])}
+
+    # Enforce per-group limits: keep at most N picks from each choice group
+    picks: dict[str, str] = {}
+    for group in choice_groups:
+        n = int(group["rule"])
+        group_codes = {_normalize_code(c["code"]) for c in group.get("courses", [])}
+        count = 0
+        for code, reason in raw_picks.items():
+            if _normalize_code(code) in group_codes:
+                if count < n:
+                    picks[code] = reason
+                    count += 1
+
+    # Only check accessibility on the LLM's picks, not every candidate
+    all_options = [c for group in group_courses for c in group]
+    picked_codes = set(picks.keys())
+    for code in list(picks.keys()):
+        if not _is_accessible(code, program_subjects or set()):
+            # Swap with first accessible alternative not already picked
+            for alt in all_options:
+                if alt["code"] not in picked_codes and _is_accessible(alt["code"], program_subjects or set()):
+                    picks[alt["code"]] = picks.pop(code)
+                    picked_codes.discard(code)
+                    picked_codes.add(alt["code"])
+                    break
+            else:
+                # No accessible replacement found — keep the original
+                pass
+
+    return picks
 
 
 def _fill_picks_with_defaults(
@@ -806,5 +1041,10 @@ def _downselect_elective_options(courses: list[dict], goal: str, limit: int = 80
     if len(top) >= limit:
         return top[:limit]
 
+    # Only pad with non-matching courses if we don't have enough relevant ones.
+    # Use a much smaller limit for filler to avoid drowning the LLM with garbage.
+    if len(top) >= 20:
+        return top
     remaining = [c for score, _, c in scored if score <= 0]
-    return (top + remaining)[:limit]
+    filler_limit = max(limit - len(top), 20)
+    return (top + remaining[:filler_limit])[:limit]

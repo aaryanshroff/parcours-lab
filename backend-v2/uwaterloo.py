@@ -9,6 +9,10 @@ import requests
 DATA_PATH = Path(__file__).resolve().parent / "data" / "programs.json"
 COURSE_CACHE_PATH = Path(__file__).resolve().parent / "data" / "course_cache.json"
 SUBJECT_CACHE_PATH = Path(__file__).resolve().parent / "data" / "subject_course_cache.json"
+UWFLOW_RATING_CACHE_PATH = Path(__file__).resolve().parent / "data" / "uwflow_rating_cache.json"
+
+UWFLOW_GRAPHQL_URL = "https://uwflow.com/graphql"
+UWFLOW_RATING_TTL_SECONDS = 7 * 24 * 60 * 60  # 7 days
 
 UW_BASE = "https://openapi.data.uwaterloo.ca/v3"
 
@@ -19,17 +23,27 @@ def _load_data() -> dict:
         return json.load(f)
 
 
+_course_cache_mem: dict | None = None
+
+
 def _load_course_cache() -> dict:
+    global _course_cache_mem
+    if _course_cache_mem is not None:
+        return _course_cache_mem
     if COURSE_CACHE_PATH.exists():
         try:
             with COURSE_CACHE_PATH.open(encoding="utf-8") as f:
-                return json.load(f)
+                _course_cache_mem = json.load(f)
+                return _course_cache_mem
         except json.JSONDecodeError:
-            return {}
-    return {}
+            pass
+    _course_cache_mem = {}
+    return _course_cache_mem
 
 
 def _save_course_cache(cache: dict) -> None:
+    global _course_cache_mem
+    _course_cache_mem = cache
     COURSE_CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
     tmp = COURSE_CACHE_PATH.with_suffix(".tmp")
     with tmp.open("w", encoding="utf-8") as f:
@@ -127,6 +141,7 @@ def _uw_headers() -> dict:
     return {"x-api-key": os.environ["UWATERLOO_API_KEY"], "accept": "application/json"}
 
 
+@lru_cache(maxsize=1)
 def _get_current_term() -> str:
     resp = requests.get(f"{UW_BASE}/Terms/current", headers=_uw_headers(), timeout=15)
     resp.raise_for_status()
@@ -321,3 +336,191 @@ def list_courses_excluding_subjects(exclude_subjects: set[str]) -> list[dict]:
 def _extract_subject(code: str) -> str:
     m = re.match(r"^([A-Z]{2,})", code.strip().upper())
     return m.group(1) if m else ""
+
+
+# ── UWFlow ratings ────────────────────────────────────────────────────────────
+
+import logging
+import time
+
+_uwflow_logger = logging.getLogger("uwflow_ratings")
+
+_uwflow_rating_cache_mem: dict | None = None
+
+UWFLOW_RATING_QUERY = """
+query getCourseRating($code: String) {
+  course(where: {code: {_eq: $code}}) {
+    rating {
+      liked
+      easy
+      useful
+      filled_count
+      comment_count
+    }
+    profs_teaching {
+      prof {
+        name
+        rating {
+          liked
+        }
+      }
+    }
+  }
+}
+"""
+
+
+def _load_uwflow_rating_cache() -> dict:
+    global _uwflow_rating_cache_mem
+    if _uwflow_rating_cache_mem is not None:
+        return _uwflow_rating_cache_mem
+    if UWFLOW_RATING_CACHE_PATH.exists():
+        try:
+            with UWFLOW_RATING_CACHE_PATH.open(encoding="utf-8") as f:
+                _uwflow_rating_cache_mem = json.load(f)
+                return _uwflow_rating_cache_mem
+        except json.JSONDecodeError:
+            pass
+    _uwflow_rating_cache_mem = {}
+    return _uwflow_rating_cache_mem
+
+
+def _save_uwflow_rating_cache(cache: dict) -> None:
+    global _uwflow_rating_cache_mem
+    _uwflow_rating_cache_mem = cache
+    UWFLOW_RATING_CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    tmp = UWFLOW_RATING_CACHE_PATH.with_suffix(".tmp")
+    with tmp.open("w", encoding="utf-8") as f:
+        json.dump(cache, f, indent=2)
+    tmp.replace(UWFLOW_RATING_CACHE_PATH)
+
+
+def _fetch_uwflow_rating_from_api(code: str) -> dict | None:
+    """Fetch rating data for a single course from UWFlow GraphQL."""
+    # UWFlow expects lowercase, no spaces: "cs135"
+    uwflow_code = code.replace(" ", "").lower()
+    try:
+        resp = requests.post(
+            UWFLOW_GRAPHQL_URL,
+            json={
+                "operationName": "getCourseRating",
+                "query": UWFLOW_RATING_QUERY,
+                "variables": {"code": uwflow_code},
+            },
+            headers={"Content-Type": "application/json"},
+            timeout=10,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+    except Exception as e:
+        _uwflow_logger.warning("UWFlow API failed for %s: %s", code, e)
+        return None
+
+    courses = data.get("data", {}).get("course", [])
+    if not courses:
+        return None
+
+    course = courses[0]
+    rating = course.get("rating") or {}
+    profs = []
+    for pt in course.get("profs_teaching", []):
+        prof = pt.get("prof", {})
+        prof_rating = prof.get("rating", {})
+        if prof.get("name"):
+            profs.append({
+                "name": prof["name"],
+                "liked": prof_rating.get("liked"),
+            })
+
+    return {
+        "liked": rating.get("liked"),
+        "easy": rating.get("easy"),
+        "useful": rating.get("useful"),
+        "filled_count": rating.get("filled_count"),
+        "comment_count": rating.get("comment_count"),
+        "profs": profs,
+    }
+
+
+def fetch_uwflow_rating(code: str) -> dict | None:
+    """Get UWFlow rating for a course. Uses disk cache with TTL."""
+    normalized = code.replace(" ", "").upper()
+    cache = _load_uwflow_rating_cache()
+    entry = cache.get(normalized)
+
+    if entry:
+        fetched_at = entry.get("fetched_at", 0)
+        if time.time() - fetched_at < UWFLOW_RATING_TTL_SECONDS:
+            return entry.get("rating")
+
+    rating = _fetch_uwflow_rating_from_api(code)
+    cache[normalized] = {
+        "fetched_at": time.time(),
+        "rating": rating,
+    }
+    _save_uwflow_rating_cache(cache)
+    return rating
+
+
+def get_uwflow_ratings_bulk(codes: list[str]) -> dict[str, dict]:
+    """Fetch UWFlow ratings for multiple courses. Returns {normalized_code: rating_dict}.
+
+    Saves the cache once at the end instead of after every fetch to avoid
+    rapid file writes that conflict with Flask's auto-reloader.
+    """
+    cache = _load_uwflow_rating_cache()
+    results: dict[str, dict] = {}
+    dirty = False
+
+    for code in codes:
+        normalized = code.replace(" ", "").upper()
+        entry = cache.get(normalized)
+
+        if entry:
+            fetched_at = entry.get("fetched_at", 0)
+            if time.time() - fetched_at < UWFLOW_RATING_TTL_SECONDS:
+                rating = entry.get("rating")
+                if rating:
+                    results[normalized] = rating
+                continue
+
+        rating = _fetch_uwflow_rating_from_api(code)
+        cache[normalized] = {
+            "fetched_at": time.time(),
+            "rating": rating,
+        }
+        dirty = True
+        if rating:
+            results[normalized] = rating
+
+    if dirty:
+        _save_uwflow_rating_cache(cache)
+
+    return results
+
+
+def format_uwflow_rating(rating: dict | None) -> str:
+    """Format a rating dict into a compact string for LLM context."""
+    if not rating:
+        return ""
+    parts = []
+    if rating.get("liked") is not None:
+        parts.append(f"{rating['liked']:.0%} liked")
+    if rating.get("useful") is not None:
+        parts.append(f"{rating['useful']:.0%} useful")
+    if rating.get("easy") is not None:
+        parts.append(f"{rating['easy']:.0%} easy")
+    if rating.get("filled_count"):
+        parts.append(f"{rating['filled_count']} reviews")
+    if not parts:
+        return ""
+    summary = f"[UWFlow: {', '.join(parts)}]"
+
+    # Top prof by liked %
+    profs = rating.get("profs", [])
+    rated_profs = [p for p in profs if p.get("liked") is not None]
+    if rated_profs:
+        best = max(rated_profs, key=lambda p: p["liked"])
+        summary += f" Top prof: {best['name']} ({best['liked']:.0%} liked)"
+
+    return summary
