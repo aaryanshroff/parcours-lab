@@ -16,9 +16,10 @@ import {
   MarkerType,
   applyNodeChanges,
 } from '@xyflow/react'
-import { ExternalLink, Check, X, RefreshCw, ChevronDown, Loader2, Undo2, HelpCircle, ThumbsUp, Star } from 'lucide-react'
+import { ExternalLink, Check, X, RefreshCw, ChevronDown, Loader2, Undo2, HelpCircle, ThumbsUp, Star, LayoutGrid, Menu, Map } from 'lucide-react'
 import Dagre from '@dagrejs/dagre'
 import GoatChat from '../components/GoatChat'
+import BoardView from './Board'
 
 /* ─── Layout helpers ─── */
 
@@ -1073,7 +1074,9 @@ export default function Graph() {
   )
   const [loading, setLoading] = useState(true)
   const [courseHistory, setCourseHistory] = useState<HistoryEntry[]>([])
-  const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null)
+  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null)
+  const [viewMode, setViewMode] = useState<'map' | 'board'>('map')
+  const [boardPanelsOpen, setBoardPanelsOpen] = useState(false)
   const [disabledTerms, setDisabledTerms] = useState<Set<string>>(new Set())
   const [shakeNodeId, setShakeNodeId] = useState<string | null>(null)
   const regenAbortRef = useRef<AbortController | null>(null)
@@ -1095,14 +1098,14 @@ export default function Graph() {
 
   const displayEdges = useMemo(() => {
     if (mode !== 'academics') return edges
-    if (!hoveredNodeId) return edges.map((e) => ({ ...e, hidden: true }))
+    if (!selectedNodeId) return edges.map((e) => ({ ...e, hidden: true }))
     return edges.map((e) => ({
       ...e,
-      hidden: e.source !== hoveredNodeId && e.target !== hoveredNodeId,
+      hidden: e.source !== selectedNodeId && e.target !== selectedNodeId,
       style: { stroke: '#a8a29e', strokeWidth: 2 },
       markerEnd: { type: MarkerType.ArrowClosed, color: '#a8a29e', width: 14, height: 14 },
     }))
-  }, [edges, hoveredNodeId, mode])
+  }, [edges, selectedNodeId, mode])
 
   const handleNodeDragStart = useCallback((_: React.MouseEvent, draggedNode: Node<SkillNodeData>) => {
     if (!draggedNode.data.term) return
@@ -1489,6 +1492,40 @@ export default function Graph() {
     [],
   )
 
+  const handleBoardMoveCourse = useCallback((courseId: string, _fromTerm: string, toTerm: string) => {
+    // Reuse the same prereq validation as the map view drag
+    const prereqIds = prereqMap[courseId] ?? []
+    const courseNodes = nodes.filter((n) => n.type === 'skill')
+    const targetTermIdx = TERM_ORDER.indexOf(toTerm)
+
+    const conflicting = prereqIds
+      .map((pid) => courseNodes.find((n) => n.id === pid))
+      .filter((n): n is Node<SkillNodeData> => !!n?.data.term && TERM_ORDER.indexOf(n.data.term as string) >= targetTermIdx)
+    if (conflicting.length > 0) {
+      const names = conflicting.map((n) => n.data.courseTitle).join(', ')
+      toast.error(`Complete ${names} first`, { duration: 3000 })
+      return
+    }
+
+    // Credit cap check
+    const targetCredits = courseNodes
+      .filter((n) => n.data.term === toTerm && n.id !== courseId)
+      .reduce((s, n) => s + (n.data.courseUnits ?? 0.5), 0)
+    const movingNode = courseNodes.find((n) => n.id === courseId)
+    if (movingNode && targetCredits + (movingNode.data.courseUnits ?? 0.5) > 2.5) {
+      toast.error(`Term ${toTerm} would exceed 2.5 credits`, { duration: 3000 })
+      return
+    }
+
+    setNodes((prev) => {
+      const withoutGroups = prev.filter((n) => n.type !== 'termGroup')
+      const updated = withoutGroups.map((n) =>
+        n.id === courseId ? { ...n, data: { ...n.data, term: toTerm } } : n,
+      )
+      return addTermGroups(updated)
+    })
+  }, [prereqMap, nodes])
+
   const termNodeMap = useMemo(() => {
     const map: Record<string, string[]> = {}
     for (const n of nodes) {
@@ -1526,60 +1563,92 @@ export default function Graph() {
       {/* Mobile: column layout (panels on top, graph below). Desktop: absolute overlays on full-screen graph */}
       <div className="relative w-screen h-dvh">
 
-        {/* Panels — absolute overlays on all sizes, pointer-events-none container */}
-        <div className="absolute inset-0 z-10 overflow-visible pointer-events-none">
-          <div className="absolute top-3 left-3 right-3 flex flex-col gap-2 pointer-events-auto sm:top-5 sm:left-5 sm:right-auto sm:gap-3">
-            <GoalPanel goal={navGoal ?? goal} program={mode === 'academics' ? major : undefined} />
-            {mode === 'academics' && (
-              <GoalPanel goal={navGoal ?? goal} />
-            )}
-            <DesiredSkillsPanel skills={desiredSkills} onSkillsChange={handleDesiredSkillsChange} loading={loading} />
-            <MySkillsPanel skills={mySkills} onSkillsChange={handleMySkillsChange} loading={loading} />
-          </div>
+        {/* Panels — absolute overlays */}
+        <div className="absolute inset-0 z-50 overflow-visible pointer-events-none">
 
-          <div className="hidden pointer-events-auto sm:flex sm:flex-col sm:gap-3 sm:absolute sm:top-5 sm:right-5">
-            <CourseHistoryPanel
-              history={courseHistory}
-              onRestore={(index) => {
-                const entry = courseHistory[index]
-                setNodes((nds) =>
-                  nds.map((n) =>
-                    n.data.labels.includes(entry.skill)
-                      ? { ...n, data: { ...n.data, courseTitle: entry.oldCourse } }
-                      : n,
-                  ),
-                )
-                setCourseHistory((h) => h.filter((_, i) => i !== index))
-              }}
-            />
+
+
+          {/* Bottom-left: view toggle (both views) + hamburger (board only) */}
+          <div className="absolute bottom-4 left-4 flex items-center gap-2 pointer-events-auto sm:bottom-5 sm:left-5">
+            {viewMode === 'board' && (
+              <button
+                onClick={() => setBoardPanelsOpen((v) => !v)}
+                className="p-2.5 bg-white rounded-xl shadow-lg border border-stone-200 hover:shadow-xl cursor-pointer transition-shadow duration-200"
+                aria-label="Toggle panels"
+              >
+                <Menu size={16} className="text-stone-500" />
+              </button>
+            )}
             <button
-              onClick={() => {
-                const courseNodes = nodes
-                  .filter((n) => n.type === 'skill')
-                  .map((n) => ({
-                    id: n.id,
-                    labels: n.data.labels,
-                    courseTitle: n.data.courseTitle,
-                    courseUrl: n.data.courseUrl,
-                    courseReason: n.data.courseReason,
-                    tier: n.data.tier,
-                    term: n.data.term,
-                  }))
-                navigate('/summary', {
-                  state: { goal: navGoal ?? goal, mode, program: mode === 'academics' ? major : undefined, courses: courseNodes },
-                })
-              }}
-              disabled={loading || nodes.filter((n) => n.type === 'skill').length === 0}
-              className="w-80 bg-white rounded-xl shadow-lg border border-stone-200 p-3 sm:p-4 hover:shadow-xl transition-shadow duration-200 flex items-center gap-1.5 cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
-              aria-label="View Summary"
+              onClick={() => { setViewMode((v) => v === 'map' ? 'board' : 'map'); setBoardPanelsOpen(false) }}
+              disabled={loading}
+              className="inline-flex items-center gap-1.5 px-3 py-2.5 bg-white rounded-xl shadow-lg border border-stone-200 hover:shadow-xl cursor-pointer transition-shadow duration-200 disabled:opacity-40 disabled:pointer-events-none"
             >
-              <ExternalLink size={14} className="text-stone-400" />
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-stone-500">Download Summary</span>
+              {viewMode === 'map' ? <LayoutGrid size={13} className="text-stone-400" /> : <Map size={13} className="text-stone-400" />}
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-stone-500">
+                {viewMode === 'map' ? 'Board View' : 'Map View'}
+              </span>
             </button>
           </div>
+
+          {/* Left panels — always visible in map mode, toggled in board mode */}
+          {(viewMode === 'map' || boardPanelsOpen) && (
+            <div className={`absolute top-0 left-3 right-3 flex flex-col gap-2 pointer-events-auto sm:right-auto sm:gap-3 sm:left-5 z-[100]`}>
+              <GoalPanel goal={navGoal ?? goal} program={mode === 'academics' ? major : undefined} />
+              {mode === 'academics' && (
+                <GoalPanel goal={navGoal ?? goal} />
+              )}
+              <DesiredSkillsPanel skills={desiredSkills} onSkillsChange={handleDesiredSkillsChange} loading={loading} />
+              <MySkillsPanel skills={mySkills} onSkillsChange={handleMySkillsChange} loading={loading} />
+            </div>
+          )}
+
+          {/* Right panels — only in map mode */}
+          {viewMode === 'map' && (
+            <div className="hidden pointer-events-auto sm:flex sm:flex-col sm:gap-3 sm:absolute sm:top-5 sm:right-5">
+              <CourseHistoryPanel
+                history={courseHistory}
+                onRestore={(index) => {
+                  const entry = courseHistory[index]
+                  setNodes((nds) =>
+                    nds.map((n) =>
+                      n.data.labels.includes(entry.skill)
+                        ? { ...n, data: { ...n.data, courseTitle: entry.oldCourse } }
+                        : n,
+                    ),
+                  )
+                  setCourseHistory((h) => h.filter((_, i) => i !== index))
+                }}
+              />
+              <button
+                onClick={() => {
+                  const courseNodes = nodes
+                    .filter((n) => n.type === 'skill')
+                    .map((n) => ({
+                      id: n.id,
+                      labels: n.data.labels,
+                      courseTitle: n.data.courseTitle,
+                      courseUrl: n.data.courseUrl,
+                      courseReason: n.data.courseReason,
+                      tier: n.data.tier,
+                      term: n.data.term,
+                    }))
+                  navigate('/summary', {
+                    state: { goal: navGoal ?? goal, mode, program: mode === 'academics' ? major : undefined, courses: courseNodes },
+                  })
+                }}
+                disabled={loading || nodes.filter((n) => n.type === 'skill').length === 0}
+                className="w-80 bg-white rounded-xl shadow-lg border border-stone-200 p-3 sm:p-4 hover:shadow-xl transition-shadow duration-200 flex items-center gap-1.5 cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
+                aria-label="View Summary"
+              >
+                <ExternalLink size={14} className="text-stone-400" />
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-stone-500">Download Summary</span>
+              </button>
+            </div>
+          )}
         </div>
 
-        {/* Graph — full screen, user pans freely */}
+        {/* Main content area — map or board */}
         <div className="relative w-full h-full">
           {loading && (
             <div className="absolute inset-x-0 bottom-0 top-[60%] sm:top-0 z-[15] flex flex-col items-center justify-center gap-3 pointer-events-none">
@@ -1588,27 +1657,37 @@ export default function Graph() {
             </div>
           )}
 
-          <ReactFlow
-            nodes={nodes}
-            edges={displayEdges}
-            onNodesChange={onNodesChange}
-            onNodeDragStart={handleNodeDragStart}
-            onNodeDrag={handleNodeDrag}
-            onNodeDragStop={handleNodeDragStop}
-            onNodeMouseEnter={(_, node) => mode === 'academics' && setHoveredNodeId(node.id)}
-            onNodeMouseLeave={() => mode === 'academics' && setHoveredNodeId(null)}
-            nodeTypes={nodeTypes}
-            edgeTypes={edgeTypes}
-            fitView
-            fitViewOptions={{ padding: 0.3 }}
-            proOptions={{ hideAttribution: true }}
-            nodesConnectable={false}
-            panOnDrag
-            zoomOnScroll
-            style={{ background: '#fafaf9' }}
-          >
-            <Background variant={BackgroundVariant.Dots} gap={20} size={1} color="#e7e5e4" />
-          </ReactFlow>
+          {viewMode === 'board' ? (
+            <BoardView 
+              nodes={nodes} 
+              edges={edges} 
+              onMoveCourse={handleBoardMoveCourse} 
+              title={mode === 'academics' && major ? major.title : ((navGoal ?? goal) || 'Course Board')}
+              subtitle={mode === 'academics' && major ? major.faculty : undefined}
+            />
+          ) : (
+            <ReactFlow
+              nodes={nodes}
+              edges={displayEdges}
+              onNodesChange={onNodesChange}
+              onNodeDragStart={handleNodeDragStart}
+              onNodeDrag={handleNodeDrag}
+              onNodeDragStop={handleNodeDragStop}
+              onNodeClick={(_, node) => mode === 'academics' && setSelectedNodeId((prev) => prev === node.id ? null : node.id)}
+              onPaneClick={() => mode === 'academics' && setSelectedNodeId(null)}
+              nodeTypes={nodeTypes}
+              edgeTypes={edgeTypes}
+              fitView
+              fitViewOptions={{ padding: 0.3 }}
+              proOptions={{ hideAttribution: true }}
+              nodesConnectable={false}
+              panOnDrag
+              zoomOnScroll
+              style={{ background: '#fafaf9' }}
+            >
+              <Background variant={BackgroundVariant.Dots} gap={20} size={1} color="#e7e5e4" />
+            </ReactFlow>
+          )}
         </div>
 
 

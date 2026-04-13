@@ -29,6 +29,15 @@ body {
   animation-delay: 0.8s;
 }
 
+@keyframes slide-in-right {
+  from { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+
+.animate-slide-in {
+  animation: slide-in-right 0.2s ease-out both;
+}
+
 @media print {
   body {
     -webkit-print-color-adjust: exact;
