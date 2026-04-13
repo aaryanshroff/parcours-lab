@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react'
 import { toast } from 'sonner'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Download, Sparkles, Loader2, ExternalLink, BookOpen, Check } from 'lucide-react'
+import { ArrowLeft, Download, Sparkles, Loader2, ExternalLink, BookOpen, Check, Target } from 'lucide-react'
 
 /* ─── Types ─── */
 
@@ -39,6 +39,8 @@ const TIER_DOT: Record<Tier, string> = {
   specialization: 'bg-pink-500',
 }
 
+const REQUIRED_RE = /^required\s*(course)?$/i
+
 /* ─── Helpers ─── */
 
 function groupByTerm(courses: CourseEntry[]): [string, CourseEntry[]][] {
@@ -63,6 +65,9 @@ function groupByTier(courses: CourseEntry[]): [Tier, CourseEntry[]][] {
 /* ─── Course Row ─── */
 
 function CourseRow({ course, isAcademic }: { course: CourseEntry; isAcademic: boolean }) {
+  const isRequired = REQUIRED_RE.test(course.courseReason.trim())
+  const reason = isRequired ? '' : course.courseReason
+
   return (
     <div className="py-2 print:py-1.5 print:break-inside-avoid">
       <div className="flex items-baseline gap-2 min-w-0">
@@ -80,15 +85,20 @@ function CourseRow({ course, isAcademic }: { course: CourseEntry; isAcademic: bo
               {course.courseTitle}
               <ExternalLink size={10} className="inline ml-1 -mt-0.5 text-stone-300 print:hidden" />
             </a>
+            {isRequired && (
+              <span className="text-[10px] font-semibold uppercase tracking-wide text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-px rounded print:bg-white print:border-emerald-300">
+                Req
+              </span>
+            )}
             {course.labels.length > 0 && (
               <span className="text-[11px] text-stone-400 print:text-stone-500">
                 {course.labels.join(' · ')}
               </span>
             )}
           </div>
-          {course.courseReason && (
+          {reason && (
             <p className="text-[12px] leading-snug text-stone-400 mt-0.5 print:text-stone-500">
-              {course.courseReason}
+              {reason}
             </p>
           )}
         </div>
@@ -249,36 +259,29 @@ export default function Summary() {
       <div className="max-w-2xl mx-auto px-5 py-6 print:py-2 print:px-4 print:max-w-none">
         {/* Header */}
         <header className="mb-5 print:mb-4">
-          <div className="flex items-start justify-between gap-4">
-            <div className="min-w-0">
-              {isAcademic && program ? (
-                <>
-                  <h1 className="text-xl font-bold text-stone-900 m-0 leading-tight">{program.title}</h1>
-                  <p className="text-xs text-stone-400 mt-0.5">{program.faculty}</p>
-                </>
-              ) : (
-                <h1 className="text-xl font-bold text-stone-900 m-0 leading-tight">Learning Roadmap</h1>
-              )}
-              {goal && (
-                <p className="text-sm text-stone-500 mt-1.5 leading-snug">
-                  <span className="text-stone-400">Goal: </span>{goal}
-                </p>
-              )}
+          {isAcademic && program && (
+            <div className="mb-2">
+              <h1 className="text-xl font-bold text-stone-900 m-0 leading-tight">{program.title}</h1>
+              <p className="text-xs text-stone-400 mt-0.5">{program.faculty}</p>
             </div>
-            <div className="shrink-0 text-right text-[11px] text-stone-400">
-              <p className="m-0">{dateStr}</p>
-              <p className="m-0">{courses.length} courses</p>
-            </div>
-          </div>
-          <div className="mt-3 h-px bg-stone-200" />
-        </header>
+          )}
+          {!isAcademic && (
+            <h1 className="text-xl font-bold text-stone-900 m-0 mb-2 leading-tight">Learning Roadmap</h1>
+          )}
 
-        {/* Narrative */}
-        {narrative && (
-          <div className="mb-5 print:mb-4">
-            <NarrativeSummary text={narrative} printVisible={includeNarrative} />
+          {goal && (
+            <div className="flex items-start gap-2.5 rounded-lg bg-stone-50 border border-stone-200 px-3.5 py-2.5 print:bg-white print:border-stone-300">
+              <Target size={15} className="shrink-0 text-stone-400 mt-0.5" />
+              <p className="text-sm text-stone-600 m-0 leading-snug">{goal}</p>
+            </div>
+          )}
+
+          <div className="flex items-center justify-between mt-3">
+            <div className="h-px flex-1 bg-stone-200" />
+            <span className="text-[11px] text-stone-400 px-3">{courses.length} courses &middot; {dateStr}</span>
+            <div className="h-px flex-1 bg-stone-200" />
           </div>
-        )}
+        </header>
 
         {/* Course groups */}
         <div className="space-y-5 print:space-y-3">
@@ -292,6 +295,13 @@ export default function Summary() {
             />
           ))}
         </div>
+
+        {/* AI Narrative — below course list */}
+        {narrative && (
+          <div className="mt-6 print:mt-4">
+            <NarrativeSummary text={narrative} printVisible={includeNarrative} />
+          </div>
+        )}
 
         {/* Footer */}
         <footer className="mt-8 pt-4 border-t border-stone-100 text-center print:mt-4 print:pt-2">
