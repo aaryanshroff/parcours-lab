@@ -287,6 +287,28 @@ def uwaterloo_course_prereqs(code):
     return jsonify(result)
 
 
+@app.route("/api/clubs/recommend", methods=["POST"])
+def clubs_recommend():
+    from wusa_clubs import recommend_clubs
+
+    body = request.get_json() or {}
+    major_title = body.get("major_title", "")
+    goal = body.get("goal", "")
+    interests = body.get("interests", [])
+
+    api_key = os.environ["OPENROUTER_API_KEY"]
+    clubs = recommend_clubs(major_title, goal, interests, api_key)
+    return jsonify({"clubs": clubs})
+
+
+@app.route("/api/clubs/refresh", methods=["POST"])
+def clubs_refresh():
+    from wusa_clubs import get_all_clubs
+
+    clubs = get_all_clubs(force_refresh=True)
+    return jsonify({"count": len(clubs)})
+
+
 @app.route("/api/esco/search")
 def esco_search():
     from resume_parser import _fetch_esco_candidates
@@ -446,6 +468,7 @@ def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None
 
     if name == "replace_course":
         from openai import OpenAI
+        from academic_graph import _get_antireqs
 
         skill = args.get("skill_name", "")
         reason = args.get("reason", "")
@@ -455,7 +478,7 @@ def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None
         client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key)
 
         if ctx.get("mode") == "academics":
-            from uwaterloo import list_courses_by_subject, get_course_prereqs
+            from uwaterloo import list_courses_by_subject, get_course_prereqs, _load_course_cache as _load_cache_rc
 
             subject_match = _re.match(r"^([A-Z]{2,})", skill.strip().upper())
             subject = subject_match.group(1) if subject_match else ""
@@ -471,10 +494,27 @@ def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None
                         c = part.strip().replace(" ", "").upper()
                         if c:
                             existing_codes_rc.add(c)
+
+                # Build antireq set from all courses already in the graph
+                existing_antireqs_rc: set[str] = set()
+                for ec in existing_codes_rc:
+                    existing_antireqs_rc |= _get_antireqs(ec)
+
                 candidates = [
                     c for c in list_courses_by_subject(subject)
                     if c["code"].replace(" ", "").upper() not in existing_codes_rc
                 ]
+
+                # Drop candidates that conflict with existing courses (antireqs)
+                antireq_filtered_rc = []
+                for c in candidates:
+                    ccode = c["code"].replace(" ", "").upper()
+                    if ccode in existing_antireqs_rc:
+                        continue
+                    if _get_antireqs(ccode) & existing_codes_rc:
+                        continue
+                    antireq_filtered_rc.append(c)
+                candidates = antireq_filtered_rc
 
             if candidates:
                 TERM_ORDER_RC = ["1A", "1B", "2A", "2B", "3A", "3B", "4A", "4B"]
@@ -518,18 +558,33 @@ def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None
                     if not prereqs or all(p.replace(" ", "").upper() in prior_codes for p in prereqs):
                         prereq_filtered.append(candidate)
 
-                # Filter by course level: cap max and set a floor
-                max_catalog = (target_term_idx + 1) * 100 + 99
-                min_catalog = max(100, (target_term_idx // 2) * 100)
-                level_filtered = [
-                    c for c in prereq_filtered
-                    if (m := _re.search(r"(\d{3})", c["code"])) and min_catalog <= int(m.group(1)) <= max_catalog
-                ]
-                candidates = level_filtered if level_filtered else prereq_filtered
+                candidates = prereq_filtered
                 goal = ctx.get("goal", "")
                 program = ctx.get("program")
                 program_str = f"{program['title']} ({program['faculty']})" if program else None
-                course_list = "\n".join(f"- {c['code']}: {c['title']}" for c in candidates[:40])
+
+                # Build reverse prereq map for unlocks info
+                rc_cache = _load_cache_rc()
+                rc_candidate_codes = {c["code"].replace(" ", "").upper() for c in candidates[:40]}
+                rc_unlocks: dict[str, list[str]] = {code: [] for code in rc_candidate_codes}
+                for cc, cd in rc_cache.items():
+                    if not isinstance(cd, dict):
+                        continue
+                    for p in cd.get("prereqs", []):
+                        np = p.replace(" ", "").upper()
+                        if np in rc_unlocks:
+                            rc_unlocks[np].append(cc)
+
+                course_lines_rc = []
+                for c in candidates[:40]:
+                    cc_norm = c["code"].replace(" ", "").upper()
+                    line = f"- {c['code']}: {c['title']}"
+                    unlocked = rc_unlocks.get(cc_norm, [])
+                    if unlocked:
+                        line += f" [unlocks: {', '.join(unlocked[:5])}]"
+                    course_lines_rc.append(line)
+                course_list = "\n".join(course_lines_rc)
+
                 prompt = f"The user is studying"
                 if program_str:
                     prompt += f" {program_str}"
@@ -542,6 +597,8 @@ def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None
                     prompt += f'\nReason: "{reason}"'
                 prompt += (
                     f"\n\nChoose ONE replacement from this list that best aligns with the student's goal and program:\n{course_list}\n\n"
+                    "Courses marked with [unlocks: ...] are prerequisites for other courses — strongly prefer "
+                    "courses that unlock future goal-relevant courses over dead-end electives.\n"
                     "Return JSON only: {\"code\": \"<course code>\", \"title\": \"<course title>\", \"reason\": \"<one sentence why it's a good fit>\"}"
                 )
 
@@ -590,6 +647,7 @@ def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None
 
     if name == "search_courses":
         from uwaterloo import list_courses_by_subject, _load_course_cache, get_course_prereqs, get_uwflow_ratings_bulk, format_uwflow_rating
+        from academic_graph import _get_antireqs
         from openai import OpenAI
 
         TERM_ORDER = ["1A", "1B", "2A", "2B", "3A", "3B", "4A", "4B"]
@@ -613,10 +671,28 @@ def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None
                 c = part.strip().replace(" ", "").upper()
                 if c:
                     existing_codes.add(c)
+        # Build antireq set from all courses already in the graph
+        existing_antireqs: set[str] = set()
+        for ec in existing_codes:
+            existing_antireqs |= _get_antireqs(ec)
+
         candidates = [
             c for c in list_courses_by_subject(subject)
             if c["code"].replace(" ", "").upper() not in existing_codes
         ]
+
+        # Drop candidates that conflict with existing courses (antireqs)
+        antireq_filtered = []
+        for c in candidates:
+            ccode = c["code"].replace(" ", "").upper()
+            # Skip if this candidate is an antireq of an existing course
+            if ccode in existing_antireqs:
+                continue
+            # Skip if this candidate's own antireqs overlap with existing courses
+            if _get_antireqs(ccode) & existing_codes:
+                continue
+            antireq_filtered.append(c)
+        candidates = antireq_filtered
 
         # Find the term of the course being replaced
         target_term = None
@@ -663,18 +739,7 @@ def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None
             if not prereqs or all(p.replace(" ", "").upper() in prior_codes for p in prereqs):
                 prereq_filtered.append(candidate)
 
-        # Filter by course level: cap max and set a floor
-        max_catalog = (target_term_idx + 1) * 100 + 99  # 1A→199, 1B→299, …
-        min_catalog = max(100, (target_term_idx // 2) * 100)  # 3A+→200, 4A+→300
-        level_filtered = []
-        for c in prereq_filtered:
-            m = _re.search(r"(\d{3})", c["code"])
-            if m:
-                num = int(m.group(1))
-                if min_catalog <= num <= max_catalog:
-                    level_filtered.append(c)
-
-        candidates = level_filtered if level_filtered else prereq_filtered
+        candidates = prereq_filtered
 
         if not candidates:
             return ("No alternative courses found in the same subject.", {})
@@ -682,14 +747,30 @@ def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None
         # Use LLM to pick top 3-4 from the filtered list
         goal = ctx.get("goal", "")
 
+        # Build reverse prereq map: candidate_code -> list of courses it unlocks
+        prereq_cache = _load_course_cache()
+        candidate_codes_set = {c["code"].replace(" ", "").upper() for c in candidates[:40]}
+        unlocks_map: dict[str, list[str]] = {code: [] for code in candidate_codes_set}
+        for cached_code, cached_data in prereq_cache.items():
+            if not isinstance(cached_data, dict):
+                continue
+            for prereq in cached_data.get("prereqs", []):
+                norm_prereq = prereq.replace(" ", "").upper()
+                if norm_prereq in unlocks_map:
+                    unlocks_map[norm_prereq].append(cached_code)
+
         # Fetch UWFlow ratings for candidates
         uwflow_ratings = get_uwflow_ratings_bulk([c["code"] for c in candidates[:40]])
         course_lines = []
         for c in candidates[:40]:
+            ccode_norm = c['code'].replace(' ', '').upper()
             line = f"- {c['code']}: {c['title']}"
-            rating_str = format_uwflow_rating(uwflow_ratings.get(c['code'].replace(' ', '').upper()))
+            rating_str = format_uwflow_rating(uwflow_ratings.get(ccode_norm))
             if rating_str:
                 line += f" {rating_str}"
+            unlocked = unlocks_map.get(ccode_norm, [])
+            if unlocked:
+                line += f" [unlocks: {', '.join(unlocked[:5])}]"
             course_lines.append(line)
         course_list = "\n".join(course_lines)
 
@@ -708,8 +789,10 @@ def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None
         prompt += (
             "IMPORTANT: Prioritize courses that are most relevant to the student's GOAL and PROGRAM. "
             "A good replacement connects to what the student is trying to achieve, not just the same subject area. "
+            "Courses marked with [unlocks: ...] are prerequisites for other courses — strongly prefer "
+            "courses that unlock future goal-relevant courses over dead-end electives. "
             "Consider UWFlow ratings when available — prefer well-liked and useful courses, "
-            "but goal-relevance is the top priority.\n"
+            "but goal-relevance and unlocking future courses are the top priorities.\n"
             'Return a JSON array only: [{"code": "<code>", "title": "<title>"}]'
         )
 

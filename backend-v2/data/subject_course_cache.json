@@ -4216,5 +4216,502 @@
       "title": "Statistics for Life & Health Science (WLU)",
       "units": null
     }
+  ],
+  "PHARM": [
+    {
+      "code": "PHARM 618",
+      "title": "Applied Health Economics and Pharmacoeconomics",
+      "units": null
+    },
+    {
+      "code": "PHARM 619",
+      "title": "Drug Discovery",
+      "units": null
+    },
+    {
+      "code": "PHARM 150",
+      "title": "World of Pharmacy - From Drug Discovery to Patient Care",
+      "units": null
+    },
+    {
+      "code": "PHARM 616A",
+      "title": "PhD Thesis Proposal",
+      "units": null
+    },
+    {
+      "code": "PHARM 658",
+      "title": "Advanced Principles of Medication Management 3: Practicum",
+      "units": null
+    },
+    {
+      "code": "PHARM 652",
+      "title": "Advanced Principles of Medication Management 2: Practicum",
+      "units": null
+    },
+    {
+      "code": "PHARM 228",
+      "title": "Professional Practice 3",
+      "units": null
+    },
+    {
+      "code": "PHARM 425",
+      "title": "Symposium",
+      "units": null
+    },
+    {
+      "code": "PHARM 326",
+      "title": "Institutional Pharmacy Practice",
+      "units": null
+    },
+    {
+      "code": "PHARM 330",
+      "title": "Professional Practice 6",
+      "units": null
+    },
+    {
+      "code": "PHARM 224",
+      "title": "Pharmacokinetic Fundamentals",
+      "units": null
+    },
+    {
+      "code": "PHARM 130",
+      "title": "Professional Practice 2",
+      "units": null
+    },
+    {
+      "code": "PHARM 226",
+      "title": "Pharmacy Management",
+      "units": null
+    },
+    {
+      "code": "PHARM 111",
+      "title": "Systems Approach to the Study of the Human Body 2",
+      "units": null
+    },
+    {
+      "code": "PHARM 151",
+      "title": "Foundation and Application of Health Informatics",
+      "units": null
+    },
+    {
+      "code": "PHARM 141",
+      "title": "Introduction to Medicinal Chemistry, Toxicology and Pharmacology",
+      "units": null
+    },
+    {
+      "code": "PHARM 129",
+      "title": "Professional Practice 1",
+      "units": null
+    },
+    {
+      "code": "PHARM 127",
+      "title": "Professional Communication Skills in Pharmacy Practice",
+      "units": null
+    },
+    {
+      "code": "PHARM 120",
+      "title": "Pharmacy in an Evolving Healthcare System",
+      "units": null
+    },
+    {
+      "code": "PHARM 401",
+      "title": "Independent Study 2",
+      "units": null
+    },
+    {
+      "code": "PHARM 400",
+      "title": "Independent Study 1",
+      "units": null
+    },
+    {
+      "code": "PHARM 126",
+      "title": "Pharmaceutical Calculations",
+      "units": null
+    },
+    {
+      "code": "PHARM 392",
+      "title": "Seminars in Pharmacy 3",
+      "units": null
+    },
+    {
+      "code": "PHARM 391",
+      "title": "Seminars in Pharmacy 2",
+      "units": null
+    },
+    {
+      "code": "PHARM 491",
+      "title": "Seminars in Pharmacy 4",
+      "units": null
+    },
+    {
+      "code": "PHARM 290",
+      "title": "Seminars in Pharmacy 1",
+      "units": null
+    },
+    {
+      "code": "PHARM 616B",
+      "title": "PhD Thesis Proposal",
+      "units": null
+    },
+    {
+      "code": "PHARM 422",
+      "title": "Integrated Patient Focused Care 9",
+      "units": null
+    },
+    {
+      "code": "PHARM 430",
+      "title": "Clinical Rotation 1: Primary Care",
+      "units": null
+    },
+    {
+      "code": "PHARM 440",
+      "title": "Clinical Rotation 2: Institutional",
+      "units": null
+    },
+    {
+      "code": "PHARM 450",
+      "title": "Clinical Rotation 3: Elective",
+      "units": null
+    },
+    {
+      "code": "PHARM 232",
+      "title": "Medical Microbiology",
+      "units": null
+    },
+    {
+      "code": "PHARM 361",
+      "title": "Advanced Compounding",
+      "units": null
+    },
+    {
+      "code": "PHARM 229",
+      "title": "Professional Practice 4",
+      "units": null
+    },
+    {
+      "code": "PHARM 329",
+      "title": "Professional Practice 5",
+      "units": null
+    },
+    {
+      "code": "PHARM 324",
+      "title": "Integrated Patient Focused Care 8",
+      "units": null
+    },
+    {
+      "code": "PHARM 125",
+      "title": "Pharmaceutics 2",
+      "units": null
+    },
+    {
+      "code": "PHARM 124",
+      "title": "Pharmaceutics 1",
+      "units": null
+    },
+    {
+      "code": "PHARM 321",
+      "title": "Integrated Patient Focused Care 6",
+      "units": null
+    },
+    {
+      "code": "PHARM 320",
+      "title": "Integrated Patient Focused Care 5",
+      "units": null
+    },
+    {
+      "code": "PHARM 221",
+      "title": "Integrated Patient Focused Care 2",
+      "units": null
+    },
+    {
+      "code": "PHARM 220",
+      "title": "Integrated Patient Focused Care 1",
+      "units": null
+    },
+    {
+      "code": "PHARM 223",
+      "title": "Integrated Patient Focused Care 4",
+      "units": null
+    },
+    {
+      "code": "PHARM 222",
+      "title": "Integrated Patient Focused Care 3",
+      "units": null
+    },
+    {
+      "code": "PHARM 110",
+      "title": "Systems Approach to the Study of the Human Body 1",
+      "units": null
+    },
+    {
+      "code": "PHARM 323",
+      "title": "Integrated Patient Focused Care 7",
+      "units": null
+    },
+    {
+      "code": "PHARM 370",
+      "title": "Personal & New Venture Financial Management",
+      "units": null
+    },
+    {
+      "code": "PHARM 352",
+      "title": "Pharmacy Management in Institutional Settings",
+      "units": null
+    },
+    {
+      "code": "PHARM 353",
+      "title": "Entrepreneurship in Pharmacy",
+      "units": null
+    },
+    {
+      "code": "PHARM 465",
+      "title": "Critical Care and Emergency Medicine for Pharmacists",
+      "units": null
+    },
+    {
+      "code": "PHARM 466",
+      "title": "Advanced Geriatric Care",
+      "units": null
+    },
+    {
+      "code": "PHARM 473",
+      "title": "Advanced Infectious Disease",
+      "units": null
+    },
+    {
+      "code": "PHARM 464",
+      "title": "Advanced Therapeutic Concepts in Oncology",
+      "units": null
+    },
+    {
+      "code": "PHARM 230",
+      "title": "Culturally Safe Patient Care",
+      "units": null
+    },
+    {
+      "code": "PHARM 375",
+      "title": "Interprofessional Approaches to Substance Use and Misuse and Mental Health",
+      "units": null
+    },
+    {
+      "code": "PHARM 474",
+      "title": "Advanced Pharmacotherapeutics in the Hospital Setting",
+      "units": null
+    },
+    {
+      "code": "PHARM 373",
+      "title": "Healthcare Delivery in Rural and Underserved Populations",
+      "units": null
+    },
+    {
+      "code": "PHARM 377",
+      "title": "Drug-Induced Disease",
+      "units": null
+    },
+    {
+      "code": "PHARM 155",
+      "title": "Introduction to Drug Information Fundamentals",
+      "units": null
+    },
+    {
+      "code": "PHARM 379",
+      "title": "Ethical Decision-Making in Pharmacy Practice",
+      "units": null
+    },
+    {
+      "code": "PHARM 475",
+      "title": "Advanced Pharmacotherapeutics in the Ambulatory Care Setting",
+      "units": null
+    },
+    {
+      "code": "PHARM 378",
+      "title": "Advanced Women's Health Pharmacotherapeutics",
+      "units": null
+    },
+    {
+      "code": "PHARM 362",
+      "title": "Advanced Patient Self Care",
+      "units": null
+    },
+    {
+      "code": "PHARM 363",
+      "title": "Global Infectious Disease Management",
+      "units": null
+    },
+    {
+      "code": "PHARM 364",
+      "title": "The Pharmacist as Educator",
+      "units": null
+    },
+    {
+      "code": "PHARM 461",
+      "title": "Advanced Patient Safety",
+      "units": null
+    },
+    {
+      "code": "PHARM 372",
+      "title": "Strategic Global Health and Pharmacy Practice",
+      "units": null
+    },
+    {
+      "code": "PHARM 368",
+      "title": "Advanced Drug Information and Evidence-Based Medicine",
+      "units": null
+    },
+    {
+      "code": "PHARM 374",
+      "title": "Complementary and Alternative Medicine",
+      "units": null
+    },
+    {
+      "code": "PHARM 376",
+      "title": "Practicing Pharmacy with Diverse Populations",
+      "units": null
+    },
+    {
+      "code": "PHARM 469",
+      "title": "Pharmacoepidemiology and Pharmacy Practice",
+      "units": null
+    },
+    {
+      "code": "PHARM 472",
+      "title": "Community Practice in a Changing Environment",
+      "units": null
+    },
+    {
+      "code": "PHARM 467",
+      "title": "Management of Oral Anticoagulation Therapy",
+      "units": null
+    },
+    {
+      "code": "PHARM 462",
+      "title": "Interprofessional Case Management",
+      "units": null
+    },
+    {
+      "code": "PHARM 367",
+      "title": "Pediatric Pharmacy",
+      "units": null
+    },
+    {
+      "code": "PHARM 366",
+      "title": "Concepts in Nutritional Sciences",
+      "units": null
+    },
+    {
+      "code": "PHARM 476",
+      "title": "Advanced Skills in Patient Engagement",
+      "units": null
+    },
+    {
+      "code": "PHARM 380",
+      "title": "Landmark Clinical Trials",
+      "units": null
+    },
+    {
+      "code": "PHARM 460",
+      "title": "Leadership in Pharmacy",
+      "units": null
+    },
+    {
+      "code": "PHARM 601",
+      "title": "MSc Thesis Proposal",
+      "units": null
+    },
+    {
+      "code": "PHARM 654",
+      "title": "Critical Appraisal and Evidence-Based Practice",
+      "units": null
+    },
+    {
+      "code": "PHARM 608A",
+      "title": "Selected Topics in Pharmaceutical Sciences 1",
+      "units": null
+    },
+    {
+      "code": "PHARM 659",
+      "title": "Mechanisms of Drug Action",
+      "units": null
+    },
+    {
+      "code": "PHARM 657",
+      "title": "Substance Use in Primary and Community Care",
+      "units": null
+    },
+    {
+      "code": "PHARM 655",
+      "title": "Physical Assessment and Clinical Laboratory Testing",
+      "units": null
+    },
+    {
+      "code": "PHARM 651",
+      "title": "Advanced Principles of Medication Management 1",
+      "units": null
+    },
+    {
+      "code": "PHARM 611",
+      "title": "Special Topics in Pharmacy Practice",
+      "units": null
+    },
+    {
+      "code": "PHARM 653",
+      "title": "Methods in Clinical and Applied Research",
+      "units": null
+    },
+    {
+      "code": "PHARM 610",
+      "title": "Topics in Drug Development",
+      "units": null
+    },
+    {
+      "code": "PHARM 656",
+      "title": "Analysis of Quantitative Health Care Data",
+      "units": null
+    },
+    {
+      "code": "PHARM 614",
+      "title": "Systematic Review and Meta-Analysis",
+      "units": null
+    },
+    {
+      "code": "PHARM 613",
+      "title": "Principles and Practices in Systemic Treatments for Cancer",
+      "units": null
+    },
+    {
+      "code": "PHARM 615",
+      "title": "Strategic Management of Biopharmaceutical Technology",
+      "units": null
+    },
+    {
+      "code": "PHARM 609",
+      "title": "Advanced Pharmacokinetics",
+      "units": null
+    },
+    {
+      "code": "PHARM 617",
+      "title": "Formulations",
+      "units": null
+    },
+    {
+      "code": "PHARM 605",
+      "title": "Physical Chemistry and Application of Surfactants",
+      "units": null
+    },
+    {
+      "code": "PHARM 604",
+      "title": "Gene Therapy",
+      "units": null
+    },
+    {
+      "code": "PHARM 607",
+      "title": "Advanced Pharmaceutical Analysis",
+      "units": null
+    },
+    {
+      "code": "PHARM 602",
+      "title": "Grant Writing in the Sciences",
+      "units": null
+    }
   ]
 }
