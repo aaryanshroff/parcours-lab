@@ -422,6 +422,50 @@ function TermGroupNode({ data }: NodeProps<Node<SkillNodeData>>) {
 
 const nodeTypes = { skill: SkillNode, termGroup: TermGroupNode }
 
+/* ─── Board view wrapper that bridges CourseContext ─── */
+
+function BoardViewWithContext({ nodes, edges, onMoveCourse, title, subtitle }: {
+  nodes: Node<SkillNodeData>[]
+  edges: Edge[]
+  onMoveCourse: (courseId: string, fromTerm: string, toTerm: string) => void
+  title: string
+  subtitle?: string
+}) {
+  const { store, allTermNodeIds, acceptMany, unacceptMany, onTermCompleted } = useContext(CourseContext)
+
+  const completedTerms = useMemo(() => {
+    const set = new Set<string>()
+    for (const [term, ids] of Object.entries(allTermNodeIds)) {
+      if (ids.length > 0 && ids.every((id) => store[id]?.status === 'accepted')) {
+        set.add(term)
+      }
+    }
+    return set
+  }, [store, allTermNodeIds])
+
+  const handleCompleteTerm = useCallback((_term: string, nodeIds: string[]) => {
+    acceptMany(nodeIds)
+    onTermCompleted?.(nodeIds)
+  }, [acceptMany, onTermCompleted])
+
+  const handleUncompleteTerm = useCallback((_term: string, nodeIds: string[]) => {
+    unacceptMany(nodeIds)
+  }, [unacceptMany])
+
+  return (
+    <BoardView
+      nodes={nodes}
+      edges={edges}
+      onMoveCourse={onMoveCourse}
+      title={title}
+      subtitle={subtitle}
+      completedTerms={completedTerms}
+      onCompleteTerm={handleCompleteTerm}
+      onUncompleteTerm={handleUncompleteTerm}
+    />
+  )
+}
+
 function AcademicEdge({ sourceX, sourceY, targetX, targetY, markerEnd, style }: EdgeProps) {
   // 1. ADJACENT COLUMNS
   // If distance between handles is < 400px, they are in adjacent columns.
@@ -1075,7 +1119,7 @@ export default function Graph() {
   const [loading, setLoading] = useState(true)
   const [courseHistory, setCourseHistory] = useState<HistoryEntry[]>([])
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null)
-  const [viewMode, setViewMode] = useState<'map' | 'board'>('map')
+  const [viewMode, setViewMode] = useState<'map' | 'board'>(mode === 'academics' ? 'board' : 'map')
   const [boardPanelsOpen, setBoardPanelsOpen] = useState(false)
   const [disabledTerms, setDisabledTerms] = useState<Set<string>>(new Set())
   const [shakeNodeId, setShakeNodeId] = useState<string | null>(null)
@@ -1408,7 +1452,7 @@ export default function Graph() {
       if (code && n.data.term) termAssignments[code] = n.data.term as string
     }
 
-    toast(`Finding a course for "${addedSkill}"…`, { id: `add-course-${addedSkill}`, duration: Infinity, icon: <Loader2 size={14} className="text-blue-800 animate-spin" /> })
+    toast.loading(`Finding a course for "${addedSkill}"…`, { id: `add-course-${addedSkill}` })
 
     fetch('/api/graph/academics/add-course', {
       method: 'POST',
@@ -1658,10 +1702,10 @@ export default function Graph() {
           )}
 
           {viewMode === 'board' ? (
-            <BoardView 
-              nodes={nodes} 
-              edges={edges} 
-              onMoveCourse={handleBoardMoveCourse} 
+            <BoardViewWithContext
+              nodes={nodes}
+              edges={edges}
+              onMoveCourse={handleBoardMoveCourse}
               title={mode === 'academics' && major ? major.title : ((navGoal ?? goal) || 'Course Board')}
               subtitle={mode === 'academics' && major ? major.faculty : undefined}
             />

@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect, useRef } from 'react'
+import { useState, useMemo, useCallback, useEffect } from 'react'
 import type { Node, Edge } from '@xyflow/react'
 import {
   ExternalLink,
@@ -9,6 +9,7 @@ import {
   Star,
   StickyNote,
   GripVertical,
+  Check,
 } from 'lucide-react'
 
 /* ─── Types ─── */
@@ -50,23 +51,19 @@ interface FlatCourse {
 
 const TERM_ORDER = ['1A', '1B', '2A', '2B', '3A', '3B', '4A', '4B']
 
-const STATUS_COLORS: Record<string, { dot: string; bg: string; text: string; label: string }> = {
-  'not-started': { dot: 'bg-stone-300', bg: 'bg-stone-50', text: 'text-stone-500', label: 'Not Started' },
-  'in-progress': { dot: 'bg-blue-400', bg: 'bg-blue-50', text: 'text-blue-600', label: 'In Progress' },
-  'completed':   { dot: 'bg-emerald-400', bg: 'bg-emerald-50', text: 'text-emerald-600', label: 'Completed' },
-}
-
 const NOTES_KEY = 'parcours-board-notes'
-const STATUSES_KEY = 'parcours-board-statuses'
 
 /* ─── Board View (embedded in Graph page) ─── */
 
-export default function BoardView({ nodes, edges, title, subtitle, onMoveCourse }: {
+export default function BoardView({ nodes, edges, title, subtitle, onMoveCourse, completedTerms, onCompleteTerm, onUncompleteTerm }: {
   nodes: Node<BoardNodeData>[]
   edges: Edge[]
   title: string
   subtitle?: string
   onMoveCourse: (courseId: string, fromTerm: string, toTerm: string) => void
+  completedTerms: Set<string>
+  onCompleteTerm: (term: string, nodeIds: string[]) => void
+  onUncompleteTerm: (term: string, nodeIds: string[]) => void
 }) {
   // Flatten nodes to simple course objects
   const courses: FlatCourse[] = useMemo(() =>
@@ -127,12 +124,7 @@ export default function BoardView({ nodes, edges, title, subtitle, onMoveCourse 
   const [notes, setNotes] = useState<Record<string, string>>(() => {
     try { return JSON.parse(localStorage.getItem(NOTES_KEY) ?? '{}') } catch { return {} }
   })
-  const [statuses, setStatuses] = useState<Record<string, string>>(() => {
-    try { return JSON.parse(localStorage.getItem(STATUSES_KEY) ?? '{}') } catch { return {} }
-  })
-
   useEffect(() => { localStorage.setItem(NOTES_KEY, JSON.stringify(notes)) }, [notes])
-  useEffect(() => { localStorage.setItem(STATUSES_KEY, JSON.stringify(statuses)) }, [statuses])
 
   // Drag state
   const [dragCourseId, setDragCourseId] = useState<string | null>(null)
@@ -197,11 +189,17 @@ export default function BoardView({ nodes, edges, title, subtitle, onMoveCourse 
             const credits = (coursesByTerm[term] ?? []).reduce((s, c) => s + c.courseUnits, 0)
             const over = credits > 2.5
             const isDragOver = dragOverTerm === term
+            const isCompleted = completedTerms.has(term)
+            const termIdx = TERM_ORDER.indexOf(term)
+            const prevTerm = termIdx > 0 ? TERM_ORDER[termIdx - 1] : null
+            const prevTermComplete = !prevTerm || completedTerms.has(prevTerm)
+            const canComplete = prevTermComplete && !isCompleted && coursesByTerm[term].length > 0
+            const termNodeIds = coursesByTerm[term].map((c) => c.id)
             return (
               <div
                 key={term}
                 className={`shrink-0 w-72 flex flex-col h-full first:rounded-l-xl last:rounded-r-xl transition-colors duration-150 ${
-                  isDragOver ? 'bg-blue-50/50' : 'bg-stone-50/50'
+                  isCompleted ? 'bg-emerald-50/50' : isDragOver ? 'bg-blue-50/50' : 'bg-stone-50/50'
                 }`}
                 onDragOver={(e) => handleDragOver(e, term)}
                 onDragLeave={handleDragLeave}
@@ -211,23 +209,52 @@ export default function BoardView({ nodes, edges, title, subtitle, onMoveCourse 
                 <div className="shrink-0 px-3 pt-6 pb-2.5">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold text-stone-700">Term {term}</span>
-                      <span className="inline-flex items-center justify-center w-5 h-5 text-[10px] font-medium rounded-full bg-stone-100 text-stone-500">
+                      <span className={`text-sm font-semibold ${isCompleted ? 'text-emerald-600' : 'text-stone-700'}`}>Term {term}</span>
+                      <span className={`inline-flex items-center justify-center w-5 h-5 text-[10px] font-medium rounded-full ${isCompleted ? 'bg-emerald-100 text-emerald-600' : 'bg-stone-100 text-stone-500'}`}>
                         {coursesByTerm[term].length}
                       </span>
+                      {isCompleted && (
+                        <span className="text-[10px] font-medium text-emerald-500">completed</span>
+                      )}
                     </div>
-                    <span className={`text-[10px] font-medium ${over ? 'text-red-500' : 'text-stone-400'}`}>
-                      {credits.toFixed(2)} cr{over ? ' ⚠' : ''}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className={`text-[10px] font-medium ${over ? 'text-red-500' : 'text-stone-400'}`}>
+                        {credits.toFixed(2)} cr{over ? ' ⚠' : ''}
+                      </span>
+                      <div className="relative group">
+                        <button
+                          className={`inline-flex items-center gap-1 px-2 py-1 text-[10px] font-medium rounded-full border transition-colors duration-150 ${
+                            isCompleted
+                              ? 'border-emerald-300 bg-emerald-50 text-emerald-600 hover:bg-white cursor-pointer'
+                              : canComplete
+                                ? 'border-stone-200 bg-white text-stone-400 hover:border-emerald-300 hover:text-emerald-600 cursor-pointer'
+                                : 'border-stone-100 bg-stone-50 text-stone-300 cursor-not-allowed'
+                          }`}
+                          onClick={() => {
+                            if (isCompleted) {
+                              onUncompleteTerm(term, termNodeIds)
+                            } else if (canComplete) {
+                              onCompleteTerm(term, termNodeIds)
+                            }
+                          }}
+                          disabled={!isCompleted && !canComplete}
+                        >
+                          <Check size={9} />
+                          {isCompleted ? 'Undo' : 'Complete'}
+                        </button>
+                        {!isCompleted && !canComplete && prevTerm && (
+                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 w-36 px-2 py-1 text-[10px] leading-snug text-stone-500 bg-white border border-stone-200 rounded-lg shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-150 z-10 text-center">
+                            Complete Term {prevTerm} first
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
 
                 {/* Cards */}
                 <div className="flex-1 overflow-y-auto p-2 space-y-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                   {coursesByTerm[term].map((course) => {
-                    const status = statuses[course.id] ?? 'not-started'
-                    const statusConfig = STATUS_COLORS[status]
-                    const prereqs = getPrereqs(course.id)
                     const hasNote = !!notes[course.id]?.trim()
                     const isDragging = dragCourseId === course.id
 
@@ -249,10 +276,6 @@ export default function BoardView({ nodes, edges, title, subtitle, onMoveCourse 
                             course.required ? 'bg-amber-100 text-amber-700' : 'bg-sky-50 text-sky-500'
                           }`}>
                             {course.required ? 'Required' : 'Elective'}
-                          </span>
-                          <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 text-[9px] font-medium rounded ${statusConfig.bg} ${statusConfig.text}`}>
-                            <span className={`w-1.5 h-1.5 rounded-full ${statusConfig.dot}`} />
-                            {statusConfig.label}
                           </span>
                         </div>
 
@@ -284,9 +307,7 @@ export default function BoardView({ nodes, edges, title, subtitle, onMoveCourse 
           prereqs={getPrereqs(selectedCourse.id)}
           dependents={getDependents(selectedCourse.id)}
           note={notes[selectedCourse.id] ?? ''}
-          status={statuses[selectedCourse.id] ?? 'not-started'}
           onNoteChange={(val) => setNotes((prev) => ({ ...prev, [selectedCourse.id]: val }))}
-          onStatusChange={(val) => setStatuses((prev) => ({ ...prev, [selectedCourse.id]: val }))}
           onClose={() => setSelectedCourseId(null)}
           onNavigate={(id) => setSelectedCourseId(id)}
         />
@@ -298,16 +319,14 @@ export default function BoardView({ nodes, edges, title, subtitle, onMoveCourse 
 /* ─── Sidebar Component ─── */
 
 function CourseSidebar({
-  course, prereqs, dependents, note, status,
-  onNoteChange, onStatusChange, onClose, onNavigate,
+  course, prereqs, dependents, note,
+  onNoteChange, onClose, onNavigate,
 }: {
   course: FlatCourse
   prereqs: FlatCourse[]
   dependents: FlatCourse[]
   note: string
-  status: string
   onNoteChange: (val: string) => void
-  onStatusChange: (val: string) => void
   onClose: () => void
   onNavigate: (id: string) => void
 }) {
@@ -352,19 +371,6 @@ function CourseSidebar({
       <div className="flex-1 overflow-y-auto">
         {/* Properties */}
         <div className="px-5 py-4 space-y-3 border-b border-stone-100">
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-stone-400 w-20 shrink-0">Status</span>
-            <select
-              value={status}
-              onChange={(e) => onStatusChange(e.target.value)}
-              className="text-xs font-medium rounded-md border border-stone-200 px-2 py-1 bg-white text-stone-700 cursor-pointer"
-            >
-              {Object.entries(STATUS_COLORS).map(([key, cfg]) => (
-                <option key={key} value={key}>{cfg.label}</option>
-              ))}
-            </select>
-          </div>
-
           <div className="flex items-center gap-3">
             <span className="text-xs text-stone-400 w-20 shrink-0">Term</span>
             <span className="text-xs font-medium text-stone-700 px-2 py-0.5 rounded bg-stone-100">{course.term}</span>

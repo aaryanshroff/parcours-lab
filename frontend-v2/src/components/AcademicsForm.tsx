@@ -52,6 +52,15 @@ export default function AcademicsForm() {
   // Goal
   const [goal, setGoal] = useState('')
 
+  // Interests (for extracurricular recommendations)
+  const INTEREST_OPTIONS = [
+    'Sports & Fitness', 'Music & Arts', 'Community Service',
+    'Tech & Startups', 'Culture & Identity', 'Faith & Spirituality',
+    'Gaming & Social', 'Environment', 'Health & Wellness',
+    'Media & Publishing', 'Politics & Advocacy',
+  ] as const
+  const [interests, setInterests] = useState<string[]>([])
+
   // Search majors
   useEffect(() => {
     const trimmed = majorQuery.trim()
@@ -213,6 +222,7 @@ export default function AcademicsForm() {
         specializations: selectedSpecs,
         minors: selectedMinors,
         goal,
+        interests,
       },
     })
   }
@@ -436,6 +446,39 @@ export default function AcademicsForm() {
             rows={3}
             className="w-full border border-stone-200 rounded-xl px-4 py-3 text-stone-800 text-base leading-relaxed outline-none focus:border-blue-800 focus:ring-2 focus:ring-blue-900/15 resize-none transition-all duration-150 placeholder:text-stone-400"
           />
+        </div>
+      )}
+
+      {/* 6. Interests for extracurriculars */}
+      {majorDetail && (
+        <div>
+          <span className="block text-sm font-semibold text-stone-700 mb-1">
+            Interests beyond academics <span className="font-normal text-stone-400">(optional)</span>
+          </span>
+          <p className="text-xs text-stone-400 mb-2">Helps us recommend clubs & extracurriculars</p>
+          <div className="flex flex-wrap gap-1.5">
+            {INTEREST_OPTIONS.map((interest) => {
+              const selected = interests.includes(interest)
+              return (
+                <button
+                  key={interest}
+                  type="button"
+                  onClick={() =>
+                    setInterests((prev) =>
+                      selected ? prev.filter((i) => i !== interest) : [...prev, interest],
+                    )
+                  }
+                  className={`inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-full border cursor-pointer transition-all duration-150 ${
+                    selected
+                      ? 'bg-violet-50 border-violet-300 text-violet-700'
+                      : 'bg-white border-stone-200 text-stone-600 hover:border-violet-300 hover:text-violet-700'
+                  }`}
+                >
+                  {interest}
+                </button>
+              )
+            })}
+          </div>
         </div>
       )}
 

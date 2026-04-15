@@ -5394,5 +5394,1297 @@
       "STAT 331",
       "STAT 371"
     ]
+  },
+  "CHEM433": {
+    "code": "CHEM433",
+    "raw": "Prereq: CHEM 331 or 333",
+    "prereqs": [
+      "CHEM 331",
+      "CHEM 333"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 121": {
+    "code": "CHEM 121",
+    "raw": "Prereq: 1A Biochemistry, Chemistry, Medicinal Chemistry, and Materials and Nanosciences students only. Antireq: CHEM 120",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "CHEM 120"
+    ]
+  },
+  "CHEM 264": {
+    "code": "CHEM 264",
+    "raw": "Prereq: CHEM 123 or CHEM 125; Honours students only. Antireq: CHEM 262, 266, NE 122/222",
+    "prereqs": [
+      "CHEM 123",
+      "CHEM 125"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CHEM 262",
+      "CHEM 266",
+      "NE 122",
+      "NE 222"
+    ]
+  },
+  "CHEM 262": {
+    "code": "CHEM 262",
+    "raw": "Prereq: One of BME 186, CHE 102, NE 121; Engineering students only. Coreq: CHEM 262L (for Chemical Engineering students only). Antireq: CHEM 264, 266, NE 122/222",
+    "prereqs": [
+      "BME 186",
+      "CHE 102",
+      "NE 121"
+    ],
+    "coreqs": [
+      "CHEM 262L"
+    ],
+    "antireqs": [
+      "CHEM 264",
+      "CHEM 266",
+      "NE 122",
+      "NE 222"
+    ]
+  },
+  "CHEM 267": {
+    "code": "CHEM 267",
+    "raw": "Prereq: One of CHEM 262, 264, 266, NE 122/222. Antireq: CHEM 265",
+    "prereqs": [
+      "CHEM 262",
+      "CHEM 264",
+      "CHEM 266",
+      "NE 122",
+      "NE 222"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CHEM 265"
+    ]
+  },
+  "CHEM 212": {
+    "code": "CHEM 212",
+    "raw": "Prereq: CHEM 123 or CHEM 125; Honours students only",
+    "prereqs": [
+      "CHEM 123",
+      "CHEM 125"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 404": {
+    "code": "CHEM 404",
+    "raw": "Prereq: One of CHEM 254; One of CHEM 123 or CHEM 125; One of CHEM 262, 264, 266",
+    "prereqs": [
+      "CHEM 254",
+      "CHEM 123",
+      "CHEM 125",
+      "CHEM 262",
+      "CHEM 264",
+      "CHEM 266"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 120": {
+    "code": "CHEM 120",
+    "raw": "Antireq: CHEM 121",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "CHEM 121"
+    ]
+  },
+  "CHEM 123": {
+    "code": "CHEM 123",
+    "raw": "Prereq: CHEM 120 or CHE 102. Antireq: CHEM 125",
+    "prereqs": [
+      "CHEM 120",
+      "CHE 102"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CHEM 125"
+    ]
+  },
+  "CHEM 125": {
+    "code": "CHEM 125",
+    "raw": "Prereq: CHEM 121. Antireq: CHEM 123",
+    "prereqs": [
+      "CHEM 121"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CHEM 123"
+    ]
+  },
+  "CHEM 220": {
+    "code": "CHEM 220",
+    "raw": "Prereq: CHEM 123 or CHEM 125;  Honours students only",
+    "prereqs": [
+      "CHEM 123",
+      "CHEM 125"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 221": {
+    "code": "CHEM 221",
+    "raw": "Prereq: CHEM 220, 220L.",
+    "prereqs": [
+      "CHEM 220",
+      "CHEM 220L"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 237": {
+    "code": "CHEM 237",
+    "raw": "Prereq: One of CHEM 262, 264, 266. Antireq: CHEM 233, CHEM 239, NE 224",
+    "prereqs": [
+      "CHEM 262",
+      "CHEM 264",
+      "CHEM 266"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CHEM 233",
+      "CHEM 239",
+      "NE 224"
+    ]
+  },
+  "CHEM 254": {
+    "code": "CHEM 254",
+    "raw": "Prereq: CHEM 123 or CHEM 125; One of MATH 128, 138, 148; Honours students only. Antireq: PHYS 358, ECE 403",
+    "prereqs": [
+      "CHEM 123",
+      "CHEM 125",
+      "MATH 128",
+      "MATH 138",
+      "MATH 148"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "PHYS 358",
+      "ECE 403"
+    ]
+  },
+  "CHEM 356": {
+    "code": "CHEM 356",
+    "raw": "Prereq: One of CHEM 240, MATH 228, AMATH 250, 251. Antireq: PHYS 234",
+    "prereqs": [
+      "CHEM 240",
+      "MATH 228",
+      "AMATH 250",
+      "AMATH 251"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "PHYS 234"
+    ]
+  },
+  "CHEM 265": {
+    "code": "CHEM 265",
+    "raw": "Prereq: CHEM 264; Honours students only. Antireq: CHEM 267",
+    "prereqs": [
+      "CHEM 264"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CHEM 267"
+    ]
+  },
+  "CHEM 266": {
+    "code": "CHEM 266",
+    "raw": "Prereq: CHEM 123 or 125. Antireq: CHEM 262, 264, NE 222",
+    "prereqs": [
+      "CHEM 123",
+      "CHEM 125"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CHEM 262",
+      "CHEM 264",
+      "NE 222"
+    ]
+  },
+  "CHEM 310": {
+    "code": "CHEM 310",
+    "raw": "Prereq: CHEM 212; Honours students only",
+    "prereqs": [
+      "CHEM 212"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 313": {
+    "code": "CHEM 313",
+    "raw": "Prereq: CHEM 212; Honours students only",
+    "prereqs": [
+      "CHEM 212"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 323": {
+    "code": "CHEM 323",
+    "raw": "Prereq: CHEM 221; CHEM 224L; Level at least 3A Honours Science programs",
+    "prereqs": [
+      "CHEM 221",
+      "CHEM 224L"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 333": {
+    "code": "CHEM 333",
+    "raw": "Prereq: One of CHEM 233, 237, NE 224; CHEM 265 or 267. Antireq: CHEM 331",
+    "prereqs": [
+      "CHEM 233",
+      "CHEM 237",
+      "NE 224",
+      "CHEM 265",
+      "CHEM 267"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CHEM 331"
+    ]
+  },
+  "CHEM 350": {
+    "code": "CHEM 350",
+    "raw": "Prereq: CHEM 254; One of CHEM 240, MATH 227, MATH 228; Honours students only",
+    "prereqs": [
+      "CHEM 254",
+      "CHEM 240",
+      "MATH 227",
+      "MATH 228"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 357": {
+    "code": "CHEM 357",
+    "raw": "Prereq: CHEM 123 or 125, MATH 128; One of CHEM 233, 237, NE 224",
+    "prereqs": [
+      "CHEM 123",
+      "CHEM 125",
+      "MATH 128",
+      "CHEM 233",
+      "CHEM 237",
+      "NE 224"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 360": {
+    "code": "CHEM 360",
+    "raw": "Prereq: CHEM 265; Honours students only",
+    "prereqs": [
+      "CHEM 265"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 363": {
+    "code": "CHEM 363",
+    "raw": "Prereq: CHEM 265",
+    "prereqs": [
+      "CHEM 265"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 432": {
+    "code": "CHEM 432",
+    "raw": "Prereq: CHEM 331 or 333",
+    "prereqs": [
+      "CHEM 331",
+      "CHEM 333"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 464": {
+    "code": "CHEM 464",
+    "raw": "Prereq: CHEM 265",
+    "prereqs": [
+      "CHEM 265"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 370": {
+    "code": "CHEM 370",
+    "raw": "Prereq: CHEM 254; CHEM 265 or 267. Antireq: CHE 541, MNS 322, NE 333",
+    "prereqs": [
+      "CHEM 254",
+      "CHEM 265",
+      "CHEM 267"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CHE 541",
+      "MNS 322",
+      "NE 333"
+    ]
+  },
+  "CHEM 765": {
+    "code": "CHEM 765",
+    "raw": "Prereq: CHEM 764.",
+    "prereqs": [
+      "CHEM 764"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 772": {
+    "code": "CHEM 772",
+    "raw": "Prerequisite: CHEM 770.",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 771": {
+    "code": "CHEM 771",
+    "raw": "Prerequisite: CHEM 770.",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 140": {
+    "code": "CHEM 140",
+    "raw": "Prereq: CHEM 120 or 121; Not open to Mathematics students",
+    "prereqs": [
+      "CHEM 120",
+      "CHEM 121"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 209": {
+    "code": "CHEM 209",
+    "raw": "Prereq: One of CHEM 120, 121, NE 121",
+    "prereqs": [
+      "CHEM 120",
+      "CHEM 121",
+      "NE 121"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 240": {
+    "code": "CHEM 240",
+    "raw": "Prereq: One of MATH 128, 138, 148; Not open to students in the Faculty of Mathematics",
+    "prereqs": [
+      "MATH 128",
+      "MATH 138",
+      "MATH 148"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 331": {
+    "code": "CHEM 331",
+    "raw": "Prereq: CHEM 233, 265. Antireq: CHEM 333",
+    "prereqs": [
+      "CHEM 233",
+      "CHEM 265"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CHEM 333"
+    ]
+  },
+  "CHEM 381": {
+    "code": "CHEM 381",
+    "raw": "Prereq: CHEM 233, 265",
+    "prereqs": [
+      "CHEM 233",
+      "CHEM 265"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 481": {
+    "code": "CHEM 481",
+    "raw": "Prereq: (CHEM 233 or 237), 340, 360",
+    "prereqs": [
+      "CHEM 233",
+      "CHEM 237",
+      "CHEM 340",
+      "CHEM 360"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 383": {
+    "code": "CHEM 383",
+    "raw": "Prereq: (CHEM 233 or 237), 360",
+    "prereqs": [
+      "CHEM 233",
+      "CHEM 237",
+      "CHEM 360"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 350L": {
+    "code": "CHEM 350L",
+    "raw": "Prereq: CHEM 250L; Honours students only",
+    "prereqs": [
+      "CHEM 250L"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 224L": {
+    "code": "CHEM 224L",
+    "raw": "Prereq: CHEM 220 and CHEM 220L; Honours Biochemistry, Chemistry or Medicinal Chemistry students only.",
+    "prereqs": [
+      "CHEM 220",
+      "CHEM 220L"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 360L": {
+    "code": "CHEM 360L",
+    "raw": "Prereq: CHEM 265, 265L; Honours Biochemistry, Chemistry, or Medicinal Chemistry students only. Coreq: CHEM 360",
+    "prereqs": [
+      "CHEM 265",
+      "CHEM 265L"
+    ],
+    "coreqs": [
+      "CHEM 360"
+    ],
+    "antireqs": []
+  },
+  "CHEM 494B": {
+    "code": "CHEM 494B",
+    "raw": "Prereq: CHEM 494A. Antireq: BIOL 499A, BIOL 499B",
+    "prereqs": [
+      "CHEM 494A"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "BIOL 499A",
+      "BIOL 499B"
+    ]
+  },
+  "CHEM 494A": {
+    "code": "CHEM 494A",
+    "raw": "Prereq: Level at least 4A Honours Biochemistry, Chemistry, Chemical Physics, or Materials & Nanosciences, or Medicinal Chemistry students only. Antireq: BIOL 499A, BIOL 499B",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "BIOL 499A",
+      "BIOL 499B"
+    ]
+  },
+  "CHEM 200": {
+    "code": "CHEM 200",
+    "raw": "Prereq: CHEM 125, 125L; Level 2A Honours Biochemistry, Chemistry, or Medicinal Chemistry students only",
+    "prereqs": [
+      "CHEM 125",
+      "CHEM 125L"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 340": {
+    "code": "CHEM 340",
+    "raw": "Prereq: CHEM 140; Level at least 3A",
+    "prereqs": [
+      "CHEM 140"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 382L": {
+    "code": "CHEM 382L",
+    "raw": "Prereq: CHEM 360, 360L; Medicinal Chemistry students only.",
+    "prereqs": [
+      "CHEM 360",
+      "CHEM 360L"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 335L": {
+    "code": "CHEM 335L",
+    "raw": "Prereq: CHEM 233L. Coreq: CHEM 331 or 333; CHEM 357",
+    "prereqs": [
+      "CHEM 233L"
+    ],
+    "coreqs": [
+      "CHEM 331",
+      "CHEM 333",
+      "CHEM 357"
+    ],
+    "antireqs": []
+  },
+  "CHEM 310L": {
+    "code": "CHEM 310L",
+    "raw": "Prereq: CHEM 123L or 125L, CHEM 212; Honours Chemistry, Chemical Physics, or Medicinal Chemistry students only.",
+    "prereqs": [
+      "CHEM 123L",
+      "CHEM 125L",
+      "CHEM 212"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 430": {
+    "code": "CHEM 430",
+    "raw": "Prereq: CHEM 331 or CHEM 333; Level at least 3A",
+    "prereqs": [
+      "CHEM 331",
+      "CHEM 333"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 400": {
+    "code": "CHEM 400",
+    "raw": "Prereq: Level at least 3A; Honours Biochemistry, Chemistry, Chemical Physics, Materials and Nanosciences or Medicinal Chemistry students only",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 497": {
+    "code": "CHEM 497",
+    "raw": "Prereq: Exchange students only",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 495": {
+    "code": "CHEM 495",
+    "raw": "Prereq: Exchange students only",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 496": {
+    "code": "CHEM 496",
+    "raw": "Prereq: Exchange students only",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 392B": {
+    "code": "CHEM 392B",
+    "raw": "Prereq: CHEM 392A",
+    "prereqs": [
+      "CHEM 392A"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 313L": {
+    "code": "CHEM 313L",
+    "raw": "Prereq: CHEM 123L or CHEM 125L; Honours Chemistry or Medicinal Chemistry students only. Coreq: CHEM 212",
+    "prereqs": [
+      "CHEM 123L",
+      "CHEM 125L"
+    ],
+    "coreqs": [
+      "CHEM 212"
+    ],
+    "antireqs": []
+  },
+  "CHEM 233L": {
+    "code": "CHEM 233L",
+    "raw": "Prereq: CHEM 123L or CHEM 125L; Honours Chemistry or Honours Biochemistry. Coreq: CHEM 233. Antireq: CHEM 237L",
+    "prereqs": [
+      "CHEM 123L",
+      "CHEM 125L"
+    ],
+    "coreqs": [
+      "CHEM 233"
+    ],
+    "antireqs": [
+      "CHEM 237L"
+    ]
+  },
+  "CHEM 267L": {
+    "code": "CHEM 267L",
+    "raw": "Prereq: CHEM 266L. Coreq: CHEM 267",
+    "prereqs": [
+      "CHEM 266L"
+    ],
+    "coreqs": [
+      "CHEM 267"
+    ],
+    "antireqs": []
+  },
+  "CHEM 266L": {
+    "code": "CHEM 266L",
+    "raw": "Prereq: CHEM 123L or 125L. Coreq: CHEM 266",
+    "prereqs": [
+      "CHEM 123L",
+      "CHEM 125L"
+    ],
+    "coreqs": [
+      "CHEM 266"
+    ],
+    "antireqs": []
+  },
+  "CHEM 237L": {
+    "code": "CHEM 237L",
+    "raw": "Coreq: CHEM 237",
+    "prereqs": [],
+    "coreqs": [
+      "CHEM 237"
+    ],
+    "antireqs": []
+  },
+  "CHEM 250L": {
+    "code": "CHEM 250L",
+    "raw": "Prereq: CHEM 140; Honours students only",
+    "prereqs": [
+      "CHEM 140"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 265L": {
+    "code": "CHEM 265L",
+    "raw": "Prereq: CHEM 123L or CHEM 125L; Honours Biochemistry, Chemistry, Medicinal Chemistry, or Science and Business (BIOCHEM) students only. Coreq: CHEM 265",
+    "prereqs": [
+      "CHEM 123L",
+      "CHEM 125L"
+    ],
+    "coreqs": [
+      "CHEM 265"
+    ],
+    "antireqs": []
+  },
+  "CHEM 120L": {
+    "code": "CHEM 120L",
+    "raw": "Coreq: CHEM 120. Antireq: CHEM 121L",
+    "prereqs": [],
+    "coreqs": [
+      "CHEM 120"
+    ],
+    "antireqs": [
+      "CHEM 121L"
+    ]
+  },
+  "CHEM 123L": {
+    "code": "CHEM 123L",
+    "raw": "Prereq: CHEM 120L. Coreq: CHEM 123. Antireq: CHEM 125L",
+    "prereqs": [
+      "CHEM 120L"
+    ],
+    "coreqs": [
+      "CHEM 123"
+    ],
+    "antireqs": [
+      "CHEM 125L"
+    ]
+  },
+  "CHEM 220L": {
+    "code": "CHEM 220L",
+    "raw": "Prereq: CHEM 123L or 125L; Honours Biochemistry, Chemistry, Materials and Nanosciences, Medicinal Chemistry, or Science and Business (Biochemistry) students only. Coreq: CHEM 220",
+    "prereqs": [
+      "CHEM 123L",
+      "CHEM 125L"
+    ],
+    "coreqs": [
+      "CHEM 220"
+    ],
+    "antireqs": []
+  },
+  "CHEM 125L": {
+    "code": "CHEM 125L",
+    "raw": "Prereq: CHEM 121L. Coreq: CHEM 125. Antireq: CHEM 123L",
+    "prereqs": [
+      "CHEM 121L"
+    ],
+    "coreqs": [
+      "CHEM 125"
+    ],
+    "antireqs": [
+      "CHEM 123L"
+    ]
+  },
+  "CHEM 121L": {
+    "code": "CHEM 121L",
+    "raw": "Coreq: CHEM 121. Antireq: CHEM 120L",
+    "prereqs": [],
+    "coreqs": [
+      "CHEM 121"
+    ],
+    "antireqs": [
+      "CHEM 120L"
+    ]
+  },
+  "CHEM 262L": {
+    "code": "CHEM 262L",
+    "raw": "Coreq: CHEM 262",
+    "prereqs": [],
+    "coreqs": [
+      "CHEM 262"
+    ],
+    "antireqs": []
+  },
+  "CHEM 392A": {
+    "code": "CHEM 392A",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 794": {
+    "code": "CHEM 794",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 784": {
+    "code": "CHEM 784",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 121W": {
+    "code": "CHEM 121W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 773": {
+    "code": "CHEM 773",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 720": {
+    "code": "CHEM 720",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 726": {
+    "code": "CHEM 726",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 760": {
+    "code": "CHEM 760",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 740": {
+    "code": "CHEM 740",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 731": {
+    "code": "CHEM 731",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 750": {
+    "code": "CHEM 750",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 710": {
+    "code": "CHEM 710",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 480W": {
+    "code": "CHEM 480W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 350W": {
+    "code": "CHEM 350W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 730": {
+    "code": "CHEM 730",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 756": {
+    "code": "CHEM 756",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 764": {
+    "code": "CHEM 764",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 736": {
+    "code": "CHEM 736",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 755": {
+    "code": "CHEM 755",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 715": {
+    "code": "CHEM 715",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 718": {
+    "code": "CHEM 718",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 728": {
+    "code": "CHEM 728",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 769": {
+    "code": "CHEM 769",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 737": {
+    "code": "CHEM 737",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 738": {
+    "code": "CHEM 738",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 745": {
+    "code": "CHEM 745",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 746": {
+    "code": "CHEM 746",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 712": {
+    "code": "CHEM 712",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 713": {
+    "code": "CHEM 713",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 717": {
+    "code": "CHEM 717",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 724": {
+    "code": "CHEM 724",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 727": {
+    "code": "CHEM 727",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 729": {
+    "code": "CHEM 729",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 766": {
+    "code": "CHEM 766",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 770": {
+    "code": "CHEM 770",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 250W": {
+    "code": "CHEM 250W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 302W": {
+    "code": "CHEM 302W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 203W": {
+    "code": "CHEM 203W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 233W": {
+    "code": "CHEM 233W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 212W": {
+    "code": "CHEM 212W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 204W": {
+    "code": "CHEM 204W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 419W": {
+    "code": "CHEM 419W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 205W": {
+    "code": "CHEM 205W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 234W": {
+    "code": "CHEM 234W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 226W": {
+    "code": "CHEM 226W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 202W": {
+    "code": "CHEM 202W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 120W": {
+    "code": "CHEM 120W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 111W": {
+    "code": "CHEM 111W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 301W": {
+    "code": "CHEM 301W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 354W": {
+    "code": "CHEM 354W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "CHEM 440W": {
+    "code": "CHEM 440W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH211": {
+    "code": "PSYCH211",
+    "raw": "Prereq: PSYCH 101/101R",
+    "prereqs": [
+      "PSYCH 101",
+      "PSYCH 101R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ECE457A": {
+    "code": "ECE457A",
+    "raw": "Prereq: One of BME 122, ECE 250, MSE 240, MTE 140, SYDE 223; Level at least 4A BASc/BSE",
+    "prereqs": [
+      "BME 122",
+      "ECE 250",
+      "MSE 240",
+      "MTE 140",
+      "SYDE 223"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH101R": {
+    "code": "PSYCH101R",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH253": {
+    "code": "PSYCH253",
+    "raw": "Prereq: PSYCH 101/101R.",
+    "prereqs": [
+      "PSYCH 101",
+      "PSYCH 101R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "SYDE572": {
+    "code": "SYDE572",
+    "raw": "Prereq: (Level at least 3A Biomedical Engineering) or (Level at least 3B Systems Design Engineering) or (Level at least 4A Mechatronics Engineering) or Mechatronics Option or Biomechanics Option",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH207": {
+    "code": "PSYCH207",
+    "raw": "Prereq: Level at least 1B",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "SYDE223": {
+    "code": "SYDE223",
+    "raw": "Prereq: Level at least 1B Systems Design Engineering or Computer Engineering Option. Antireq: BME 122, CS 240/240E, ECE 250, MTE 140",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "BME 122",
+      "CS 240",
+      "CS 240E",
+      "ECE 250",
+      "MTE 140"
+    ]
+  },
+  "MSE331": {
+    "code": "MSE331",
+    "raw": "Not open to Management Engineering students or students in the Faculty of Mathematics except for Software Engineering. Antireq: BME 411, CHE 521, CIVE 332, CO 250, ENVE 320/335, MSCI 232, SYDE 411",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "BME 411",
+      "CHE 521",
+      "CIVE 332",
+      "CO 250",
+      "ENVE 320",
+      "ENVE 335",
+      "MSCI 232",
+      "SYDE 411"
+    ]
+  },
+  "MSE332": {
+    "code": "MSE332",
+    "raw": "Prereq: One of BME 411, CHE 521, CIVE 332, CO 250, ENVE 320, 335, MSCI 232, 331, SYDE 411. Antireq: CO 327",
+    "prereqs": [
+      "BME 411",
+      "CHE 521",
+      "CIVE 332",
+      "CO 250",
+      "ENVE 320",
+      "ENVE 335",
+      "MSCI 232",
+      "MSCI 331",
+      "SYDE 411"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CO 327"
+    ]
+  },
+  "BME411": {
+    "code": "BME411",
+    "raw": "Prereq: Level at least 4A Biomedical Engineering. Antireq: SYDE 411",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "SYDE 411"
+    ]
+  },
+  "SYDE522": {
+    "code": "SYDE522",
+    "raw": "Prereq: One of BME 122, CS 240/240E, ECE 250, MSE 240, MTE 140, SYDE 223 and Biomedical Engineering or SYDE or level at least 4A Management Engineering or Mechatronics Eng or Mechatronics Option or Computer Eng Option. Antireq:CS 480,486, ECE 457A,457B",
+    "prereqs": [
+      "BME 122",
+      "CS 240",
+      "CS 240E",
+      "ECE 250",
+      "MSE 240",
+      "MTE 140",
+      "SYDE 223"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CS 480",
+      "CS 486",
+      "ECE 457A",
+      "ECE 457B"
+    ]
+  },
+  "HLTH104": {
+    "code": "HLTH104",
+    "raw": "Prereq: Health Studies or Public Health students",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MSE240": {
+    "code": "MSE240",
+    "raw": "Prereq: MSE 121; Level at least 2A Management Engineering. Antireq: BME 122, CS 240/240E, ECE 250, MTE 140 and SYDE 223",
+    "prereqs": [
+      "MSE 121"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "BME 122",
+      "CS 240",
+      "CS 240E",
+      "ECE 250",
+      "MTE 140",
+      "SYDE 223"
+    ]
+  },
+  "ENVE391": {
+    "code": "ENVE391",
+    "raw": "Prereq: 3B Environmental Engineering",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "KIN312": {
+    "code": "KIN312",
+    "raw": "Prereq: BIOL 273 or PSYCH 261. Antireq: KIN 242",
+    "prereqs": [
+      "BIOL 273",
+      "PSYCH 261"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "KIN 242"
+    ]
+  },
+  "SYDE531": {
+    "code": "SYDE531",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ECE459": {
+    "code": "ECE459",
+    "raw": "Prereq: One of ECE 252, MTE 241, SE 350; Level at least 4A BASc/BSE",
+    "prereqs": [
+      "ECE 252",
+      "MTE 241",
+      "SE 350"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL373": {
+    "code": "BIOL373",
+    "raw": "Prereq: BIOL 273",
+    "prereqs": [
+      "BIOL 273"
+    ],
+    "coreqs": [],
+    "antireqs": []
   }
 }

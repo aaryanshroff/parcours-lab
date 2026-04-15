@@ -26,27 +26,87 @@ ROW_GAP = 220   # vertical gap between courses within a column
 TERM_ORDER = ["1A", "1B", "2A", "2B", "3A", "3B", "4A", "4B"]
 
 # Maps lowercase substrings of a program title to its primary subject code(s).
-# Used to derive enrollment-restriction subjects from the major title sent by the frontend.
+# Used by _program_subjects_from_title to identify the *student's* program.
+# Keep these NARROW (one program = one set of codes).
 _PROGRAM_SUBJECTS: dict[str, set[str]] = {
+    # Faculty of Mathematics
     "computer science": {"CS"},
+    "data science": {"CS", "STAT"},
     "software engineering": {"SE"},
-    "electrical engineering": {"ECE"},
-    "computer engineering": {"ECE"},
-    "mechanical engineering": {"ME"},
-    "civil engineering": {"CE"},
-    "systems design engineering": {"SYDE"},
-    "mathematics": {"MATH"},
     "applied mathematics": {"AMATH"},
     "pure mathematics": {"PMATH"},
-    "statistics": {"STAT"},
-    "actuarial science": {"ACTSC"},
     "combinatorics and optimization": {"CO"},
-    "data science": {"CS", "STAT"},
+    "actuarial science": {"ACTSC"},
+    "statistics": {"STAT"},
+    "mathematics": {"MATH"},
     "accounting": {"AFM"},
     "finance": {"FARM"},
+    # Faculty of Engineering
+    "systems design engineering": {"SYDE"},
+    "management engineering": {"MSCI", "MSE"},
+    "environmental engineering": {"ENVE"},
+    "mechatronics engineering": {"MTE"},
+    "nanotechnology engineering": {"NE"},
+    "electrical engineering": {"ECE"},
+    "biomedical engineering": {"BME"},
+    "mechanical engineering": {"ME"},
+    "geological engineering": {"GEOE"},
+    "computer engineering": {"ECE"},
+    "chemical engineering": {"CHE"},
+    "civil engineering": {"CIVE"},
+    # Faculty of Science
+    "biological and medical physics": {"PHYS"},
+    "physics and astronomy": {"PHYS"},
+    "materials and nanosciences": {"PHYS"},
+    "mathematical physics": {"PHYS", "AMATH"},
+    "environmental science": {"ENVS"},
+    "chemical physics": {"PHYS"},
+    "biomedical sciences": {"BIOL"},
+    "medical physics": {"PHYS"},
+    "earth sciences": {"EARTH"},
+    "life physics": {"PHYS"},
+    "biochemistry": {"BIOL", "CHEM"},
+    "chemistry": {"CHEM"},
+    "physics": {"PHYS"},
+    "biology": {"BIOL"},
+    # Faculty of Health
+    "health informatics": {"HLTH"},
+    "health sciences": {"HLTH"},
+    "health studies": {"HLTH"},
+    "public health": {"HLTH"},
+    "psychology": {"PSYCH"},
+    "kinesiology": {"KIN"},
+    # Faculty of Environment
+    "global business and digital arts": {"GBDA"},
+    "environment and resource": {"ERS", "ENVS"},
+    "geomatics": {"GEOG"},
+    # Faculty of Arts
     "economics": {"ECON"},
-    "management engineering": {"MSCI"},
 }
+
+# Broader mapping for interpreting enrollment *restrictions* in prereq text.
+# "Mathematics" in a restriction means the whole Faculty of Math (incl. CS),
+# not just the Mathematics major.  Specific-program entries are inherited from
+# _PROGRAM_SUBJECTS; only faculty-level / abbreviation overrides are added here.
+_RESTRICTION_SUBJECTS: dict[str, set[str]] = {
+    **_PROGRAM_SUBJECTS,
+    # Faculty-level broad terms
+    "mathematics": {"CS", "MATH", "STAT", "CO", "AMATH", "PMATH", "ACTSC", "CM"},
+    "math":        {"CS", "MATH", "STAT", "CO", "AMATH", "PMATH", "ACTSC", "CM"},
+    "engineering": {"ECE", "ME", "CIVE", "ENVE", "GEOE", "CHE", "MTE", "NE",
+                    "SYDE", "BME", "MSCI", "MSE", "SE"},
+    "science":     {"PHYS", "CHEM", "BIOL", "EARTH", "SCI"},
+    "environment": {"ENVS", "GEOG", "ERS", "PLAN"},
+    # Abbreviations found in course_cache.json
+    "eng": {"ECE", "ME", "CIVE", "ENVE", "GEOE", "CHE", "MTE", "NE",
+            "SYDE", "BME", "MSCI", "MSE", "SE"},
+    "sci": {"PHYS", "CHEM", "BIOL", "EARTH", "SCI"},
+    # Degree-type abbreviations
+    "basc": {"ECE", "ME", "CIVE", "ENVE", "GEOE", "CHE", "MTE", "NE",
+             "SYDE", "BME", "MSCI", "MSE"},
+    "bse": {"SE"},
+}
+_RESTRICTION_KEYS_BY_LEN = sorted(_RESTRICTION_SUBJECTS, key=len, reverse=True)
 
 
 def _program_subjects_from_title(major_title: str) -> set[str]:
@@ -70,7 +130,10 @@ def _is_accessible(code: str, program_subjects: set[str]) -> bool:
     if not program_subjects:
         return True
     from uwaterloo import _load_course_cache
-    data = _load_course_cache().get(code)
+    cache = _load_course_cache()
+    normalized = code.replace(" ", "").upper()
+    spaced = re.sub(r"([A-Za-z])(\d)", r"\1 \2", normalized)
+    data = cache.get(code) or cache.get(normalized) or cache.get(spaced)
     if not data:
         return True
     raw = (data.get("raw", "") or "").lower()
@@ -78,30 +141,75 @@ def _is_accessible(code: str, program_subjects: set[str]) -> bool:
         return True
 
     def _subjects_in(phrase: str) -> set[str]:
+        """Extract program subject codes from restriction text.
+
+        Uses longest-match-first with consumption so 'management engineering'
+        doesn't also trigger the broad 'engineering' entry.
+        """
         found: set[str] = set()
-        for name, subjs in _PROGRAM_SUBJECTS.items():
-            if name in phrase:
-                found |= subjs
-        # also catch bare codes like "CS", "MATH" that appear directly in the text
+        remaining = phrase
+        for name in _RESTRICTION_KEYS_BY_LEN:
+            if name in remaining:
+                found |= _RESTRICTION_SUBJECTS[name]
+                remaining = remaining.replace(name, " ")
         for m in re.finditer(r"\b([A-Z]{2,6})\b", phrase.upper()):
             found.add(m.group(1))
         return found
 
-    # DENY: "not open to X students" / "not open to students in X programs"
-    for m in re.finditer(r"not open to (?:students in )?([^.;\n]+?)\s*(?:students?|programs?)", raw):
-        if _subjects_in(m.group(1)) & program_subjects:
+    # ── DENY: "not open to ..." ──
+    # Handles: "Not open to X students", "Not open to students in X",
+    #          "Not open to Faculty of X students", and bare "Not open to X"
+    for m in re.finditer(
+        r"not open to (?:students in )?(?:the )?(?:faculty of )?"
+        r"([^.;\n]+?)(?:\s+(?:students?|programs?)|\.|;|$)",
+        raw,
+    ):
+        denied = _subjects_in(m.group(1))
+        if denied & program_subjects:
             return False
 
-    # ALLOW-only: "X students only" / "for X students only" / "restricted to X students"
+    # ── ALLOW-only: "X students only" / "restricted to X" ──
     for pattern in [
-        r"(?:for\s+)?([^.;\n]+?)\s*students? only",
-        r"restricted to ([^.;\n]+?)\s*students?",
-        r"open to ([^.;\n]+?)\s*students? only",
+        r"(?:for\s+)?([^.;\n]+?)\s+students?\s+only",
+        r"restricted to ([^.;\n]+?)\s+students?",
+        r"open to ([^.;\n]+?)\s+students?\s+only",
     ]:
         for m in re.finditer(pattern, raw):
             allowed = _subjects_in(m.group(1))
             if allowed and not (allowed & program_subjects):
                 return False
+
+    # ── ALLOW-only: "X only" without "students" ──
+    # Catches: "Hon Math only", "Specialization only" (after a semicolon)
+    for m in re.finditer(r";\s*([^.;\n]+?)\s+only\s*(?:\.|;|$)", raw):
+        text = m.group(1).strip()
+        text = re.sub(r"^level at least \d[ab]\s*", "", text).strip()
+        if not text:
+            continue
+        allowed = _subjects_in(text)
+        if allowed and not (allowed & program_subjects):
+            return False
+
+    # ── ALLOW-only: "Level at least XY <Program>" ──
+    # Catches: "Level at least 2A Management Engineering",
+    #          "Level at least 2B Environmental Engineering",
+    #          "Level at least 3A BASc/BSE students", etc.
+    # Skips OR-alternative prereqs like "MATH 145 or level at least 2A SE"
+    # where a course code immediately precedes "or level at least".
+    for m in re.finditer(r"level at least \d[ab]\s+([^.;]+)", raw):
+        pre = raw[max(0, m.start() - 50):m.start()]
+        if re.search(r"[a-z]{2,6}\s*\d{3}[a-z]?\)*\s+or\s*$", pre):
+            continue
+        text = m.group(1).strip()
+        text = re.sub(
+            r"\s*(?:students?|stdnts|plans?|majors?|specialization)?\s*(?:only)?\s*$",
+            "", text,
+        ).strip()
+        if not text:
+            continue
+        allowed = _subjects_in(text)
+        if allowed and not (allowed & program_subjects):
+            return False
 
     return True
 TERM_TO_TIER = {
@@ -782,6 +890,9 @@ def _balance_terms(
     return result
 
 
+_ESCO_BATCH_SIZE = 20
+
+
 def _map_courses_to_esco_skills(
     codes: set[str],
     course_info: dict[str, dict],
@@ -795,67 +906,81 @@ def _map_courses_to_esco_skills(
     if not codes:
         return {}
 
-    client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key)
-
-    course_lines = []
-    for code in sorted(codes):
-        info = course_info.get(code, {})
-        title = info.get("title", code)
-        course_lines.append(f"- {code}: {title}")
-
     skills_context = ""
     if desired_skills:
         skills_context += f"\nDesired skills: {', '.join(desired_skills)}"
     if my_skills:
         skills_context += f"\nExisting skills: {', '.join(my_skills)}"
 
-    response = client.chat.completions.create(
-        model=model,
-        messages=[
-            {
-                "role": "system",
-                "content": (
-                    "You map university courses to ESCO (European Skills, Competences, Qualifications and Occupations) skill labels. "
-                    "For each course, assign 1-3 concise ESCO-style skill labels that the course teaches. "
-                    "Use standard ESCO skill terminology (e.g. 'Python programming', 'data analysis', "
-                    "'algorithm design', 'linear algebra', 'technical writing'). Keep labels short (1-4 words).\n\n"
-                    "If the student has desired skills, prefer mapping courses to those skill labels where applicable. "
-                    "Do NOT invent skills unrelated to the course content.\n\n"
-                    "Return ONLY valid JSON, no other text. Schema:\n"
-                    '{"mappings": {"COURSE_CODE": ["skill1", "skill2"]}}'
-                ),
-            },
-            {
-                "role": "user",
-                "content": (
-                    (f"Goal: {goal}\n" if goal else "")
-                    + skills_context
-                    + "\n\nCourses:\n" + "\n".join(course_lines)
-                ),
-            },
-        ],
-        temperature=0.2,
-    )
+    sorted_codes = sorted(codes)
+    batches = [sorted_codes[i:i + _ESCO_BATCH_SIZE] for i in range(0, len(sorted_codes), _ESCO_BATCH_SIZE)]
 
-    raw = response.choices[0].message.content or "{}"
-    raw = raw.strip()
-    if raw.startswith("```"):
-        raw = raw.split("\n", 1)[1] if "\n" in raw else raw[3:]
-        if raw.endswith("```"):
-            raw = raw[:-3]
+    def _map_batch(batch: list[str]) -> dict[str, list[str]]:
+        client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key)
+        course_lines = []
+        for code in batch:
+            info = course_info.get(code, {})
+            title = info.get("title", code)
+            course_lines.append(f"- {code}: {title}")
+
+        response = client.chat.completions.create(
+            model=model,
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You map university courses to ESCO (European Skills, Competences, Qualifications and Occupations) skill labels. "
+                        "For each course, assign 1-3 concise ESCO-style skill labels that the course teaches. "
+                        "Use standard ESCO skill terminology (e.g. 'Python programming', 'data analysis', "
+                        "'algorithm design', 'linear algebra', 'technical writing'). Keep labels short (1-4 words).\n\n"
+                        "If the student has desired skills, prefer mapping courses to those skill labels where applicable. "
+                        "Do NOT invent skills unrelated to the course content.\n\n"
+                        "You MUST return a mapping for EVERY course listed. Do not skip any.\n\n"
+                        "Return ONLY valid JSON, no other text. Schema:\n"
+                        '{"mappings": {"COURSE_CODE": ["skill1", "skill2"]}}'
+                    ),
+                },
+                {
+                    "role": "user",
+                    "content": (
+                        (f"Goal: {goal}\n" if goal else "")
+                        + skills_context
+                        + "\n\nCourses:\n" + "\n".join(course_lines)
+                    ),
+                },
+            ],
+            temperature=0.2,
+        )
+
+        raw = response.choices[0].message.content or "{}"
         raw = raw.strip()
+        if raw.startswith("```"):
+            raw = raw.split("\n", 1)[1] if "\n" in raw else raw[3:]
+            if raw.endswith("```"):
+                raw = raw[:-3]
+            raw = raw.strip()
 
-    try:
-        data = json.loads(raw)
-    except json.JSONDecodeError:
-        logger.warning("[academics] failed to parse ESCO mapping response: %s", raw[:200])
-        return {}
+        try:
+            data = json.loads(raw)
+        except json.JSONDecodeError:
+            logger.warning("[academics] failed to parse ESCO mapping response: %s", raw[:200])
+            return {}
+
+        batch_result: dict[str, list[str]] = {}
+        for code, skills in data.get("mappings", {}).items():
+            nc = _normalize_code(code)
+            if nc in codes and isinstance(skills, list):
+                batch_result[nc] = [s for s in skills[:3] if isinstance(s, str)]
+        return batch_result
 
     result: dict[str, list[str]] = {}
-    for code, skills in data.get("mappings", {}).items():
-        nc = _normalize_code(code)
-        if nc in codes and isinstance(skills, list):
-            result[nc] = [s for s in skills[:3] if isinstance(s, str)]
+    if len(batches) == 1:
+        result = _map_batch(batches[0])
+    else:
+        with ThreadPoolExecutor(max_workers=len(batches)) as pool:
+            futures = [pool.submit(_map_batch, batch) for batch in batches]
+            for f in futures:
+                result.update(f.result())
 
     logger.info("[academics] ESCO mapped %d/%d courses", len(result), len(codes))
     return result
@@ -1132,19 +1257,25 @@ def _pick_electives(
 
     # Build group descriptions for LLM — no accessibility filtering here
     groups_desc = []
-    group_courses: list[list[dict]] = []  # parallel list of course objects per group
 
-    # First pass: expand and trim candidate pools via LLM search
+    # First pass: expand groups (may hit UW API), then trim via LLM search in parallel
     for group in choice_groups:
         expanded = _expand_elective_group(group)
         if expanded:
             group["courses"] = expanded
-        courses = group.get("courses", [])
-        trimmed = _llm_search_elective_candidates(
-            courses, goal, api_key, model,
-            major_title=major_title, desired_skills=desired_skills,
-        )
-        group_courses.append(trimmed)
+
+    with ThreadPoolExecutor() as pool:
+        futures = {
+            pool.submit(
+                _llm_search_elective_candidates,
+                group.get("courses", []), goal, api_key, model,
+                major_title=major_title, desired_skills=desired_skills,
+            ): i
+            for i, group in enumerate(choice_groups)
+        }
+        group_courses: list[list[dict]] = [[] for _ in choice_groups]
+        for fut in as_completed(futures):
+            group_courses[futures[fut]] = fut.result()
 
     # Fetch UWFlow ratings only for the trimmed candidates (not thousands of breadth courses)
     all_candidate_codes: list[str] = []
@@ -1166,7 +1297,7 @@ def _pick_electives(
             options.append(line)
         if not options:
             continue
-        header = f"Group {i + 1} (pick {n})"
+        header = f"Group {i + 1} (pick {n + 2})"
         if group.get("description"):
             header += f": {group['description']}"
         groups_desc.append(header + "\n" + "\n".join(f"  - {opt}" for opt in options))
