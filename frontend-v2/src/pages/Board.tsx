@@ -117,10 +117,7 @@ export default function BoardView({ nodes, edges, title, subtitle, onMoveCourse 
     return map
   }, [courses])
 
-  const termsWithCourses = useMemo(() =>
-    TERM_ORDER.filter((t) => coursesByTerm[t]?.length > 0),
-    [coursesByTerm],
-  )
+  const termsWithCourses = useMemo(() => [...TERM_ORDER], [])
 
   // Sidebar state
   const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null)
