@@ -1,6 +1,35 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { Send, X, Loader2 } from 'lucide-react'
 import goatImg from '../assets/mountain-goat.png'
+
+const STATUS_SEQUENCES: Record<string, string[]> = {
+  replace: [
+    'Understanding your request\u2026',
+    'Searching for courses\u2026',
+    'Checking prerequisites\u2026',
+    'Picking the best fit\u2026',
+  ],
+  skill: [
+    'Understanding your request\u2026',
+    'Updating your skills\u2026',
+  ],
+  remove: [
+    'Understanding your request\u2026',
+    'Updating your plan\u2026',
+  ],
+  general: [
+    'Understanding your request\u2026',
+    'Thinking\u2026',
+  ],
+}
+
+function detectIntent(text: string): keyof typeof STATUS_SEQUENCES {
+  const lower = text.toLowerCase()
+  if (/\b(replace|swap|switch|change course|different course|alternative)\b/.test(lower)) return 'replace'
+  if (/\b(add skill|remove skill|new skill|drop skill)\b/.test(lower)) return 'skill'
+  if (/\b(remove|drop|delete|take out|get rid)\b/.test(lower)) return 'remove'
+  return 'general'
+}
 
 interface SearchResult {
   code: string
@@ -43,8 +72,30 @@ export default function GoatChat({ context, onAction }: GoatChatProps) {
   ])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
+  const [statusMessage, setStatusMessage] = useState('')
+  const statusIndexRef = useRef(0)
+  const statusTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  const startStatusCycle = useCallback((intent: keyof typeof STATUS_SEQUENCES) => {
+    const seq = STATUS_SEQUENCES[intent]
+    statusIndexRef.current = 0
+    setStatusMessage(seq[0])
+    if (statusTimerRef.current) clearInterval(statusTimerRef.current)
+    statusTimerRef.current = setInterval(() => {
+      statusIndexRef.current = Math.min(statusIndexRef.current + 1, seq.length - 1)
+      setStatusMessage(seq[statusIndexRef.current])
+    }, 2500)
+  }, [])
+
+  const stopStatusCycle = useCallback(() => {
+    if (statusTimerRef.current) {
+      clearInterval(statusTimerRef.current)
+      statusTimerRef.current = null
+    }
+    setStatusMessage('')
+  }, [])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -59,9 +110,11 @@ export default function GoatChat({ context, onAction }: GoatChatProps) {
     if (!text || loading) return
 
     const next: Message[] = [...messages, { role: 'user', content: text }]
+    const intent = detectIntent(text)
     setMessages(next)
     setInput('')
     setLoading(true)
+    startStatusCycle(intent)
 
     try {
       const res = await fetch('/api/chat', {
@@ -87,6 +140,7 @@ export default function GoatChat({ context, onAction }: GoatChatProps) {
     } catch {
       setMessages((prev) => [...prev, { role: 'assistant', content: 'Something went wrong. Try again.' }])
     } finally {
+      stopStatusCycle()
       setLoading(false)
     }
   }
@@ -156,10 +210,11 @@ export default function GoatChat({ context, onAction }: GoatChatProps) {
                 )}
               </div>
             ))}
-            {loading && (
+            {loading && statusMessage && (
               <div className="flex justify-start">
-                <div className="bg-stone-100 rounded-lg px-3 py-1.5">
-                  <Loader2 size={14} className="text-stone-400 animate-spin" />
+                <div className="bg-stone-100 rounded-lg px-3 py-1.5 flex items-center gap-2">
+                  <Loader2 size={14} className="text-stone-400 animate-spin shrink-0" />
+                  <span className="text-xs text-stone-500 animate-pulse">{statusMessage}</span>
                 </div>
               </div>
             )}
