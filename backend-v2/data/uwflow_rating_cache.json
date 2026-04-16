@@ -1991,7 +1991,7 @@
     }
   },
   "ECE206": {
-    "fetched_at": 1775342861.860936,
+    "fetched_at": 1776355215.959264,
     "rating": {
       "liked": 0.8085106382978723,
       "easy": 0.6212121212121212,
@@ -2002,12 +2002,12 @@
     }
   },
   "ECE205": {
-    "fetched_at": 1775342862.039934,
+    "fetched_at": 1776355215.983178,
     "rating": {
-      "liked": 0.7562189054726368,
+      "liked": 0.7598039215686274,
       "easy": 0.48722627737226276,
       "useful": 0.8768115942028986,
-      "filled_count": 201,
+      "filled_count": 204,
       "comment_count": 35,
       "profs": []
     }
@@ -2233,7 +2233,7 @@
     }
   },
   "ECE457B": {
-    "fetched_at": 1775342864.246206,
+    "fetched_at": 1776354670.0469592,
     "rating": {
       "liked": 0.5652173913043478,
       "easy": 0.4,
@@ -2365,7 +2365,7 @@
     }
   },
   "PHYS121": {
-    "fetched_at": 1775342865.7477288,
+    "fetched_at": 1776363875.967136,
     "rating": {
       "liked": 0.6359447004608295,
       "easy": 0.4532442748091603,
@@ -2376,7 +2376,7 @@
     }
   },
   "PHYS122": {
-    "fetched_at": 1775342865.8681211,
+    "fetched_at": 1776363876.283815,
     "rating": {
       "liked": 0.5348837209302325,
       "easy": 0.408203125,
@@ -2387,13 +2387,13 @@
     }
   },
   "PHYS175": {
-    "fetched_at": 1775342865.9631958,
+    "fetched_at": 1776363876.239224,
     "rating": {
-      "liked": 0.8865979381443299,
-      "easy": 0.7268518518518519,
-      "useful": 0.8090909090909091,
-      "filled_count": 97,
-      "comment_count": 25,
+      "liked": 0.8877551020408163,
+      "easy": 0.7181818181818181,
+      "useful": 0.8035714285714286,
+      "filled_count": 98,
+      "comment_count": 26,
       "profs": []
     }
   },
@@ -2409,18 +2409,18 @@
     }
   },
   "PHYS275": {
-    "fetched_at": 1775342866.2460952,
+    "fetched_at": 1776363876.016545,
     "rating": {
-      "liked": 0.6551724137931034,
-      "easy": 0.47560975609756095,
-      "useful": 0.4226190476190476,
-      "filled_count": 58,
-      "comment_count": 13,
+      "liked": 0.6610169491525424,
+      "easy": 0.48214285714285715,
+      "useful": 0.43023255813953487,
+      "filled_count": 59,
+      "comment_count": 14,
       "profs": []
     }
   },
   "PHYS375": {
-    "fetched_at": 1775342866.4208488,
+    "fetched_at": 1776363875.958221,
     "rating": {
       "liked": 0.7,
       "easy": 0.3333333333333333,
@@ -2431,7 +2431,7 @@
     }
   },
   "PHYS474": {
-    "fetched_at": 1775342866.554507,
+    "fetched_at": 1776363876.242753,
     "rating": {
       "liked": 0.5,
       "easy": 0.39285714285714285,
@@ -2442,7 +2442,7 @@
     }
   },
   "PHYS475": {
-    "fetched_at": 1775342866.7286808,
+    "fetched_at": 1776363875.977159,
     "rating": {
       "liked": 0.5,
       "easy": 0.32142857142857145,
@@ -2453,7 +2453,7 @@
     }
   },
   "PHYS476": {
-    "fetched_at": 1775342866.845052,
+    "fetched_at": 1776363876.121341,
     "rating": {
       "liked": 0.8888888888888888,
       "easy": 0.1,
@@ -2706,23 +2706,23 @@
     }
   },
   "BIOL130": {
-    "fetched_at": 1775342870.131032,
+    "fetched_at": 1776356932.837733,
     "rating": {
-      "liked": 0.5466830466830467,
+      "liked": 0.5453431372549019,
       "easy": 0.512546468401487,
       "useful": 0.8226851851851852,
-      "filled_count": 814,
+      "filled_count": 816,
       "comment_count": 204,
       "profs": []
     }
   },
   "BIOL130L": {
-    "fetched_at": 1775342870.198542,
+    "fetched_at": 1776356932.767138,
     "rating": {
-      "liked": 0.5408163265306123,
+      "liked": 0.5386178861788617,
       "easy": 0.597027972027972,
       "useful": 0.6628919860627178,
-      "filled_count": 490,
+      "filled_count": 492,
       "comment_count": 107,
       "profs": []
     }
@@ -2739,13 +2739,13 @@
     }
   },
   "BIOL239": {
-    "fetched_at": 1775342870.464107,
+    "fetched_at": 1776356932.7702851,
     "rating": {
-      "liked": 0.7398720682302772,
-      "easy": 0.6001683501683501,
-      "useful": 0.8501655629139073,
-      "filled_count": 469,
-      "comment_count": 100,
+      "liked": 0.7367303609341825,
+      "easy": 0.6003344481605352,
+      "useful": 0.8478618421052632,
+      "filled_count": 471,
+      "comment_count": 101,
       "profs": []
     }
   },
@@ -2882,7 +2882,7 @@
     }
   },
   "CHEM233": {
-    "fetched_at": 1775342872.249946,
+    "fetched_at": 1776356932.747487,
     "rating": {
       "liked": 0.7272727272727273,
       "easy": 0.6590909090909091,
@@ -2893,7 +2893,7 @@
     }
   },
   "CHEM233L": {
-    "fetched_at": 1775342872.394546,
+    "fetched_at": 1776356932.7537029,
     "rating": {
       "liked": 0.5714285714285714,
       "easy": 0.6666666666666666,
@@ -2959,7 +2959,7 @@
     }
   },
   "CHEM335L": {
-    "fetched_at": 1775342873.154457,
+    "fetched_at": 1776356932.747489,
     "rating": {
       "liked": 1.0,
       "easy": 1.0,
@@ -2970,7 +2970,7 @@
     }
   },
   "CHEM357": {
-    "fetched_at": 1775342873.3011048,
+    "fetched_at": 1776356932.662295,
     "rating": {
       "liked": 0.5238095238095238,
       "easy": 0.736111111111111,
@@ -3080,29 +3080,29 @@
     }
   },
   "PHYS111": {
-    "fetched_at": 1775342874.853596,
+    "fetched_at": 1776363876.021167,
     "rating": {
-      "liked": 0.376865671641791,
-      "easy": 0.42673716012084595,
-      "useful": 0.5577507598784195,
-      "filled_count": 536,
-      "comment_count": 117,
+      "liked": 0.3803339517625232,
+      "easy": 0.42771084337349397,
+      "useful": 0.5583333333333333,
+      "filled_count": 539,
+      "comment_count": 118,
       "profs": []
     }
   },
   "PHYS112": {
-    "fetched_at": 1775342875.037144,
+    "fetched_at": 1776363876.099307,
     "rating": {
-      "liked": 0.5601659751037344,
-      "easy": 0.4823717948717949,
-      "useful": 0.6412337662337663,
-      "filled_count": 241,
-      "comment_count": 36,
+      "liked": 0.5596707818930041,
+      "easy": 0.47943037974683544,
+      "useful": 0.6410256410256411,
+      "filled_count": 243,
+      "comment_count": 37,
       "profs": []
     }
   },
   "BIOL308": {
-    "fetched_at": 1775342875.1622982,
+    "fetched_at": 1776356932.712128,
     "rating": {
       "liked": 0.4421768707482993,
       "easy": 0.1778846153846154,
@@ -3124,7 +3124,7 @@
     }
   },
   "BIOL465": {
-    "fetched_at": 1775342875.398635,
+    "fetched_at": 1776356932.747787,
     "rating": {
       "liked": 0.4,
       "easy": 0.9,
@@ -3201,23 +3201,23 @@
     }
   },
   "PHYS263": {
-    "fetched_at": 1775342876.587747,
+    "fetched_at": 1776363876.1015701,
     "rating": {
-      "liked": 0.4166666666666667,
-      "easy": 0.5043859649122807,
-      "useful": 0.6272727272727273,
-      "filled_count": 84,
+      "liked": 0.4117647058823529,
+      "easy": 0.5,
+      "useful": 0.6205357142857143,
+      "filled_count": 85,
       "comment_count": 28,
       "profs": []
     }
   },
   "PHYS334": {
-    "fetched_at": 1775342876.737767,
+    "fetched_at": 1776363876.038476,
     "rating": {
-      "liked": 0.7105263157894737,
+      "liked": 0.725,
       "easy": 0.42391304347826086,
       "useful": 0.8260869565217391,
-      "filled_count": 38,
+      "filled_count": 40,
       "comment_count": 10,
       "profs": []
     }
@@ -3234,9 +3234,9 @@
     }
   },
   "PHYS342": {
-    "fetched_at": 1775342876.9517162,
+    "fetched_at": 1776363876.244739,
     "rating": {
-      "liked": 0.6486486486486487,
+      "liked": 0.6756756756756757,
       "easy": 0.31521739130434784,
       "useful": 0.7391304347826086,
       "filled_count": 37,
@@ -3245,7 +3245,7 @@
     }
   },
   "PHYS349": {
-    "fetched_at": 1775342877.083429,
+    "fetched_at": 1776363876.281121,
     "rating": {
       "liked": 0.3333333333333333,
       "easy": 1.0,
@@ -3256,13 +3256,13 @@
     }
   },
   "PHYS359": {
-    "fetched_at": 1775342877.225759,
+    "fetched_at": 1776363876.0017889,
     "rating": {
-      "liked": 0.7586206896551724,
-      "easy": 0.3289473684210526,
-      "useful": 0.9078947368421053,
-      "filled_count": 29,
-      "comment_count": 8,
+      "liked": 0.7419354838709677,
+      "easy": 0.3375,
+      "useful": 0.9,
+      "filled_count": 31,
+      "comment_count": 9,
       "profs": []
     }
   },
@@ -3443,7 +3443,7 @@
     }
   },
   "BIOL469": {
-    "fetched_at": 1775342879.970816,
+    "fetched_at": 1776356932.6642141,
     "rating": {
       "liked": 0.8461538461538461,
       "easy": 0.5833333333333334,
@@ -3509,7 +3509,7 @@
     }
   },
   "BIOL335L": {
-    "fetched_at": 1775342880.82768,
+    "fetched_at": 1776356932.6714292,
     "rating": {
       "liked": 1.0,
       "easy": 0.9444444444444444,
@@ -4301,7 +4301,7 @@
     }
   },
   "PHYS395": {
-    "fetched_at": 1775342891.27016,
+    "fetched_at": 1776363876.16689,
     "rating": {
       "liked": 0.2857142857142857,
       "easy": 0.3,
@@ -4323,7 +4323,7 @@
     }
   },
   "SYDE544": {
-    "fetched_at": 1775342891.4610932,
+    "fetched_at": 1776354602.4391198,
     "rating": {
       "liked": 0.3333333333333333,
       "easy": 0.75,
@@ -6127,13 +6127,13 @@
     }
   },
   "CHEM237": {
-    "fetched_at": 1775342910.203237,
+    "fetched_at": 1776356932.692204,
     "rating": {
-      "liked": 0.5,
-      "easy": 0.3157894736842105,
-      "useful": 0.754424778761062,
-      "filled_count": 160,
-      "comment_count": 36,
+      "liked": 0.50920245398773,
+      "easy": 0.31837606837606836,
+      "useful": 0.7543103448275862,
+      "filled_count": 163,
+      "comment_count": 39,
       "profs": []
     }
   },
@@ -6292,7 +6292,7 @@
     }
   },
   "CHEM430": {
-    "fetched_at": 1775342911.95386,
+    "fetched_at": 1776356932.7607439,
     "rating": {
       "liked": 1.0,
       "easy": 0.4,
@@ -6303,7 +6303,7 @@
     }
   },
   "NE451": {
-    "fetched_at": 1775342912.052266,
+    "fetched_at": 1776357182.333445,
     "rating": {
       "liked": 0.45454545454545453,
       "easy": 0.5416666666666666,
@@ -6314,7 +6314,7 @@
     }
   },
   "NE452": {
-    "fetched_at": 1775342912.155471,
+    "fetched_at": 1776357182.323832,
     "rating": {
       "liked": 1.0,
       "easy": 0.625,
@@ -6413,7 +6413,7 @@
     }
   },
   "CHEM433": {
-    "fetched_at": 1775342913.19469,
+    "fetched_at": 1776356932.748106,
     "rating": {
       "liked": 1.0,
       "easy": 0.25,
@@ -6853,7 +6853,7 @@
     }
   },
   "CHE520": {
-    "fetched_at": 1775342917.654602,
+    "fetched_at": 1776357182.3175402,
     "rating": {
       "liked": 0.0,
       "easy": 0.5,
@@ -6875,7 +6875,7 @@
     }
   },
   "EARTH456": {
-    "fetched_at": 1775342917.957741,
+    "fetched_at": 1776356932.6799948,
     "rating": {
       "liked": 0.5,
       "easy": 0.125,
@@ -8888,7 +8888,7 @@
     }
   },
   "ECE313": {
-    "fetched_at": 1775342938.171854,
+    "fetched_at": 1776354602.4419572,
     "rating": {
       "liked": 0.6153846153846154,
       "easy": 0.5833333333333334,
@@ -8910,7 +8910,7 @@
     }
   },
   "ECE358": {
-    "fetched_at": 1775342938.382059,
+    "fetched_at": 1776357476.9344482,
     "rating": {
       "liked": 0.783068783068783,
       "easy": 0.5900735294117647,
@@ -12397,7 +12397,7 @@
     }
   },
   "CIVE221": {
-    "fetched_at": 1775342978.278362,
+    "fetched_at": 1776355215.99086,
     "rating": {
       "liked": 0.575,
       "easy": 0.2375,
@@ -12408,7 +12408,7 @@
     }
   },
   "GEOE221": {
-    "fetched_at": 1775342978.395522,
+    "fetched_at": 1776355215.981631,
     "rating": {
       "liked": 0.0,
       "easy": null,
@@ -17886,7 +17886,7 @@
     }
   },
   "HLTH217": {
-    "fetched_at": 1775343039.080472,
+    "fetched_at": 1776356932.6744242,
     "rating": {
       "liked": 0.6666666666666666,
       "easy": 0.38461538461538464,
@@ -20064,12 +20064,12 @@
     }
   },
   "CIVE343": {
-    "fetched_at": 1775343067.367697,
+    "fetched_at": 1776357182.315673,
     "rating": {
-      "liked": 0.625,
+      "liked": 0.5555555555555556,
       "easy": 0.4166666666666667,
       "useful": 0.5,
-      "filled_count": 8,
+      "filled_count": 9,
       "comment_count": 1,
       "profs": []
     }
@@ -20416,7 +20416,7 @@
     }
   },
   "PHYS380": {
-    "fetched_at": 1775343071.107782,
+    "fetched_at": 1776363876.007225,
     "rating": {
       "liked": 0.5333333333333333,
       "easy": 0.6590909090909091,
@@ -20449,7 +20449,7 @@
     }
   },
   "PHYS396": {
-    "fetched_at": 1775343071.5428648,
+    "fetched_at": 1776363876.274786,
     "rating": {
       "liked": 0.6,
       "easy": 0.85,
@@ -20460,29 +20460,29 @@
     }
   },
   "PHYS242": {
-    "fetched_at": 1775343071.647011,
+    "fetched_at": 1776363876.2619479,
     "rating": {
-      "liked": 0.6805555555555556,
-      "easy": 0.22674418604651161,
-      "useful": 0.8313953488372093,
-      "filled_count": 72,
-      "comment_count": 22,
+      "liked": 0.6891891891891891,
+      "easy": 0.25,
+      "useful": 0.8222222222222222,
+      "filled_count": 74,
+      "comment_count": 24,
       "profs": []
     }
   },
   "PHYS234": {
-    "fetched_at": 1775343071.745279,
+    "fetched_at": 1776363875.971681,
     "rating": {
-      "liked": 0.8046875,
-      "easy": 0.42333333333333334,
-      "useful": 0.8243243243243243,
-      "filled_count": 128,
-      "comment_count": 29,
+      "liked": 0.7984496124031008,
+      "easy": 0.41776315789473684,
+      "useful": 0.8133333333333334,
+      "filled_count": 129,
+      "comment_count": 30,
       "profs": []
     }
   },
   "PHYS454": {
-    "fetched_at": 1775343071.881343,
+    "fetched_at": 1776363876.176744,
     "rating": {
       "liked": 1.0,
       "easy": 0.5,
@@ -20515,18 +20515,18 @@
     }
   },
   "PHYS358": {
-    "fetched_at": 1775343072.176976,
+    "fetched_at": 1776363875.938234,
     "rating": {
-      "liked": 0.47540983606557374,
+      "liked": 0.4838709677419355,
       "easy": 0.48214285714285715,
       "useful": 0.573170731707317,
-      "filled_count": 61,
+      "filled_count": 62,
       "comment_count": 17,
       "profs": []
     }
   },
   "PHYS363": {
-    "fetched_at": 1775343072.2921112,
+    "fetched_at": 1776363876.023176,
     "rating": {
       "liked": 0.5714285714285714,
       "easy": 0.4375,
@@ -20537,7 +20537,7 @@
     }
   },
   "PHYS434": {
-    "fetched_at": 1775343072.395862,
+    "fetched_at": 1776363876.017476,
     "rating": {
       "liked": 0.45,
       "easy": 0.34375,
@@ -20548,7 +20548,7 @@
     }
   },
   "PHYS442": {
-    "fetched_at": 1775343072.4991271,
+    "fetched_at": 1776363876.2683089,
     "rating": {
       "liked": 0.3333333333333333,
       "easy": 0.5,
@@ -20559,7 +20559,7 @@
     }
   },
   "PHYS444": {
-    "fetched_at": 1775343072.599689,
+    "fetched_at": 1776363875.985685,
     "rating": {
       "liked": 0.6666666666666666,
       "easy": 0.0,
@@ -20812,7 +20812,7 @@
     }
   },
   "ECE356": {
-    "fetched_at": 1775343075.2472908,
+    "fetched_at": 1776355215.8524039,
     "rating": {
       "liked": 0.5925925925925926,
       "easy": 0.5296610169491526,
@@ -22462,7 +22462,7 @@
     }
   },
   "PHYS256": {
-    "fetched_at": 1775343091.729168,
+    "fetched_at": 1776363876.093267,
     "rating": {
       "liked": 0.4479166666666667,
       "easy": 0.39344262295081966,
@@ -22473,7 +22473,7 @@
     }
   },
   "PHYS260A": {
-    "fetched_at": 1775343091.836535,
+    "fetched_at": 1776363876.361251,
     "rating": {
       "liked": 0.375,
       "easy": 0.3125,
@@ -22484,7 +22484,7 @@
     }
   },
   "PHYS260B": {
-    "fetched_at": 1775343091.9520278,
+    "fetched_at": 1776363876.376423,
     "rating": {
       "liked": 1.0,
       "easy": 0.6666666666666666,
@@ -22539,7 +22539,7 @@
     }
   },
   "PHYS460A": {
-    "fetched_at": 1775343092.4559932,
+    "fetched_at": 1776363876.384198,
     "rating": {
       "liked": 0.75,
       "easy": 0.16666666666666666,
@@ -23056,7 +23056,7 @@
     }
   },
   "HLTH454": {
-    "fetched_at": 1775343097.651391,
+    "fetched_at": 1776357016.193231,
     "rating": {
       "liked": 1.0,
       "easy": 1.0,
@@ -23067,7 +23067,7 @@
     }
   },
   "HLTH465": {
-    "fetched_at": 1775343097.757293,
+    "fetched_at": 1776356932.708508,
     "rating": {
       "liked": 1.0,
       "easy": 0.75,
@@ -23133,13 +23133,13 @@
     }
   },
   "CHEM237L": {
-    "fetched_at": 1775343098.394666,
+    "fetched_at": 1776356932.764935,
     "rating": {
-      "liked": 0.6530612244897959,
-      "easy": 0.5901639344262295,
-      "useful": 0.7991803278688524,
-      "filled_count": 98,
-      "comment_count": 23,
+      "liked": 0.6435643564356436,
+      "easy": 0.578125,
+      "useful": 0.7734375,
+      "filled_count": 101,
+      "comment_count": 26,
       "profs": []
     }
   },
@@ -23672,7 +23672,7 @@
     }
   },
   "PHYS233": {
-    "fetched_at": 1775343103.9970329,
+    "fetched_at": 1776363876.276866,
     "rating": {
       "liked": 1.0,
       "easy": 0.35,
@@ -23749,7 +23749,7 @@
     }
   },
   "MSE271": {
-    "fetched_at": 1775343104.682848,
+    "fetched_at": 1776355215.9886458,
     "rating": {
       "liked": 0.3333333333333333,
       "easy": 0.25,
@@ -23771,7 +23771,7 @@
     }
   },
   "NE216": {
-    "fetched_at": 1775343104.883301,
+    "fetched_at": 1776355215.981629,
     "rating": {
       "liked": 0.9142857142857143,
       "easy": 0.736111111111111,
@@ -23782,7 +23782,7 @@
     }
   },
   "SYDE211": {
-    "fetched_at": 1775343104.973794,
+    "fetched_at": 1776355215.978372,
     "rating": {
       "liked": 0.7954545454545454,
       "easy": 0.2552083333333333,
@@ -24915,7 +24915,7 @@
     }
   },
   "SYDE535": {
-    "fetched_at": 1775343115.810528,
+    "fetched_at": 1776357182.4137118,
     "rating": {
       "liked": 1.0,
       "easy": 1.0,
@@ -25047,7 +25047,7 @@
     }
   },
   "BME544": {
-    "fetched_at": 1775343117.210749,
+    "fetched_at": 1776354602.43913,
     "rating": {
       "liked": null,
       "easy": null,
@@ -25905,7 +25905,7 @@
     }
   },
   "PHYS105": {
-    "fetched_at": 1775409223.100693,
+    "fetched_at": 1776363876.148382,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26026,7 +26026,7 @@
     }
   },
   "PHYS391": {
-    "fetched_at": 1775413041.711647,
+    "fetched_at": 1776363876.091881,
     "rating": {
       "liked": 0.5,
       "easy": 0.3333333333333333,
@@ -26037,7 +26037,7 @@
     }
   },
   "PHYS782": {
-    "fetched_at": 1775413041.87318,
+    "fetched_at": 1776363876.14928,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26048,7 +26048,7 @@
     }
   },
   "PHYS739": {
-    "fetched_at": 1775413042.132087,
+    "fetched_at": 1776363876.176738,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26059,7 +26059,7 @@
     }
   },
   "PHYS702": {
-    "fetched_at": 1775413042.3043132,
+    "fetched_at": 1776363876.1767411,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26070,7 +26070,7 @@
     }
   },
   "PHYS705": {
-    "fetched_at": 1775413042.459947,
+    "fetched_at": 1776363876.1499321,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26081,7 +26081,7 @@
     }
   },
   "PHYS383": {
-    "fetched_at": 1775413042.60461,
+    "fetched_at": 1776363876.244736,
     "rating": {
       "liked": 0.8,
       "easy": 0.875,
@@ -26092,7 +26092,7 @@
     }
   },
   "PHYS394": {
-    "fetched_at": 1775413042.7694578,
+    "fetched_at": 1776363876.242757,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26103,7 +26103,7 @@
     }
   },
   "PHYS449": {
-    "fetched_at": 1775413042.910474,
+    "fetched_at": 1776363876.26259,
     "rating": {
       "liked": 0.25,
       "easy": 0.041666666666666664,
@@ -26114,7 +26114,7 @@
     }
   },
   "PHYS225": {
-    "fetched_at": 1775413043.1369119,
+    "fetched_at": 1776363876.3395991,
     "rating": {
       "liked": 0.39285714285714285,
       "easy": 0.675,
@@ -26125,18 +26125,18 @@
     }
   },
   "PHYS393": {
-    "fetched_at": 1775413043.296476,
+    "fetched_at": 1776363876.354825,
     "rating": {
       "liked": 1.0,
-      "easy": 0.5833333333333334,
-      "useful": 0.9166666666666666,
+      "easy": 0.4375,
+      "useful": 0.9375,
       "filled_count": 5,
-      "comment_count": 3,
+      "comment_count": 4,
       "profs": []
     }
   },
   "PHYS703": {
-    "fetched_at": 1775413043.4860108,
+    "fetched_at": 1776363876.3639748,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26147,7 +26147,7 @@
     }
   },
   "PHYS437B": {
-    "fetched_at": 1775413043.682061,
+    "fetched_at": 1776363876.356239,
     "rating": {
       "liked": 1.0,
       "easy": null,
@@ -26158,7 +26158,7 @@
     }
   },
   "PHYS612": {
-    "fetched_at": 1775413043.828928,
+    "fetched_at": 1776363876.37837,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26235,7 +26235,7 @@
     }
   },
   "MATH104": {
-    "fetched_at": 1775415067.926281,
+    "fetched_at": 1776355341.2070022,
     "rating": {
       "liked": 0.5849056603773585,
       "easy": 0.5681818181818181,
@@ -26246,7 +26246,7 @@
     }
   },
   "MATH103": {
-    "fetched_at": 1775415067.9262831,
+    "fetched_at": 1776355341.199311,
     "rating": {
       "liked": 0.5384615384615384,
       "easy": 0.7767857142857143,
@@ -26312,7 +26312,7 @@
     }
   },
   "MATH680": {
-    "fetched_at": 1775415068.036772,
+    "fetched_at": 1776355341.1948621,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26323,7 +26323,7 @@
     }
   },
   "MATH647": {
-    "fetched_at": 1775415068.0394418,
+    "fetched_at": 1776355341.234164,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26334,7 +26334,7 @@
     }
   },
   "MATH681": {
-    "fetched_at": 1775415068.0575879,
+    "fetched_at": 1776355341.2310882,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26345,7 +26345,7 @@
     }
   },
   "MATH630": {
-    "fetched_at": 1775415068.0645099,
+    "fetched_at": 1776355341.210338,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26356,7 +26356,7 @@
     }
   },
   "MATH636": {
-    "fetched_at": 1775415068.081841,
+    "fetched_at": 1776355341.19579,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26367,7 +26367,7 @@
     }
   },
   "MATH643": {
-    "fetched_at": 1775415068.0861828,
+    "fetched_at": 1776355341.192539,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26378,7 +26378,7 @@
     }
   },
   "MATH642": {
-    "fetched_at": 1775415068.095197,
+    "fetched_at": 1776355341.233688,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26389,7 +26389,7 @@
     }
   },
   "MATH640": {
-    "fetched_at": 1775415068.10168,
+    "fetched_at": 1776355341.2095811,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26400,7 +26400,7 @@
     }
   },
   "MATH683": {
-    "fetched_at": 1775415068.103729,
+    "fetched_at": 1776355341.403523,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26422,7 +26422,7 @@
     }
   },
   "MATH661": {
-    "fetched_at": 1775415068.1130838,
+    "fetched_at": 1776355341.284388,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26433,7 +26433,7 @@
     }
   },
   "MATH650": {
-    "fetched_at": 1775415068.1625001,
+    "fetched_at": 1776355341.3163679,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26444,7 +26444,7 @@
     }
   },
   "MATH682": {
-    "fetched_at": 1775415068.184436,
+    "fetched_at": 1776355341.3236349,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26477,7 +26477,7 @@
     }
   },
   "MATH685": {
-    "fetched_at": 1775415068.2128482,
+    "fetched_at": 1776355341.319305,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26488,7 +26488,7 @@
     }
   },
   "MATH215": {
-    "fetched_at": 1775415068.224446,
+    "fetched_at": 1776355341.3211,
     "rating": {
       "liked": 0.7884615384615384,
       "easy": 0.8571428571428571,
@@ -26499,7 +26499,7 @@
     }
   },
   "MATH124": {
-    "fetched_at": 1775415068.226563,
+    "fetched_at": 1776355341.3193011,
     "rating": {
       "liked": 0.5421686746987951,
       "easy": 0.7602040816326531,
@@ -26521,7 +26521,7 @@
     }
   },
   "MATH674": {
-    "fetched_at": 1775415068.258707,
+    "fetched_at": 1776355341.323631,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26532,7 +26532,7 @@
     }
   },
   "MATH900": {
-    "fetched_at": 1775415068.263863,
+    "fetched_at": 1776355341.323638,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26543,7 +26543,7 @@
     }
   },
   "MATH641": {
-    "fetched_at": 1775415068.266072,
+    "fetched_at": 1776355341.338582,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26554,7 +26554,7 @@
     }
   },
   "MATH690": {
-    "fetched_at": 1775415068.272109,
+    "fetched_at": 1776355341.3266208,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26565,7 +26565,7 @@
     }
   },
   "MATH692": {
-    "fetched_at": 1775415068.306995,
+    "fetched_at": 1776355341.335503,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26576,7 +26576,7 @@
     }
   },
   "MATH600": {
-    "fetched_at": 1775415068.315256,
+    "fetched_at": 1776355341.4237702,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26587,7 +26587,7 @@
     }
   },
   "MATH698": {
-    "fetched_at": 1775415068.3452759,
+    "fetched_at": 1776355341.450345,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26598,7 +26598,7 @@
     }
   },
   "MATH699": {
-    "fetched_at": 1775415068.359139,
+    "fetched_at": 1776355341.44333,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26609,7 +26609,7 @@
     }
   },
   "MATH700": {
-    "fetched_at": 1775415068.369456,
+    "fetched_at": 1776355341.453668,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26620,7 +26620,7 @@
     }
   },
   "MATH110W": {
-    "fetched_at": 1775415068.373279,
+    "fetched_at": 1776355341.44437,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26631,7 +26631,7 @@
     }
   },
   "MATH199": {
-    "fetched_at": 1775415068.379324,
+    "fetched_at": 1776355341.447382,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26642,7 +26642,7 @@
     }
   },
   "MATH129W": {
-    "fetched_at": 1775415068.391476,
+    "fetched_at": 1776355341.440177,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26653,7 +26653,7 @@
     }
   },
   "MATH101W": {
-    "fetched_at": 1775415068.401376,
+    "fetched_at": 1776355341.452163,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26664,7 +26664,7 @@
     }
   },
   "MATH304W": {
-    "fetched_at": 1775415068.408163,
+    "fetched_at": 1776355341.4782531,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26675,7 +26675,7 @@
     }
   },
   "MATH122W": {
-    "fetched_at": 1775415068.4139478,
+    "fetched_at": 1776355341.4521658,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26686,7 +26686,7 @@
     }
   },
   "MATH170W": {
-    "fetched_at": 1775415068.4164639,
+    "fetched_at": 1776355341.479101,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26697,7 +26697,7 @@
     }
   },
   "MATH103W": {
-    "fetched_at": 1775415068.4587579,
+    "fetched_at": 1776355341.5170188,
     "rating": {
       "liked": null,
       "easy": null,
@@ -26708,7 +26708,7 @@
     }
   },
   "MATH305W": {
-    "fetched_at": 1775415068.468504,
+    "fetched_at": 1776355341.499525,
     "rating": {
       "liked": null,
       "easy": null,
@@ -27243,6 +27243,61 @@
       "useful": 0.75,
       "filled_count": 5,
       "comment_count": 1,
+      "profs": []
+    }
+  },
+  "MATH235W": {
+    "fetched_at": 1776355341.524607,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH121W": {
+    "fetched_at": 1776355341.53715,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH104W": {
+    "fetched_at": 1776355341.537689,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH201W": {
+    "fetched_at": 1776355341.54031,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "MATH475W": {
+    "fetched_at": 1776355341.540757,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
       "profs": []
     }
   }

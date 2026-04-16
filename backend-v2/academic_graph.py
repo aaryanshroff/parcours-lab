@@ -241,7 +241,7 @@ def generate_academic_graph(
     goal: str,
     api_key: str,
     model: str = "openai/gpt-4.1-mini",
-    elective_model: str = "openai/gpt-4.1-mini",
+    elective_model: str = "anthropic/claude-sonnet-4",
     major_title: str = "",
     desired_skills: list[str] | None = None,
     my_skills: list[str] | None = None,
@@ -347,7 +347,6 @@ def generate_academic_graph(
         _filter_variant_preferences(choice_groups, major_title)
         if goal.strip():
             picks = _pick_electives(choice_groups, goal, api_key, elective_model, program_subjects, major_title, desired_skills=desired_skills, my_skills=my_skills)
-            picks = _fill_picks_with_defaults(choice_groups, picks)
         else:
             picks = _pick_defaults(choice_groups, program_subjects)
     for code, reason in picks.items():
@@ -1242,6 +1241,90 @@ def _pick_defaults(choice_groups: list[dict], program_subjects: set[str] | None 
     return picks
 
 
+def _repair_elective_group(
+    client: OpenAI,
+    group: dict,
+    remaining_candidates: list[dict],
+    needed: int,
+    already_selected: list[str],
+    goal: str,
+    major_title: str,
+    desired_skills: list[str] | None,
+    my_skills: list[str] | None,
+    uwflow_ratings: dict[str, dict],
+    model: str,
+) -> dict[str, str]:
+    """Ask the LLM to fill only the missing picks for one underfilled group."""
+    if needed <= 0 or not remaining_candidates:
+        return {}
+
+    options = []
+    for c in remaining_candidates:
+        line = f"{c['code']} — {c.get('title', c['code'])}"
+        rating_str = format_uwflow_rating(uwflow_ratings.get(c["code"].replace(" ", "").upper()))
+        if rating_str:
+            line += f" {rating_str}"
+        options.append(line)
+
+    response = client.chat.completions.create(
+        model=model,
+        messages=[
+            {
+                "role": "system",
+                "content": (
+                    "You are repairing an underfilled elective selection for a single university choice group. "
+                    "Pick EXACTLY the missing number of courses from the REMAINING options only.\n\n"
+                    "Rules:\n"
+                    "- Choose ONLY from the remaining options provided.\n"
+                    "- Do NOT repeat already selected courses.\n"
+                    "- Prefer courses that align with the student's program, goal, and desired skills.\n"
+                    "- If ratings are shown, use them as a secondary signal.\n"
+                    "- Return ONLY valid JSON, no other text.\n\n"
+                    "Schema:\n"
+                    '{"picks": [{"code": "COURSE_CODE", "reason": "One sentence why"}]}'
+                ),
+            },
+            {
+                "role": "user",
+                "content": (
+                    (f"Program: {major_title}\n" if major_title else "")
+                    + f"Goal: {goal}\n"
+                    + (f"Desired skills to develop: {', '.join(desired_skills)}\n" if desired_skills else "")
+                    + (f"Skills already acquired: {', '.join(my_skills)}\n" if my_skills else "")
+                    + (f"Group description: {group['description']}\n" if group.get("description") else "")
+                    + (f"Already selected: {', '.join(already_selected)}\n" if already_selected else "")
+                    + f"Need exactly {needed} more picks.\n"
+                    + "Choose only from these remaining options:\n"
+                    + "\n".join(f"  - {opt}" for opt in options)
+                ),
+            },
+        ],
+        temperature=0.2,
+    )
+
+    raw = response.choices[0].message.content or "{}"
+    raw = raw.strip()
+    if raw.startswith("```"):
+        raw = raw.split("\n", 1)[1] if "\n" in raw else raw[3:]
+        if raw.endswith("```"):
+            raw = raw[:-3]
+        raw = raw.strip()
+
+    try:
+        data = json.loads(raw)
+    except json.JSONDecodeError:
+        logger.warning("[academics] failed to parse group repair response: %s", raw[:200])
+        return {}
+
+    repaired: dict[str, str] = {}
+    for pick in data.get("picks", []):
+        code = pick.get("code")
+        if not isinstance(code, str) or not code.strip():
+            continue
+        repaired[code] = pick.get("reason", "")
+    return repaired
+
+
 def _pick_electives(
     choice_groups: list[dict],
     goal: str,
@@ -1255,14 +1338,28 @@ def _pick_electives(
     """LLM picks N courses from each choice group based on the student's goal and desired skills."""
     client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key)
 
-    # Build group descriptions for LLM — no accessibility filtering here
     groups_desc = []
 
-    # First pass: expand groups (may hit UW API), then trim via LLM search in parallel
-    for group in choice_groups:
+    # Expand groups and strip inaccessible candidates before any LLM selection.
+    for i, group in enumerate(choice_groups):
         expanded = _expand_elective_group(group)
         if expanded:
             group["courses"] = expanded
+        courses = group.get("courses", [])
+        if not courses:
+            continue
+        accessible_courses = [
+            c for c in courses
+            if _is_accessible(c["code"], program_subjects or set())
+        ]
+        if len(accessible_courses) != len(courses):
+            logger.info(
+                "[academics] group %d filtered inaccessible candidates: kept %d/%d",
+                i + 1,
+                len(accessible_courses),
+                len(courses),
+            )
+        group["courses"] = accessible_courses
 
     with ThreadPoolExecutor() as pool:
         futures = {
@@ -1317,6 +1414,12 @@ def _pick_electives(
                     "Rules:\n"
                     "- When a group offers regular vs honours/advanced variants, pick the one matching the program level "
                     "(e.g. Honours programs get Honours-level courses like MATH 137, not MATH 127).\n"
+                    "- When a group lists both a normal honours-stream course and an advanced, enriched, or "
+                    "\"Advanced Level\" variant (e.g. CS 135 vs CS 145, MATH 135 vs MATH 145, CS 136 vs CS 146, "
+                    "STAT 230 vs STAT 240), you MUST pick the normal honours-stream option unless the student's "
+                    "stated goal, desired skills, or skills already acquired explicitly say they belong in or need "
+                    "the advanced track. Broad goals such as machine learning, AI, or data science are NOT "
+                    "enough on their own to justify the advanced variant — default to the regular course.\n"
                     "- For breadth/free elective groups, pick courses that complement the student's program and goal. "
                     "Do NOT pick courses from unrelated professional fields (e.g. no accounting, actuarial, nursing, etc. for a CS student). "
                     "Prefer courses that build transferable skills relevant to the goal.\n"
@@ -1358,102 +1461,95 @@ def _pick_electives(
     data = json.loads(raw)
     raw_picks = {p["code"]: p.get("reason", "") for p in data.get("picks", [])}
 
-    # Enforce per-group limits: keep at most N picks from each choice group
     picks: dict[str, str] = {}
-    for group in choice_groups:
-        n = int(group["rule"])
-        group_codes = {_normalize_code(c["code"]) for c in group.get("courses", [])}
-        count = 0
-        for code, reason in raw_picks.items():
-            if _normalize_code(code) in group_codes:
-                if count < n:
-                    picks[code] = reason
-                    count += 1
-
-    # Fill under-filled groups from the downselected (goal-relevant) candidate list
-    picked_normalized = {_normalize_code(c) for c in picks}
+    used_codes: set[str] = set()
+    max_repair_attempts = 2
     for gi, group in enumerate(choice_groups):
         n = int(group["rule"])
-        group_codes_set = {_normalize_code(c["code"]) for c in group.get("courses", [])}
-        count = sum(1 for c in picked_normalized if c in group_codes_set)
-        if count >= n:
+        allowed_candidates = group_courses[gi]
+        allowed_by_code = {_normalize_code(c["code"]): c for c in allowed_candidates}
+        if not allowed_by_code:
+            logger.warning(
+                "[academics] group %d has no accessible candidates after filtering",
+                gi + 1,
+            )
             continue
-        needed = n - count
-        logging.warning(
-            "LLM under-picked group %d (%s): got %d/%d, filling %d from downselected list",
-            gi + 1, group.get("description", "")[:60], count, n, needed,
-        )
-        for c in group_courses[gi]:
-            if needed <= 0:
-                break
-            nc = _normalize_code(c["code"])
-            if nc not in picked_normalized:
-                picks[c["code"]] = "Auto-filled from goal-relevant candidates"
-                picked_normalized.add(nc)
-                needed -= 1
 
-    # Only check accessibility on the LLM's picks, not every candidate
-    all_options = [c for group in group_courses for c in group]
-    picked_codes = set(picks.keys())
-    for code in list(picks.keys()):
-        if not _is_accessible(code, program_subjects or set()):
-            # Swap with first accessible alternative not already picked
-            for alt in all_options:
-                if alt["code"] not in picked_codes and _is_accessible(alt["code"], program_subjects or set()):
-                    picks[alt["code"]] = picks.pop(code)
-                    picked_codes.discard(code)
-                    picked_codes.add(alt["code"])
+        group_picks: dict[str, str] = {}
+        for code, reason in raw_picks.items():
+            normalized = _normalize_code(code)
+            if normalized not in allowed_by_code or normalized in used_codes:
+                continue
+            canonical_code = allowed_by_code[normalized]["code"]
+            group_picks[canonical_code] = reason
+            used_codes.add(normalized)
+            if len(group_picks) >= n:
+                break
+
+        attempts = 0
+        while len(group_picks) < n and attempts < max_repair_attempts:
+            remaining_candidates = [
+                c for c in allowed_candidates
+                if _normalize_code(c["code"]) not in used_codes
+            ]
+            if not remaining_candidates:
+                break
+
+            needed = n - len(group_picks)
+            attempts += 1
+            logger.warning(
+                "[academics] group %d under-picked (%d/%d), retrying repair attempt %d with %d remaining candidates",
+                gi + 1,
+                len(group_picks),
+                n,
+                attempts,
+                len(remaining_candidates),
+            )
+
+            repaired = _repair_elective_group(
+                client=client,
+                group=group,
+                remaining_candidates=remaining_candidates,
+                needed=needed,
+                already_selected=list(group_picks.keys()),
+                goal=goal,
+                major_title=major_title,
+                desired_skills=desired_skills,
+                my_skills=my_skills,
+                uwflow_ratings=uwflow_ratings,
+                model=model,
+            )
+
+            progress = False
+            for code, reason in repaired.items():
+                normalized = _normalize_code(code)
+                if normalized not in allowed_by_code or normalized in used_codes:
+                    continue
+                canonical_code = allowed_by_code[normalized]["code"]
+                group_picks[canonical_code] = reason
+                used_codes.add(normalized)
+                progress = True
+                if len(group_picks) >= n:
                     break
-            else:
-                # No accessible replacement found — keep the original
-                pass
+            if not progress:
+                logger.warning(
+                    "[academics] repair attempt %d for group %d made no progress",
+                    attempts,
+                    gi + 1,
+                )
+                break
+
+        if len(group_picks) < n:
+            logger.warning(
+                "[academics] group %d remains underfilled after repair attempts: got %d/%d",
+                gi + 1,
+                len(group_picks),
+                n,
+            )
+
+        picks.update(group_picks)
 
     return picks
-
-
-def _fill_picks_with_defaults(
-    choice_groups: list[dict],
-    picks: dict[str, str],
-) -> dict[str, str]:
-    """Ensure each choice group contributes N picks; fill gaps with defaults."""
-    if not choice_groups:
-        return picks
-
-    normalized = {_normalize_code(code): code for code in picks.keys()}
-    filled = dict(picks)
-
-    for group in choice_groups:
-        n = int(group.get("rule", 0))
-        if n <= 0:
-            continue
-
-        options = group.get("courses", [])
-        if not options and group.get("elective_type"):
-            expanded = _expand_elective_group(group)
-            if expanded:
-                options = expanded
-
-        if not options:
-            continue
-
-        group_codes = [_normalize_code(c["code"]) for c in options]
-        picked_in_group = [code for code in group_codes if code in normalized]
-        needed = n - len(picked_in_group)
-        if needed <= 0:
-            continue
-
-        for c in options:
-            code = c["code"]
-            ncode = _normalize_code(code)
-            if ncode in normalized:
-                continue
-            filled[code] = "Default selection"
-            normalized[ncode] = code
-            needed -= 1
-            if needed == 0:
-                break
-
-    return filled
 
 
 def _expand_elective_group(group: dict) -> list[dict]:
@@ -1644,6 +1740,7 @@ def _llm_search_elective_candidates(
     )
 
     if not filtered:
-        return catalog_matches[:limit]
+        logger.warning("[academics] no catalog matches in allowed pool, returning first %d from pool", limit)
+        return courses[:limit]
 
     return filtered[:limit]

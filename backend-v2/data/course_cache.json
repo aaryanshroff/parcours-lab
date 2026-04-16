@@ -6686,5 +6686,715 @@
     ],
     "coreqs": [],
     "antireqs": []
+  },
+  "SYDE212": {
+    "code": "SYDE212",
+    "raw": "Prereq: Level at least 2B Systems Design Engineering. Antireq: BME 213, CIVE 224, ECE 316, NE 115",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "BME 213",
+      "CIVE 224",
+      "ECE 316",
+      "NE 115"
+    ]
+  },
+  "CIVE221": {
+    "code": "CIVE221",
+    "raw": "Prereq: MATH 118; Level at least 2A Civil Engineering.  Antireq: MATH 217, ENVE 225",
+    "prereqs": [
+      "MATH 118"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "MATH 217",
+      "ENVE 225"
+    ]
+  },
+  "ECE457B": {
+    "code": "ECE457B",
+    "raw": "Prereq: One of BME 122, ECE 250, MSE 240, MTE 140, SYDE 223; Level at least 4A BASc/BSE. Antireq: CS 486, SYDE 552",
+    "prereqs": [
+      "BME 122",
+      "ECE 250",
+      "MSE 240",
+      "MTE 140",
+      "SYDE 223"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CS 486",
+      "SYDE 552"
+    ]
+  },
+  "SYDE211": {
+    "code": "SYDE211",
+    "raw": "Prereq: 2A Systems Designs Engineering or 2A Biomedical Engineering",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MATH 211": {
+    "code": "MATH 211",
+    "raw": "Prereq: MATH 119; Not open to Mathematics students. Antireq: AMATH 350, MATH 218, 228",
+    "prereqs": [
+      "MATH 119"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "AMATH 350",
+      "MATH 218",
+      "MATH 228"
+    ]
+  },
+  "MATH 212": {
+    "code": "MATH 212",
+    "raw": "Prereq: MATH 211/ECE 205; Not open to Mathematics students. Antireq: AMATH 231, MATH 207, 217, 227, 237, 247",
+    "prereqs": [
+      "MATH 211",
+      "ECE 205"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "AMATH 231",
+      "MATH 207",
+      "MATH 217",
+      "MATH 227",
+      "MATH 237",
+      "MATH 247"
+    ]
+  },
+  "MATH 103": {
+    "code": "MATH 103",
+    "raw": "Prereq: Open only to students in the following faculties: ARTS, AHS or ENV. Not open to Acc'ting & Fin Mgt students. Antireq: MATH 106, 114, 115, 136, 146, NE 112",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "MATH 106",
+      "MATH 114",
+      "MATH 115",
+      "MATH 136",
+      "MATH 146",
+      "NE 112"
+    ]
+  },
+  "MATH 104": {
+    "code": "MATH 104",
+    "raw": "Prereq: Open only to students in the following Faculties: ARTS, AHS, ENV, SCI. Antireq: MATH 127, 137, 147",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "MATH 127",
+      "MATH 137",
+      "MATH 147"
+    ]
+  },
+  "MATH 225": {
+    "code": "MATH 225",
+    "raw": "Prereq: MATH 106 or 136 or 146. Antireq: MATH 235, 245",
+    "prereqs": [
+      "MATH 106",
+      "MATH 136",
+      "MATH 146"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "MATH 235",
+      "MATH 245"
+    ]
+  },
+  "MATH 218": {
+    "code": "MATH 218",
+    "raw": "Prereq: One of MATH 118, 119, 128, 138, 148, SYDE 112; Engineering or Earth Science students only.  Antireq: AMATH 250, 251, 350, 351, CIVE 222,  ENVE 223, MATH 211/ECE 205, 228, MATH 212N/NE 217, ME 203, SYDE 211",
+    "prereqs": [
+      "MATH 118",
+      "MATH 119",
+      "MATH 128",
+      "MATH 138",
+      "MATH 148",
+      "SYDE 112"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "AMATH 250",
+      "AMATH 251",
+      "AMATH 350",
+      "AMATH 351",
+      "CIVE 222",
+      "ENVE 223",
+      "MATH 211",
+      "ECE 205",
+      "ECE 228",
+      "MATH 212N",
+      "NE 217",
+      "ME 203",
+      "SYDE 211"
+    ]
+  },
+  "MATH 227": {
+    "code": "MATH 227",
+    "raw": "Prereq: MATH 128 or 138; Only open to Science students in honours plans. Antireq: AMATH 231, MATH 207, 212/ECE 206, 217, 237, 247, MATH 212N/NE 217",
+    "prereqs": [
+      "MATH 128",
+      "MATH 138"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "AMATH 231",
+      "MATH 207",
+      "MATH 212",
+      "ECE 206",
+      "ECE 217",
+      "ECE 237",
+      "ECE 247",
+      "MATH 212N",
+      "NE 217"
+    ]
+  },
+  "MATH 228": {
+    "code": "MATH 228",
+    "raw": "Prereq: MATH 128 or 138; Not open to Mathematics students.  Antireq: AMATH 250, 251, 350",
+    "prereqs": [
+      "MATH 128",
+      "MATH 138"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "AMATH 250",
+      "AMATH 251",
+      "AMATH 350"
+    ]
+  },
+  "MATH 235": {
+    "code": "MATH 235",
+    "raw": "Prereq: (MATH 106 or 114 or 115 with a grade of at least 70%) or (MATH 136 with a grade of at least 60%) or MATH 146; Honours Mathematics or Mathematical Physics students. Coreq: MATH 128 or 138 or 148. Antireq: MATH 225, 245",
+    "prereqs": [
+      "MATH 106",
+      "MATH 114",
+      "MATH 115",
+      "MATH 136",
+      "MATH 146"
+    ],
+    "coreqs": [
+      "MATH 128",
+      "MATH 138",
+      "MATH 148"
+    ],
+    "antireqs": [
+      "MATH 225",
+      "MATH 245"
+    ]
+  },
+  "MATH 237": {
+    "code": "MATH 237",
+    "raw": "Prereq: (One of MATH 106, 114, 115, 136, 146) and (MATH 128 with at least 70% or MATH 138 with at least 60% or MATH 148); Honours Math or Math/Physics students. Antireq: MATH 207, 212/ECE 206, MATH 212N, 217, 227, 247",
+    "prereqs": [
+      "MATH 106",
+      "MATH 114",
+      "MATH 115",
+      "MATH 136",
+      "MATH 146",
+      "MATH 128",
+      "MATH 138",
+      "MATH 148"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "MATH 207",
+      "MATH 212",
+      "ECE 206",
+      "MATH 212N",
+      "MATH 217",
+      "MATH 227",
+      "MATH 247"
+    ]
+  },
+  "MATH 245": {
+    "code": "MATH 245",
+    "raw": "Prereq: MATH 146; Honours Mathematics students only. Antireq: MATH 225, 235",
+    "prereqs": [
+      "MATH 146"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "MATH 225",
+      "MATH 235"
+    ]
+  },
+  "MATH 247": {
+    "code": "MATH 247",
+    "raw": "Prereq: MATH 146, 148; Honours Mathematics students only. Antireq: MATH 237",
+    "prereqs": [
+      "MATH 146",
+      "MATH 148"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "MATH 237"
+    ]
+  },
+  "MATH 647": {
+    "code": "MATH 647",
+    "raw": "Coreq: MATH 600, 692",
+    "prereqs": [],
+    "coreqs": [
+      "MATH 600",
+      "MATH 692"
+    ],
+    "antireqs": []
+  },
+  "MATH 648": {
+    "code": "MATH 648",
+    "raw": "Prereq: MATH 647",
+    "prereqs": [
+      "MATH 647"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MATH 680": {
+    "code": "MATH 680",
+    "raw": "Coreq: MATH 600, 692",
+    "prereqs": [],
+    "coreqs": [
+      "MATH 600",
+      "MATH 692"
+    ],
+    "antireqs": []
+  },
+  "MATH 681": {
+    "code": "MATH 681",
+    "raw": "Coreq: MATH 600, 692",
+    "prereqs": [],
+    "coreqs": [
+      "MATH 600",
+      "MATH 692"
+    ],
+    "antireqs": []
+  },
+  "MATH 630": {
+    "code": "MATH 630",
+    "raw": "Coreq: MATH 600, 692",
+    "prereqs": [],
+    "coreqs": [
+      "MATH 600",
+      "MATH 692"
+    ],
+    "antireqs": []
+  },
+  "MATH 636": {
+    "code": "MATH 636",
+    "raw": "Coreq: MATH 600, 692",
+    "prereqs": [],
+    "coreqs": [
+      "MATH 600",
+      "MATH 692"
+    ],
+    "antireqs": []
+  },
+  "MATH 643": {
+    "code": "MATH 643",
+    "raw": "Coreq: MATH 600, 692",
+    "prereqs": [],
+    "coreqs": [
+      "MATH 600",
+      "MATH 692"
+    ],
+    "antireqs": []
+  },
+  "MATH 642": {
+    "code": "MATH 642",
+    "raw": "Coreq: MATH 600, 692",
+    "prereqs": [],
+    "coreqs": [
+      "MATH 600",
+      "MATH 692"
+    ],
+    "antireqs": []
+  },
+  "MATH 661": {
+    "code": "MATH 661",
+    "raw": "Coreq: MATH 600, 692",
+    "prereqs": [],
+    "coreqs": [
+      "MATH 600",
+      "MATH 692"
+    ],
+    "antireqs": []
+  },
+  "MATH 640": {
+    "code": "MATH 640",
+    "raw": "Coreq: MATH 600, 692",
+    "prereqs": [],
+    "coreqs": [
+      "MATH 600",
+      "MATH 692"
+    ],
+    "antireqs": []
+  },
+  "MATH 683": {
+    "code": "MATH 683",
+    "raw": "Coreq: MATH 600, 692",
+    "prereqs": [],
+    "coreqs": [
+      "MATH 600",
+      "MATH 692"
+    ],
+    "antireqs": []
+  },
+  "MATH 650": {
+    "code": "MATH 650",
+    "raw": "Coreq: MATH 600, 692",
+    "prereqs": [],
+    "coreqs": [
+      "MATH 600",
+      "MATH 692"
+    ],
+    "antireqs": []
+  },
+  "MATH 631": {
+    "code": "MATH 631",
+    "raw": "Prereq: MATH 630",
+    "prereqs": [
+      "MATH 630"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MATH 682": {
+    "code": "MATH 682",
+    "raw": "Coreq: MATH 600, 692",
+    "prereqs": [],
+    "coreqs": [
+      "MATH 600",
+      "MATH 692"
+    ],
+    "antireqs": []
+  },
+  "MATH 685": {
+    "code": "MATH 685",
+    "raw": "Coreq: MATH 600 and MATH 692",
+    "prereqs": [],
+    "coreqs": [
+      "MATH 600",
+      "MATH 692"
+    ],
+    "antireqs": []
+  },
+  "MATH 207": {
+    "code": "MATH 207",
+    "raw": "Prereq: MATH 128 or 138 or 148. Antireq: AMATH 231, MATH 212, 212N/NE 217, MATH 217, 227, 237, 247",
+    "prereqs": [
+      "MATH 128",
+      "MATH 138",
+      "MATH 148"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "AMATH 231",
+      "MATH 212",
+      "MATH 212N",
+      "NE 217",
+      "MATH 217",
+      "MATH 227",
+      "MATH 237",
+      "MATH 247"
+    ]
+  },
+  "MATH 124": {
+    "code": "MATH 124",
+    "raw": "Prereq: 4U Advanced Functions; Kinesiology students only. Antireq: MATH 109, 116, 117, 127, 137, 147",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "MATH 109",
+      "MATH 116",
+      "MATH 117",
+      "MATH 127",
+      "MATH 137",
+      "MATH 147"
+    ]
+  },
+  "MATH 215": {
+    "code": "MATH 215",
+    "raw": "Prereq: Level at least 2A Computer Engineering or Electrical Engineering students only. Antireq: MATH 106, 114, 115, 136, 146, NE 112",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "MATH 106",
+      "MATH 114",
+      "MATH 115",
+      "MATH 136",
+      "MATH 146",
+      "NE 112"
+    ]
+  },
+  "MATH 213": {
+    "code": "MATH 213",
+    "raw": "Prereq: One of MATH 118, MATH 119, MATH 128, MATH 138. Antireq: AMATH 250, 251, MATH 211/ECE 205, 218, 228",
+    "prereqs": [
+      "MATH 118",
+      "MATH 119",
+      "MATH 128",
+      "MATH 138"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "AMATH 250",
+      "AMATH 251",
+      "MATH 211",
+      "ECE 205",
+      "ECE 218",
+      "ECE 228"
+    ]
+  },
+  "MATH 674": {
+    "code": "MATH 674",
+    "raw": "Coreq: MATH 600 and MATH 692",
+    "prereqs": [],
+    "coreqs": [
+      "MATH 600",
+      "MATH 692"
+    ],
+    "antireqs": []
+  },
+  "MATH 900": {
+    "code": "MATH 900",
+    "raw": "Prereq: Open to Math grad students only. Not open to MMT students.",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MATH 690": {
+    "code": "MATH 690",
+    "raw": "Coreq: MATH 600 and MATH 692",
+    "prereqs": [],
+    "coreqs": [
+      "MATH 600",
+      "MATH 692"
+    ],
+    "antireqs": []
+  },
+  "MATH 641": {
+    "code": "MATH 641",
+    "raw": "Coreq: MATH 600, 692",
+    "prereqs": [],
+    "coreqs": [
+      "MATH 600",
+      "MATH 692"
+    ],
+    "antireqs": []
+  },
+  "MATH 692": {
+    "code": "MATH 692",
+    "raw": "MMT Grad Students only",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MATH 600": {
+    "code": "MATH 600",
+    "raw": "MMT Grad Students only",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MATH 698": {
+    "code": "MATH 698",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MATH 700": {
+    "code": "MATH 700",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MATH 110W": {
+    "code": "MATH 110W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MATH 699": {
+    "code": "MATH 699",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MATH 199": {
+    "code": "MATH 199",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MATH 129W": {
+    "code": "MATH 129W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MATH 122W": {
+    "code": "MATH 122W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MATH 101W": {
+    "code": "MATH 101W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MATH 170W": {
+    "code": "MATH 170W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MATH 304W": {
+    "code": "MATH 304W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MATH 305W": {
+    "code": "MATH 305W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MATH 103W": {
+    "code": "MATH 103W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MATH 121W": {
+    "code": "MATH 121W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MATH 475W": {
+    "code": "MATH 475W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MATH 235W": {
+    "code": "MATH 235W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MATH 201W": {
+    "code": "MATH 201W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MATH 104W": {
+    "code": "MATH 104W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "MATH 455W": {
+    "code": "MATH 455W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "ECE313": {
+    "code": "ECE313",
+    "raw": "Prereq: (Level at least 3B Computer Engineering or Electrical Engineering) or (MATH 213, STAT 206; Level at least 3B Software Engineering). Antireq: ECE 413",
+    "prereqs": [
+      "MATH 213",
+      "STAT 206"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "ECE 413"
+    ]
+  },
+  "BIOL308": {
+    "code": "BIOL308",
+    "raw": "Prereq: BIOL 130, 139/239",
+    "prereqs": [
+      "BIOL 130",
+      "BIOL 139",
+      "BIOL 239"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "BIOL331": {
+    "code": "BIOL331",
+    "raw": "Prereq: One of BIOL 235, 308 or 309; CHEM 233 or 237 or Prereq: (BIOL 235, 308, or 309) and Coreq: CHEM 233 or CHEM 237 for Science and Business/Biotechnology Specialization or Honours Biotechnology/Economics or CS Honours Bioinformatics",
+    "prereqs": [
+      "BIOL 235",
+      "BIOL 308",
+      "BIOL 309",
+      "CHEM 233",
+      "CHEM 237"
+    ],
+    "coreqs": [
+      "CHEM 233",
+      "CHEM 237"
+    ],
+    "antireqs": []
+  },
+  "CHEM237": {
+    "code": "CHEM237",
+    "raw": "Prereq: One of CHEM 262, 264, 266. Antireq: CHEM 233, CHEM 239, NE 224",
+    "prereqs": [
+      "CHEM 262",
+      "CHEM 264",
+      "CHEM 266"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "CHEM 233",
+      "CHEM 239",
+      "NE 224"
+    ]
+  },
+  "PHYS175": {
+    "code": "PHYS175",
+    "raw": "Prereq: One of PHYS 111,115,121; one of MATH 116, 117, 127, 137,147. Antireq: SCI 238",
+    "prereqs": [
+      "PHYS 111",
+      "PHYS 115",
+      "PHYS 121",
+      "MATH 116",
+      "MATH 117",
+      "MATH 127",
+      "MATH 137",
+      "MATH 147"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "SCI 238"
+    ]
   }
 }

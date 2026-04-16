@@ -101,7 +101,8 @@ interface CourseContextValue {
   startReplace: (nodeId: string) => void
   submitReplace: (nodeId: string, reason: string, skill: string, currentCourse: string) => void
   cancelReplace: (nodeId: string) => void
-  onTermCompleted?: (nodeIds: string[]) => void
+  onTermCompleted?: (term: string, nodeIds: string[]) => void
+  onTermUncompleted?: (term: string, nodeIds: string[]) => void
 }
 
 /* ─── Drag validation context ─── */
@@ -115,7 +116,7 @@ const DragValidationContext = createContext<DragValidationContextValue>({ disabl
 
 const CourseContext = createContext<CourseContextValue>(null!)
 
-function CourseProvider({ children, edges, setNodes, allTermNodeIds, onCourseReplaced, onTermCompleted }: { children: React.ReactNode; edges: Edge[]; setNodes: React.Dispatch<React.SetStateAction<Node<SkillNodeData>[]>>; allTermNodeIds: Record<string, string[]>; onCourseReplaced?: (entry: HistoryEntry) => void; onTermCompleted?: (nodeIds: string[]) => void }) {
+function CourseProvider({ children, edges, setNodes, allTermNodeIds, onCourseReplaced, onTermCompleted, onTermUncompleted }: { children: React.ReactNode; edges: Edge[]; setNodes: React.Dispatch<React.SetStateAction<Node<SkillNodeData>[]>>; allTermNodeIds: Record<string, string[]>; onCourseReplaced?: (entry: HistoryEntry) => void; onTermCompleted?: (term: string, nodeIds: string[]) => void; onTermUncompleted?: (term: string, nodeIds: string[]) => void }) {
   const [store, setStore] = useState<Record<string, CourseState>>({})
 
   const prerequisites = useMemo(() => {
@@ -190,7 +191,7 @@ function CourseProvider({ children, edges, setNodes, allTermNodeIds, onCourseRep
   }, [])
 
   return (
-    <CourseContext.Provider value={{ store, prerequisites, allTermNodeIds, accept, acceptMany, unacceptMany, startReplace, submitReplace, cancelReplace, onTermCompleted }}>
+    <CourseContext.Provider value={{ store, prerequisites, allTermNodeIds, accept, acceptMany, unacceptMany, startReplace, submitReplace, cancelReplace, onTermCompleted, onTermUncompleted }}>
       {children}
     </CourseContext.Provider>
   )
@@ -363,7 +364,7 @@ function TermGroupNode({ data }: NodeProps<Node<SkillNodeData>>) {
   const over = credits > 2.5
   const { disabledTerms } = useContext(DragValidationContext)
   const disabled = disabledTerms.has(data.term as string)
-  const { store, allTermNodeIds, acceptMany, unacceptMany, onTermCompleted } = useContext(CourseContext)
+  const { store, allTermNodeIds, acceptMany, unacceptMany, onTermCompleted, onTermUncompleted } = useContext(CourseContext)
   const termNodeIds = data.termNodeIds ?? []
   const allComplete = termNodeIds.length > 0 && termNodeIds.every((id) => store[id]?.status === 'accepted')
 
@@ -398,9 +399,10 @@ function TermGroupNode({ data }: NodeProps<Node<SkillNodeData>>) {
               onClick={() => {
                 if (allComplete) {
                   unacceptMany(termNodeIds)
+                  onTermUncompleted?.(currentTerm, termNodeIds)
                 } else if (canComplete) {
                   acceptMany(termNodeIds)
-                  onTermCompleted?.(termNodeIds)
+                  onTermCompleted?.(currentTerm, termNodeIds)
                 }
               }}
               disabled={!allComplete && !canComplete}
@@ -424,14 +426,25 @@ const nodeTypes = { skill: SkillNode, termGroup: TermGroupNode }
 
 /* ─── Board view wrapper that bridges CourseContext ─── */
 
-function BoardViewWithContext({ nodes, edges, onMoveCourse, title, subtitle }: {
+interface ClubRecommendation {
+  name: string
+  category: string
+  description: string
+  url: string
+  match_tier: string
+  match_reason: string
+}
+
+function BoardViewWithContext({ nodes, edges, onMoveCourse, title, subtitle, clubs, onViewSummary }: {
   nodes: Node<SkillNodeData>[]
   edges: Edge[]
   onMoveCourse: (courseId: string, fromTerm: string, toTerm: string) => void
   title: string
   subtitle?: string
+  clubs?: ClubRecommendation[]
+  onViewSummary?: () => void
 }) {
-  const { store, allTermNodeIds, acceptMany, unacceptMany, onTermCompleted } = useContext(CourseContext)
+  const { store, allTermNodeIds, acceptMany, unacceptMany, onTermCompleted, onTermUncompleted } = useContext(CourseContext)
 
   const completedTerms = useMemo(() => {
     const set = new Set<string>()
@@ -443,14 +456,15 @@ function BoardViewWithContext({ nodes, edges, onMoveCourse, title, subtitle }: {
     return set
   }, [store, allTermNodeIds])
 
-  const handleCompleteTerm = useCallback((_term: string, nodeIds: string[]) => {
+  const handleCompleteTerm = useCallback((term: string, nodeIds: string[]) => {
     acceptMany(nodeIds)
-    onTermCompleted?.(nodeIds)
+    onTermCompleted?.(term, nodeIds)
   }, [acceptMany, onTermCompleted])
 
-  const handleUncompleteTerm = useCallback((_term: string, nodeIds: string[]) => {
+  const handleUncompleteTerm = useCallback((term: string, nodeIds: string[]) => {
     unacceptMany(nodeIds)
-  }, [unacceptMany])
+    onTermUncompleted?.(term, nodeIds)
+  }, [unacceptMany, onTermUncompleted])
 
   return (
     <BoardView
@@ -462,6 +476,8 @@ function BoardViewWithContext({ nodes, edges, onMoveCourse, title, subtitle }: {
       completedTerms={completedTerms}
       onCompleteTerm={handleCompleteTerm}
       onUncompleteTerm={handleUncompleteTerm}
+      clubs={clubs}
+      onViewSummary={onViewSummary}
     />
   )
 }
@@ -1106,16 +1122,21 @@ export default function Graph() {
   const specializations = navState.specializations as { pid: string }[] | undefined
   const minors = navState.minors as { pid: string }[] | undefined
   const major = navState.major as { title: string; faculty: string } | undefined
+  const navInterests = navState.interests as string[] | undefined
 
   const [nodes, setNodes] = useState<Node<SkillNodeData>[]>([])
   const [edges, setEdges] = useState<Edge[]>([])
   const [goal, setGoal] = useState('')
+  const [recommendedClubs, setRecommendedClubs] = useState<{ name: string; category: string; description: string; url: string; match_tier: string; match_reason: string }[]>([])
   const [desiredSkills, setDesiredSkills] = useState<string[]>(() =>
     (navDesiredSkills ?? []).map((s) => s.esco_label),
   )
   const [mySkills, setMySkills] = useState<string[]>(() =>
     (existingSkills ?? []).map((s) => s.esco_label),
   )
+  const manualMySkillsRef = useRef<Set<string>>(new Set((existingSkills ?? []).map((s) => s.esco_label)))
+  const completedTermSkillsRef = useRef<Record<string, string[]>>({})
+  const completedSkillSourcesRef = useRef<Record<string, string[]>>({})
   const [loading, setLoading] = useState(true)
   const [courseHistory, setCourseHistory] = useState<HistoryEntry[]>([])
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null)
@@ -1417,6 +1438,42 @@ export default function Graph() {
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
+  const getCompletedSkillsForTerm = useCallback((nodeIds: string[]) => {
+    const completedSkills = Array.from(
+      new Set(
+        nodes
+          .filter((n) => n.type === 'skill' && nodeIds.includes(n.id))
+          .flatMap((n) => n.data.escoSkills ?? [])
+          .filter((skill): skill is string => typeof skill === 'string' && skill.length > 0),
+      ),
+    )
+    console.log('[term-skill-sync] resolved ESCO skills for term', { nodeIds, completedSkills })
+    return completedSkills
+  }, [nodes])
+
+  // Fetch recommended clubs in academic mode
+  useEffect(() => {
+    if (mode !== 'academics' || !major) return
+    const controller = new AbortController()
+    fetch('/api/clubs/recommend', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        major_title: `${major.title} (${major.faculty})`,
+        goal: navGoal ?? '',
+        interests: navInterests ?? [],
+      }),
+      signal: AbortSignal.any([controller.signal, AbortSignal.timeout(30_000)]),
+    })
+      .then((r) => r.ok ? r.json() : Promise.reject(new Error('Failed to fetch clubs')))
+      .then((data) => setRecommendedClubs(data.clubs ?? []))
+      .catch((e) => {
+        if (e.name === 'AbortError') return
+        console.error('Club recommendations failed:', e)
+      })
+    return () => controller.abort()
+  }, [mode, major, navGoal, navInterests])
+
   const handleDesiredSkillsChange = useCallback((newSkills: string[]) => {
     const prevSkills = desiredSkills
     setDesiredSkills(newSkills)
@@ -1517,6 +1574,17 @@ export default function Graph() {
   }, [mode, desiredSkills, nodes, fetchGraph, mySkills, navGoal, goal, major])
 
   const handleMySkillsChange = useCallback((newSkills: string[]) => {
+    const autoManagedSkills = new Set(
+      Object.entries(completedSkillSourcesRef.current)
+        .filter(([, terms]) => terms.length > 0)
+        .map(([skill]) => skill),
+    )
+    manualMySkillsRef.current = new Set(newSkills.filter((skill) => !autoManagedSkills.has(skill)))
+    console.log('[my-skills] updated manual skill baseline', {
+      newSkills,
+      autoManagedSkills: Array.from(autoManagedSkills),
+      manualSkills: Array.from(manualMySkillsRef.current),
+    })
     setMySkills(newSkills)
     skillChangeCounter.current += 1
     const snapshot = skillChangeCounter.current
@@ -1570,6 +1638,23 @@ export default function Graph() {
     })
   }, [prereqMap, nodes])
 
+  const handleViewSummary = useCallback(() => {
+    const courseNodes = nodes
+      .filter((n) => n.type === 'skill')
+      .map((n) => ({
+        id: n.id,
+        labels: n.data.labels,
+        courseTitle: n.data.courseTitle,
+        courseUrl: n.data.courseUrl,
+        courseReason: n.data.courseReason,
+        tier: n.data.tier,
+        term: n.data.term,
+      }))
+    navigate('/summary', {
+      state: { goal: navGoal ?? goal, mode, program: mode === 'academics' ? major : undefined, courses: courseNodes },
+    })
+  }, [goal, major, mode, navGoal, navigate, nodes])
+
   const termNodeMap = useMemo(() => {
     const map: Record<string, string[]> = {}
     for (const n of nodes) {
@@ -1591,17 +1676,89 @@ export default function Graph() {
       setNodes={setNodes}
       allTermNodeIds={termNodeMap}
       onCourseReplaced={(entry) => setCourseHistory((h) => [entry, ...h])}
-      onTermCompleted={(nodeIds) => {
-        const completedSkills = new Set(
-          nodes
-            .filter((n) => nodeIds.includes(n.id) && n.type === 'skill')
-            .flatMap((n) => n.data.escoSkills ?? [])
-        )
-        if (completedSkills.size === 0) return
-        const newDesired = desiredSkills.filter((s) => !completedSkills.has(s))
-        const newMy = [...mySkills, ...Array.from(completedSkills).filter((s) => !mySkills.includes(s))]
+      onTermCompleted={(term, nodeIds) => {
+        const completedSkills = getCompletedSkillsForTerm(nodeIds)
+        if (completedSkills.length === 0) {
+          console.log('[term-complete] no skills to sync', { term, nodeIds })
+          return
+        }
+
+        completedTermSkillsRef.current[term] = completedSkills
+        for (const skill of completedSkills) {
+          const existingTerms = completedSkillSourcesRef.current[skill] ?? []
+          if (!existingTerms.includes(term)) {
+            completedSkillSourcesRef.current[skill] = [...existingTerms, term]
+          }
+        }
+
+        const completedSkillSet = new Set(completedSkills)
+        const newDesired = desiredSkills.filter((skill) => !completedSkillSet.has(skill))
+        const newMy = [...mySkills, ...completedSkills.filter((skill) => !mySkills.includes(skill))]
+
+        console.log('[term-complete] moving skills from desired to My Skills', {
+          term,
+          nodeIds,
+          completedSkills,
+          beforeDesired: desiredSkills,
+          beforeMySkills: mySkills,
+          afterDesired: newDesired,
+          afterMySkills: newMy,
+        })
+
         setDesiredSkills(newDesired)
         setMySkills(newMy)
+      }}
+      onTermUncompleted={(term, nodeIds) => {
+        const completedSkills = completedTermSkillsRef.current[term] ?? getCompletedSkillsForTerm(nodeIds)
+        if (completedSkills.length === 0) {
+          console.log('[term-uncomplete] no skills to revert', { term, nodeIds })
+          return
+        }
+
+        delete completedTermSkillsRef.current[term]
+
+        const revertedSkills = new Set<string>()
+        for (const skill of completedSkills) {
+          const remainingTerms = (completedSkillSourcesRef.current[skill] ?? []).filter((sourceTerm) => sourceTerm !== term)
+          if (remainingTerms.length === 0) {
+            delete completedSkillSourcesRef.current[skill]
+          } else {
+            completedSkillSourcesRef.current[skill] = remainingTerms
+          }
+
+          const shouldStayInMySkills = remainingTerms.length > 0 || manualMySkillsRef.current.has(skill)
+          if (!shouldStayInMySkills) {
+            revertedSkills.add(skill)
+          }
+        }
+
+        if (revertedSkills.size === 0) {
+          console.log('[term-uncomplete] nothing moved back to desired', {
+            term,
+            nodeIds,
+            completedSkills,
+            remainingSources: completedSkillSourcesRef.current,
+            manualSkills: Array.from(manualMySkillsRef.current),
+          })
+          return
+        }
+
+        const newMy = mySkills.filter((skill) => !revertedSkills.has(skill))
+        const newDesired = Array.from(new Set([...desiredSkills, ...Array.from(revertedSkills)]))
+
+        console.log('[term-uncomplete] moving skills from My Skills back to desired', {
+          term,
+          nodeIds,
+          completedSkills,
+          revertedSkills: Array.from(revertedSkills),
+          beforeDesired: desiredSkills,
+          beforeMySkills: mySkills,
+          afterDesired: newDesired,
+          afterMySkills: newMy,
+        })
+
+        setMySkills(newMy)
+        setDesiredSkills(newDesired)
       }}
     >
       {/* Mobile: column layout (panels on top, graph below). Desktop: absolute overlays on full-screen graph */}
@@ -1665,22 +1822,7 @@ export default function Graph() {
                 }}
               />
               <button
-                onClick={() => {
-                  const courseNodes = nodes
-                    .filter((n) => n.type === 'skill')
-                    .map((n) => ({
-                      id: n.id,
-                      labels: n.data.labels,
-                      courseTitle: n.data.courseTitle,
-                      courseUrl: n.data.courseUrl,
-                      courseReason: n.data.courseReason,
-                      tier: n.data.tier,
-                      term: n.data.term,
-                    }))
-                  navigate('/summary', {
-                    state: { goal: navGoal ?? goal, mode, program: mode === 'academics' ? major : undefined, courses: courseNodes },
-                  })
-                }}
+                onClick={handleViewSummary}
                 disabled={loading || nodes.filter((n) => n.type === 'skill').length === 0}
                 className="w-80 bg-white rounded-xl shadow-lg border border-stone-200 p-3 sm:p-4 hover:shadow-xl transition-shadow duration-200 flex items-center gap-1.5 cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
                 aria-label="View Summary"
@@ -1708,6 +1850,8 @@ export default function Graph() {
               onMoveCourse={handleBoardMoveCourse}
               title={mode === 'academics' && major ? major.title : ((navGoal ?? goal) || 'Course Board')}
               subtitle={mode === 'academics' && major ? major.faculty : undefined}
+              clubs={recommendedClubs}
+              onViewSummary={handleViewSummary}
             />
           ) : (
             <ReactFlow

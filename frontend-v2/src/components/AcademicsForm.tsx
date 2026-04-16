@@ -301,10 +301,10 @@ export default function AcademicsForm() {
       {/* 2. Major requirement summary */}
       {majorDetail && majorDetail.requirementGroups.length > 0 && (() => {
         const required = majorDetail.requirementGroups
-          .filter((g) => g.rule === 'all')
+          .filter((g) => g.rule === 'all' || (typeof g.rule === 'number' && g.rule >= g.courses.length))
           .reduce((sum, g) => sum + g.courses.length, 0)
         const choiceGroups = majorDetail.requirementGroups.filter(
-          (g) => typeof g.rule === 'number',
+          (g) => typeof g.rule === 'number' && g.rule < g.courses.length,
         )
         const electives = choiceGroups.reduce(
           (sum, g) => sum + (g.rule as number),

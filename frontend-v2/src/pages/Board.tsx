@@ -10,6 +10,7 @@ import {
   StickyNote,
   GripVertical,
   Check,
+  Users,
 } from 'lucide-react'
 
 /* ─── Types ─── */
@@ -53,9 +54,23 @@ const TERM_ORDER = ['1A', '1B', '2A', '2B', '3A', '3B', '4A', '4B']
 
 const NOTES_KEY = 'parcours-board-notes'
 
+interface ClubRecommendation {
+  name: string
+  category: string
+  description: string
+  url: string
+  match_tier: string
+  match_reason: string
+}
+
+const MATCH_TIER_STYLE: Record<string, { bg: string; text: string; label: string }> = {
+  strong: { bg: 'bg-emerald-50', text: 'text-emerald-700', label: 'Strong match' },
+  explore: { bg: 'bg-sky-50', text: 'text-sky-600', label: 'Explore' },
+}
+
 /* ─── Board View (embedded in Graph page) ─── */
 
-export default function BoardView({ nodes, edges, title, subtitle, onMoveCourse, completedTerms, onCompleteTerm, onUncompleteTerm }: {
+export default function BoardView({ nodes, edges, title, subtitle, onMoveCourse, completedTerms, onCompleteTerm, onUncompleteTerm, clubs, onViewSummary }: {
   nodes: Node<BoardNodeData>[]
   edges: Edge[]
   title: string
@@ -64,6 +79,8 @@ export default function BoardView({ nodes, edges, title, subtitle, onMoveCourse,
   completedTerms: Set<string>
   onCompleteTerm: (term: string, nodeIds: string[]) => void
   onUncompleteTerm: (term: string, nodeIds: string[]) => void
+  clubs?: ClubRecommendation[]
+  onViewSummary?: () => void
 }) {
   // Flatten nodes to simple course objects
   const courses: FlatCourse[] = useMemo(() =>
@@ -119,6 +136,8 @@ export default function BoardView({ nodes, edges, title, subtitle, onMoveCourse,
   // Sidebar state
   const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null)
   const selectedCourse = courses.find((c) => c.id === selectedCourseId) ?? null
+  const [selectedClubName, setSelectedClubName] = useState<string | null>(null)
+  const selectedClub = (clubs ?? []).find((c) => c.name === selectedClubName) ?? null
 
   // Notes & statuses persisted to localStorage
   const [notes, setNotes] = useState<Record<string, string>>(() => {
@@ -176,10 +195,25 @@ export default function BoardView({ nodes, edges, title, subtitle, onMoveCourse,
       <div className="flex-1 flex flex-col min-w-0">
         {/* Relative Header */}
         <div className="px-10 pt-8 pb-3 shrink-0">
-          <h1 className="text-xl font-bold text-stone-900 mb-0.5">{title}</h1>
-          {subtitle && (
-            <p className="text-xs text-stone-400">{subtitle}</p>
-          )}
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <h1 className="text-xl font-bold text-stone-900 mb-0.5">{title}</h1>
+              {subtitle && (
+                <p className="text-xs text-stone-400">{subtitle}</p>
+              )}
+            </div>
+            {onViewSummary && (
+              <button
+                onClick={onViewSummary}
+                disabled={courses.length === 0}
+                className="inline-flex items-center gap-1.5 self-start rounded-xl border border-stone-200 bg-white px-3 py-2.5 shadow-lg transition-shadow duration-200 hover:shadow-xl cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
+                aria-label="View Summary"
+              >
+                <ExternalLink size={14} className="text-stone-400" />
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-stone-500">Download Summary</span>
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Board columns */}
@@ -264,7 +298,7 @@ export default function BoardView({ nodes, edges, title, subtitle, onMoveCourse,
                         draggable
                         onDragStart={(e) => handleDragStart(e, course.id)}
                         onDragEnd={handleDragEnd}
-                        onClick={() => setSelectedCourseId(course.id)}
+                        onClick={() => { setSelectedCourseId(course.id); setSelectedClubName(null) }}
                         className={`w-full text-left p-3 rounded-lg border bg-white shadow-sm hover:shadow-md hover:-translate-y-px transition-all duration-150 cursor-pointer ${
                           selectedCourseId === course.id ? 'border-blue-400 ring-2 ring-blue-100' : 'border-stone-200'
                         } ${isDragging ? 'opacity-40' : ''}`}
@@ -294,6 +328,46 @@ export default function BoardView({ nodes, edges, title, subtitle, onMoveCourse,
               </div>
             )
           })}
+          {/* Clubs column */}
+          {clubs && clubs.length > 0 && (
+            <div className="shrink-0 w-72 flex flex-col h-full bg-violet-50/30">
+              <div className="shrink-0 px-3 pt-6 pb-2.5">
+                <div className="flex items-center gap-2">
+                  <Users size={14} className="text-violet-400" />
+                  <span className="text-sm font-semibold text-stone-700">Clubs & Activities</span>
+                  <span className="inline-flex items-center justify-center w-5 h-5 text-[10px] font-medium rounded-full bg-violet-100 text-violet-600">
+                    {clubs.length}
+                  </span>
+                </div>
+              </div>
+              <div className="flex-1 overflow-y-auto p-2 space-y-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {clubs.map((club) => {
+                  const tierCfg = MATCH_TIER_STYLE[club.match_tier] ?? MATCH_TIER_STYLE.explore
+                  return (
+                    <div
+                      key={club.name}
+                      onClick={() => { setSelectedClubName(club.name); setSelectedCourseId(null) }}
+                      className={`w-full text-left p-3 rounded-lg border bg-white shadow-sm hover:shadow-md hover:-translate-y-px transition-all duration-150 cursor-pointer ${
+                        selectedClubName === club.name ? 'border-violet-400 ring-2 ring-violet-100' : 'border-stone-200'
+                      }`}
+                    >
+                      <div className="flex items-center gap-1 mb-1.5">
+                        <span className={`inline-block px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider rounded ${tierCfg.bg} ${tierCfg.text}`}>
+                          {tierCfg.label}
+                        </span>
+                        <span className="text-[9px] font-medium text-stone-400 truncate">{club.category}</span>
+                      </div>
+                      <p className="text-sm font-medium text-stone-900 leading-snug mb-1">{club.name}</p>
+                      {club.description && (
+                        <p className="text-xs text-stone-400 line-clamp-2">{club.description}</p>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
           {/* Explicit right edge spacer element against scroll clipping */}
           <div className="w-10 shrink-0" />
         </div>
@@ -301,7 +375,7 @@ export default function BoardView({ nodes, edges, title, subtitle, onMoveCourse,
       </div>
 
       {/* Sidebar detail panel */}
-      {selectedCourse && (
+      {selectedCourse && !selectedClub && (
         <CourseSidebar
           course={selectedCourse}
           prereqs={getPrereqs(selectedCourse.id)}
@@ -310,6 +384,14 @@ export default function BoardView({ nodes, edges, title, subtitle, onMoveCourse,
           onNoteChange={(val) => setNotes((prev) => ({ ...prev, [selectedCourse.id]: val }))}
           onClose={() => setSelectedCourseId(null)}
           onNavigate={(id) => setSelectedCourseId(id)}
+        />
+      )}
+
+      {/* Club sidebar */}
+      {selectedClub && (
+        <ClubSidebar
+          club={selectedClub}
+          onClose={() => setSelectedClubName(null)}
         />
       )}
     </div>
@@ -503,6 +585,80 @@ function CourseSidebar({
             placeholder="Add your notes about this course…"
             className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm text-stone-700 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 resize-none transition-all min-h-[100px]"
           />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* ─── Club Sidebar ─── */
+
+function ClubSidebar({ club, onClose }: {
+  club: ClubRecommendation
+  onClose: () => void
+}) {
+  const tierCfg = MATCH_TIER_STYLE[club.match_tier] ?? MATCH_TIER_STYLE.explore
+
+  return (
+    <div className="w-96 shrink-0 bg-white border-l border-stone-200 flex flex-col h-full shadow-lg animate-slide-in relative z-[60] pt-4">
+      {/* Header */}
+      <div className="shrink-0 px-5 py-4 border-b border-stone-100">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-1.5 mb-1">
+              <span className={`inline-block px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider rounded ${tierCfg.bg} ${tierCfg.text}`}>
+                {tierCfg.label}
+              </span>
+              <span className="text-[10px] text-stone-400 font-medium">{club.category}</span>
+            </div>
+            <a
+              href={club.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-base font-semibold text-stone-900 leading-snug no-underline hover:text-violet-800 transition-colors"
+            >
+              <ExternalLink size={12} className="inline mr-1 -mt-0.5" />
+              {club.name}
+            </a>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-1 rounded-md text-stone-400 hover:text-stone-600 hover:bg-stone-100 cursor-pointer transition-colors"
+          >
+            <X size={16} />
+          </button>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="flex-1 overflow-y-auto">
+        {/* Why this club */}
+        {club.match_reason && (
+          <div className="px-5 py-4 border-b border-stone-100">
+            <h3 className="text-xs font-semibold text-stone-500 uppercase tracking-wider mb-2">Why this club?</h3>
+            <p className="text-sm text-violet-600 leading-relaxed">{club.match_reason}</p>
+          </div>
+        )}
+
+        {/* Description */}
+        {club.description && (
+          <div className="px-5 py-4 border-b border-stone-100">
+            <h3 className="text-xs font-semibold text-stone-500 uppercase tracking-wider mb-2">About</h3>
+            <p className="text-sm text-stone-600 leading-relaxed">{club.description}</p>
+          </div>
+        )}
+
+        {/* Link */}
+        <div className="px-5 py-4">
+          <a
+            href={club.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-violet-700 bg-violet-50 hover:bg-violet-100 no-underline transition-colors"
+          >
+            <ExternalLink size={14} />
+            View on WUSA
+          </a>
         </div>
       </div>
     </div>
