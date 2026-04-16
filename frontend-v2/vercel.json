@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://parcours-lab-production.up.railway.app/api/:path*"
+      "destination": "https://endearing-comfort-production-7fce.up.railway.app/api/:path*"
     }
   ]
 }
