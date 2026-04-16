@@ -77,6 +77,45 @@ interface SkillNodeData {
   [key: string]: unknown
 }
 
+type ReplacementCoursePayload = {
+  title: string
+  url: string
+  reason?: string
+}
+
+function parseAcademicReplacementTitle(title: string): { code: string; title: string } | null {
+  const trimmed = title.trim()
+  const match = trimmed.match(/^([A-Z]{2,}\s*\d{2,}[A-Z]?)\s*:\s*(.+)$/)
+  if (!match) return null
+  return {
+    code: match[1].replace(/\s+/g, ' ').trim(),
+    title: match[2].trim(),
+  }
+}
+
+function applyReplacementCourse(data: SkillNodeData, course: ReplacementCoursePayload): SkillNodeData {
+  const parsed = data.term ? parseAcademicReplacementTitle(course.title) : null
+  const nextData = {
+    ...data,
+    labels: parsed ? [parsed.code] : data.labels,
+    courseTitle: parsed?.title || course.title,
+    courseUrl: course.url,
+    courseReason: course.reason ?? '',
+  }
+
+  console.log('[course-replace] applying replacement', {
+    isAcademic: Boolean(data.term),
+    previousLabels: data.labels,
+    nextLabels: nextData.labels,
+    previousTitle: data.courseTitle,
+    nextTitle: nextData.courseTitle,
+    rawReplacementTitle: course.title,
+    replacementUrl: course.url,
+  })
+
+  return nextData
+}
+
 const tierConfig: Record<Tier, { border: string; borderAccepted: string; text: string; label: string }> = {
   foundation:     { border: 'border-stone-300',  borderAccepted: 'border-emerald-400', text: 'text-stone-400',  label: 'Foundation' },
   core:           { border: 'border-sky-300',    borderAccepted: 'border-emerald-400', text: 'text-sky-400',    label: 'Core' },
@@ -170,7 +209,7 @@ function CourseProvider({ children, edges, setNodes, allTermNodeIds, onCourseRep
       setNodes((nds) =>
         nds.map((n) =>
           n.id === nodeId
-            ? { ...n, data: { ...n.data, courseTitle: data.course.title, courseUrl: data.course.url, courseReason: data.course.reason ?? '' } }
+            ? { ...n, data: applyReplacementCourse(n.data, data.course as ReplacementCoursePayload) }
             : n,
         ),
       )
@@ -1899,7 +1938,7 @@ export default function Graph() {
                   setNodes((nds) =>
                     nds.map((n) =>
                       n.data.labels.includes(action.skill_name!)
-                        ? { ...n, data: { ...n.data, courseTitle: action.course!.title, courseUrl: action.course!.url, courseReason: action.course!.reason ?? '' } }
+                        ? { ...n, data: applyReplacementCourse(n.data, action.course as ReplacementCoursePayload) }
                         : n,
                     ),
                   )
