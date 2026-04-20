@@ -549,9 +549,15 @@ def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None
                                 prior_codes.add(c)
 
                 # Filter candidates: prereqs must be satisfied by courses in earlier terms
+                from concurrent.futures import ThreadPoolExecutor, as_completed
                 prereq_filtered = []
+                prereq_map: dict[str, dict | None] = {}
+                with ThreadPoolExecutor(max_workers=10) as pool:
+                    futures = {pool.submit(get_course_prereqs, c["code"]): c for c in candidates}
+                    for fut in as_completed(futures):
+                        prereq_map[futures[fut]["code"]] = fut.result()
                 for candidate in candidates:
-                    prereq_data = get_course_prereqs(candidate["code"])
+                    prereq_data = prereq_map.get(candidate["code"])
                     if prereq_data is None:
                         continue
                     prereqs = prereq_data.get("prereqs", [])
@@ -724,16 +730,18 @@ def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None
                         prior_codes.add(c)
 
         # Filter candidates: prereqs must be satisfiable by courses in earlier terms
+        from concurrent.futures import ThreadPoolExecutor, as_completed
         prereq_cache = _load_course_cache()
+        # Identify candidates that need a network fetch (not in local cache)
+        need_fetch = [c for c in candidates if prereq_cache.get(c["code"]) is None]
+        with ThreadPoolExecutor(max_workers=10) as pool:
+            futures = {pool.submit(get_course_prereqs, c["code"]): c["code"] for c in need_fetch}
+            for fut in as_completed(futures):
+                prereq_cache[futures[fut]] = fut.result()
         prereq_filtered = []
         for candidate in candidates:
-            code = candidate["code"]
-            cached = prereq_cache.get(code)
+            cached = prereq_cache.get(candidate["code"])
             if cached is None:
-                # Not in cache — fetch from API so we don't suggest blind
-                cached = get_course_prereqs(code)
-            if cached is None:
-                # Course doesn't exist in API either — skip it
                 continue
             prereqs = cached.get("prereqs", [])
             if not prereqs or all(p.replace(" ", "").upper() in prior_codes for p in prereqs):
