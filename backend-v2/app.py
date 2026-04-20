@@ -370,6 +370,10 @@ CHAT_TOOLS = [
                 "properties": {
                     "skill_name": {"type": "string", "description": "The exact skill label to replace the course for"},
                     "reason": {"type": "string", "description": "Why the user wants a different course"},
+                    "requested_course_code": {
+                        "type": "string",
+                        "description": "If the user explicitly asked for a specific replacement course code (e.g. 'MATH 145'), pass it here.",
+                    },
                 },
                 "required": ["skill_name"],
             },
@@ -449,6 +453,10 @@ CHAT_TOOLS = [
                         "type": "string",
                         "description": "The course code to find replacements for (e.g. 'CS 350')",
                     },
+                    "requested_course_code": {
+                        "type": "string",
+                        "description": "If the user explicitly asked for a specific replacement course code (e.g. 'MATH 145'), pass it here so it can be preserved if valid.",
+                    },
                     "subject": {
                         "type": "string",
                         "description": "Subject to search in, if different from the course's subject (e.g. 'PSYCH', 'SYDE'). Omit to search the same subject.",
@@ -459,6 +467,45 @@ CHAT_TOOLS = [
         },
     },
 ]
+
+
+def _normalize_course_code(code: str) -> str:
+    return code.replace(" ", "").upper()
+
+
+def _extract_context_course_codes(nodes: list[dict], exclude_code: str = "") -> set[str]:
+    normalized_exclude = _normalize_course_code(exclude_code)
+    codes: set[str] = set()
+    for node in nodes:
+        if not isinstance(node, dict):
+            continue
+        for part in node.get("skill", "").split(","):
+            normalized = _normalize_course_code(part.strip())
+            if normalized and normalized != normalized_exclude:
+                codes.add(normalized)
+    return codes
+
+
+def _prioritize_requested_course(
+    candidates: list[dict],
+    requested_course_code: str,
+) -> tuple[list[dict], dict | None]:
+    requested_norm = _normalize_course_code(requested_course_code)
+    if not requested_norm:
+        return candidates, None
+
+    requested_candidate = None
+    remaining: list[dict] = []
+    for candidate in candidates:
+        candidate_norm = _normalize_course_code(str(candidate.get("code", "")))
+        if requested_candidate is None and candidate_norm == requested_norm:
+            requested_candidate = candidate
+            continue
+        remaining.append(candidate)
+
+    if not requested_candidate:
+        return candidates, None
+    return [requested_candidate, *remaining], requested_candidate
 
 
 def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None = None) -> tuple[str, dict]:
@@ -473,6 +520,7 @@ def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None
         skill = args.get("skill_name", "")
         reason = args.get("reason", "")
         current_course = args.get("current_course", "")
+        requested_course_code = args.get("requested_course_code", "")
         ctx = context or {}
 
         client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key)
@@ -480,60 +528,70 @@ def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None
         if ctx.get("mode") == "academics":
             from uwaterloo import list_courses_by_subject, get_course_prereqs, _load_course_cache as _load_cache_rc
 
+            requested_norm = _normalize_course_code(requested_course_code)
+            requested_subject_match = _re.match(r"^([A-Z]{2,})", requested_norm)
+            requested_subject = requested_subject_match.group(1) if requested_subject_match else ""
             subject_match = _re.match(r"^([A-Z]{2,})", skill.strip().upper())
-            subject = subject_match.group(1) if subject_match else ""
+            subject = requested_subject or (subject_match.group(1) if subject_match else "")
             candidates = []
             if subject:
-                norm_current = skill.replace(" ", "").upper()
-                # Exclude all courses already in the graph
-                existing_codes_rc: set[str] = set()
-                for node in ctx.get("nodes", []):
-                    if not isinstance(node, dict):
-                        continue
-                    for part in node.get("skill", "").split(","):
-                        c = part.strip().replace(" ", "").upper()
-                        if c:
-                            existing_codes_rc.add(c)
+                norm_current = _normalize_course_code(skill)
+                existing_codes_rc = _extract_context_course_codes(ctx.get("nodes", []), exclude_code=norm_current)
+                app.logger.info(
+                    "[chat.replace_course] current=%s requested=%s subject=%s existing_codes_after_removal=%s",
+                    norm_current,
+                    requested_norm or "-",
+                    subject,
+                    sorted(existing_codes_rc),
+                )
 
-                # Build antireq set from all courses already in the graph
                 existing_antireqs_rc: set[str] = set()
                 for ec in existing_codes_rc:
                     existing_antireqs_rc |= _get_antireqs(ec)
 
                 candidates = [
                     c for c in list_courses_by_subject(subject)
-                    if c["code"].replace(" ", "").upper() not in existing_codes_rc
+                    if _normalize_course_code(c["code"]) not in existing_codes_rc
                 ]
+                initial_candidate_count = len(candidates)
 
-                # Drop candidates that conflict with existing courses (antireqs)
                 antireq_filtered_rc = []
+                requested_removed_by_antireq = False
                 for c in candidates:
-                    ccode = c["code"].replace(" ", "").upper()
+                    ccode = _normalize_course_code(c["code"])
                     if ccode in existing_antireqs_rc:
+                        if ccode == requested_norm:
+                            requested_removed_by_antireq = True
                         continue
                     if _get_antireqs(ccode) & existing_codes_rc:
+                        if ccode == requested_norm:
+                            requested_removed_by_antireq = True
                         continue
                     antireq_filtered_rc.append(c)
                 candidates = antireq_filtered_rc
+                app.logger.info(
+                    "[chat.replace_course] subject_candidates=%d antireq_filtered=%d requested_removed_by_antireq=%s",
+                    initial_candidate_count,
+                    len(candidates),
+                    requested_removed_by_antireq,
+                )
 
             if candidates:
                 TERM_ORDER_RC = ["1A", "1B", "2A", "2B", "3A", "3B", "4A", "4B"]
 
-                # Find the term of the course being replaced
                 target_term = None
                 for node in ctx.get("nodes", []):
                     if not isinstance(node, dict):
                         continue
                     node_skill = node.get("skill", "")
                     for part in node_skill.split(","):
-                        if part.strip().replace(" ", "").upper() == norm_current:
+                        if _normalize_course_code(part.strip()) == norm_current:
                             target_term = node.get("term")
                             break
                     if target_term:
                         break
                 target_term_idx = TERM_ORDER_RC.index(target_term) if target_term in TERM_ORDER_RC else len(TERM_ORDER_RC) - 1
 
-                # Build set of course codes completed BEFORE the target term
                 prior_codes: set[str] = set()
                 for node in ctx.get("nodes", []):
                     if not isinstance(node, dict):
@@ -544,40 +602,50 @@ def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None
                     if TERM_ORDER_RC.index(node_term) < target_term_idx:
                         node_skill = node.get("skill", "")
                         for part in node_skill.split(","):
-                            c = part.strip().replace(" ", "").upper()
+                            c = _normalize_course_code(part.strip())
                             if c:
                                 prior_codes.add(c)
 
-                # Filter candidates: prereqs must be satisfied by courses in earlier terms
                 prereq_filtered = []
+                requested_removed_by_prereqs = False
                 for candidate in candidates:
                     prereq_data = get_course_prereqs(candidate["code"])
                     if prereq_data is None:
+                        if _normalize_course_code(candidate["code"]) == requested_norm:
+                            requested_removed_by_prereqs = True
                         continue
                     prereqs = prereq_data.get("prereqs", [])
-                    if not prereqs or all(p.replace(" ", "").upper() in prior_codes for p in prereqs):
+                    if not prereqs or all(_normalize_course_code(p) in prior_codes for p in prereqs):
                         prereq_filtered.append(candidate)
+                    elif _normalize_course_code(candidate["code"]) == requested_norm:
+                        requested_removed_by_prereqs = True
 
                 candidates = prereq_filtered
+                candidates, requested_candidate = _prioritize_requested_course(candidates, requested_course_code)
+                app.logger.info(
+                    "[chat.replace_course] prereq_filtered=%d requested_removed_by_prereqs=%s requested_available=%s",
+                    len(candidates),
+                    requested_removed_by_prereqs,
+                    bool(requested_candidate),
+                )
                 goal = ctx.get("goal", "")
                 program = ctx.get("program")
                 program_str = f"{program['title']} ({program['faculty']})" if program else None
 
-                # Build reverse prereq map for unlocks info
                 rc_cache = _load_cache_rc()
-                rc_candidate_codes = {c["code"].replace(" ", "").upper() for c in candidates[:40]}
+                rc_candidate_codes = {_normalize_course_code(c["code"]) for c in candidates[:40]}
                 rc_unlocks: dict[str, list[str]] = {code: [] for code in rc_candidate_codes}
                 for cc, cd in rc_cache.items():
                     if not isinstance(cd, dict):
                         continue
                     for p in cd.get("prereqs", []):
-                        np = p.replace(" ", "").upper()
+                        np = _normalize_course_code(p)
                         if np in rc_unlocks:
                             rc_unlocks[np].append(cc)
 
                 course_lines_rc = []
                 for c in candidates[:40]:
-                    cc_norm = c["code"].replace(" ", "").upper()
+                    cc_norm = _normalize_course_code(c["code"])
                     line = f"- {c['code']}: {c['title']}"
                     unlocked = rc_unlocks.get(cc_norm, [])
                     if unlocked:
@@ -585,37 +653,51 @@ def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None
                     course_lines_rc.append(line)
                 course_list = "\n".join(course_lines_rc)
 
-                prompt = f"The user is studying"
-                if program_str:
-                    prompt += f" {program_str}"
-                prompt += " at University of Waterloo"
-                if goal:
-                    prompt += f" with a goal of: {goal}"
-                prompt += ".\n"
-                prompt += f'They want to replace the course "{skill}" ({current_course or "current course"}).'
-                if reason:
-                    prompt += f'\nReason: "{reason}"'
-                prompt += (
-                    f"\n\nChoose ONE replacement from this list that best aligns with the student's goal and program:\n{course_list}\n\n"
-                    "Courses marked with [unlocks: ...] are prerequisites for other courses — strongly prefer "
-                    "courses that unlock future goal-relevant courses over dead-end electives.\n"
-                    "Return JSON only: {\"code\": \"<course code>\", \"title\": \"<course title>\", \"reason\": \"<one sentence why it's a good fit>\"}"
-                )
+                if requested_candidate:
+                    code = requested_candidate.get("code", skill)
+                    title = requested_candidate.get("title", code)
+                    picked_reason = (
+                        f"{code} was explicitly requested by the student and is a valid replacement in the remaining plan."
+                    )
+                    app.logger.info("[chat.replace_course] honoring explicit replacement request %s", code)
+                else:
+                    prompt = f"The user is studying"
+                    if program_str:
+                        prompt += f" {program_str}"
+                    prompt += " at University of Waterloo"
+                    if goal:
+                        prompt += f" with a goal of: {goal}"
+                    prompt += ".\n"
+                    prompt += f'They want to replace the course "{skill}" ({current_course or "current course"}).'
+                    if reason:
+                        prompt += f'\nReason: "{reason}"'
+                    if requested_norm:
+                        prompt += (
+                            f'\nThe student explicitly asked for "{requested_course_code}", but it is not currently available in the '
+                            "filtered candidate list. Do not invent it or substitute it silently."
+                        )
+                    prompt += (
+                        f"\n\nChoose ONE replacement from this list that best aligns with the student's goal and program:\n{course_list}\n\n"
+                        "Courses marked with [unlocks: ...] are prerequisites for other courses — strongly prefer "
+                        "courses that unlock future goal-relevant courses over dead-end electives.\n"
+                        "Return JSON only: {\"code\": \"<course code>\", \"title\": \"<course title>\", \"reason\": \"<one sentence why it's a good fit>\"}"
+                    )
 
-                resp = client.chat.completions.create(
-                    model="openai/gpt-4.1-mini",
-                    messages=[
-                        {"role": "system", "content": "You recommend University of Waterloo courses. Reply with valid JSON only, no markdown."},
-                        {"role": "user", "content": prompt},
-                    ],
-                )
-                picked = _json.loads(resp.choices[0].message.content)
-                code = picked.get("code", skill)
-                title = picked.get("title", code)
+                    resp = client.chat.completions.create(
+                        model="openai/gpt-4.1-mini",
+                        messages=[
+                            {"role": "system", "content": "You recommend University of Waterloo courses. Reply with valid JSON only, no markdown."},
+                            {"role": "user", "content": prompt},
+                        ],
+                    )
+                    picked = _json.loads(resp.choices[0].message.content)
+                    code = picked.get("code", skill)
+                    title = picked.get("title", code)
+                    picked_reason = picked.get("reason", "")
                 course = {
                     "title": f"{code}: {title}",
                     "url": f"https://uwflow.com/course/{code.replace(' ', '').lower()}",
-                    "reason": picked.get("reason", ""),
+                    "reason": picked_reason,
                 }
             else:
                 course = {
@@ -653,62 +735,71 @@ def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None
         TERM_ORDER = ["1A", "1B", "2A", "2B", "3A", "3B", "4A", "4B"]
 
         course_code = args.get("course_code", "")
+        requested_course_code = args.get("requested_course_code", "")
         subject_override = args.get("subject", "").strip().upper()
         ctx = context or {}
 
+        requested_norm = _normalize_course_code(requested_course_code)
+        requested_subject_match = _re.match(r"^([A-Z]{2,})", requested_norm)
+        requested_subject = requested_subject_match.group(1) if requested_subject_match else ""
         subject_match = _re.match(r"^([A-Z]{2,})", course_code.strip().upper())
-        subject = subject_override if subject_override else (subject_match.group(1) if subject_match else "")
+        subject = subject_override if subject_override else (requested_subject or (subject_match.group(1) if subject_match else ""))
         if not subject:
             return ("No valid subject found in course code.", {})
 
-        norm_current = course_code.replace(" ", "").upper()
-        # Exclude all courses already in the graph
-        existing_codes: set[str] = set()
-        for node in ctx.get("nodes", []):
-            if not isinstance(node, dict):
-                continue
-            for part in node.get("skill", "").split(","):
-                c = part.strip().replace(" ", "").upper()
-                if c:
-                    existing_codes.add(c)
-        # Build antireq set from all courses already in the graph
+        norm_current = _normalize_course_code(course_code)
+        existing_codes = _extract_context_course_codes(ctx.get("nodes", []), exclude_code=norm_current)
+        app.logger.info(
+            "[chat.search_courses] current=%s requested=%s subject=%s existing_codes_after_removal=%s",
+            norm_current,
+            requested_norm or "-",
+            subject,
+            sorted(existing_codes),
+        )
         existing_antireqs: set[str] = set()
         for ec in existing_codes:
             existing_antireqs |= _get_antireqs(ec)
 
         candidates = [
             c for c in list_courses_by_subject(subject)
-            if c["code"].replace(" ", "").upper() not in existing_codes
+            if _normalize_course_code(c["code"]) not in existing_codes
         ]
+        initial_candidate_count = len(candidates)
 
-        # Drop candidates that conflict with existing courses (antireqs)
         antireq_filtered = []
+        requested_removed_by_antireq = False
         for c in candidates:
-            ccode = c["code"].replace(" ", "").upper()
-            # Skip if this candidate is an antireq of an existing course
+            ccode = _normalize_course_code(c["code"])
             if ccode in existing_antireqs:
+                if ccode == requested_norm:
+                    requested_removed_by_antireq = True
                 continue
-            # Skip if this candidate's own antireqs overlap with existing courses
             if _get_antireqs(ccode) & existing_codes:
+                if ccode == requested_norm:
+                    requested_removed_by_antireq = True
                 continue
             antireq_filtered.append(c)
         candidates = antireq_filtered
+        app.logger.info(
+            "[chat.search_courses] subject_candidates=%d antireq_filtered=%d requested_removed_by_antireq=%s",
+            initial_candidate_count,
+            len(candidates),
+            requested_removed_by_antireq,
+        )
 
-        # Find the term of the course being replaced
         target_term = None
         for node in ctx.get("nodes", []):
             if not isinstance(node, dict):
                 continue
             node_skill = node.get("skill", "")
             for part in node_skill.split(","):
-                if part.strip().replace(" ", "").upper() == norm_current:
+                if _normalize_course_code(part.strip()) == norm_current:
                     target_term = node.get("term")
                     break
             if target_term:
                 break
         target_term_idx = TERM_ORDER.index(target_term) if target_term in TERM_ORDER else len(TERM_ORDER) - 1
 
-        # Build set of course codes completed BEFORE the target term
         prior_codes: set[str] = set()
         for node in ctx.get("nodes", []):
             if not isinstance(node, dict):
@@ -719,51 +810,57 @@ def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None
             if TERM_ORDER.index(node_term) < target_term_idx:
                 node_skill = node.get("skill", "")
                 for part in node_skill.split(","):
-                    c = part.strip().replace(" ", "").upper()
+                    c = _normalize_course_code(part.strip())
                     if c:
                         prior_codes.add(c)
 
-        # Filter candidates: prereqs must be satisfiable by courses in earlier terms
         prereq_cache = _load_course_cache()
         prereq_filtered = []
+        requested_removed_by_prereqs = False
         for candidate in candidates:
             code = candidate["code"]
             cached = prereq_cache.get(code)
             if cached is None:
-                # Not in cache — fetch from API so we don't suggest blind
                 cached = get_course_prereqs(code)
             if cached is None:
-                # Course doesn't exist in API either — skip it
+                if _normalize_course_code(code) == requested_norm:
+                    requested_removed_by_prereqs = True
                 continue
             prereqs = cached.get("prereqs", [])
-            if not prereqs or all(p.replace(" ", "").upper() in prior_codes for p in prereqs):
+            if not prereqs or all(_normalize_course_code(p) in prior_codes for p in prereqs):
                 prereq_filtered.append(candidate)
+            elif _normalize_course_code(code) == requested_norm:
+                requested_removed_by_prereqs = True
 
         candidates = prereq_filtered
+        candidates, requested_candidate = _prioritize_requested_course(candidates, requested_course_code)
+        app.logger.info(
+            "[chat.search_courses] prereq_filtered=%d requested_removed_by_prereqs=%s requested_available=%s",
+            len(candidates),
+            requested_removed_by_prereqs,
+            bool(requested_candidate),
+        )
 
         if not candidates:
             return ("No alternative courses found in the same subject.", {})
 
-        # Use LLM to pick top 3-4 from the filtered list
         goal = ctx.get("goal", "")
 
-        # Build reverse prereq map: candidate_code -> list of courses it unlocks
         prereq_cache = _load_course_cache()
-        candidate_codes_set = {c["code"].replace(" ", "").upper() for c in candidates[:40]}
+        candidate_codes_set = {_normalize_course_code(c["code"]) for c in candidates[:40]}
         unlocks_map: dict[str, list[str]] = {code: [] for code in candidate_codes_set}
         for cached_code, cached_data in prereq_cache.items():
             if not isinstance(cached_data, dict):
                 continue
             for prereq in cached_data.get("prereqs", []):
-                norm_prereq = prereq.replace(" ", "").upper()
+                norm_prereq = _normalize_course_code(prereq)
                 if norm_prereq in unlocks_map:
                     unlocks_map[norm_prereq].append(cached_code)
 
-        # Fetch UWFlow ratings for candidates
         uwflow_ratings = get_uwflow_ratings_bulk([c["code"] for c in candidates[:40]])
         course_lines = []
         for c in candidates[:40]:
-            ccode_norm = c['code'].replace(' ', '').upper()
+            ccode_norm = _normalize_course_code(c['code'])
             line = f"- {c['code']}: {c['title']}"
             rating_str = format_uwflow_rating(uwflow_ratings.get(ccode_norm))
             if rating_str:
@@ -785,6 +882,16 @@ def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None
             prompt += f" with a goal of: {goal}"
         prompt += ".\n"
         prompt += f'They want alternatives to "{course_code}".\n'
+        if requested_candidate:
+            prompt += (
+                f'The student explicitly asked for "{requested_candidate["code"]}". '
+                "If it is valid, include it in the final options.\n"
+            )
+        elif requested_norm:
+            prompt += (
+                f'The student explicitly asked for "{requested_course_code}", but it is not currently available in the '
+                "filtered candidate list. Do not invent it or silently substitute it.\n"
+            )
         prompt += f"\nPick the 3-4 best alternatives from this list:\n{course_list}\n\n"
         prompt += (
             "IMPORTANT: Prioritize courses that are most relevant to the student's GOAL and PROGRAM. "
@@ -807,17 +914,37 @@ def _execute_chat_tool(name: str, args: dict, api_key: str, context: dict | None
         picks = _json.loads(resp.choices[0].message.content)
 
         results = []
+        seen_result_codes: set[str] = set()
+        if requested_candidate:
+            requested_code = requested_candidate.get("code", "")
+            if requested_code:
+                result_entry = {
+                    "code": requested_code,
+                    "title": requested_candidate.get("title", requested_code),
+                    "url": f"https://uwflow.com/course/{requested_code.replace(' ', '').lower()}",
+                }
+                rating = uwflow_ratings.get(_normalize_course_code(requested_code))
+                if rating:
+                    result_entry["rating"] = rating
+                results.append(result_entry)
+                seen_result_codes.add(_normalize_course_code(requested_code))
         for p in picks[:4]:
             code = p.get("code", "")
+            normalized_code = _normalize_course_code(code)
+            if not code or normalized_code in seen_result_codes:
+                continue
             result_entry = {
                 "code": code,
                 "title": p.get("title", code),
                 "url": f"https://uwflow.com/course/{code.replace(' ', '').lower()}",
             }
-            rating = uwflow_ratings.get(code.replace(" ", "").upper())
+            rating = uwflow_ratings.get(normalized_code)
             if rating:
                 result_entry["rating"] = rating
             results.append(result_entry)
+            seen_result_codes.add(normalized_code)
+            if len(results) >= 4:
+                break
 
         result_text = "Found alternatives: " + ", ".join(r["code"] for r in results)
         return (
@@ -869,7 +996,10 @@ def chat():
             "Replacements should be relevant to the student's GOAL and PROGRAM, not just the same subject. "
             "For example, if a CS/HCI student wants to replace a biology course, suggest courses from ANY subject "
             "that align with their goal (e.g. PSYCH, CS, SYDE courses related to HCI) rather than other biology courses.\n"
-            "3. Do NOT use replace_course directly — let the student pick from the search results.\n\n"
+            "3. If the user explicitly names a replacement course code they want (for example 'replace MATH 135 with MATH 145'), "
+            "pass that exact code as requested_course_code when calling search_courses. If it is valid, preserve it instead of swapping in a random alternative. "
+            "A course being replaced does not block its own anti-requisites.\n"
+            "4. Do NOT use replace_course directly — let the student pick from the search results.\n\n"
             "Keep responses concise and friendly. "
             "If the user's message is not about course planning, academics, or university life, "
             "respond ONLY with: \"I'm here to help with your course plan. "

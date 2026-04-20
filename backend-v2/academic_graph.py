@@ -692,12 +692,12 @@ def _enforce_prereq_ordering(
     prereq_map: dict[str, list[str]],
     all_codes: set[str],
 ) -> dict[str, str]:
-    """Bump courses to later terms until no prereq-ordering violations remain.
+    """Clamp each course's term into its [ASAP, ALAP] window on the prereq DAG.
 
-    Two rules:
-    - In-plan prereq: course must be in a strictly later term than its prereq.
-    - External prereq (not in plan): floor the course's term using the catalog
-      number of the highest-level external prereq (100s→1B, 200s→2A, 300s→3A, 400s→4A).
+    ASAP (earliest): longest in-plan prereq chain + external catalog floor
+    (100s→1B, 200s→2A, 300s→3A, 400s→4A).
+    ALAP (latest): strictly before any in-plan successor's ALAP.
+    If ASAP > ALAP the chain exceeds available terms — log and use ASAP.
     """
     LEVEL_TO_MIN_IDX = {
         1: TERM_ORDER.index("1B"),
@@ -705,6 +705,7 @@ def _enforce_prereq_ordering(
         3: TERM_ORDER.index("3A"),
         4: TERM_ORDER.index("4A"),
     }
+    LAST_IDX = len(TERM_ORDER) - 1
 
     def _external_min_idx(code: str) -> int:
         try:
@@ -717,31 +718,75 @@ def _enforce_prereq_ordering(
         max_level = 0
         for p in prereq_data.get("prereqs", []):
             if _normalize_code(p) in all_codes:
-                continue  # in-plan; handled by prereq_map
+                continue
             m = re.search(r"(\d{3})", p)
             if m:
                 max_level = max(max_level, int(m.group(1)) // 100)
         return LEVEL_TO_MIN_IDX.get(min(max_level, 4), 0)
 
+    codes = list(term_assignments.keys())
+
+    successor_map: dict[str, list[str]] = defaultdict(list)
+    for code, prereqs in prereq_map.items():
+        for p in prereqs:
+            if p in term_assignments:
+                successor_map[p].append(code)
+
+    earliest: dict[str, int] = {}
+
+    def _asap(code: str, visiting: set[str]) -> int:
+        if code in earliest:
+            return earliest[code]
+        if code in visiting:
+            return 0  # cycle — break
+        visiting.add(code)
+        e = _external_min_idx(code)
+        for p in prereq_map.get(code, []):
+            if p in term_assignments:
+                e = max(e, _asap(p, visiting) + 1)
+        visiting.discard(code)
+        earliest[code] = e
+        return e
+
+    latest: dict[str, int] = {}
+
+    def _alap(code: str, visiting: set[str]) -> int:
+        if code in latest:
+            return latest[code]
+        if code in visiting:
+            return LAST_IDX
+        visiting.add(code)
+        l = LAST_IDX
+        for s in successor_map.get(code, []):
+            l = min(l, _alap(s, visiting) - 1)
+        visiting.discard(code)
+        latest[code] = l
+        return l
+
+    for c in codes:
+        _asap(c, set())
+    for c in codes:
+        _alap(c, set())
+
     result = dict(term_assignments)
+    for code in codes:
+        e = earliest[code]
+        l = latest[code]
+        current = result.get(code, "4B")
+        current_idx = TERM_ORDER.index(current) if current in TERM_ORDER else LAST_IDX
 
-    for _ in range(len(TERM_ORDER)):
-        changed = False
-        for code in list(result.keys()):
-            current = result.get(code, "4B")
-            current_idx = TERM_ORDER.index(current) if current in TERM_ORDER else len(TERM_ORDER) - 1
-            min_idx = _external_min_idx(code)
+        if e > l:
+            logger.warning(
+                "[academics] over-constrained %s: earliest=%s latest=%s — prereq chain exceeds available terms",
+                code,
+                TERM_ORDER[min(e, LAST_IDX)],
+                TERM_ORDER[max(l, 0)],
+            )
+            target = min(e, LAST_IDX)
+        else:
+            target = max(e, min(current_idx, l))
 
-            for prereq in prereq_map.get(code, []):
-                prereq_term = result.get(prereq)
-                if prereq_term in TERM_ORDER:
-                    min_idx = max(min_idx, TERM_ORDER.index(prereq_term) + 1)
-
-            if current_idx < min_idx:
-                result[code] = TERM_ORDER[min(min_idx, len(TERM_ORDER) - 1)]
-                changed = True
-        if not changed:
-            break
+        result[code] = TERM_ORDER[min(target, LAST_IDX)]
 
     return result
 

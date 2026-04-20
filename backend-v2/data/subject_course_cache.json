@@ -4713,5 +4713,1457 @@
       "title": "Grant Writing in the Sciences",
       "units": null
     }
+  ],
+  "PSYCH": [
+    {
+      "code": "PSYCH 770",
+      "title": "Basic Issues in Cognition",
+      "units": null
+    },
+    {
+      "code": "PSYCH 679A",
+      "title": "Clincial Neuropsych Practicum",
+      "units": null
+    },
+    {
+      "code": "PSYCH 886",
+      "title": "Psychology of Training",
+      "units": null
+    },
+    {
+      "code": "PSYCH 779A",
+      "title": "Cognitive Neuropsychology I",
+      "units": null
+    },
+    {
+      "code": "PSYCH 775",
+      "title": "Consciousness and Cognition",
+      "units": null
+    },
+    {
+      "code": "PSYCH 779",
+      "title": "Language and Reading",
+      "units": null
+    },
+    {
+      "code": "PSYCH 836A",
+      "title": "Advanced Practicum in Applied Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 772",
+      "title": "Auditory Processes and Speech Perception",
+      "units": null
+    },
+    {
+      "code": "PSYCH 773",
+      "title": "Psychophysics and Measurement",
+      "units": null
+    },
+    {
+      "code": "PSYCH 776",
+      "title": "Problem Solving, Judgment and  Decision-Making",
+      "units": null
+    },
+    {
+      "code": "PSYCH 777",
+      "title": "Human Memory",
+      "units": null
+    },
+    {
+      "code": "PSYCH 778",
+      "title": "Attention",
+      "units": null
+    },
+    {
+      "code": "PSYCH 779B",
+      "title": "Cognitive Neuropsychology II",
+      "units": null
+    },
+    {
+      "code": "PSYCH 782",
+      "title": "Visual Neuroscience",
+      "units": null
+    },
+    {
+      "code": "PSYCH 605",
+      "title": "Special Topics in Clinical Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 784",
+      "title": "Human Neuroanatomy and Neuropathology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 884",
+      "title": "Special Topics in Industrial & Organizational Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 846",
+      "title": "Special Topics in Applied Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 640",
+      "title": "Special Topics in Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 670",
+      "title": "Special Topics in Behavioural Neuroscience",
+      "units": null
+    },
+    {
+      "code": "PSYCH 844",
+      "title": "Special Topics in Educational Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 783",
+      "title": "Neuroimaging of Cognition",
+      "units": null
+    },
+    {
+      "code": "PSYCH 804",
+      "title": "Multi-Level Modeling Applications in Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 709",
+      "title": "Reasoning about Beliefs and Desires",
+      "units": null
+    },
+    {
+      "code": "PSYCH 769",
+      "title": "Causal Reasoning",
+      "units": null
+    },
+    {
+      "code": "PSYCH 713",
+      "title": "Theories of Pretence",
+      "units": null
+    },
+    {
+      "code": "PSYCH 708",
+      "title": "Reasoning about Ownership of Property",
+      "units": null
+    },
+    {
+      "code": "PSYCH 789",
+      "title": "Mind-wandering and Inattention",
+      "units": null
+    },
+    {
+      "code": "PSYCH 790",
+      "title": "Case Studies in Neuropsychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 810",
+      "title": "Directed Studies",
+      "units": null
+    },
+    {
+      "code": "PSYCH 704A",
+      "title": "Social Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 800",
+      "title": "Psychometric Theory & Structural Equation Modeling",
+      "units": null
+    },
+    {
+      "code": "PSYCH 801",
+      "title": "Advanced Structural Equation Modeling",
+      "units": null
+    },
+    {
+      "code": "PSYCH 317",
+      "title": "Child Psychopathology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 792",
+      "title": "An Introduction to Methods in Computational Neuroscience",
+      "units": null
+    },
+    {
+      "code": "PSYCH 308",
+      "title": "Psychology of Reading",
+      "units": null
+    },
+    {
+      "code": "PSYCH 320",
+      "title": "Language Development",
+      "units": null
+    },
+    {
+      "code": "PSYCH 319",
+      "title": "Problem Behaviour in the Classroom",
+      "units": null
+    },
+    {
+      "code": "PSYCH 318",
+      "title": "Psychosexual Organization",
+      "units": null
+    },
+    {
+      "code": "PSYCH 727",
+      "title": "Efficacy & Program Evaluation",
+      "units": null
+    },
+    {
+      "code": "PSYCH 742A",
+      "title": "Senior Practicum III",
+      "units": null
+    },
+    {
+      "code": "PSYCH 732B",
+      "title": "Child and Adolescent Psychotherapy Practicum II",
+      "units": null
+    },
+    {
+      "code": "PSYCH 735C",
+      "title": "Child and Adolescent Psychotherapy Practicum III",
+      "units": null
+    },
+    {
+      "code": "PSYCH 740A",
+      "title": "Senior Practicum I",
+      "units": null
+    },
+    {
+      "code": "PSYCH 740C",
+      "title": "Senior Practicum I",
+      "units": null
+    },
+    {
+      "code": "PSYCH 795",
+      "title": "Structure and Function in the Developing Brain",
+      "units": null
+    },
+    {
+      "code": "PSYCH 725",
+      "title": "Cognitive Behaviour Therapy",
+      "units": null
+    },
+    {
+      "code": "PSYCH 726A",
+      "title": "Practicum in Integrated Assessment I",
+      "units": null
+    },
+    {
+      "code": "PSYCH 729A",
+      "title": "Child and Adolescent Psychotherapy Practicum I",
+      "units": null
+    },
+    {
+      "code": "PSYCH 732A",
+      "title": "Child and Adolescent Psychotherapy Practicum I",
+      "units": null
+    },
+    {
+      "code": "PSYCH 738A",
+      "title": "Clinical Fieldwork Placement II",
+      "units": null
+    },
+    {
+      "code": "PSYCH 739B",
+      "title": "Clinical Fieldwork Placement III",
+      "units": null
+    },
+    {
+      "code": "PSYCH 740B",
+      "title": "Senior Practicum I",
+      "units": null
+    },
+    {
+      "code": "PSYCH 887",
+      "title": "Research Methods in Industrial/Organizational",
+      "units": null
+    },
+    {
+      "code": "PSYCH 870",
+      "title": "Research Design & Methods",
+      "units": null
+    },
+    {
+      "code": "PSYCH 720A",
+      "title": "Practicum in Interviewing & Cognitive Assessment I",
+      "units": null
+    },
+    {
+      "code": "PSYCH 730C",
+      "title": "Adult Psychotherapy Practicum III",
+      "units": null
+    },
+    {
+      "code": "PSYCH 794",
+      "title": "Cognitive Neuroscience of Face Perception",
+      "units": null
+    },
+    {
+      "code": "PSYCH 650",
+      "title": "Special Topics in Cognition and Perception",
+      "units": null
+    },
+    {
+      "code": "PSYCH 690",
+      "title": "Special Topics in Social and Personality",
+      "units": null
+    },
+    {
+      "code": "PSYCH 723",
+      "title": "Child Psychopathology and Psychotherapy",
+      "units": null
+    },
+    {
+      "code": "PSYCH 718",
+      "title": "Psychological Assessment II",
+      "units": null
+    },
+    {
+      "code": "PSYCH 716",
+      "title": "Adult Psychopathology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 717",
+      "title": "Psychological Assessment I",
+      "units": null
+    },
+    {
+      "code": "PSYCH 720B",
+      "title": "Practicum in Interviewing & Cognitive Assessment II",
+      "units": null
+    },
+    {
+      "code": "PSYCH 721A",
+      "title": "Diagnostic Assessment Practicum I",
+      "units": null
+    },
+    {
+      "code": "PSYCH 316",
+      "title": "Pragmatic Language Development",
+      "units": null
+    },
+    {
+      "code": "PSYCH 314",
+      "title": "Cognitive Development",
+      "units": null
+    },
+    {
+      "code": "PSYCH 705",
+      "title": "Foundations in Language Development: Basic Language Development",
+      "units": null
+    },
+    {
+      "code": "PSYCH 701",
+      "title": "Foundations in Cognitive/Social Development: Basic",
+      "units": null
+    },
+    {
+      "code": "PSYCH 330",
+      "title": "Criminal Profiling",
+      "units": null
+    },
+    {
+      "code": "PSYCH 706",
+      "title": "Foundations in Language Development: Pragmatics of Language",
+      "units": null
+    },
+    {
+      "code": "PSYCH 702",
+      "title": "Foundations in Cognitive/Social Development: Social Cognitive Development",
+      "units": null
+    },
+    {
+      "code": "PSYCH 730A",
+      "title": "Adult Psychotherapy Practicum I",
+      "units": null
+    },
+    {
+      "code": "PSYCH 738C",
+      "title": "Clinical Fieldwork Placement II",
+      "units": null
+    },
+    {
+      "code": "PSYCH 724",
+      "title": "Personality & Measurement Theory",
+      "units": null
+    },
+    {
+      "code": "PSYCH 726B",
+      "title": "Practicum in Integrated Assessment II",
+      "units": null
+    },
+    {
+      "code": "PSYCH 728",
+      "title": "Psychotherapy:  Classical Roots & Contemporary Developments",
+      "units": null
+    },
+    {
+      "code": "PSYCH 729B",
+      "title": "Child and Adolescent Psychotherapy Practicum II",
+      "units": null
+    },
+    {
+      "code": "PSYCH 729C",
+      "title": "Child and Adolescent Psychotherapy Practicum III",
+      "units": null
+    },
+    {
+      "code": "PSYCH 733A",
+      "title": "Adult Psychotherapy Practicum I",
+      "units": null
+    },
+    {
+      "code": "PSYCH 733B",
+      "title": "Adult Psychotherapy Practicum II",
+      "units": null
+    },
+    {
+      "code": "PSYCH 306",
+      "title": "Perception",
+      "units": null
+    },
+    {
+      "code": "PSYCH 741C",
+      "title": "Senior Practicum II",
+      "units": null
+    },
+    {
+      "code": "PSYCH 732C",
+      "title": "Child and Adolescent Psychotherapy Practicum III",
+      "units": null
+    },
+    {
+      "code": "PSYCH 733C",
+      "title": "Adult Psychotherapy Practicum III",
+      "units": null
+    },
+    {
+      "code": "PSYCH 734B",
+      "title": "Practicum in Supervision II",
+      "units": null
+    },
+    {
+      "code": "PSYCH 735A",
+      "title": "Child and Adolescent Psychotherapy Practicum I",
+      "units": null
+    },
+    {
+      "code": "PSYCH 735B",
+      "title": "Child and Adolescent Psychotherapy Practicum II",
+      "units": null
+    },
+    {
+      "code": "PSYCH 737C",
+      "title": "Couples' Therapy Practicum",
+      "units": null
+    },
+    {
+      "code": "PSYCH 734A",
+      "title": "Practicum in Supervision I",
+      "units": null
+    },
+    {
+      "code": "PSYCH 734C",
+      "title": "Practicum in Supervision III",
+      "units": null
+    },
+    {
+      "code": "PSYCH 736A",
+      "title": "Adult Psychotherapy Practicum I",
+      "units": null
+    },
+    {
+      "code": "PSYCH 736B",
+      "title": "Adult Psychotherapy Practicum II",
+      "units": null
+    },
+    {
+      "code": "PSYCH 741A",
+      "title": "Senior Practicum II",
+      "units": null
+    },
+    {
+      "code": "PSYCH 741B",
+      "title": "Senior Practicum II",
+      "units": null
+    },
+    {
+      "code": "PSYCH 738B",
+      "title": "Clinical Fieldwork Placement II",
+      "units": null
+    },
+    {
+      "code": "PSYCH 739A",
+      "title": "Clinical Fieldwork Placement III",
+      "units": null
+    },
+    {
+      "code": "PSYCH 739C",
+      "title": "Clinical Fieldwork Placement III",
+      "units": null
+    },
+    {
+      "code": "PSYCH 877",
+      "title": "Work Motivation",
+      "units": null
+    },
+    {
+      "code": "PSYCH 878",
+      "title": "Job Performance",
+      "units": null
+    },
+    {
+      "code": "PSYCH 781",
+      "title": "Cognitive Neuroscience of Memory",
+      "units": null
+    },
+    {
+      "code": "PSYCH 879",
+      "title": "Personnel Selection",
+      "units": null
+    },
+    {
+      "code": "PSYCH 742C",
+      "title": "Senior Practicum III",
+      "units": null
+    },
+    {
+      "code": "PSYCH 721B",
+      "title": "Diagnostic Assessment Practicum II",
+      "units": null
+    },
+    {
+      "code": "PSYCH 730B",
+      "title": "Adult Psychotherapy Practicum II",
+      "units": null
+    },
+    {
+      "code": "PSYCH 742B",
+      "title": "Senior Practicum III",
+      "units": null
+    },
+    {
+      "code": "PSYCH 307",
+      "title": "Human Neuropsychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 736C",
+      "title": "Adult Psychotherapy Practicum III",
+      "units": null
+    },
+    {
+      "code": "PSYCH 785",
+      "title": "Attention and the Brain",
+      "units": null
+    },
+    {
+      "code": "PSYCH 876",
+      "title": "The Psychology of Justice in the Workplace",
+      "units": null
+    },
+    {
+      "code": "PSYCH 737A",
+      "title": "Emotion-Focused Therapy Practicum",
+      "units": null
+    },
+    {
+      "code": "PSYCH 823",
+      "title": "Research Apprenticeship I",
+      "units": null
+    },
+    {
+      "code": "PSYCH 466",
+      "title": "Emergent Literacy",
+      "units": null
+    },
+    {
+      "code": "PSYCH 731",
+      "title": "Emotion-Focused Therapy",
+      "units": null
+    },
+    {
+      "code": "PSYCH 821",
+      "title": "Community Practicum II",
+      "units": null
+    },
+    {
+      "code": "PSYCH 822",
+      "title": "Community Practicum III",
+      "units": null
+    },
+    {
+      "code": "PSYCH 820",
+      "title": "Community Practicum I",
+      "units": null
+    },
+    {
+      "code": "PSYCH 875",
+      "title": "Organizational Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 492",
+      "title": "Psychological Measurement: Foundations of Research and Practice",
+      "units": null
+    },
+    {
+      "code": "PSYCH 824",
+      "title": "Research Apprenticeship II",
+      "units": null
+    },
+    {
+      "code": "PSYCH 737B",
+      "title": "Emotion-Focused Therapy Practicum",
+      "units": null
+    },
+    {
+      "code": "PSYCH 803",
+      "title": "Meta-Analysis",
+      "units": null
+    },
+    {
+      "code": "PSYCH 788",
+      "title": "Epidemiologic Methods in Aging Research",
+      "units": null
+    },
+    {
+      "code": "PSYCH 759",
+      "title": "Research Practicum in Cognitive Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 743",
+      "title": "Advanced Intergroup Relations",
+      "units": null
+    },
+    {
+      "code": "PSYCH 374W",
+      "title": "Applied Social Psychology (WLU)",
+      "units": null
+    },
+    {
+      "code": "PSYCH 283W",
+      "title": "Educational Psychology (WLU)",
+      "units": null
+    },
+    {
+      "code": "PSYCH 744",
+      "title": "Personality in Social Context",
+      "units": null
+    },
+    {
+      "code": "PSYCH 390W",
+      "title": "History of Psychology (WLU)",
+      "units": null
+    },
+    {
+      "code": "PSYCH 268W",
+      "title": "Drugs and Behaviour (WLU)",
+      "units": null
+    },
+    {
+      "code": "PSYCH 262W",
+      "title": "Introduction to Perception (WLU)",
+      "units": null
+    },
+    {
+      "code": "PSYCH 746",
+      "title": "Culture and the Mind",
+      "units": null
+    },
+    {
+      "code": "PSYCH 295W",
+      "title": "Intro to Research Methods (WLU)",
+      "units": null
+    },
+    {
+      "code": "PSYCH 825A",
+      "title": "Applied Practicum in Developmental Science l",
+      "units": null
+    },
+    {
+      "code": "PSYCH 828B",
+      "title": "Applied Practicum in Social Psychology II",
+      "units": null
+    },
+    {
+      "code": "PSYCH 827A",
+      "title": "Applied Practicum in Industrial/Organizational Psychology I",
+      "units": null
+    },
+    {
+      "code": "PSYCH 827",
+      "title": "Applied Practicum in Industrial/Organizational Psychology ll",
+      "units": null
+    },
+    {
+      "code": "PSYCH 315",
+      "title": "Psychology of Adolescence and Emerging Adulthood",
+      "units": null
+    },
+    {
+      "code": "PSYCH 100W",
+      "title": "Introduction to Psychology (WLU)",
+      "units": null
+    },
+    {
+      "code": "PSYCH 264W",
+      "title": "Motivation and Emotion (WLU)",
+      "units": null
+    },
+    {
+      "code": "PSYCH 271W",
+      "title": "Personality (WLU)",
+      "units": null
+    },
+    {
+      "code": "PSYCH 286W",
+      "title": "Sport Psychology (WLU)",
+      "units": null
+    },
+    {
+      "code": "PSYCH 101W",
+      "title": "Introduction to Psychology I (WLU)",
+      "units": null
+    },
+    {
+      "code": "PSYCH 276W",
+      "title": "Introduction to Developmental Psychology: Adolescence and Young Adulthood (WLU)",
+      "units": null
+    },
+    {
+      "code": "PSYCH 240W",
+      "title": "Sex, Evolution & Behaviour (WLU)",
+      "units": null
+    },
+    {
+      "code": "PSYCH 745",
+      "title": "Close Relationships",
+      "units": null
+    },
+    {
+      "code": "PSYCH 339",
+      "title": "Personnel Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 357",
+      "title": "Psychology of Good",
+      "units": null
+    },
+    {
+      "code": "PSYCH 758B",
+      "title": "Applied Practicum in Cognitive Psychology II",
+      "units": null
+    },
+    {
+      "code": "PSYCH 677A",
+      "title": "Fundamentals of Cognitive Neuroscience",
+      "units": null
+    },
+    {
+      "code": "PSYCH 292W",
+      "title": "Introduction to Statistics(WLU)",
+      "units": null
+    },
+    {
+      "code": "PSYCH 758A",
+      "title": "Applied Practicum in Cognitive Psychology I",
+      "units": null
+    },
+    {
+      "code": "PSYCH 829A",
+      "title": "Research Practicum in Social Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 420",
+      "title": "An Introduction to Computational Neuroscience Methods",
+      "units": null
+    },
+    {
+      "code": "PSYCH 296W",
+      "title": "Introduction to Statistics (WLU)",
+      "units": null
+    },
+    {
+      "code": "PSYCH 381W",
+      "title": "Introduction to Clinical Psychology (WLU)",
+      "units": null
+    },
+    {
+      "code": "PSYCH 263W",
+      "title": "Biopsychology (WLU)",
+      "units": null
+    },
+    {
+      "code": "PSYCH 270W",
+      "title": "Social Psychology (WLU)",
+      "units": null
+    },
+    {
+      "code": "PSYCH 828A",
+      "title": "Applied Practicum in Social Psychology l",
+      "units": null
+    },
+    {
+      "code": "PSYCH 260W",
+      "title": "Introduction to Cognitive Psychology (WLU)",
+      "units": null
+    },
+    {
+      "code": "PSYCH 749",
+      "title": "Wisdom",
+      "units": null
+    },
+    {
+      "code": "PSYCH 825B",
+      "title": "Applied Practicum in Developmental Science ll",
+      "units": null
+    },
+    {
+      "code": "PSYCH 102W",
+      "title": "Introduction to Psychology II (WLU)",
+      "units": null
+    },
+    {
+      "code": "PSYCH 829B",
+      "title": "Research Practicum in Social Psychology II",
+      "units": null
+    },
+    {
+      "code": "PSYCH 748",
+      "title": "Self-Regulation and Motivation",
+      "units": null
+    },
+    {
+      "code": "PSYCH 826A",
+      "title": "Research Practicum in Developmental Science l",
+      "units": null
+    },
+    {
+      "code": "PSYCH 826B",
+      "title": "Research Practicum in Developmental Science ll",
+      "units": null
+    },
+    {
+      "code": "PSYCH 275W",
+      "title": "Developmental Psychology 1 : Infancy and Childhood (WLU)",
+      "units": null
+    },
+    {
+      "code": "PSYCH 280W",
+      "title": "Abnormal Psychology (WLU)",
+      "units": null
+    },
+    {
+      "code": "PSYCH 366W",
+      "title": "Introduction to Psycholinguistics (WLU)",
+      "units": null
+    },
+    {
+      "code": "PSYCH 288W",
+      "title": "Behaviour Modification (WLU)",
+      "units": null
+    },
+    {
+      "code": "PSYCH 354R",
+      "title": "Interpersonal Relations",
+      "units": null
+    },
+    {
+      "code": "PSYCH 354",
+      "title": "Interpersonal Relations",
+      "units": null
+    },
+    {
+      "code": "PSYCH 459",
+      "title": "Honours Seminar - Close Relationships",
+      "units": null
+    },
+    {
+      "code": "PSYCH 236",
+      "title": "A Psychological Analysis of Human Sexuality",
+      "units": null
+    },
+    {
+      "code": "PSYCH 380",
+      "title": "History of Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 350",
+      "title": "Political Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 355",
+      "title": "Intergroup Relations",
+      "units": null
+    },
+    {
+      "code": "PSYCH 342",
+      "title": "The Psychology of Groups and Teams",
+      "units": null
+    },
+    {
+      "code": "PSYCH 470",
+      "title": "Special Topics in Applied Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 888",
+      "title": "Negotiation: Conflict Management, and Teamwork: Theory and Practice",
+      "units": null
+    },
+    {
+      "code": "PSYCH 487W",
+      "title": "Psychological Measurement and Testing (WLU)",
+      "units": null
+    },
+    {
+      "code": "PSYCH 218",
+      "title": "Psychology of Death and Dying",
+      "units": null
+    },
+    {
+      "code": "PSYCH 352",
+      "title": "Culture and Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 352R",
+      "title": "Culture and Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 634",
+      "title": "Data Visualization, Management, and Analysis",
+      "units": null
+    },
+    {
+      "code": "PSYCH 417",
+      "title": "Mindfulness-Based Stress Reduction: Advanced Topics in Mental Health",
+      "units": null
+    },
+    {
+      "code": "PSYCH 707",
+      "title": "Cognitive Neuroscience Seminar",
+      "units": null
+    },
+    {
+      "code": "PSYCH 771",
+      "title": "Fundamentals of Behavioural Science",
+      "units": null
+    },
+    {
+      "code": "PSYCH 291",
+      "title": "Basic Research Methods",
+      "units": null
+    },
+    {
+      "code": "PSYCH 487",
+      "title": "Directed Studies - Community Engagement",
+      "units": null
+    },
+    {
+      "code": "PSYCH 310",
+      "title": "Computing and Psychological Research",
+      "units": null
+    },
+    {
+      "code": "PSYCH 213R",
+      "title": "Exceptional Children",
+      "units": null
+    },
+    {
+      "code": "PSYCH 722C",
+      "title": "Clinical Full-Time Fieldwork Placement I",
+      "units": null
+    },
+    {
+      "code": "PSYCH 632",
+      "title": "Multiple Regression",
+      "units": null
+    },
+    {
+      "code": "PSYCH 883",
+      "title": "Organizational and Management Development",
+      "units": null
+    },
+    {
+      "code": "PSYCH 719",
+      "title": "Ethics and Professional Issues in Clinical Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 238",
+      "title": "Organizational Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 391",
+      "title": "Advanced Data Analysis",
+      "units": null
+    },
+    {
+      "code": "PSYCH 393",
+      "title": "Research in Developmental Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 394",
+      "title": "Research in Cognition and Perception",
+      "units": null
+    },
+    {
+      "code": "PSYCH 395",
+      "title": "Research in Social Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 396",
+      "title": "Research in Behavioural Neuroscience",
+      "units": null
+    },
+    {
+      "code": "PSYCH 397",
+      "title": "Research in Personality and Clinical Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 398",
+      "title": "Research in Memory",
+      "units": null
+    },
+    {
+      "code": "PSYCH 398R",
+      "title": "Independent Study",
+      "units": null
+    },
+    {
+      "code": "PSYCH 399R",
+      "title": "Independent Study",
+      "units": null
+    },
+    {
+      "code": "PSYCH 453",
+      "title": "Honours Seminar in Developmental Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 455",
+      "title": "Honours Seminar in Social Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 457",
+      "title": "Honours Seminar in Personality and Clinical Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 458",
+      "title": "Honours Seminar in Cognition",
+      "units": null
+    },
+    {
+      "code": "PSYCH 461",
+      "title": "Honours Seminar in Cognitive Neuroscience",
+      "units": null
+    },
+    {
+      "code": "PSYCH 462",
+      "title": "Honours Seminar in Industrial/Organizational Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 464",
+      "title": "Advanced Research Apprenticeship",
+      "units": null
+    },
+    {
+      "code": "PSYCH 465",
+      "title": "Applied Apprenticeship",
+      "units": null
+    },
+    {
+      "code": "PSYCH 480",
+      "title": "Directed Studies - Elective",
+      "units": null
+    },
+    {
+      "code": "PSYCH 499A",
+      "title": "Honours Thesis - Part 1",
+      "units": null
+    },
+    {
+      "code": "PSYCH 499B",
+      "title": "Honours Thesis - Part 2",
+      "units": null
+    },
+    {
+      "code": "PSYCH 499C",
+      "title": "Honours Thesis - Part 3",
+      "units": null
+    },
+    {
+      "code": "PSYCH 375R",
+      "title": "Studies in Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 264",
+      "title": "Research Apprenticeship",
+      "units": null
+    },
+    {
+      "code": "PSYCH 399",
+      "title": "Research in Industrial/Organizational Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 486",
+      "title": "Directed Studies - Advanced Statistics",
+      "units": null
+    },
+    {
+      "code": "PSYCH 630",
+      "title": "Advanced Analysis of Variance",
+      "units": null
+    },
+    {
+      "code": "PSYCH 392",
+      "title": "Research in Human Cognitive Neuroscience",
+      "units": null
+    },
+    {
+      "code": "PSYCH 450R",
+      "title": "Senior Seminar in Special Topics",
+      "units": null
+    },
+    {
+      "code": "PSYCH 481",
+      "title": "Directed Studies - Natural Science Advanced Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 482",
+      "title": "Directed Studies - Social Science Advanced Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 483",
+      "title": "Directed Studies - Natural Science Research",
+      "units": null
+    },
+    {
+      "code": "PSYCH 484",
+      "title": "Directed Studies - Social Science Research",
+      "units": null
+    },
+    {
+      "code": "PSYCH 490R",
+      "title": "Special Studies",
+      "units": null
+    },
+    {
+      "code": "PSYCH 363",
+      "title": "Special Subjects",
+      "units": null
+    },
+    {
+      "code": "PSYCH 463",
+      "title": "Honours Seminar in Special Topics",
+      "units": null
+    },
+    {
+      "code": "PSYCH 485",
+      "title": "Directed Studies - Seminar",
+      "units": null
+    },
+    {
+      "code": "PSYCH 439",
+      "title": "Negotiation in the Workplace: Theory and Practice",
+      "units": null
+    },
+    {
+      "code": "PSYCH 467",
+      "title": "Human Resources Apprenticeship",
+      "units": null
+    },
+    {
+      "code": "PSYCH 389",
+      "title": "Social Science Advanced Research Methods Topics",
+      "units": null
+    },
+    {
+      "code": "PSYCH 390",
+      "title": "Natural Science Advanced Research Methods Topics",
+      "units": null
+    },
+    {
+      "code": "PSYCH 101",
+      "title": "Introductory Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 101R",
+      "title": "Introductory Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 212",
+      "title": "Educational Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 212R",
+      "title": "Educational Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 253R",
+      "title": "Social Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 253",
+      "title": "Social Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 257",
+      "title": "Psychopathology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 257R",
+      "title": "Psychopathology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 312",
+      "title": "Learning Disabilities",
+      "units": null
+    },
+    {
+      "code": "PSYCH 312R",
+      "title": "Learning Disabilities",
+      "units": null
+    },
+    {
+      "code": "PSYCH 493",
+      "title": "Data Analysis and Graphing in R",
+      "units": null
+    },
+    {
+      "code": "PSYCH 356",
+      "title": "Personality",
+      "units": null
+    },
+    {
+      "code": "PSYCH 356R",
+      "title": "Personality",
+      "units": null
+    },
+    {
+      "code": "PSYCH 447",
+      "title": "Seminar in Cognitive Science",
+      "units": null
+    },
+    {
+      "code": "PSYCH 811A",
+      "title": "Clinical Part-time Fall Fieldwork Placement I",
+      "units": null
+    },
+    {
+      "code": "PSYCH 410W",
+      "title": "History of Psychology (WLU)",
+      "units": null
+    },
+    {
+      "code": "PSYCH 335",
+      "title": "Developmental Neuropsychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 337",
+      "title": "Trauma, Stress, and Resilience in Families",
+      "units": null
+    },
+    {
+      "code": "PSYCH 621",
+      "title": "Advanced Clinical Research",
+      "units": null
+    },
+    {
+      "code": "PSYCH 714",
+      "title": "Current Topics in Social Psych Seminar",
+      "units": null
+    },
+    {
+      "code": "PSYCH 334R",
+      "title": "Theories of Individual Counselling Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 726C",
+      "title": "Practicum in Integrated Assessment III",
+      "units": null
+    },
+    {
+      "code": "PSYCH 336",
+      "title": "Introduction to Clinical Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 710",
+      "title": "Current Issues in Developmental Psych Seminar",
+      "units": null
+    },
+    {
+      "code": "PSYCH 885",
+      "title": "Industrial & Organizational Psychology Research Seminar",
+      "units": null
+    },
+    {
+      "code": "PSYCH 232",
+      "title": "Psychology of Evil",
+      "units": null
+    },
+    {
+      "code": "PSYCH 451",
+      "title": "Honours Seminar - Child and Adolescent Psychopathology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 226R",
+      "title": "Positive Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 454",
+      "title": "Honours Seminar in Educational Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 256",
+      "title": "Introduction to Cognitive Science",
+      "units": null
+    },
+    {
+      "code": "PSYCH 230",
+      "title": "Psychology and Law",
+      "units": null
+    },
+    {
+      "code": "PSYCH 211",
+      "title": "Developmental Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 235",
+      "title": "Psychological Perspectives on Gender and Sex",
+      "units": null
+    },
+    {
+      "code": "PSYCH 207",
+      "title": "Cognitive Processes",
+      "units": null
+    },
+    {
+      "code": "PSYCH 261",
+      "title": "Physiological Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 715",
+      "title": "Family Systems",
+      "units": null
+    },
+    {
+      "code": "PSYCH 373W",
+      "title": "Close Relationships (WLU)",
+      "units": null
+    },
+    {
+      "code": "PSYCH 231",
+      "title": "The Psychology of Religious Experience",
+      "units": null
+    },
+    {
+      "code": "PSYCH 811B",
+      "title": "Clinical Part-time Winter Fieldwork Placement I",
+      "units": null
+    },
+    {
+      "code": "PSYCH 680",
+      "title": "Special Topics in Child Behaviour and Development",
+      "units": null
+    },
+    {
+      "code": "PSYCH 340",
+      "title": "Training and Development",
+      "units": null
+    },
+    {
+      "code": "PSYCH 448R",
+      "title": "Close Relationships",
+      "units": null
+    },
+    {
+      "code": "PSYCH 444R",
+      "title": "Psychological Interventions",
+      "units": null
+    },
+    {
+      "code": "PSYCH 812",
+      "title": "Autism Spectrum Disorder",
+      "units": null
+    },
+    {
+      "code": "PSYCH 747",
+      "title": "Cognition and Perception Seminar",
+      "units": null
+    },
+    {
+      "code": "PSYCH 361",
+      "title": "Evolutionary Psychology",
+      "units": null
+    },
+    {
+      "code": "PSYCH 371W",
+      "title": "Atypical Development (WLU)",
+      "units": null
+    },
+    {
+      "code": "PSYCH 292",
+      "title": "Basic Data Analysis",
+      "units": null
+    },
+    {
+      "code": "PSYCH 811C",
+      "title": "Clinical Part-time Spring Fieldwork Placement I",
+      "units": null
+    },
+    {
+      "code": "PSYCH 353",
+      "title": "Social Cognition",
+      "units": null
+    },
+    {
+      "code": "PSYCH 372",
+      "title": "Environmental Psychology",
+      "units": null
+    }
   ]
 }

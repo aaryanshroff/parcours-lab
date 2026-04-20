@@ -7396,5 +7396,1398 @@
     "antireqs": [
       "SCI 238"
     ]
+  },
+  "MATH 145": {
+    "code": "MATH 145",
+    "raw": "Prereq: 4U Calculus and Vectors or 4U Mathematics of Data Management; Honours Mathematics students only. Antireq: MATH 135",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "MATH 135"
+    ]
+  },
+  "MATH 135": {
+    "code": "MATH 135",
+    "raw": "Prereq: 4U Calculus and Vectors or 4U Mathematics of Data Management; Honours Mathematical Physics (BSc) or Honours Mathematics or Mathematics/BASE or Software Engineering students only. Antireq: MATH 145",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "MATH 145"
+    ]
+  },
+  "MATH 217": {
+    "code": "MATH 217",
+    "raw": "Prereq: MATH 118; Not open to Mathematics students. Antireq: AMATH 231, CIVE 221, ENVE 221, MATH 207, 212/ECE 206, 227, 237, 247, MATH 212N/NE 217, ME 201",
+    "prereqs": [
+      "MATH 118"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "AMATH 231",
+      "CIVE 221",
+      "ENVE 221",
+      "MATH 207",
+      "MATH 212",
+      "ECE 206",
+      "ECE 227",
+      "ECE 237",
+      "ECE 247",
+      "MATH 212N",
+      "NE 217",
+      "ME 201"
+    ]
+  },
+  "PSYCH 770": {
+    "code": "PSYCH 770",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 679A": {
+    "code": "PSYCH 679A",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 886": {
+    "code": "PSYCH 886",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 779A": {
+    "code": "PSYCH 779A",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 775": {
+    "code": "PSYCH 775",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 779": {
+    "code": "PSYCH 779",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 836A": {
+    "code": "PSYCH 836A",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 772": {
+    "code": "PSYCH 772",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 773": {
+    "code": "PSYCH 773",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 776": {
+    "code": "PSYCH 776",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 777": {
+    "code": "PSYCH 777",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 778": {
+    "code": "PSYCH 778",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 779B": {
+    "code": "PSYCH 779B",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 782": {
+    "code": "PSYCH 782",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 605": {
+    "code": "PSYCH 605",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 784": {
+    "code": "PSYCH 784",
+    "raw": "Antireq: PSYCH 675C",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "PSYCH 675C"
+    ]
+  },
+  "PSYCH 884": {
+    "code": "PSYCH 884",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 846": {
+    "code": "PSYCH 846",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 640": {
+    "code": "PSYCH 640",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 670": {
+    "code": "PSYCH 670",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 844": {
+    "code": "PSYCH 844",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 783": {
+    "code": "PSYCH 783",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 804": {
+    "code": "PSYCH 804",
+    "raw": "Prereq: PSYCH 632",
+    "prereqs": [
+      "PSYCH 632"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 709": {
+    "code": "PSYCH 709",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 769": {
+    "code": "PSYCH 769",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 713": {
+    "code": "PSYCH 713",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 708": {
+    "code": "PSYCH 708",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 789": {
+    "code": "PSYCH 789",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 790": {
+    "code": "PSYCH 790",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 810": {
+    "code": "PSYCH 810",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 704A": {
+    "code": "PSYCH 704A",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 800": {
+    "code": "PSYCH 800",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 801": {
+    "code": "PSYCH 801",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 317": {
+    "code": "PSYCH 317",
+    "raw": "Prereq: PSYCH 211",
+    "prereqs": [
+      "PSYCH 211"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 792": {
+    "code": "PSYCH 792",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 308": {
+    "code": "PSYCH 308",
+    "raw": "Prereq: PSYCH 207",
+    "prereqs": [
+      "PSYCH 207"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 320": {
+    "code": "PSYCH 320",
+    "raw": "Prereq: PSYCH 211 or 207",
+    "prereqs": [
+      "PSYCH 211",
+      "PSYCH 207"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 319": {
+    "code": "PSYCH 319",
+    "raw": "Prereq: PSYCH 211, 212/212R",
+    "prereqs": [
+      "PSYCH 211",
+      "PSYCH 212",
+      "PSYCH 212R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 318": {
+    "code": "PSYCH 318",
+    "raw": "Prereq: PSYCH 211 or 236",
+    "prereqs": [
+      "PSYCH 211",
+      "PSYCH 236"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 727": {
+    "code": "PSYCH 727",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 742A": {
+    "code": "PSYCH 742A",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 732B": {
+    "code": "PSYCH 732B",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 735C": {
+    "code": "PSYCH 735C",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 740A": {
+    "code": "PSYCH 740A",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 740C": {
+    "code": "PSYCH 740C",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 795": {
+    "code": "PSYCH 795",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 725": {
+    "code": "PSYCH 725",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 726A": {
+    "code": "PSYCH 726A",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 729A": {
+    "code": "PSYCH 729A",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 732A": {
+    "code": "PSYCH 732A",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 738A": {
+    "code": "PSYCH 738A",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 739B": {
+    "code": "PSYCH 739B",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 740B": {
+    "code": "PSYCH 740B",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 887": {
+    "code": "PSYCH 887",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 870": {
+    "code": "PSYCH 870",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 720A": {
+    "code": "PSYCH 720A",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 730C": {
+    "code": "PSYCH 730C",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 794": {
+    "code": "PSYCH 794",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 650": {
+    "code": "PSYCH 650",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 690": {
+    "code": "PSYCH 690",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 723": {
+    "code": "PSYCH 723",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 718": {
+    "code": "PSYCH 718",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 716": {
+    "code": "PSYCH 716",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 717": {
+    "code": "PSYCH 717",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 720B": {
+    "code": "PSYCH 720B",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 721A": {
+    "code": "PSYCH 721A",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 316": {
+    "code": "PSYCH 316",
+    "raw": "Prereq: PSYCH 211; Level at least 3A",
+    "prereqs": [
+      "PSYCH 211"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 314": {
+    "code": "PSYCH 314",
+    "raw": "Prereq: PSYCH 207 and 211; Level at least 2B",
+    "prereqs": [
+      "PSYCH 207",
+      "PSYCH 211"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 705": {
+    "code": "PSYCH 705",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 701": {
+    "code": "PSYCH 701",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 330": {
+    "code": "PSYCH 330",
+    "raw": "Prereq: PSYCH 230/LS 272",
+    "prereqs": [
+      "PSYCH 230",
+      "LS 272"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 706": {
+    "code": "PSYCH 706",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 702": {
+    "code": "PSYCH 702",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 730A": {
+    "code": "PSYCH 730A",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 738C": {
+    "code": "PSYCH 738C",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 724": {
+    "code": "PSYCH 724",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 726B": {
+    "code": "PSYCH 726B",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 728": {
+    "code": "PSYCH 728",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 729B": {
+    "code": "PSYCH 729B",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 729C": {
+    "code": "PSYCH 729C",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 733A": {
+    "code": "PSYCH 733A",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 733B": {
+    "code": "PSYCH 733B",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 306": {
+    "code": "PSYCH 306",
+    "raw": "Prereq: PSYCH 207 or 261; Level at least 2B",
+    "prereqs": [
+      "PSYCH 207",
+      "PSYCH 261"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 741C": {
+    "code": "PSYCH 741C",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 732C": {
+    "code": "PSYCH 732C",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 733C": {
+    "code": "PSYCH 733C",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 734B": {
+    "code": "PSYCH 734B",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 735A": {
+    "code": "PSYCH 735A",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 735B": {
+    "code": "PSYCH 735B",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 737C": {
+    "code": "PSYCH 737C",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 734A": {
+    "code": "PSYCH 734A",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 734C": {
+    "code": "PSYCH 734C",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 736A": {
+    "code": "PSYCH 736A",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 736B": {
+    "code": "PSYCH 736B",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 741A": {
+    "code": "PSYCH 741A",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 741B": {
+    "code": "PSYCH 741B",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 738B": {
+    "code": "PSYCH 738B",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 739A": {
+    "code": "PSYCH 739A",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 739C": {
+    "code": "PSYCH 739C",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 877": {
+    "code": "PSYCH 877",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 878": {
+    "code": "PSYCH 878",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 781": {
+    "code": "PSYCH 781",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 879": {
+    "code": "PSYCH 879",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 742C": {
+    "code": "PSYCH 742C",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 721B": {
+    "code": "PSYCH 721B",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 730B": {
+    "code": "PSYCH 730B",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 742B": {
+    "code": "PSYCH 742B",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 307": {
+    "code": "PSYCH 307",
+    "raw": "Prereq: One of PSYCH 207, 261, KIN 356; Level at least 2B",
+    "prereqs": [
+      "PSYCH 207",
+      "PSYCH 261",
+      "KIN 356"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 736C": {
+    "code": "PSYCH 736C",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 785": {
+    "code": "PSYCH 785",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 876": {
+    "code": "PSYCH 876",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 737A": {
+    "code": "PSYCH 737A",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 823": {
+    "code": "PSYCH 823",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 466": {
+    "code": "PSYCH 466",
+    "raw": "Prereq: PSYCH 211, 212/212R, 291, 292; Level at least 3A Honours Psychology or Four-Year General Psychology students; Psychology average of at least 75%",
+    "prereqs": [
+      "PSYCH 211",
+      "PSYCH 212",
+      "PSYCH 212R",
+      "PSYCH 291",
+      "PSYCH 292"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 731": {
+    "code": "PSYCH 731",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 821": {
+    "code": "PSYCH 821",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 822": {
+    "code": "PSYCH 822",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 820": {
+    "code": "PSYCH 820",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 875": {
+    "code": "PSYCH 875",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 492": {
+    "code": "PSYCH 492",
+    "raw": "Prereq: PSYCH 391; Honours Psychology or Make-up Psychology students; Psychology average at least 74%",
+    "prereqs": [
+      "PSYCH 391"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 824": {
+    "code": "PSYCH 824",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 737B": {
+    "code": "PSYCH 737B",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 803": {
+    "code": "PSYCH 803",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 788": {
+    "code": "PSYCH 788",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 759": {
+    "code": "PSYCH 759",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 743": {
+    "code": "PSYCH 743",
+    "raw": "Antireq: PSYCH 690 - Topic 21",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "PSYCH 690"
+    ]
+  },
+  "PSYCH 374W": {
+    "code": "PSYCH 374W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 283W": {
+    "code": "PSYCH 283W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 744": {
+    "code": "PSYCH 744",
+    "raw": "Antireq: PSYCH 690 - Topic 12",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "PSYCH 690"
+    ]
+  },
+  "PSYCH 390W": {
+    "code": "PSYCH 390W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 268W": {
+    "code": "PSYCH 268W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 262W": {
+    "code": "PSYCH 262W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 746": {
+    "code": "PSYCH 746",
+    "raw": "Antireq: PSYCH 690 - Topic 20",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "PSYCH 690"
+    ]
+  },
+  "PSYCH 295W": {
+    "code": "PSYCH 295W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 825A": {
+    "code": "PSYCH 825A",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 828B": {
+    "code": "PSYCH 828B",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 827A": {
+    "code": "PSYCH 827A",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 827": {
+    "code": "PSYCH 827",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 315": {
+    "code": "PSYCH 315",
+    "raw": "Prereq: PSYCH 211",
+    "prereqs": [
+      "PSYCH 211"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 100W": {
+    "code": "PSYCH 100W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 264W": {
+    "code": "PSYCH 264W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 271W": {
+    "code": "PSYCH 271W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 286W": {
+    "code": "PSYCH 286W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 101W": {
+    "code": "PSYCH 101W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 276W": {
+    "code": "PSYCH 276W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 240W": {
+    "code": "PSYCH 240W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 745": {
+    "code": "PSYCH 745",
+    "raw": "Antireq: PSYCH 690 - Topic 3",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "PSYCH 690"
+    ]
+  },
+  "PSYCH 339": {
+    "code": "PSYCH 339",
+    "raw": "Prereq: One of PSYCH 101/101R or PSYCH 238, and one of PSYCH 291 or Level at least 3A. Antireq: BUS 354W/454W, BUS 408W/498KW",
+    "prereqs": [
+      "PSYCH 101",
+      "PSYCH 101R",
+      "PSYCH 238",
+      "PSYCH 291"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "BUS 354W",
+      "BUS 454W",
+      "BUS 408W"
+    ]
+  },
+  "PSYCH 357": {
+    "code": "PSYCH 357",
+    "raw": "Prereq: PSYCH 101/101R",
+    "prereqs": [
+      "PSYCH 101",
+      "PSYCH 101R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 758B": {
+    "code": "PSYCH 758B",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 677A": {
+    "code": "PSYCH 677A",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 292W": {
+    "code": "PSYCH 292W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 758A": {
+    "code": "PSYCH 758A",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 829A": {
+    "code": "PSYCH 829A",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 420": {
+    "code": "PSYCH 420",
+    "raw": "Prereq: Level at least 3A Honours Psychology; Psychology average at least 74%",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 296W": {
+    "code": "PSYCH 296W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 381W": {
+    "code": "PSYCH 381W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 263W": {
+    "code": "PSYCH 263W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 270W": {
+    "code": "PSYCH 270W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 828A": {
+    "code": "PSYCH 828A",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 260W": {
+    "code": "PSYCH 260W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 749": {
+    "code": "PSYCH 749",
+    "raw": "Antireq: PSYCH 690 - Topic 24",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "PSYCH 690"
+    ]
+  },
+  "PSYCH 825B": {
+    "code": "PSYCH 825B",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 102W": {
+    "code": "PSYCH 102W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 829B": {
+    "code": "PSYCH 829B",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 748": {
+    "code": "PSYCH 748",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 826A": {
+    "code": "PSYCH 826A",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 826B": {
+    "code": "PSYCH 826B",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 275W": {
+    "code": "PSYCH 275W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 280W": {
+    "code": "PSYCH 280W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 366W": {
+    "code": "PSYCH 366W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 288W": {
+    "code": "PSYCH 288W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 354R": {
+    "code": "PSYCH 354R",
+    "raw": "Prereq: PSYCH 253/253R. Antireq: SRF 306",
+    "prereqs": [
+      "PSYCH 253",
+      "PSYCH 253R"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "SRF 306"
+    ]
+  },
+  "PSYCH 354": {
+    "code": "PSYCH 354",
+    "raw": "Prereq: PSYCH 253/253R. Antireq: SRF 306",
+    "prereqs": [
+      "PSYCH 253",
+      "PSYCH 253R"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "SRF 306"
+    ]
+  },
+  "PSYCH 459": {
+    "code": "PSYCH 459",
+    "raw": "Prereq: PSYCH 354/354R or (PSYCH 253/253R and SRF 306); Honours Psychology or Make-Up Psychology; Psych average at least 74%. Coreq: PSYCH 391.  Antireq: PSYCH 448R; PSYCH 455 taken winter 2015",
+    "prereqs": [
+      "PSYCH 354",
+      "PSYCH 354R",
+      "PSYCH 253",
+      "PSYCH 253R",
+      "SRF 306"
+    ],
+    "coreqs": [
+      "PSYCH 391"
+    ],
+    "antireqs": [
+      "PSYCH 448R",
+      "PSYCH 455"
+    ]
+  },
+  "PSYCH 236": {
+    "code": "PSYCH 236",
+    "raw": "Prereq: PSYCH 101/101R. Antireq: SRF 204",
+    "prereqs": [
+      "PSYCH 101",
+      "PSYCH 101R"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "SRF 204"
+    ]
+  },
+  "PSYCH 380": {
+    "code": "PSYCH 380",
+    "raw": "Prereq: PSYCH 101/101R; Level at least 2B",
+    "prereqs": [
+      "PSYCH 101",
+      "PSYCH 101R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 350": {
+    "code": "PSYCH 350",
+    "raw": "Prereq: PSYCH 101/101R; Level at least 3A",
+    "prereqs": [
+      "PSYCH 101",
+      "PSYCH 101R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 355": {
+    "code": "PSYCH 355",
+    "raw": "Prereq: PSYCH 253/253R; Level at least 2B",
+    "prereqs": [
+      "PSYCH 253",
+      "PSYCH 253R"
+    ],
+    "coreqs": [],
+    "antireqs": []
   }
 }

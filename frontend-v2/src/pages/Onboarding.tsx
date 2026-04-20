@@ -207,6 +207,21 @@ export default function Onboarding() {
 
   const canSubmit = goal.trim().length > 0 && !parsing && !goalParsing && !jobParsing
   const hasGoalSkills = goalExistingSkills.length > 0 || goalDesiredSkills.length > 0
+  const howItWorksSteps = activeTab === 'career'
+    ? [
+        { step: '1', title: 'Describe your goal', desc: 'Tell us what you want to learn or where you want to go in your career.' },
+        { step: '2', title: 'Optionally, add context', desc: 'Upload your resume or paste a job link to help us understand your starting point.' },
+        { step: '3', title: 'We map your skills', desc: 'Your skills are matched to the ESCO taxonomy — the European standard for classifying skills and occupations.' },
+        { step: '4', title: 'Get your skill tree', desc: 'We generate a personalized learning path with curated course recommendations for each skill gap.' },
+        { step: '5', title: 'Refine and explore', desc: 'Replace courses, add or remove skills, and chat with the goat to customize your path.' },
+      ]
+    : [
+        { step: '1', title: 'Choose your program', desc: 'Search for your major so we can anchor the plan around your actual degree requirements.' },
+        { step: '2', title: 'We load your requirements', desc: 'We pull in required courses, choice groups, and elective space from your program structure.' },
+        { step: '3', title: 'Add your academic path', desc: 'Select specializations and optional minors to shape the recommendations around your interests.' },
+        { step: '4', title: 'Tell us what you want to explore', desc: 'Share the topics or fields you are curious about so we can guide electives and future directions.' },
+        { step: '5', title: 'Get your course plan', desc: 'We build a course board you can explore, adjust, and pair with relevant clubs and extracurriculars.' },
+      ]
 
   return (
     <div className="min-h-screen bg-stone-50 flex flex-col px-4 pt-6 pb-16">
@@ -539,13 +554,7 @@ export default function Onboarding() {
       <div className="w-full max-w-lg">
         <h2 className="text-2xl font-bold text-stone-800 mb-6">How it works</h2>
         <div className="relative flex flex-col gap-0">
-          {[
-            { step: '1', title: 'Describe your goal', desc: 'Tell us what you want to learn or where you want to go in your career.' },
-            { step: '2', title: 'Optionally, add context', desc: 'Upload your resume or paste a job link to help us understand your starting point.' },
-            { step: '3', title: 'We map your skills', desc: 'Your skills are matched to the ESCO taxonomy — the European standard for classifying skills and occupations.' },
-            { step: '4', title: 'Get your skill tree', desc: 'We generate a personalized learning path with curated course recommendations for each skill gap.' },
-            { step: '5', title: 'Refine and explore', desc: 'Replace courses, add or remove skills, and chat with the goat to customize your path.' },
-          ].map((item, i, arr) => (
+          {howItWorksSteps.map((item, i, arr) => (
             <div key={item.step} className="flex gap-4">
               <div className="flex flex-col items-center">
                 <div className="w-8 h-8 rounded-full bg-amber-500/20 text-amber-600 flex items-center justify-center text-sm font-semibold shrink-0">

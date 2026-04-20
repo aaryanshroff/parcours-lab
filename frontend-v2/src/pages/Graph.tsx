@@ -25,6 +25,22 @@ import BoardView from './Board'
 
 const NODE_W = 260
 const NODE_H = 160
+const ACADEMIC_LOADING_MESSAGES = [
+  'Building your course graph…',
+  'Mapping your degree path…',
+  'Connecting your prerequisites…',
+  'Laying out your academic roadmap…',
+  'Organizing your next courses…',
+  'Tracing your program structure…',
+]
+const SKILL_LOADING_MESSAGES = [
+  'Building your skill tree…',
+  'Mapping your growth path…',
+  'Connecting your target skills…',
+  'Shaping your learning roadmap…',
+  'Organizing your next steps…',
+  'Tracing your career pathway…',
+]
 
 function layoutGraph(nodes: Node<SkillNodeData>[], edges: Edge[]): Node<SkillNodeData>[] {
   const g = new Dagre.graphlib.Graph()
@@ -1183,10 +1199,12 @@ export default function Graph() {
   const [boardPanelsOpen, setBoardPanelsOpen] = useState(false)
   const [disabledTerms, setDisabledTerms] = useState<Set<string>>(new Set())
   const [shakeNodeId, setShakeNodeId] = useState<string | null>(null)
+  const [loadingMessageIndex, setLoadingMessageIndex] = useState(0)
   const regenAbortRef = useRef<AbortController | null>(null)
   const skillChangeCounter = useRef(0)
   const dragOriginRef = useRef<{ nodeId: string; position: { x: number; y: number }; term: string } | null>(null)
   const dragCleanupRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const loadingMessages = mode === 'academics' ? ACADEMIC_LOADING_MESSAGES : SKILL_LOADING_MESSAGES
 
   const ROW_GAP = 220
 
@@ -1210,6 +1228,20 @@ export default function Graph() {
       markerEnd: { type: MarkerType.ArrowClosed, color: '#a8a29e', width: 14, height: 14 },
     }))
   }, [edges, selectedNodeId, mode])
+
+  useEffect(() => {
+    setLoadingMessageIndex(0)
+  }, [loading, mode])
+
+  useEffect(() => {
+    if (!loading || loadingMessages.length <= 1) return
+
+    const intervalId = window.setInterval(() => {
+      setLoadingMessageIndex((index) => (index + 1) % loadingMessages.length)
+    }, 2400)
+
+    return () => window.clearInterval(intervalId)
+  }, [loading, loadingMessages])
 
   const handleNodeDragStart = useCallback((_: React.MouseEvent, draggedNode: Node<SkillNodeData>) => {
     if (!draggedNode.data.term) return
@@ -1878,7 +1910,7 @@ export default function Graph() {
           {loading && (
             <div className="absolute inset-x-0 bottom-0 top-[60%] sm:top-0 z-[15] flex flex-col items-center justify-center gap-3 pointer-events-none">
               <Loader2 size={28} className="text-blue-800 animate-spin" />
-              <p className="text-stone-400 text-sm">{mode === 'academics' ? 'Building your course graph…' : 'Building your skill tree…'}</p>
+              <p className="text-stone-400 text-sm">{loadingMessages[loadingMessageIndex]}</p>
             </div>
           )}
 
