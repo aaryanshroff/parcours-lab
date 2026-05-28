@@ -27300,5 +27300,445 @@
       "comment_count": 0,
       "profs": []
     }
+  },
+  "PSYCH779A": {
+    "fetched_at": 1776703891.3504279,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH770": {
+    "fetched_at": 1776703891.428027,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH778": {
+    "fetched_at": 1776703891.4280288,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH836A": {
+    "fetched_at": 1776703891.4292421,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH773": {
+    "fetched_at": 1776703891.4314702,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH779": {
+    "fetched_at": 1776703891.4314728,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH886": {
+    "fetched_at": 1776703891.4370391,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH775": {
+    "fetched_at": 1776703891.439283,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH772": {
+    "fetched_at": 1776703891.447364,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH777": {
+    "fetched_at": 1776703891.461386,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH776": {
+    "fetched_at": 1776703891.471615,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH679A": {
+    "fetched_at": 1776703891.472878,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH779B": {
+    "fetched_at": 1776703891.561543,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH670": {
+    "fetched_at": 1776703891.576957,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH844": {
+    "fetched_at": 1776703891.578878,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH605": {
+    "fetched_at": 1776703891.595686,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH640": {
+    "fetched_at": 1776703891.630368,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH782": {
+    "fetched_at": 1776703891.63104,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH846": {
+    "fetched_at": 1776703891.632879,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH783": {
+    "fetched_at": 1776703891.6351612,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH784": {
+    "fetched_at": 1776703891.637111,
+    "rating": {
+      "liked": 1.0,
+      "easy": 1.0,
+      "useful": 1.0,
+      "filled_count": 2,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH769": {
+    "fetched_at": 1776703891.637126,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH884": {
+    "fetched_at": 1776703891.6381109,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH709": {
+    "fetched_at": 1776703891.6441731,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH708": {
+    "fetched_at": 1776703891.7712371,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH789": {
+    "fetched_at": 1776703891.77188,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH713": {
+    "fetched_at": 1776703891.7726452,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH742A": {
+    "fetched_at": 1776703891.799995,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH727": {
+    "fetched_at": 1776703891.8041952,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH810": {
+    "fetched_at": 1776703891.805006,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH790": {
+    "fetched_at": 1776703891.809629,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH792": {
+    "fetched_at": 1776703891.8225899,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH801": {
+    "fetched_at": 1776703891.822592,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH800": {
+    "fetched_at": 1776703891.824807,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH732B": {
+    "fetched_at": 1776703891.825235,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH704A": {
+    "fetched_at": 1776703891.827403,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH740C": {
+    "fetched_at": 1776703891.896072,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH740A": {
+    "fetched_at": 1776703891.9086342,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH735C": {
+    "fetched_at": 1776703891.9107919,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
+  },
+  "PSYCH795": {
+    "fetched_at": 1776703891.9444852,
+    "rating": {
+      "liked": null,
+      "easy": null,
+      "useful": null,
+      "filled_count": 0,
+      "comment_count": 0,
+      "profs": []
+    }
   }
 }

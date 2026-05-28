@@ -8789,5 +8789,1163 @@
     ],
     "coreqs": [],
     "antireqs": []
+  },
+  "PSYCH 342": {
+    "code": "PSYCH 342",
+    "raw": "Prereq: PSYCH 101/101R; Level at least 2B",
+    "prereqs": [
+      "PSYCH 101",
+      "PSYCH 101R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 470": {
+    "code": "PSYCH 470",
+    "raw": "Prereq: PSYCH 211, 257/257R, 291, 292; PSYCH 207 or 261; PSYCH 238/338 or 253/253R; Level at least 3A Psychology majors or Make-Up Psychology. Antireq: PSYCH 391",
+    "prereqs": [
+      "PSYCH 211",
+      "PSYCH 257",
+      "PSYCH 257R",
+      "PSYCH 291",
+      "PSYCH 292",
+      "PSYCH 207",
+      "PSYCH 261",
+      "PSYCH 238",
+      "PSYCH 338",
+      "PSYCH 253",
+      "PSYCH 253R"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "PSYCH 391"
+    ]
+  },
+  "PSYCH 888": {
+    "code": "PSYCH 888",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 487W": {
+    "code": "PSYCH 487W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 218": {
+    "code": "PSYCH 218",
+    "raw": "Prereq: PSYCH 101/101R; Level at least 2A",
+    "prereqs": [
+      "PSYCH 101",
+      "PSYCH 101R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 352": {
+    "code": "PSYCH 352",
+    "raw": "Prereq: PSYCH 253/253R; Level at least 2B. Antireq: PSYCH 349R/SWREN 349R",
+    "prereqs": [
+      "PSYCH 253",
+      "PSYCH 253R"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "PSYCH 349R",
+      "SWREN 349R"
+    ]
+  },
+  "PSYCH 352R": {
+    "code": "PSYCH 352R",
+    "raw": "Prereq: PSYCH 253/253R; Level at least 2B. Antireq: PSYCH 349R/SWREN 349R",
+    "prereqs": [
+      "PSYCH 253",
+      "PSYCH 253R"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "PSYCH 349R",
+      "SWREN 349R"
+    ]
+  },
+  "PSYCH 634": {
+    "code": "PSYCH 634",
+    "raw": "Antireq: PSYCH 493",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "PSYCH 493"
+    ]
+  },
+  "PSYCH 417": {
+    "code": "PSYCH 417",
+    "raw": "Prereq: PSYCH 257; Level at least 3A Honours Psychology or Make-up Psychology; Psychology average of at least 70%",
+    "prereqs": [
+      "PSYCH 257"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 707": {
+    "code": "PSYCH 707",
+    "raw": "Prereq: PSYCH Grad Students Only",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 771": {
+    "code": "PSYCH 771",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 291": {
+    "code": "PSYCH 291",
+    "raw": "Prereq: PSYCH 101/101R; Level at least 2A; Psychology majors. Coreq: MATH 103 if no 4U Math. Antireq: HLTH 333, SDS 251R, KIN 232, 330, REC 270, SWREN 251R",
+    "prereqs": [
+      "PSYCH 101",
+      "PSYCH 101R"
+    ],
+    "coreqs": [
+      "MATH 103"
+    ],
+    "antireqs": [
+      "HLTH 333",
+      "SDS 251R",
+      "KIN 232",
+      "KIN 330",
+      "REC 270",
+      "SWREN 251R"
+    ]
+  },
+  "PSYCH 487": {
+    "code": "PSYCH 487",
+    "raw": "Prereq: Psychology majors; Level at least 3A; Psychology average at least 75%",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 310": {
+    "code": "PSYCH 310",
+    "raw": "Prereq: PSYCH 291, PSYCH 292. Antireq: PSYCH 363 topic title: Computing and Psych. Research",
+    "prereqs": [
+      "PSYCH 291",
+      "PSYCH 292"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "PSYCH 363"
+    ]
+  },
+  "PSYCH 213R": {
+    "code": "PSYCH 213R",
+    "raw": "Prereq: PSYCH 101/101R",
+    "prereqs": [
+      "PSYCH 101",
+      "PSYCH 101R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 722C": {
+    "code": "PSYCH 722C",
+    "raw": "Antireq: PSYCH 811A, PSYCH 811B, PSYCH 811C",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "PSYCH 811A",
+      "PSYCH 811B",
+      "PSYCH 811C"
+    ]
+  },
+  "PSYCH 632": {
+    "code": "PSYCH 632",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 883": {
+    "code": "PSYCH 883",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 719": {
+    "code": "PSYCH 719",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 238": {
+    "code": "PSYCH 238",
+    "raw": "Prereq: Level at least 1B; Not open to Accounting and Financial Management students. Antireq: PSYCH 338, AFM 280, MSE 211, BUS 288W/388W, SCBUS 225",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "PSYCH 338",
+      "AFM 280",
+      "MSE 211",
+      "BUS 288W",
+      "BUS 388W",
+      "SCBUS 225"
+    ]
+  },
+  "PSYCH 393": {
+    "code": "PSYCH 393",
+    "raw": "Prereq: PSYCH 211; Level at least 3A Honours Psychology or Make-up Psychology students; Psychology average at least 74%. Coreq: PSYCH 391. Antireq: PSYCH 389, 395, 397, 399; Psychology Research Intensive Specialization",
+    "prereqs": [
+      "PSYCH 211"
+    ],
+    "coreqs": [
+      "PSYCH 391"
+    ],
+    "antireqs": [
+      "PSYCH 389",
+      "PSYCH 395",
+      "PSYCH 397",
+      "PSYCH 399"
+    ]
+  },
+  "PSYCH 394": {
+    "code": "PSYCH 394",
+    "raw": "Prereq: PSYCH 207;  Level at least 3A Honours Psychology or Make-up Psychology students; Psychology average at least 74%. Coreq: PSYCH 391. Antireq: PSYCH 390, 392, 396, 398; Psychology Research Intensive Specialization",
+    "prereqs": [
+      "PSYCH 207"
+    ],
+    "coreqs": [
+      "PSYCH 391"
+    ],
+    "antireqs": [
+      "PSYCH 390",
+      "PSYCH 392",
+      "PSYCH 396",
+      "PSYCH 398"
+    ]
+  },
+  "PSYCH 395": {
+    "code": "PSYCH 395",
+    "raw": "Prereq: PSYCH 253/253R; Level at least 3A Honours Psychology or Make-up Psychology students; Psychology average at least 74%. Coreq: PSYCH 391. Antireq: PSYCH 389, 393, 397, 399; Psychology Research Intensive Specialization",
+    "prereqs": [
+      "PSYCH 253",
+      "PSYCH 253R"
+    ],
+    "coreqs": [
+      "PSYCH 391"
+    ],
+    "antireqs": [
+      "PSYCH 389",
+      "PSYCH 393",
+      "PSYCH 397",
+      "PSYCH 399"
+    ]
+  },
+  "PSYCH 396": {
+    "code": "PSYCH 396",
+    "raw": "Prereq: PSYCH 261; Level at least 3A Honours Psychology or Make-up Psychology students; Psychology average at least 74%. Coreq: PSYCH 391. Antireq: PSYCH 390, 392, 394, 398; Psychology Research Intensive Specialization",
+    "prereqs": [
+      "PSYCH 261"
+    ],
+    "coreqs": [
+      "PSYCH 391"
+    ],
+    "antireqs": [
+      "PSYCH 390",
+      "PSYCH 392",
+      "PSYCH 394",
+      "PSYCH 398"
+    ]
+  },
+  "PSYCH 397": {
+    "code": "PSYCH 397",
+    "raw": "Prereq: PSYCH 257/257R or 323R; Level at least 3A Honours Psychology or Make-up Psychology students; Psychology average at least 74%. Coreq: PSYCH 391. Antireq: PSYCH 389, 393, 395, 399;  Psychology Research Intensive Specialization",
+    "prereqs": [
+      "PSYCH 257",
+      "PSYCH 257R",
+      "PSYCH 323R"
+    ],
+    "coreqs": [
+      "PSYCH 391"
+    ],
+    "antireqs": [
+      "PSYCH 389",
+      "PSYCH 393",
+      "PSYCH 395",
+      "PSYCH 399"
+    ]
+  },
+  "PSYCH 398": {
+    "code": "PSYCH 398",
+    "raw": "Prereq: PSYCH 207 or 261; Level at least 3A Honours Psychology or Make-Up Psychology students; Psychology average at least 74%. Coreq: PSYCH 391. Antireq: PSYCH 390, 392, 394, 396; Psychology Research Intensive Specialization",
+    "prereqs": [
+      "PSYCH 207",
+      "PSYCH 261"
+    ],
+    "coreqs": [
+      "PSYCH 391"
+    ],
+    "antireqs": [
+      "PSYCH 390",
+      "PSYCH 392",
+      "PSYCH 394",
+      "PSYCH 396"
+    ]
+  },
+  "PSYCH 398R": {
+    "code": "PSYCH 398R",
+    "raw": "Prereq: Social Development Studies students",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 399R": {
+    "code": "PSYCH 399R",
+    "raw": "Prereq: Social Development Studies students",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 453": {
+    "code": "PSYCH 453",
+    "raw": "Prereq: PSYCH 211; Level at least 3A Honours Psychology or Make-up Psychology students; Psychology average at least 74%. Coreq: PSYCH 391",
+    "prereqs": [
+      "PSYCH 211"
+    ],
+    "coreqs": [
+      "PSYCH 391"
+    ],
+    "antireqs": []
+  },
+  "PSYCH 455": {
+    "code": "PSYCH 455",
+    "raw": "Prereq: PSYCH 253/253R; Level at least 3A Honours Psychology or Make-Up Psychology students; Psychology average at least 74%. Coreq: PSYCH 391",
+    "prereqs": [
+      "PSYCH 253",
+      "PSYCH 253R"
+    ],
+    "coreqs": [
+      "PSYCH 391"
+    ],
+    "antireqs": []
+  },
+  "PSYCH 457": {
+    "code": "PSYCH 457",
+    "raw": "Prereq: PSYCH 257/257R or 323R; Level at least 3A Honours Psychology or Make-up Psychology students; Psychology average at least 74%. Coreq: PSYCH 391",
+    "prereqs": [
+      "PSYCH 257",
+      "PSYCH 257R",
+      "PSYCH 323R"
+    ],
+    "coreqs": [
+      "PSYCH 391"
+    ],
+    "antireqs": []
+  },
+  "PSYCH 458": {
+    "code": "PSYCH 458",
+    "raw": "Prereq: PSYCH 207;  Level at least 3A Honours Psychology or Make-up Psychology students; Psychology average at least 74%. Coreq: PSYCH 391",
+    "prereqs": [
+      "PSYCH 207"
+    ],
+    "coreqs": [
+      "PSYCH 391"
+    ],
+    "antireqs": []
+  },
+  "PSYCH 461": {
+    "code": "PSYCH 461",
+    "raw": "Prereq: PSYCH 261; Level at least 3A Honours Psychology or Make-up Psychology students; Psychology average at least 74%. Coreq: PSYCH 391",
+    "prereqs": [
+      "PSYCH 261"
+    ],
+    "coreqs": [
+      "PSYCH 391"
+    ],
+    "antireqs": []
+  },
+  "PSYCH 462": {
+    "code": "PSYCH 462",
+    "raw": "Prereq: One of PSYCH 238/338, AFM 280, MSE 211; Level at least 3A Honours Psychology or Make-up Psychology students; Psychology average at least 74%. Coreq: PSYCH 391",
+    "prereqs": [
+      "PSYCH 238",
+      "PSYCH 338",
+      "AFM 280",
+      "MSE 211"
+    ],
+    "coreqs": [
+      "PSYCH 391"
+    ],
+    "antireqs": []
+  },
+  "PSYCH 464": {
+    "code": "PSYCH 464",
+    "raw": "Prereq: PSYCH 391; one of PSYCH 389, 390, 392, 393, 394, 395, 396, 397, 398, 399, 483 or 484; Honours Psychology or Make-up Psychology students.",
+    "prereqs": [
+      "PSYCH 391",
+      "PSYCH 389",
+      "PSYCH 390",
+      "PSYCH 392",
+      "PSYCH 393",
+      "PSYCH 394",
+      "PSYCH 395",
+      "PSYCH 396",
+      "PSYCH 397",
+      "PSYCH 398",
+      "PSYCH 399",
+      "PSYCH 483",
+      "PSYCH 484"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 465": {
+    "code": "PSYCH 465",
+    "raw": "Prereq: PSYCH 291 and 292; Level at least 3A Psychology Majors; Psychology average at least 75%. Antireq: PSYCH 467",
+    "prereqs": [
+      "PSYCH 291",
+      "PSYCH 292"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "PSYCH 467"
+    ]
+  },
+  "PSYCH 480": {
+    "code": "PSYCH 480",
+    "raw": "Prereq: Psychology majors; Level at least 3A; Psychology average at least 75%",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 499A": {
+    "code": "PSYCH 499A",
+    "raw": "Prereq: PSYCH 391; one of PSYCH 389, 390, 392, 393, 394, 395, 396, 397, 398, 399, 483, 484; Honours Psychology or Make-up Psychology students; cumulative Psychology average of 82%",
+    "prereqs": [
+      "PSYCH 391",
+      "PSYCH 389",
+      "PSYCH 390",
+      "PSYCH 392",
+      "PSYCH 393",
+      "PSYCH 394",
+      "PSYCH 395",
+      "PSYCH 396",
+      "PSYCH 397",
+      "PSYCH 398",
+      "PSYCH 399",
+      "PSYCH 483",
+      "PSYCH 484"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 499B": {
+    "code": "PSYCH 499B",
+    "raw": "Prereq: Honours Psychology or Make-Up Psychology students  with a cumulative average of 75% in Psychology . Coreq: PSYCH 499A",
+    "prereqs": [],
+    "coreqs": [
+      "PSYCH 499A"
+    ],
+    "antireqs": []
+  },
+  "PSYCH 499C": {
+    "code": "PSYCH 499C",
+    "raw": "Prereq: PSYCH 499A; Honours Psychology or Make-Up Psychology students with a cumulative average of 75% in Psychology. Coreq: PSYCH 499B",
+    "prereqs": [
+      "PSYCH 499A"
+    ],
+    "coreqs": [
+      "PSYCH 499B"
+    ],
+    "antireqs": []
+  },
+  "PSYCH 375R": {
+    "code": "PSYCH 375R",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 264": {
+    "code": "PSYCH 264",
+    "raw": "Prereq: PSYCH 291; Honours Psychology students. Antireq: PSYCH 464",
+    "prereqs": [
+      "PSYCH 291"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "PSYCH 464"
+    ]
+  },
+  "PSYCH 399": {
+    "code": "PSYCH 399",
+    "raw": "Prereq: One of PSYCH 238/338, 253/253R, 339, AFM 280, MSE 211; Level at least 3A Honours PSYCH or Make-Up PSYCH students; Psych average at least 74%. Coreq: PSYCH 391. Antireq: PSYCH 389, 393, 395, 397; Psychology Research Intensive Specialization",
+    "prereqs": [
+      "PSYCH 238",
+      "PSYCH 338",
+      "PSYCH 253",
+      "PSYCH 253R",
+      "PSYCH 339",
+      "AFM 280",
+      "MSE 211"
+    ],
+    "coreqs": [
+      "PSYCH 391"
+    ],
+    "antireqs": [
+      "PSYCH 389",
+      "PSYCH 393",
+      "PSYCH 395",
+      "PSYCH 397"
+    ]
+  },
+  "PSYCH 486": {
+    "code": "PSYCH 486",
+    "raw": "Prereq: PSYCH 391; Level at least 3A Honours Psychology or Make-up Psychology students; Psychology average at least 75%",
+    "prereqs": [
+      "PSYCH 391"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 630": {
+    "code": "PSYCH 630",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 392": {
+    "code": "PSYCH 392",
+    "raw": "Prereq: PSYCH 261; Level at least 3A Honours Psychology or Make-up Psychology students; Psychology average at least 74%. Coreq: PSYCH 391. Antireq: PSYCH 390, 394, 396, 398; Psychology Research Intensive Specialization",
+    "prereqs": [
+      "PSYCH 261"
+    ],
+    "coreqs": [
+      "PSYCH 391"
+    ],
+    "antireqs": [
+      "PSYCH 390",
+      "PSYCH 394",
+      "PSYCH 396",
+      "PSYCH 398"
+    ]
+  },
+  "PSYCH 450R": {
+    "code": "PSYCH 450R",
+    "raw": "Prereq: 1.0 unit of PSYCH; Level at least 3A",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 481": {
+    "code": "PSYCH 481",
+    "raw": "Prereq: Psychology majors; Level at least 3A; Psychology average at least 75%",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 482": {
+    "code": "PSYCH 482",
+    "raw": "Prereq: Psychology majors; Level at least 3A; Psychology average at least 75%",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 483": {
+    "code": "PSYCH 483",
+    "raw": "Prereq: Level at least 3A Honours Psychology or Make-up Psychology students; Psychology average at least 75%. Coreq: PSYCH 391",
+    "prereqs": [],
+    "coreqs": [
+      "PSYCH 391"
+    ],
+    "antireqs": []
+  },
+  "PSYCH 484": {
+    "code": "PSYCH 484",
+    "raw": "Prereq: Level at least 3A Honours Psychology or Make-up Psychology students; Psychology average at least 75%. Coreq: PSYCH 391",
+    "prereqs": [],
+    "coreqs": [
+      "PSYCH 391"
+    ],
+    "antireqs": []
+  },
+  "PSYCH 490R": {
+    "code": "PSYCH 490R",
+    "raw": "Prereq: Level at least 3A Social Development Studies majors",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 363": {
+    "code": "PSYCH 363",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 463": {
+    "code": "PSYCH 463",
+    "raw": "Prereq: Level at least 3A Honours Psychology or Make-up Psychology students; Psychology average at least 74%. Coreq: PSYCH 391",
+    "prereqs": [],
+    "coreqs": [
+      "PSYCH 391"
+    ],
+    "antireqs": []
+  },
+  "PSYCH 485": {
+    "code": "PSYCH 485",
+    "raw": "Prereq: Level at least 3A Honours Psychology or Make-up Psychology students; Psychology average at least 75%. Coreq: PSYCH 391",
+    "prereqs": [],
+    "coreqs": [
+      "PSYCH 391"
+    ],
+    "antireqs": []
+  },
+  "PSYCH 439": {
+    "code": "PSYCH 439",
+    "raw": "Prereq: One of PSYCH 238/338, AFM 280, MSE 211, SCBUS 225; Level at least 3A.  Antireq: PACS 323/LS 319",
+    "prereqs": [
+      "PSYCH 238",
+      "PSYCH 338",
+      "AFM 280",
+      "MSE 211",
+      "SCBUS 225"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "PACS 323",
+      "LS 319"
+    ]
+  },
+  "PSYCH 467": {
+    "code": "PSYCH 467",
+    "raw": "Prereq: HRM 200; one of PSYCH 238/338, 339, 340; one of HRM 301, 303, 305, 307; Psychology Majors and Human Resources Management students; HRM average at least 70%. Antireq: PSYCH 465",
+    "prereqs": [
+      "HRM 200",
+      "PSYCH 238",
+      "PSYCH 338",
+      "PSYCH 339",
+      "PSYCH 340",
+      "HRM 301",
+      "HRM 303",
+      "HRM 305",
+      "HRM 307"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "PSYCH 465"
+    ]
+  },
+  "PSYCH 389": {
+    "code": "PSYCH 389",
+    "raw": "Prereq: PSYCH 211, 257/257R; PSYCH 238/338 or 253/253R; Level at least 3A Honours BA Psychology Research Intensive Specialization or Honours BSc Psychology or Makeup Psychology. Coreq: PSYCH 391. Antireq: PSYCH 393, 395, 397, 399",
+    "prereqs": [
+      "PSYCH 211",
+      "PSYCH 257",
+      "PSYCH 257R",
+      "PSYCH 238",
+      "PSYCH 338",
+      "PSYCH 253",
+      "PSYCH 253R"
+    ],
+    "coreqs": [
+      "PSYCH 391"
+    ],
+    "antireqs": [
+      "PSYCH 393",
+      "PSYCH 395",
+      "PSYCH 397",
+      "PSYCH 399"
+    ]
+  },
+  "PSYCH 390": {
+    "code": "PSYCH 390",
+    "raw": "Prereq: PSYCH 207, 211, 261; Level at least 3A Honours BA Psychology Research Intensive Specialization or Honours BSc Psychology or Make-Up Psychology. Coreq: PSYCH 391. Antireq: PSYCH 392, 394, 396, 398",
+    "prereqs": [
+      "PSYCH 207",
+      "PSYCH 211",
+      "PSYCH 261"
+    ],
+    "coreqs": [
+      "PSYCH 391"
+    ],
+    "antireqs": [
+      "PSYCH 392",
+      "PSYCH 394",
+      "PSYCH 396",
+      "PSYCH 398"
+    ]
+  },
+  "PSYCH 101": {
+    "code": "PSYCH 101",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 101R": {
+    "code": "PSYCH 101R",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 212": {
+    "code": "PSYCH 212",
+    "raw": "Prereq: PSYCH 101/101R",
+    "prereqs": [
+      "PSYCH 101",
+      "PSYCH 101R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 212R": {
+    "code": "PSYCH 212R",
+    "raw": "Prereq: PSYCH 101/101R",
+    "prereqs": [
+      "PSYCH 101",
+      "PSYCH 101R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 253R": {
+    "code": "PSYCH 253R",
+    "raw": "Prereq: PSYCH 101/101R.",
+    "prereqs": [
+      "PSYCH 101",
+      "PSYCH 101R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 253": {
+    "code": "PSYCH 253",
+    "raw": "Prereq: PSYCH 101/101R.",
+    "prereqs": [
+      "PSYCH 101",
+      "PSYCH 101R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 257": {
+    "code": "PSYCH 257",
+    "raw": "Prereq: PSYCH 101/101R",
+    "prereqs": [
+      "PSYCH 101",
+      "PSYCH 101R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 257R": {
+    "code": "PSYCH 257R",
+    "raw": "Prereq: PSYCH 101/101R",
+    "prereqs": [
+      "PSYCH 101",
+      "PSYCH 101R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 312": {
+    "code": "PSYCH 312",
+    "raw": "Prereq: One of PSYCH 207, 211, 212/212R, 213R; Level at least 2B",
+    "prereqs": [
+      "PSYCH 207",
+      "PSYCH 211",
+      "PSYCH 212",
+      "PSYCH 212R",
+      "PSYCH 213R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 312R": {
+    "code": "PSYCH 312R",
+    "raw": "Prereq: One of PSYCH 207, 211, 212/212R, 213R; Level at least 2B",
+    "prereqs": [
+      "PSYCH 207",
+      "PSYCH 211",
+      "PSYCH 212",
+      "PSYCH 212R",
+      "PSYCH 213R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 493": {
+    "code": "PSYCH 493",
+    "raw": "Prereq: PSYCH 391; Level at least 3A Honours Psychology or Make-up Psychology students; Psychology average at least 74%",
+    "prereqs": [
+      "PSYCH 391"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 356": {
+    "code": "PSYCH 356",
+    "raw": "Prereq: PSYCH 101/101R; Level at least 3A",
+    "prereqs": [
+      "PSYCH 101",
+      "PSYCH 101R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 356R": {
+    "code": "PSYCH 356R",
+    "raw": "Prereq: PSYCH 101/101R; Level at least 3A",
+    "prereqs": [
+      "PSYCH 101",
+      "PSYCH 101R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 447": {
+    "code": "PSYCH 447",
+    "raw": "Prereq: PHIL/PSYCH 256",
+    "prereqs": [
+      "PSYCH 256"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 811A": {
+    "code": "PSYCH 811A",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 410W": {
+    "code": "PSYCH 410W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 335": {
+    "code": "PSYCH 335",
+    "raw": "Prereq: PSYCH 207 or 211; PSYCH 261 or KIN 301",
+    "prereqs": [
+      "PSYCH 207",
+      "PSYCH 211",
+      "PSYCH 261",
+      "KIN 301"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 337": {
+    "code": "PSYCH 337",
+    "raw": "Prereq: PSYCH 211 or 257. Antireq: PSYCH 363 (002) taken fall 2019",
+    "prereqs": [
+      "PSYCH 211",
+      "PSYCH 257"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "PSYCH 363",
+      "PSYCH 002"
+    ]
+  },
+  "PSYCH 621": {
+    "code": "PSYCH 621",
+    "raw": "Prereq: PSYCH Grad Students Only",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 714": {
+    "code": "PSYCH 714",
+    "raw": "Prereq: PSYCH Grad Students Only",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 334R": {
+    "code": "PSYCH 334R",
+    "raw": "Prereq: PSYCH 101/101R; Level at least 2A",
+    "prereqs": [
+      "PSYCH 101",
+      "PSYCH 101R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 726C": {
+    "code": "PSYCH 726C",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 336": {
+    "code": "PSYCH 336",
+    "raw": "Prereq: PSYCH 257/257R",
+    "prereqs": [
+      "PSYCH 257",
+      "PSYCH 257R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 710": {
+    "code": "PSYCH 710",
+    "raw": "Prereq: PSYCH Grad Students Only",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 885": {
+    "code": "PSYCH 885",
+    "raw": "Prereq: PSYCH Grad Students Only",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 232": {
+    "code": "PSYCH 232",
+    "raw": "Prereq: PSYCH 101/101R; Level at least 2A",
+    "prereqs": [
+      "PSYCH 101",
+      "PSYCH 101R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 451": {
+    "code": "PSYCH 451",
+    "raw": "Prereq: PSYCH 317; Honours Psychology or Make-Up Psychology only; Psychology average at least 74%. Coreq: PSYCH 391. Antireq: PSYCH 463 taken fall 2012, winter 2014 (section 002), fall 2014",
+    "prereqs": [
+      "PSYCH 317"
+    ],
+    "coreqs": [
+      "PSYCH 391"
+    ],
+    "antireqs": [
+      "PSYCH 463",
+      "PSYCH 002"
+    ]
+  },
+  "PSYCH 226R": {
+    "code": "PSYCH 226R",
+    "raw": "Prereq: PSYCH 101/101R",
+    "prereqs": [
+      "PSYCH 101",
+      "PSYCH 101R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 454": {
+    "code": "PSYCH 454",
+    "raw": "Prereq: PSYCH 212/212R; Level at least 3A Honours Psychology or Make-Up Psychology students; Psychology average at least 74%. Coreq: PSYCH 391",
+    "prereqs": [
+      "PSYCH 212",
+      "PSYCH 212R"
+    ],
+    "coreqs": [
+      "PSYCH 391"
+    ],
+    "antireqs": []
+  },
+  "PSYCH 256": {
+    "code": "PSYCH 256",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 230": {
+    "code": "PSYCH 230",
+    "raw": "Prereq: PSYCH 101/101R",
+    "prereqs": [
+      "PSYCH 101",
+      "PSYCH 101R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 211": {
+    "code": "PSYCH 211",
+    "raw": "Prereq: PSYCH 101/101R",
+    "prereqs": [
+      "PSYCH 101",
+      "PSYCH 101R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 235": {
+    "code": "PSYCH 235",
+    "raw": "Prereq: PSYCH 101/101R",
+    "prereqs": [
+      "PSYCH 101",
+      "PSYCH 101R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 207": {
+    "code": "PSYCH 207",
+    "raw": "Prereq: Level at least 1B",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 261": {
+    "code": "PSYCH 261",
+    "raw": "Prereq: Level at least 1B",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 715": {
+    "code": "PSYCH 715",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 373W": {
+    "code": "PSYCH 373W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 231": {
+    "code": "PSYCH 231",
+    "raw": "Prereq: PSYCH 101/101R",
+    "prereqs": [
+      "PSYCH 101",
+      "PSYCH 101R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 811B": {
+    "code": "PSYCH 811B",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 680": {
+    "code": "PSYCH 680",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 340": {
+    "code": "PSYCH 340",
+    "raw": "Prereq: Level at least 2B. Antireq: BUS 474W",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": [
+      "BUS 474W"
+    ]
+  },
+  "PSYCH 448R": {
+    "code": "PSYCH 448R",
+    "raw": "Prereq: PSYCH 253/253R; SDS/ISS 250R or PSYCH 292; SDS/ISS 251R or PSYCH 291; Level at least 3A. Antireq: PSYCH 459",
+    "prereqs": [
+      "PSYCH 253",
+      "PSYCH 253R",
+      "ISS 250R",
+      "PSYCH 292",
+      "ISS 251R",
+      "PSYCH 291"
+    ],
+    "coreqs": [],
+    "antireqs": [
+      "PSYCH 459"
+    ]
+  },
+  "PSYCH 444R": {
+    "code": "PSYCH 444R",
+    "raw": "Prereq: PSYCH 253/253R; SDS/ISS 250R or PSYCH 292; SDS/ISS 251R or PSYCH 291; Level at least 3A",
+    "prereqs": [
+      "PSYCH 253",
+      "PSYCH 253R",
+      "ISS 250R",
+      "PSYCH 292",
+      "ISS 251R",
+      "PSYCH 291"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 812": {
+    "code": "PSYCH 812",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 747": {
+    "code": "PSYCH 747",
+    "raw": "Prereq: PSYCH Grad Students Only",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 361": {
+    "code": "PSYCH 361",
+    "raw": "Prereq: One of PSYCH 207, 253/253R, 261",
+    "prereqs": [
+      "PSYCH 207",
+      "PSYCH 253",
+      "PSYCH 253R",
+      "PSYCH 261"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 371W": {
+    "code": "PSYCH 371W",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 811C": {
+    "code": "PSYCH 811C",
+    "raw": "",
+    "prereqs": [],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 353": {
+    "code": "PSYCH 353",
+    "raw": "Prereq: PSYCH 253/253R",
+    "prereqs": [
+      "PSYCH 253",
+      "PSYCH 253R"
+    ],
+    "coreqs": [],
+    "antireqs": []
+  },
+  "PSYCH 372": {
+    "code": "PSYCH 372",
+    "raw": "Prereq: PSYCH 101/101R; Level at least 2B",
+    "prereqs": [
+      "PSYCH 101",
+      "PSYCH 101R"
+    ],
+    "coreqs": [],
+    "antireqs": []
   }
 }

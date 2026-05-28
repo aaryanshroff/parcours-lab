@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.env
+.env.*
+.venv/
+venv/
+poetry.lock
+pyproject.toml
+scripts/
+.git/
+.gitignore
+*.md

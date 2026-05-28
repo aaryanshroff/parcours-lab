@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(poetry export *)",
+      "Bash(poetry self *)",
+      "Bash(grep -E '\\\\.\\(npy|safetensors|png|jpg|jpeg|pt|bin|onnx|pkl|h5\\)$')"
+    ]
+  }
+}
