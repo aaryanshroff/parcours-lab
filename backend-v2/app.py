@@ -3,11 +3,24 @@ import traceback
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
+
+# Vercel rewrite → HF Space proxy → gunicorn: trust 2 X-Forwarded-For hops
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=2)
+
+limiter = Limiter(
+    key_func=get_remote_address,
+    app=app,
+    default_limits=["120 per minute", "1000 per day"],
+    storage_uri="memory://",
+)
 
 
 @app.errorhandler(Exception)
@@ -17,6 +30,7 @@ def handle_exception(e):
 
 
 @app.route("/api/health")
+@limiter.exempt
 def health():
     return {"status": "ok"}
 
