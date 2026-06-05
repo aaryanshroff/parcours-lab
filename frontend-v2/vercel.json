@@ -1,1 +1,8 @@
-{}
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://aaryanshroff-parcours-lab.hf.space/api/:path*"
+    }
+  ]
+}
