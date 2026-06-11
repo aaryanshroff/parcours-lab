@@ -3,7 +3,11 @@
     "allow": [
       "Bash(poetry export *)",
       "Bash(poetry self *)",
-      "Bash(grep -E '\\\\.\\(npy|safetensors|png|jpg|jpeg|pt|bin|onnx|pkl|h5\\)$')"
+      "Bash(grep -E '\\\\.\\(npy|safetensors|png|jpg|jpeg|pt|bin|onnx|pkl|h5\\)$')",
+      "Bash(git commit -m ' *)",
+      "Bash(curl -sS -w \"\\\\n---\\\\nHTTP %{http_code}\\\\n\" https://aaryanshroff-parcours-lab.hf.space/api/health)",
+      "Bash(poetry add *)",
+      "Bash(git subtree *)"
     ]
   }
 }

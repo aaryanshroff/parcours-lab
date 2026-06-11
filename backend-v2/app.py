@@ -1036,7 +1036,13 @@ def chat():
     api_messages = [{"role": "system", "content": system_content}, *messages]
     actions = []
 
-    tools = CHAT_TOOLS
+    # search_courses is UWaterloo-academic only (hits the UW API). In career /
+    # learning-path mode, exclude it so the model uses replace_course (online
+    # courses, no UWATERLOO_API_KEY) instead.
+    if context.get("mode") == "academics":
+        tools = CHAT_TOOLS
+    else:
+        tools = [t for t in CHAT_TOOLS if t["function"]["name"] != "search_courses"]
 
     # Tool calling loop (max 5 iterations)
     for _ in range(5):
